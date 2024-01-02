@@ -1,0 +1,32 @@
+package com.hussain.csoup.tokenization
+
+internal enum class CharCodes(val code: Int) {
+    Tab(0x09), // "\t"
+    LineFeed(0x0a), // "\n"
+    FormFeed(0xc), // "\f"
+    CarriageReturn(0x0d), // "\r"
+    Space(0x20), // " "
+    ExclamationMark(0x21), // "!"
+    NumberSign(0x23), // "#"
+    Ampersand(0x26), // "&"
+    Apostrophe(0x27), // "'"
+    QuotationMark(0x22), // '"'
+    HyphenMinus(0x2d), // "-"
+    Solidus(0x2f), // "/"
+    Zero(0x30), // "0"
+    Nine(0x39), // "9"
+    SemiColon(0x3b), // ";"
+    LessThan(0x3c), // "<"
+    Equals(0x3d), // "="
+    GreaterThan(0x3e), // ">"
+    QuestionMark(0x3f), // "?"
+    UpperA(0x41), // "A"
+    LowerA(0x61), // "a"
+    UpperF(0x46), // "F"
+    LowerF(0x66), // "f"
+    UpperZ(0x5a), // "Z"
+    LowerZ(0x7a), // "z"
+    LowerX(0x78), // "x"
+    GraveAccent(0x60), // "`"
+    OpeningSquareBracket(0x5b), // "["
+}
