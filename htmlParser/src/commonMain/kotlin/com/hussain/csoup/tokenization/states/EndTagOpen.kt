@@ -15,12 +15,12 @@ internal data object EndTagOpen : TokenizationState() {
             }
 
             CharCodes.GreaterThan.code -> {
-                // TODO: Implement parse error
+                // TODO Implement parse error
                 consumeNextChar { Data }
             }
 
             else -> {
-                // TODO: Implement parse error
+                // TODO Implement parse error
                 val commentToken = Token.Comment(data = "")
                 reconsumeCurrentChar { BogusComment(commentToken) }
             }

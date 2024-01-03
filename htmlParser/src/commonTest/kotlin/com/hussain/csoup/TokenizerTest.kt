@@ -15,7 +15,7 @@ class TokenizerTest {
         """.trimIndent()
         tokenizer.tokenize(html)
         assertEquals(
-            tokenizer.emittedTokens, listOf(
+            listOf(
                 Token.StartTag(name = "p"),
                 Token.Character(data = 'h'),
                 Token.Character(data = 'e'),
@@ -23,7 +23,54 @@ class TokenizerTest {
                 Token.Character(data = 'l'),
                 Token.Character(data = 'o'),
                 Token.EndTag(name = "p")
-            )
+            ),
+            tokenizer.emittedTokens,
+        )
+    }
+
+    @Test
+    fun `test open tag state`() {
+        val tokenizer = Tokenizer()
+        val html = "<p>"
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf<Token>(
+                Token.StartTag(name = "p"),
+            ),
+            tokenizer.emittedTokens,
+        )
+    }
+
+    @Test
+    fun `test close tag state`() {
+        val tokenizer = Tokenizer()
+        val html = "</p>"
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf<Token>(
+                Token.EndTag(name = "p"),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `test attributes`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p class="test">a</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf<Token>(
+                Token.StartTag(
+                    name = "p",
+                    attributes = mapOf(
+                        "class" to "test",
+                    )
+                ),
+            ),
+            tokenizer.emittedTokens
         )
     }
 }

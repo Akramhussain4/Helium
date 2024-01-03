@@ -10,7 +10,7 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState()
             CharCodes.Tab.code,
             CharCodes.LineFeed.code,
             CharCodes.FormFeed.code,
-            CharCodes.Space.code -> consumeNextChar { BeforeAttributeName }
+            CharCodes.Space.code -> consumeNextChar { BeforeAttributeName(currentTagToken) }
 
             CharCodes.Solidus.code -> consumeNextChar { SelfClosingStartTag }
 
@@ -24,14 +24,16 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState()
                     is Token.StartTag -> {
                         val newStartTagName = currentTagToken.name + (codePoint + 0x0020).toChar()
                         val updatedStartTagToken = currentTagToken.copy(name = newStartTagName)
-                        consumeNextChar { TagName(updatedStartTagToken)  }
+                        consumeNextChar { TagName(updatedStartTagToken) }
                     }
+
                     is Token.EndTag -> {
                         val newEndTagName = currentTagToken.name + (codePoint + 0x0020).toChar()
                         val updatedEndTagToken = currentTagToken.copy(name = newEndTagName)
-                        consumeNextChar { TagName(updatedEndTagToken)  }
+                        consumeNextChar { TagName(updatedEndTagToken) }
                     }
-                    else -> throw IllegalStateException("Expected a StartTag or EndTag token")
+
+                    else -> throw IllegalStateException("Expected a StartTag or EndTag token, got $currentTagToken")
                 }
             }
 
@@ -47,7 +49,7 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState()
                         currentTagToken.copy(name = newStartTagTokenName)
                     }
 
-                    else -> currentTagToken
+                    else -> throw IllegalStateException("Expected a StartTag or EndTag token, got $currentTagToken")
                 }
                 consumeNextChar { TagName(currentTagToken = token) }
             }

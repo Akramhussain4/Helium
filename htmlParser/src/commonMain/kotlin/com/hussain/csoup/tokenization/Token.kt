@@ -10,11 +10,7 @@ internal sealed class Token {
         val attributes: Map<String, String> = emptyMap()
     ) : Token()
 
-    data class EndTag(
-        val name: String,
-        val selfClosing: Boolean = false,
-        val attributes: Map<String, String> = emptyMap()
-    ) : Token()
+    data class EndTag(val name: String) : Token()
 
     data class Comment(val data: String) : Token()
 
