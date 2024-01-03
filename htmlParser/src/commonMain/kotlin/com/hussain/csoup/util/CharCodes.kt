@@ -1,4 +1,4 @@
-package com.hussain.csoup.tokenization
+package com.hussain.csoup.util
 
 internal enum class CharCodes(val code: Int) {
     Tab(0x09), // "\t"
