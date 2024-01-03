@@ -62,10 +62,10 @@ class TokenizerTest {
         """.trimIndent()
         tokenizer.tokenize(html)
         assertEquals(
-            listOf<Token>(
+            listOf(
                 Token.StartTag(
                     name = "p",
-                    attributes = mapOf(
+                    attributes = mutableMapOf(
                         "class" to "test",
                     )
                 ),
