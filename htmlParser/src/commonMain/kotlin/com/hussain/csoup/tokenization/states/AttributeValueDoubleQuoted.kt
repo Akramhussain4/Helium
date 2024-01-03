@@ -11,9 +11,7 @@ internal class AttributeValueDoubleQuoted(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when (codePoint) {
             CharCodes.QuotationMark.code -> consumeNextChar {
-                AfterAttributeValueQuoted(
-                    currentTagToken
-                )
+                AfterAttributeValueQuoted(currentTagToken)
             }
 
             CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
@@ -22,12 +20,13 @@ internal class AttributeValueDoubleQuoted(
                 when (currentTagToken) {
                     is Token.StartTag -> {
                         val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
-                        currentTagToken.attributes[currentAttributeName] = currentValue + codePoint.toChar()
+                        currentTagToken.attributes[currentAttributeName] =
+                            currentValue + codePoint.toChar()
 
                         consumeNextChar {
                             AttributeValueDoubleQuoted(
-                                currentTagToken,
-                                currentAttributeName
+                                currentTagToken = currentTagToken,
+                                currentAttributeName = currentAttributeName
                             )
                         }
                     }

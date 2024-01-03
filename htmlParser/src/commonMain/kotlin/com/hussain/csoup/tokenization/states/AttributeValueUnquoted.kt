@@ -14,9 +14,7 @@ internal class AttributeValueUnquoted(
             CharCodes.LineFeed.code,
             CharCodes.FormFeed.code,
             CharCodes.Space.code -> consumeNextChar {
-                BeforeAttributeName(
-                    currentTagToken = currentTagToken
-                )
+                BeforeAttributeName(currentTagToken = currentTagToken)
             }
 
             CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
@@ -52,8 +50,8 @@ internal class AttributeValueUnquoted(
 
                 consumeNextChar {
                     AttributeValueDoubleQuoted(
-                        updatedToken,
-                        currentAttributeName
+                        currentTagToken = updatedToken,
+                        currentAttributeName = currentAttributeName
                     )
                 }
             }
