@@ -75,4 +75,58 @@ class TokenizerTest {
             tokenizer.emittedTokens
         )
     }
+
+    @Test
+    fun `self closing start tag`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <br/>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf<Token>(
+                Token.StartTag(
+                    name = "br",
+                    selfClosing = true,
+                ),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `test long html`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <html><head><title>Test</title></head><body><p>Test</p><br/></body></html>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "html"),
+                Token.StartTag(name = "head"),
+                Token.StartTag(name = "title"),
+                Token.Character(data = 'T'),
+                Token.Character(data = 'e'),
+                Token.Character(data = 's'),
+                Token.Character(data = 't'),
+                Token.EndTag(name = "title"),
+                Token.EndTag(name = "head"),
+                Token.StartTag(name = "body"),
+                Token.StartTag(name = "p"),
+                Token.Character(data = 'T'),
+                Token.Character(data = 'e'),
+                Token.Character(data = 's'),
+                Token.Character(data = 't'),
+                Token.EndTag(name = "p"),
+                Token.StartTag(
+                    name = "br",
+                    selfClosing = true,
+                ),
+                Token.EndTag(name = "body"),
+                Token.EndTag(name = "html"),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
 }
