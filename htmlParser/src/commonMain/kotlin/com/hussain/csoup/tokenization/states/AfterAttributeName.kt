@@ -31,10 +31,10 @@ internal class AfterAttributeName(
 
             else -> {
                 val emptyAttribute = "" to ""
-                val updatedToken = updateCurrentStartToken(emptyAttribute)
+                updateAttribute(emptyAttribute)
                 reconsumeCurrentChar {
                     AttributeName(
-                        currentTagToken = updatedToken,
+                        currentTagToken = currentTagToken,
                         currentAttributeName = ""
                     )
                 }
@@ -42,11 +42,10 @@ internal class AfterAttributeName(
         }
     }
 
-    private fun updateCurrentStartToken(newAttribute: Pair<String, String>): Token.StartTag {
-        return when (currentTagToken) {
+    private fun updateAttribute(newAttribute: Pair<String, String>) {
+        when (currentTagToken) {
             is Token.StartTag -> {
-                val updatedAttributes = currentTagToken.attributes.plus(newAttribute).toMutableMap()
-                currentTagToken.copy(attributes = updatedAttributes)
+                currentTagToken.attributes.plus(newAttribute).toMutableMap()
             }
 
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")

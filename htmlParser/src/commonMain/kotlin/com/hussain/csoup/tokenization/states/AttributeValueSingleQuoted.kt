@@ -17,15 +17,13 @@ internal class AttributeValueSingleQuoted(
             else -> {
                 when (currentTagToken) {
                     is Token.StartTag -> {
-                        val attributes = currentTagToken.attributes.toMutableMap()
-                        val updatedAttribute = attributes[currentAttributeName] + codePoint.toChar()
-                        attributes[currentAttributeName] = updatedAttribute
-
-                        val updatedToken = currentTagToken.copy(attributes = attributes)
+                        val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
+                        currentTagToken.attributes[currentAttributeName] =
+                            currentValue + codePoint.toChar()
 
                         consumeNextChar {
                             AttributeValueDoubleQuoted(
-                                currentTagToken = updatedToken,
+                                currentTagToken = currentTagToken,
                                 currentAttributeName = currentAttributeName
                             )
                         }

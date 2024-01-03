@@ -51,7 +51,7 @@ internal class AttributeName(
     ): Pair<TokenizationState, Action> {
         when (currentTagToken) {
             is Token.StartTag -> {
-                val updatedAttributeName = currentAttributeName.append(codePoint.toChar())
+                val updatedAttributeName = currentAttributeName + codePoint.toChar()
                 currentTagToken.attributes.updateKey(
                     currentAttributeName,
                     updatedAttributeName
@@ -62,6 +62,4 @@ internal class AttributeName(
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
-
-    private fun String.append(char: Char) = this + char
 }
