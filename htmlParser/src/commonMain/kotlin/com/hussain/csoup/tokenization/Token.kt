@@ -7,7 +7,7 @@ internal sealed class Token {
     data class StartTag(
         val name: String,
         val selfClosing: Boolean = false,
-        val attributes: Map<String, String> = emptyMap()
+        val attributes: MutableMap<String, String> = mutableMapOf()
     ) : Token()
 
     data class EndTag(val name: String) : Token()

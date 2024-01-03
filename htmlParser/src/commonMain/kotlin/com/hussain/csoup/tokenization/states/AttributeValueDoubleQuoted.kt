@@ -1,0 +1,40 @@
+package com.hussain.csoup.tokenization.states
+
+import com.hussain.csoup.tokenization.CharCodes
+import com.hussain.csoup.tokenization.Token
+import com.hussain.csoup.tokenization.Tokenizer
+
+internal class AttributeValueDoubleQuoted(
+    private val currentTagToken: Token,
+    private val currentAttributeName: String
+) : TokenizationState() {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+        return when (codePoint) {
+            CharCodes.QuotationMark.code -> consumeNextChar {
+                AfterAttributeValueQuoted(
+                    currentTagToken
+                )
+            }
+
+            CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
+
+            else -> {
+                when (currentTagToken) {
+                    is Token.StartTag -> {
+                        val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
+                        currentTagToken.attributes[currentAttributeName] = currentValue + codePoint.toChar()
+
+                        consumeNextChar {
+                            AttributeValueDoubleQuoted(
+                                currentTagToken,
+                                currentAttributeName
+                            )
+                        }
+                    }
+
+                    else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
+                }
+            }
+        }
+    }
+}
