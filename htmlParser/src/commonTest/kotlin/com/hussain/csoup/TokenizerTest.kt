@@ -69,6 +69,8 @@ class TokenizerTest {
                         "class" to "test",
                     )
                 ),
+                Token.Character(data = 'a'),
+                Token.EndTag(name = "p")
             ),
             tokenizer.emittedTokens
         )

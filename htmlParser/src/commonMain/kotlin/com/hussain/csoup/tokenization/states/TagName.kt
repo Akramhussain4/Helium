@@ -20,39 +20,31 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState()
             }
 
             in CharCodes.UpperA.code..CharCodes.UpperZ.code -> {
-                when (currentTagToken) {
-                    is Token.StartTag -> {
-                        val newStartTagName = currentTagToken.name + (codePoint + 0x0020).toChar()
-                        val updatedStartTagToken = currentTagToken.copy(name = newStartTagName)
-                        consumeNextChar { TagName(updatedStartTagToken) }
-                    }
-
-                    is Token.EndTag -> {
-                        val newEndTagName = currentTagToken.name + (codePoint + 0x0020).toChar()
-                        val updatedEndTagToken = currentTagToken.copy(name = newEndTagName)
-                        consumeNextChar { TagName(updatedEndTagToken) }
-                    }
-
-                    else -> throw IllegalStateException("Expected a StartTag or EndTag token, got $currentTagToken")
-                }
+                val token = updateTagName(codePoint + 0x0020)
+                consumeNextChar { TagName(token) }
             }
 
             else -> {
-                val token = when (currentTagToken) {
-                    is Token.StartTag -> {
-                        val newStartTagTokenName = currentTagToken.name + codePoint.toChar()
-                        currentTagToken.copy(name = newStartTagTokenName)
-                    }
-
-                    is Token.EndTag -> {
-                        val newStartTagTokenName = currentTagToken.name + codePoint.toChar()
-                        currentTagToken.copy(name = newStartTagTokenName)
-                    }
-
-                    else -> throw IllegalStateException("Expected a StartTag or EndTag token, got $currentTagToken")
-                }
+                val token = updateTagName(codePoint)
                 consumeNextChar { TagName(currentTagToken = token) }
             }
+        }
+    }
+
+
+    private fun updateTagName(codePoint: Int): Token {
+        return when (currentTagToken) {
+            is Token.StartTag -> {
+                val newStartTagTokenName = currentTagToken.name + codePoint.toChar()
+                currentTagToken.copy(name = newStartTagTokenName)
+            }
+
+            is Token.EndTag -> {
+                val newStartTagTokenName = currentTagToken.name + codePoint.toChar()
+                currentTagToken.copy(name = newStartTagTokenName)
+            }
+
+            else -> throw IllegalStateException("Expected a StartTag or EndTag token, got $currentTagToken")
         }
     }
 }
