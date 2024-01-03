@@ -31,29 +31,32 @@ internal class AttributeValueUnquoted(
             CharCodes.GraveAccent.code -> {
                 // TODO Implement parse error
                 updateAttributeValue(codePoint)
+                consumeNextChar {
+                    AttributeValueDoubleQuoted(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = currentAttributeName
+                    )
+                }
             }
 
             else -> {
                 updateAttributeValue(codePoint)
+                consumeNextChar {
+                    AttributeValueDoubleQuoted(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = currentAttributeName
+                    )
+                }
             }
         }
     }
 
-    private fun updateAttributeValue(codePoint: Int): Pair<TokenizationState, Action.ConsumeNext> {
-        return when (currentTagToken) {
+    private fun updateAttributeValue(codePoint: Int) {
+        when (currentTagToken) {
             is Token.StartTag -> {
-                val attributes = currentTagToken.attributes.toMutableMap()
-                val updatedAttribute = attributes[currentAttributeName] + codePoint.toChar()
-                attributes[currentAttributeName] = updatedAttribute
-
-                val updatedToken = currentTagToken.copy(attributes = attributes)
-
-                consumeNextChar {
-                    AttributeValueDoubleQuoted(
-                        currentTagToken = updatedToken,
-                        currentAttributeName = currentAttributeName
-                    )
-                }
+                val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
+                currentTagToken.attributes[currentAttributeName] =
+                    currentValue + codePoint.toChar()
             }
 
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")

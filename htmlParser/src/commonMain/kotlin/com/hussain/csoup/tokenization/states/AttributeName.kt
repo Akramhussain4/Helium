@@ -31,37 +31,54 @@ internal class AttributeName(
                 )
             }
 
-            in CharCodes.UpperA.code..CharCodes.UpperZ.code -> updateAndReturnNextState(
-                codePoint = codePoint + 0x0020
-            )
+            in CharCodes.UpperA.code..CharCodes.UpperZ.code -> {
+                val attributeName = currentAttributeName + codePoint.toChar() + 0x0020
+                updateAttributeName(attributeName = attributeName)
+                consumeNextChar {
+                    AttributeName(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = attributeName
+                    )
+                }
+            }
 
             CharCodes.QuotationMark.code,
             CharCodes.Apostrophe.code,
             CharCodes.LessThan.code -> {
                 // TODO Implement parse error
-                updateAndReturnNextState(codePoint)
+                val attributeName = currentAttributeName + codePoint.toChar()
+                updateAttributeName(attributeName = attributeName)
+                consumeNextChar {
+                    AttributeName(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = attributeName
+                    )
+                }
             }
 
-            else -> updateAndReturnNextState(codePoint)
+            else -> {
+                val attributeName = currentAttributeName + codePoint.toChar()
+                updateAttributeName(attributeName = attributeName)
+                consumeNextChar {
+                    AttributeName(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = attributeName
+                    )
+                }
+            }
         }
     }
 
-    private fun updateAndReturnNextState(
-        codePoint: Int,
-    ): Pair<TokenizationState, Action> {
+    private fun updateAttributeName(attributeName: String) {
         when (currentTagToken) {
             is Token.StartTag -> {
-                val updatedAttributeName = currentAttributeName.append(codePoint.toChar())
                 currentTagToken.attributes.updateKey(
-                    currentAttributeName,
-                    updatedAttributeName
+                    oldKey = currentAttributeName,
+                    newKey = attributeName
                 )
-                return consumeNextChar { AttributeName(currentTagToken, updatedAttributeName) }
             }
 
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
-
-    private fun String.append(char: Char) = this + char
 }
