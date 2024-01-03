@@ -12,7 +12,7 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
             CharCodes.FormFeed.code,
             CharCodes.Space.code -> consumeNextChar { BeforeAttributeName(currentTagToken) }
 
-            CharCodes.Solidus.code -> consumeNextChar { SelfClosingStartTag }
+            CharCodes.Solidus.code -> consumeNextChar { SelfClosingStartTag(currentTagToken) }
 
             CharCodes.GreaterThan.code -> {
                 tokenizer.emitToken(currentTagToken)

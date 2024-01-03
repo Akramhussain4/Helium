@@ -15,7 +15,7 @@ internal class AfterAttributeName(
             CharCodes.FormFeed.code,
             CharCodes.Space.code -> consumeNextChar { this }
 
-            CharCodes.Solidus.code -> consumeNextChar { SelfClosingStartTag }
+            CharCodes.Solidus.code -> consumeNextChar { SelfClosingStartTag(currentTagToken) }
 
             CharCodes.Equals.code -> consumeNextChar {
                 BeforeAttributeValue(
