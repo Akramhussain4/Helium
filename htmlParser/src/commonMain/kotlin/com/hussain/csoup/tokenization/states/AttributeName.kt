@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.util.updateKey
 
 internal class AttributeName(
     private val currentTagToken: Token,
@@ -17,7 +18,10 @@ internal class AttributeName(
             CharCodes.Space.code,
             CharCodes.Solidus.code,
             CharCodes.GreaterThan.code -> reconsumeCurrentChar {
-                AfterAttributeName(currentTagToken, currentAttributeName)
+                AfterAttributeName(
+                    currentTagToken = currentTagToken,
+                    currentAttributeName = currentAttributeName
+                )
             }
 
             CharCodes.Equals.code -> consumeNextChar {
@@ -60,11 +64,4 @@ internal class AttributeName(
     }
 
     private fun String.append(char: Char) = this + char
-}
-
-internal fun <K, V> MutableMap<K, V>.updateKey(oldKey: K, newKey: K) {
-    this[oldKey]?.let { value ->
-        this.remove(oldKey)
-        this[newKey] = value
-    }
 }

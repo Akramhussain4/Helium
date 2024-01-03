@@ -14,19 +14,32 @@ internal class BeforeAttributeName(private val currentTagToken: Token) : Tokeniz
 
             CharCodes.Solidus.code,
             CharCodes.GreaterThan.code -> reconsumeCurrentChar {
-                AfterAttributeName(currentTagToken, "")
+                AfterAttributeName(
+                    currentTagToken = currentTagToken,
+                    currentAttributeName = ""
+                )
             }
 
             CharCodes.Equals.code -> {
                 // TODO Implement parse error
                 val attributeName = codePoint.toChar().toString()
                 updateAttribute(attributeName)
-                consumeNextChar { AttributeName(currentTagToken, attributeName) }
+                consumeNextChar {
+                    AttributeName(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = attributeName
+                    )
+                }
             }
 
             else -> {
                 updateAttribute("")
-                reconsumeCurrentChar { AttributeName(currentTagToken, "") }
+                reconsumeCurrentChar {
+                    AttributeName(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = ""
+                    )
+                }
             }
         }
     }

@@ -25,8 +25,8 @@ internal class AttributeValueSingleQuoted(
 
                         consumeNextChar {
                             AttributeValueDoubleQuoted(
-                                updatedToken,
-                                currentAttributeName
+                                currentTagToken = updatedToken,
+                                currentAttributeName = currentAttributeName
                             )
                         }
                     }
