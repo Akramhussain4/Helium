@@ -129,4 +129,25 @@ class TokenizerTest {
             tokenizer.emittedTokens
         )
     }
+
+    @Test
+    fun `test char ref attribute value else case`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p class="This is a &[ test"></p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(
+                    name = "p",
+                    attributes = mutableMapOf(
+                        "class" to "This is a &[ test",
+                    )
+                ),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
 }
