@@ -5,8 +5,8 @@ import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 
 internal class AttributeValueUnquoted(
-    private val currentTagToken: Token,
-    private val currentAttributeName: String
+    val currentTagToken: Token,
+    val currentAttributeName: String
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when (codePoint) {
