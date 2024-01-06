@@ -27,6 +27,7 @@ internal enum class CharCodes(val code: Int) {
     UpperZ(0x5a), // "Z"
     LowerZ(0x7a), // "z"
     LowerX(0x78), // "x"
+    UpperX(0x58), // "X"
     GraveAccent(0x60), // "`"
     OpeningSquareBracket(0x5b), // "["
 }
