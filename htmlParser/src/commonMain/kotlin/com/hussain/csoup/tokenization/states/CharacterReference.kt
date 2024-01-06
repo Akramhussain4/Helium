@@ -25,7 +25,7 @@ internal class CharacterReference(
 
             CharCodes.NumberSign.code -> {
                 tempBuffer.append(codePoint.toChar())
-                reconsumeCurrentChar { NumericCharacterReference }
+                reconsumeCurrentChar { NumericCharacterReference(returnState, tempBuffer) }
             }
 
             else -> {

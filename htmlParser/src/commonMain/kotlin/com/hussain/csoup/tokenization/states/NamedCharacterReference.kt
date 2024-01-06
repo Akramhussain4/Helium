@@ -5,6 +5,9 @@ import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
 
+/**
+ * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
+ */
 internal class NamedCharacterReference(
     private val returnState: TokenizationState,
     private val tempBuffer: StringBuilder
@@ -12,6 +15,7 @@ internal class NamedCharacterReference(
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         tempBuffer.append(codePoint.toChar())
+        // TODO("Handle edge cases")
         when (codePoint) {
             in CharCodes.Zero.code..CharCodes.Nine.code,
             in CharCodes.UpperA.code..CharCodes.UpperZ.code,
