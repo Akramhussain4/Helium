@@ -20,7 +20,7 @@ internal class CharacterReference(
             in CharCodes.Zero.code..CharCodes.Nine.code,
             in CharCodes.UpperA.code..CharCodes.UpperZ.code,
             in CharCodes.LowerA.code..CharCodes.LowerZ.code -> reconsumeCurrentChar {
-                NamedCharacterReference
+                NamedCharacterReference(returnState, tempBuffer)
             }
 
             CharCodes.NumberSign.code -> {

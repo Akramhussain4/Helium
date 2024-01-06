@@ -31,22 +31,12 @@ internal class AttributeValueUnquoted(
             CharCodes.GraveAccent.code -> {
                 // TODO Implement parse error
                 updateAttributeValue(codePoint)
-                consumeNextChar {
-                    AttributeValueDoubleQuoted(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = currentAttributeName
-                    )
-                }
+                consumeNextChar { this }
             }
 
             else -> {
                 updateAttributeValue(codePoint)
-                consumeNextChar {
-                    AttributeValueDoubleQuoted(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = currentAttributeName
-                    )
-                }
+                consumeNextChar { this }
             }
         }
     }
