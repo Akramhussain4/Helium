@@ -14,7 +14,13 @@ internal class NumericCharacterReference(
         return when (codePoint) {
             in CharCodes.LowerX.code..CharCodes.UpperX.code -> {
                 tempBuffer.append(codePoint.toChar())
-                consumeNextChar { HexadecimalCharacterReferenceStart(returnState, tempBuffer) }
+                consumeNextChar {
+                    HexadecimalCharacterReferenceStart(
+                        returnState = returnState,
+                        tempBuffer = tempBuffer,
+                        charRefCode = charRefCode
+                    )
+                }
             }
 
             else -> {
