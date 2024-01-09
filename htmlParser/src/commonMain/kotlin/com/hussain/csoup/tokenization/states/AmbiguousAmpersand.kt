@@ -3,15 +3,14 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.isAsciiAlphaNumeric
 
 internal class AmbiguousAmpersand(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            in CharCodes.UpperA.code..CharCodes.UpperZ.code,
-            in CharCodes.LowerA.code..CharCodes.LowerZ.code,
-            in CharCodes.Zero.code..CharCodes.Nine.code -> {
+        return when {
+            codePoint.isAsciiAlphaNumeric() -> {
                 when (returnState) {
                     is AttributeValueDoubleQuoted -> {
                         val currentToken = returnState.currentTagToken
@@ -39,7 +38,7 @@ internal class AmbiguousAmpersand(
                 consumeNextChar { returnState }
             }
 
-            CharCodes.SemiColon.code -> {
+            codePoint == CharCodes.SemiColon.code -> {
                 // TODO Implement parse error
                 reconsumeCurrentChar { returnState }
             }

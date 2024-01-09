@@ -45,13 +45,13 @@ internal class HexadecimalCharacterReference(
 
             CharCodes.SemiColon.code -> {
                 consumeNextChar {
-                    NumericCharacterReferenceEnd()
+                    NumericCharacterReferenceEnd(charRefCode)
                 }
             }
 
             else -> {
                 // TODO Implement parse error
-                reconsumeCurrentChar { NumericCharacterReferenceEnd() }
+                reconsumeCurrentChar { NumericCharacterReferenceEnd(charRefCode) }
             }
         }
     }
