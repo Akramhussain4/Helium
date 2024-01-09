@@ -7,11 +7,12 @@ import com.hussain.csoup.tokenization.states.TokenizationState
 internal class Tokenizer() {
 
     val emittedTokens: MutableList<Token> = mutableListOf()
+    private var currentPosition = 0
+    private var htmlBuffer: String = ""
 
     fun tokenize(html: String) {
         var currentState: TokenizationState = Data
-        var currentPosition = 0
-
+        this.htmlBuffer = html
         while (currentPosition < html.length) {
             val codePoint = html[currentPosition].code
             val (nextState, action) = currentState.consume(codePoint, this)
@@ -26,5 +27,9 @@ internal class Tokenizer() {
 
     fun emitToken(token: Token) {
         emittedTokens.add(token)
+    }
+
+    fun peekNextChar(): Char {
+        return htmlBuffer[currentPosition + 1]
     }
 }
