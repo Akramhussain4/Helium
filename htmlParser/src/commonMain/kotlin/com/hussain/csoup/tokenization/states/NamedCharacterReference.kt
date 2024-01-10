@@ -30,7 +30,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            tempBuffer.get(0)
                         )
                         return consumeNextChar { returnState }
                     }
@@ -43,7 +42,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            codePoint.toChar()
                         )
                         return consumeNextChar { returnState }
                     }
@@ -56,7 +54,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            codePoint.toChar()
                         )
                         return consumeNextChar { returnState }
                     }
@@ -75,7 +72,6 @@ internal class NamedCharacterReference(
                                 updateAttributeValue(
                                     currentToken,
                                     attributeName,
-                                    codePoint.toChar()
                                 )
                             }
 
@@ -85,7 +81,6 @@ internal class NamedCharacterReference(
                                 updateAttributeValue(
                                     currentToken,
                                     attributeName,
-                                    codePoint.toChar()
                                 )
                             }
 
@@ -95,12 +90,12 @@ internal class NamedCharacterReference(
                                 updateAttributeValue(
                                     currentToken,
                                     attributeName,
-                                    codePoint.toChar()
+
                                 )
                             }
 
                             else -> {
-                                tokenizer.emitToken(Token.Character(tempBuffer.get(0)))
+                                tokenizer.emitToken(Token.Character(codePoint.toChar()))
                             }
                         }
                         consumeNextChar { returnState }
@@ -116,7 +111,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            codePoint.toChar()
                         )
                     }
 
@@ -126,7 +120,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            codePoint.toChar()
                         )
                     }
 
@@ -136,7 +129,6 @@ internal class NamedCharacterReference(
                         updateAttributeValue(
                             currentToken,
                             attributeName,
-                            codePoint.toChar()
                         )
                     }
 
@@ -158,12 +150,11 @@ internal class NamedCharacterReference(
     private fun updateAttributeValue(
         currentToken: Token,
         attributeName: String,
-        replacement: Char?
     ) {
         when (currentToken) {
             is Token.StartTag -> {
                 val currentValue = currentToken.attributes.getValue(attributeName)
-                currentToken.attributes[attributeName] = currentValue + replacement
+                currentToken.attributes[attributeName] = currentValue + tempBuffer.toString()
             }
 
             else -> throw IllegalStateException("Expected a StartTag token, got $currentToken")
