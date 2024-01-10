@@ -24,7 +24,13 @@ internal class NumericCharacterReference(
             }
 
             else -> {
-                reconsumeCurrentChar { DecimalCharacterReferenceStart(returnState, tempBuffer) }
+                reconsumeCurrentChar {
+                    DecimalCharacterReferenceStart(
+                        returnState = returnState,
+                        tempBuffer = tempBuffer,
+                        charRefCode = charRefCode
+                    )
+                }
             }
         }
     }
