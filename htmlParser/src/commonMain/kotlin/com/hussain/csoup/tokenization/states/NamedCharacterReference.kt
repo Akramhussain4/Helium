@@ -16,141 +16,70 @@ internal class NamedCharacterReference(
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         tempBuffer.append(codePoint.toChar())
-        val namedChar = NamedChars[tempBuffer.toString()]
 
-        when {
-            // If there is a match
-            NamedChars.containsKey(tempBuffer.toString()) -> {
-                when {
-                    returnState is AttributeValueDoubleQuoted &&
-                            tempBuffer.last().code != CharCodes.SemiColon.code &&
-                            (tokenizer.peekNextChar().code == CharCodes.Equals.code || codePoint.isAsciiAlphaNumeric()) -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                        return consumeNextChar { returnState }
-                    }
+        val matches = NamedChars.keys.filter { it.startsWith(tempBuffer.toString()) }
 
-                    returnState is AttributeValueSingleQuoted &&
-                            tempBuffer.last().code != CharCodes.SemiColon.code &&
-                            (tokenizer.peekNextChar().code == CharCodes.Equals.code || codePoint.isAsciiAlphaNumeric()) -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                        return consumeNextChar { returnState }
-                    }
-
-                    returnState is AttributeValueUnquoted &&
-                            tempBuffer.last().code != CharCodes.SemiColon.code &&
-                            (tokenizer.peekNextChar().code == CharCodes.Equals.code || codePoint.isAsciiAlphaNumeric()) -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                        return consumeNextChar { returnState }
-                    }
-
-                    // Otherwise:
-                    else -> {
-                        if (tempBuffer.last().code != CharCodes.SemiColon.code) {
-                            // TODO Implement parse error
-                        }
-                        tempBuffer.clear()
-                        tempBuffer.append(namedChar?.get(0))
-                        when (returnState) {
-                            is AttributeValueDoubleQuoted -> {
-                                val currentToken = returnState.currentTagToken
-                                val attributeName = returnState.currentAttributeName
-                                updateAttributeValue(
-                                    currentToken,
-                                    attributeName,
-                                )
-                            }
-
-                            is AttributeValueSingleQuoted -> {
-                                val currentToken = returnState.currentTagToken
-                                val attributeName = returnState.currentAttributeName
-                                updateAttributeValue(
-                                    currentToken,
-                                    attributeName,
-                                )
-                            }
-
-                            is AttributeValueUnquoted -> {
-                                val currentToken = returnState.currentTagToken
-                                val attributeName = returnState.currentAttributeName
-                                updateAttributeValue(
-                                    currentToken,
-                                    attributeName,
-
-                                )
-                            }
-
-                            else -> {
-                                tokenizer.emitToken(Token.Character(codePoint.toChar()))
-                            }
-                        }
-                        consumeNextChar { returnState }
-                    }
-                }
-            }
-            // Otherwise
-            else -> {
-                when (returnState) {
-                    is AttributeValueDoubleQuoted -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                    }
-
-                    is AttributeValueSingleQuoted -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                    }
-
-                    is AttributeValueUnquoted -> {
-                        val currentToken = returnState.currentTagToken
-                        val attributeName = returnState.currentAttributeName
-                        updateAttributeValue(
-                            currentToken,
-                            attributeName,
-                        )
-                    }
-
-                    else -> {
-                        tokenizer.emitToken(
-                            Token.Character(
-                                codePoint.toChar()
-                            )
-                        )
-                    }
-                }
+        return when {
+            matches.isEmpty() -> {
+                flushCodePoints(tokenizer)
                 consumeNextChar { AmbiguousAmpersand(returnState) }
             }
 
+            matches.size == 1 && matches.contains(tempBuffer.toString()) -> {
+                val nextChar = tokenizer.peekNextChar().code
+                if (
+                    (returnState is AttributeValueDoubleQuoted ||
+                            returnState is AttributeValueSingleQuoted ||
+                            returnState is AttributeValueUnquoted) &&
+                    tempBuffer.last().code != CharCodes.SemiColon.code
+                    && (nextChar == CharCodes.Equals.code || nextChar.isAsciiAlphaNumeric())
+                ) {
+                    flushCodePoints(tokenizer)
+                    return consumeNextChar { returnState }
+                } else {
+                    if (tempBuffer.last().code != CharCodes.SemiColon.code) {
+                        // TODO Implement parse error
+                    }
+                    tempBuffer.clear()
+                    tempBuffer.append(NamedChars[matches.first()])
+                    flushCodePoints(tokenizer)
+                    return consumeNextChar { returnState }
+                }
+            }
+
+            else -> consumeNextChar { this }
         }
-        return consumeNextChar { this }
     }
 
-    private fun updateAttributeValue(
-        currentToken: Token,
-        attributeName: String,
-    ) {
+
+    private fun flushCodePoints(tokenizer: Tokenizer) {
+        when (returnState) {
+            is AttributeValueDoubleQuoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
+            }
+
+            is AttributeValueSingleQuoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
+            }
+
+            is AttributeValueUnquoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
+            }
+
+            else -> {
+                val token = Token.Character(tempBuffer[0])
+                tokenizer.emitToken(token)
+            }
+        }
+    }
+
+    private fun updateAttributeValue(currentToken: Token, attributeName: String) {
         when (currentToken) {
             is Token.StartTag -> {
                 val currentValue = currentToken.attributes.getValue(attributeName)
