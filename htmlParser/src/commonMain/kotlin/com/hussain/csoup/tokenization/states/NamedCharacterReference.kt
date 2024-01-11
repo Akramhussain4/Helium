@@ -51,7 +51,6 @@ internal class NamedCharacterReference(
         }
     }
 
-
     private fun flushCodePoints(tokenizer: Tokenizer) {
         when (returnState) {
             is AttributeValueDoubleQuoted -> {

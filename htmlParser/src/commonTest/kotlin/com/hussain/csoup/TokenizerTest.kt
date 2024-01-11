@@ -155,19 +155,31 @@ class TokenizerTest {
     fun `named char ref test`() {
         val tokenizer = Tokenizer()
         val html = """
-            <p>&amp; &yuml; &uuml; &apos;</p>
+            <p>I'm &notit; I tell you</p>
         """.trimIndent()
         tokenizer.tokenize(html)
-        assertEquals(
+        assertEquals<List<Token>>(
             listOf(
                 Token.StartTag(name = "p"),
-                Token.Character(data = '&'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'ÿ'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'ü'),
-                Token.Character(data = ' '),
+                Token.Character(data = 'I'),
                 Token.Character(data = '\''),
+                Token.Character(data = 'm'),
+                Token.Character(data = ' '),
+                Token.Character(data = '¬'),
+                Token.Character(data = 'i'),
+                Token.Character(data = 't'),
+                Token.Character(data = ';'),
+                Token.Character(data = ' '),
+                Token.Character(data = 'I'),
+                Token.Character(data = ' '),
+                Token.Character(data = 't'),
+                Token.Character(data = 'e'),
+                Token.Character(data = 'l'),
+                Token.Character(data = 'l'),
+                Token.Character(data = ' '),
+                Token.Character(data = 'y'),
+                Token.Character(data = 'o'),
+                Token.Character(data = 'u'),
                 Token.EndTag(name = "p")
             ),
             tokenizer.emittedTokens
