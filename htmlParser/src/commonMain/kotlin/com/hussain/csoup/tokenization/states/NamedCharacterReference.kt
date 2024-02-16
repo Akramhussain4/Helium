@@ -40,8 +40,14 @@ internal class NamedCharacterReference(
                     if (tempBuffer.last().code != CharCodes.SemiColon.code) {
                         // TODO Implement parse error
                     }
-                    tempBuffer.clear()
-                    tempBuffer.append(NamedChars[matches.first()])
+                    val referenceName = NamedChars[matches.first()] ?: error("Unexpected reference name")
+                    if (returnState !is AttributeValueUnquoted) {
+                        tempBuffer.clear()
+                        tempBuffer.append(referenceName)
+                    } else {
+                        tempBuffer.clear()
+                        tempBuffer.append(referenceName)
+                    }
                     flushCodePoints(tokenizer)
                     return consumeNextChar { returnState }
                 }
