@@ -152,7 +152,7 @@ class TokenizerTest {
     }
 
     @Test
-    fun `named char ref test`() {
+    fun `test ∉ char ref`() {
         val tokenizer = Tokenizer()
         val html = """
             <p>I'm &notin; I tell</p>
@@ -180,7 +180,7 @@ class TokenizerTest {
     }
 
     @Test
-    fun `test char ref attribute value`() {
+    fun `test ¬it char ref`() {
         val tokenizer = Tokenizer()
         val html1 = """
             <p>I'm &notit; I tell</p>
@@ -211,7 +211,7 @@ class TokenizerTest {
     }
 
     @Test
-    fun `test char ref string value`() {
+    fun `test nbsp char ref in string`() {
         val tokenizer = Tokenizer()
         val html1 = """
                 &nbsp;&nbsp;&nbsp;

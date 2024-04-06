@@ -6,7 +6,6 @@ import com.hussain.csoup.util.isAsciiDigit
 
 internal class DecimalCharacterReference(
     private val returnState: TokenizationState,
-    private val tempBuffer: StringBuilder,
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         if (codePoint.isAsciiDigit()) {
@@ -16,20 +15,14 @@ internal class DecimalCharacterReference(
         return when {
             codePoint == CharCodes.SemiColon.code -> {
                 consumeNextChar {
-                    NumericCharacterReferenceEnd(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer,
-                    )
+                    NumericCharacterReferenceEnd(returnState = returnState)
                 }
             }
 
             else -> {
                 // TODO Implement parse error
                 reconsumeCurrentChar {
-                    NumericCharacterReferenceEnd(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer,
-                    )
+                    NumericCharacterReferenceEnd(returnState = returnState)
                 }
             }
         }

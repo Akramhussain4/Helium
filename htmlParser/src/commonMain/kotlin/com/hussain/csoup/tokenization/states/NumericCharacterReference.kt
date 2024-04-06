@@ -4,8 +4,7 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
 
 internal class NumericCharacterReference(
-    private val returnState: TokenizationState,
-    private val tempBuffer: StringBuilder
+    private val returnState: TokenizationState
 ) : TokenizationState() {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
@@ -13,21 +12,15 @@ internal class NumericCharacterReference(
         return when (codePoint) {
             CharCodes.LowerX.code,
             CharCodes.UpperX.code -> {
-                tempBuffer.append(codePoint.toChar())
+                tokenizer.tempBuffer.append(codePoint.toChar())
                 consumeNextChar {
-                    HexadecimalCharacterReferenceStart(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer,
-                    )
+                    HexadecimalCharacterReferenceStart(returnState = returnState)
                 }
             }
 
             else -> {
                 reconsumeCurrentChar {
-                    DecimalCharacterReferenceStart(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer,
-                    )
+                    DecimalCharacterReferenceStart(returnState = returnState)
                 }
             }
         }

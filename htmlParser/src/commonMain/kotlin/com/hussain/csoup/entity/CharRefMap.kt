@@ -4,8 +4,7 @@ package com.hussain.csoup.entity
  * A map from entity name to character value.
  * https://html.spec.whatwg.org/multipage/named#named-character-references
  */
-
-internal val NamedChars: Map<String, String> by lazy {
+internal val NamedChars by lazy {
     mapOf(
         "&AElig" to "Æ",
         "&AElig;" to "Æ",

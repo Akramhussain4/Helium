@@ -1,6 +1,5 @@
 package com.hussain.csoup.util
 
-
 internal fun Int.isAsciiDigit() = this in CharCodes.Zero.code..CharCodes.Nine.code
 
 internal fun Int.isAsciiUpperHexDigit() = this in CharCodes.UpperA.code..CharCodes.UpperF.code
