@@ -12,7 +12,10 @@ internal class AttributeValueSingleQuoted(
         return when (codePoint) {
             CharCodes.Apostrophe.code -> consumeNextChar { AfterAttributeValueQuoted(currentTagToken) }
 
-            CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
+            CharCodes.Ampersand.code -> {
+                val returnState = AttributeValueSingleQuoted(currentTagToken, currentAttributeName)
+                consumeNextChar { CharacterReference(returnState) }
+            }
 
             else -> {
                 when (currentTagToken) {
@@ -22,7 +25,7 @@ internal class AttributeValueSingleQuoted(
                             currentValue + codePoint.toChar()
 
                         consumeNextChar {
-                            AttributeValueDoubleQuoted(
+                            AttributeValueSingleQuoted(
                                 currentTagToken = currentTagToken,
                                 currentAttributeName = currentAttributeName
                             )
