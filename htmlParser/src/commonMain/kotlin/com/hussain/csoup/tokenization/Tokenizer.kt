@@ -5,6 +5,7 @@ import com.hussain.csoup.tokenization.states.Data
 import com.hussain.csoup.tokenization.states.TokenizationState
 
 internal class Tokenizer {
+    var charRefCode = 0
 
     val emittedTokens: MutableList<Token> = mutableListOf()
     private var currentPosition = 0

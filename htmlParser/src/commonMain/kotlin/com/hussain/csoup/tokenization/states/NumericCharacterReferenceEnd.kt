@@ -1,41 +1,82 @@
 package com.hussain.csoup.tokenization.states
 
+import com.hussain.csoup.entity.NumCharRef
+import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.util.isNonCharacter
+import com.hussain.csoup.util.isSurrogate
 
-internal class NumericCharacterReferenceEnd(private val charRefCode: Int) : TokenizationState() {
+internal class NumericCharacterReferenceEnd(
+    private val returnState: TokenizationState,
+    private val tempBuffer: StringBuilder,
+) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+        val number = tokenizer.charRefCode
         when {
-            charRefCode == 0x00 -> {
+            number == 0x00 -> {
                 // TODO Implement parse error
-                val newCharRefCode = 0xFFFD
+                tokenizer.charRefCode = 0xFFFD
             }
 
-            charRefCode > 0x10FFFF -> {
+            number > 0x10FFFF -> {
                 // TODO Implement parse error
-                val newCharRefCode = 0xFFFD
+                tokenizer.charRefCode = 0xFFFD
             }
 
-            charRefCode in 0xD800..0xDBFF ||
-                    charRefCode in 0xDC00..0xDFFF -> {
+            number.isSurrogate() -> {
                 // TODO Implement parse error
-                val newCharRefCode = 0xFFFD
+                tokenizer.charRefCode = 0xFFFD
             }
 
-            // TODO Add more cases
-            charRefCode in 0xFDD0..0xFDEF -> {
+            number.isNonCharacter() -> {
                 // TODO Implement parse error
-                val newCharRefCode = 0xFFFD
+            }
+        }
+
+        if (number == 0x0D || (number.toChar().isISOControl() && !number.toChar().isWhitespace())) {
+            // TODO Implement parse error
+            if (NumCharRef.containsKey(number)) {
+                tokenizer.charRefCode = NumCharRef[number]!!
+            }
+        }
+
+        tempBuffer.clear()
+        tempBuffer.append(tokenizer.charRefCode.toChar())
+        when (returnState) {
+            is AttributeValueDoubleQuoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
             }
 
-            // TODO Add more cases
-            charRefCode == 0x0D -> {
-                val newCharRefCode = 0x000D
+            is AttributeValueSingleQuoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
+            }
+
+            is AttributeValueUnquoted -> {
+                val currentToken = returnState.currentTagToken
+                val attributeName = returnState.currentAttributeName
+                updateAttributeValue(currentToken, attributeName)
             }
 
             else -> {
-                val newCharRefCode = charRefCode
+                val token = Token.Character(codePoint.toChar())
+                tokenizer.emitToken(token)
             }
         }
-        TODO()
+        return consumeNextChar { returnState }
+    }
+
+    private fun updateAttributeValue(currentToken: Token, attributeName: String) {
+        when (currentToken) {
+            is Token.StartTag -> {
+                val currentValue = currentToken.attributes.getValue(attributeName)
+                currentToken.attributes[attributeName] = currentValue + tempBuffer.toString()
+            }
+
+            else -> throw IllegalStateException("Expected a StartTag token, got $currentToken")
+        }
     }
 }

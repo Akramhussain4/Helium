@@ -9,52 +9,43 @@ import com.hussain.csoup.util.isAsciiUpperHexDigit
 internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
     private val tempBuffer: StringBuilder,
-    private val charRefCode: Int
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when {
+        when {
             codePoint.isAsciiDigit() -> {
-                val newCharRefCode = (charRefCode * 16) + (codePoint - CharCodes.Zero.code)
-                consumeNextChar {
-                    HexadecimalCharacterReference(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer.append(codePoint.toChar()),
-                        charRefCode = newCharRefCode
-                    )
-                }
+                tokenizer.charRefCode *= 16
+                tokenizer.charRefCode += codePoint - CharCodes.Zero.code
             }
 
             codePoint.isAsciiUpperHexDigit() -> {
-                val newCharRefCode = (charRefCode * 16) + (codePoint - 0x0037)
-                consumeNextChar {
-                    HexadecimalCharacterReference(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer.append(codePoint.toChar()),
-                        charRefCode = newCharRefCode
-                    )
-                }
+                tokenizer.charRefCode *= 16
+                tokenizer.charRefCode += codePoint - 0x0037
             }
 
             codePoint.isAsciiLowerHexDigit() -> {
-                val newCharRefCode = (charRefCode * 16) + (codePoint - 0x0057)
-                consumeNextChar {
-                    HexadecimalCharacterReference(
-                        returnState = returnState,
-                        tempBuffer = tempBuffer.append(codePoint.toChar()),
-                        charRefCode = newCharRefCode
-                    )
-                }
+                tokenizer.charRefCode *= 16
+                tokenizer.charRefCode += codePoint - 0x0057
             }
+        }
 
+        return when {
             codePoint == CharCodes.SemiColon.code -> {
                 consumeNextChar {
-                    NumericCharacterReferenceEnd(charRefCode)
+                    NumericCharacterReferenceEnd(
+                        returnState = returnState,
+                        tempBuffer = tempBuffer,
+                    )
                 }
             }
 
             else -> {
                 // TODO Implement parse error
-                reconsumeCurrentChar { NumericCharacterReferenceEnd(charRefCode) }
+                reconsumeCurrentChar {
+                    NumericCharacterReferenceEnd(
+                        returnState = returnState,
+                        tempBuffer = tempBuffer,
+                    )
+                }
             }
         }
     }

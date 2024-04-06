@@ -209,4 +209,38 @@ class TokenizerTest {
             tokenizer.emittedTokens
         )
     }
+
+    @Test
+    fun `test char ref string value`() {
+        val tokenizer = Tokenizer()
+        val html1 = """
+                &nbsp;&nbsp;&nbsp;
+        """.trimIndent()
+        tokenizer.tokenize(html1)
+        assertEquals(
+            listOf<Token>(
+                Token.Character(data = ' '),
+                Token.Character(data = ' '),
+                Token.Character(data = ' '),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `numeric entity test`(){
+        val tokenizer = Tokenizer()
+        val html = """
+            <p>&#8230;</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "p"),
+                Token.Character(data = '…'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
 }
