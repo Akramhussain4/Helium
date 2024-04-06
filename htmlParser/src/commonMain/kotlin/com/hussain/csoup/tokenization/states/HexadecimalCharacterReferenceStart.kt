@@ -2,13 +2,11 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.util.isAsciiHexDigit
 
 internal class HexadecimalCharacterReferenceStart(
     private val returnState: TokenizationState,
     private val tempBuffer: StringBuilder,
-    private val charRefCode: Int
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
@@ -17,7 +15,6 @@ internal class HexadecimalCharacterReferenceStart(
                     HexadecimalCharacterReference(
                         returnState = returnState,
                         tempBuffer = tempBuffer,
-                        charRefCode = charRefCode
                     )
                 }
             }
