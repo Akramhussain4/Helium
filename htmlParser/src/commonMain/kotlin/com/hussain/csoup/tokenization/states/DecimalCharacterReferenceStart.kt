@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.isAsciiDigit
 
 internal class DecimalCharacterReferenceStart(
     private val returnState: TokenizationState,
@@ -10,8 +11,8 @@ internal class DecimalCharacterReferenceStart(
     private val charRefCode: Int
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            in CharCodes.Zero.code..CharCodes.Nine.code -> {
+        return when {
+            codePoint.isAsciiDigit() -> {
                 tempBuffer.append(codePoint.toChar())
                 consumeNextChar {
                     DecimalCharacterReference(

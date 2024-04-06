@@ -2,6 +2,9 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.isAsciiDigit
+import com.hussain.csoup.util.isAsciiLowerHexDigit
+import com.hussain.csoup.util.isAsciiUpperHexDigit
 
 internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
@@ -9,8 +12,8 @@ internal class HexadecimalCharacterReference(
     private val charRefCode: Int
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            in CharCodes.Zero.code..CharCodes.Nine.code -> {
+        return when {
+            codePoint.isAsciiDigit() -> {
                 val newCharRefCode = (charRefCode * 16) + (codePoint - CharCodes.Zero.code)
                 consumeNextChar {
                     HexadecimalCharacterReference(
@@ -21,7 +24,7 @@ internal class HexadecimalCharacterReference(
                 }
             }
 
-            in CharCodes.UpperA.code..CharCodes.UpperF.code -> {
+            codePoint.isAsciiUpperHexDigit() -> {
                 val newCharRefCode = (charRefCode * 16) + (codePoint - 0x0037)
                 consumeNextChar {
                     HexadecimalCharacterReference(
@@ -32,7 +35,7 @@ internal class HexadecimalCharacterReference(
                 }
             }
 
-            in CharCodes.LowerA.code..CharCodes.LowerF.code -> {
+            codePoint.isAsciiLowerHexDigit() -> {
                 val newCharRefCode = (charRefCode * 16) + (codePoint - 0x0057)
                 consumeNextChar {
                     HexadecimalCharacterReference(
@@ -43,7 +46,7 @@ internal class HexadecimalCharacterReference(
                 }
             }
 
-            CharCodes.SemiColon.code -> {
+            codePoint == CharCodes.SemiColon.code -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(charRefCode)
                 }
