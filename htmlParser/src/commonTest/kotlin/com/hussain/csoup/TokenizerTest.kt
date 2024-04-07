@@ -243,4 +243,21 @@ class TokenizerTest {
             tokenizer.emittedTokens
         )
     }
+
+    @Test
+    fun `test numeric entity with hex`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p>&#x7E;</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "p"),
+                Token.Character(data = '~'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
 }
