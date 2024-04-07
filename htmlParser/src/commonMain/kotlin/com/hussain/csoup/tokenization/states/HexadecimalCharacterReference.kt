@@ -10,24 +10,25 @@ internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        when {
+        return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.charRefCode *= 16
                 tokenizer.charRefCode += codePoint - CharCodes.Zero.code
+                consumeNextChar { this }
             }
 
             codePoint.isAsciiUpperHexDigit() -> {
                 tokenizer.charRefCode *= 16
                 tokenizer.charRefCode += codePoint - 0x0037
+                consumeNextChar { this }
             }
 
             codePoint.isAsciiLowerHexDigit() -> {
                 tokenizer.charRefCode *= 16
                 tokenizer.charRefCode += codePoint - 0x0057
+                consumeNextChar { this }
             }
-        }
 
-        return when {
             codePoint == CharCodes.SemiColon.code -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(returnState = returnState)

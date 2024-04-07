@@ -1,7 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.entity.NumCharRef
-import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.flushCodePoints
 import com.hussain.csoup.util.isNonCharacter
@@ -42,7 +41,7 @@ internal class NumericCharacterReferenceEnd(
 
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.append(tokenizer.charRefCode.toChar())
-        returnState.flushCodePoints(codePoint, tokenizer)
+        returnState.flushCodePoints(tokenizer)
         return consumeNextChar { returnState }
     }
 }

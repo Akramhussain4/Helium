@@ -27,7 +27,7 @@ internal class CharacterReference(
             }
 
             else -> {
-                returnState.flushCodePoints(codePoint, tokenizer)
+                returnState.flushCodePoints(tokenizer)
                 reconsumeCurrentChar { returnState }
             }
         }

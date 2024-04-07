@@ -8,11 +8,13 @@ internal class DecimalCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        if (codePoint.isAsciiDigit()) {
-            tokenizer.charRefCode *= 10
-            tokenizer.charRefCode += codePoint - 0x30
-        }
         return when {
+            codePoint.isAsciiDigit() -> {
+                tokenizer.charRefCode *= 10
+                tokenizer.charRefCode += codePoint - 0x30
+                consumeNextChar { this }
+            }
+
             codePoint == CharCodes.SemiColon.code -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(returnState = returnState)
