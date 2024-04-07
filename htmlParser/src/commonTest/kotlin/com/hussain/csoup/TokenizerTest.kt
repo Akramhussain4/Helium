@@ -11,7 +11,7 @@ class TokenizerTest {
     fun `test open close tags and chars`() {
         val tokenizer = Tokenizer()
         val html = """
-                    <p>hello</p>
+            <p>hello</p>
         """.trimIndent()
         tokenizer.tokenize(html)
         assertEquals(
@@ -55,6 +55,24 @@ class TokenizerTest {
     }
 
     @Test
+    fun `self closing start tag`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <br/>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf<Token>(
+                Token.StartTag(
+                    name = "br",
+                    selfClosing = true,
+                ),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
     fun `test attributes`() {
         val tokenizer = Tokenizer()
         val html = """
@@ -71,24 +89,6 @@ class TokenizerTest {
                 ),
                 Token.Character(data = 'a'),
                 Token.EndTag(name = "p")
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `self closing start tag`() {
-        val tokenizer = Tokenizer()
-        val html = """
-            <br/>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "br",
-                    selfClosing = true,
-                ),
             ),
             tokenizer.emittedTokens
         )
@@ -152,10 +152,122 @@ class TokenizerTest {
     }
 
     @Test
+    fun `test nbsp char ref in string`() {
+        val tokenizer = Tokenizer()
+        val html1 = """
+                &nbsp;&nbsp;&nbsp;
+        """.trimIndent()
+        tokenizer.tokenize(html1)
+        assertEquals(
+            listOf<Token>(
+                Token.Character(data = ' '),
+                Token.Character(data = ' '),
+                Token.Character(data = ' '),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `numeric entity with semicolon`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p>&#7937;</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "p"),
+                Token.Character(data = 'ἁ'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `numeric entity without semicolon`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p>&#9666</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "p"),
+                Token.Character(data = '◂'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `test hex entity with semicolon`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p>&#x7E;</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(name = "p"),
+                Token.Character(data = '~'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `numeric entity in attribute`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p class="&#x7E;">a</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(
+                    name = "p",
+                    attributes = mutableMapOf(
+                        "class" to "~",
+                    )
+                ),
+                Token.Character(data = 'a'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun `hex entity in attribute`() {
+        val tokenizer = Tokenizer()
+        val html = """
+            <p class="&#x40;">a</p>
+        """.trimIndent()
+        tokenizer.tokenize(html)
+        assertEquals(
+            listOf(
+                Token.StartTag(
+                    name = "p",
+                    attributes = mutableMapOf(
+                        "class" to "@",
+                    )
+                ),
+                Token.Character(data = 'a'),
+                Token.EndTag(name = "p")
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
     fun `test ∉ char ref`() {
         val tokenizer = Tokenizer()
         val html = """
-            <p>I'm &notin; I tell</p>
+            <p>I'm &notin; I tell you</p>
         """.trimIndent()
         tokenizer.tokenize(html)
         assertEquals(
@@ -173,6 +285,10 @@ class TokenizerTest {
                 Token.Character(data = 'e'),
                 Token.Character(data = 'l'),
                 Token.Character(data = 'l'),
+                Token.Character(data = ' '),
+                Token.Character(data = 'y'),
+                Token.Character(data = 'o'),
+                Token.Character(data = 'u'),
                 Token.EndTag(name = "p")
             ),
             tokenizer.emittedTokens
@@ -183,7 +299,7 @@ class TokenizerTest {
     fun `test ¬it char ref`() {
         val tokenizer = Tokenizer()
         val html1 = """
-            <p>I'm &notit; I tell</p>
+            <p>I'm &notit; I tell you</p>
         """.trimIndent()
         tokenizer.tokenize(html1)
         assertEquals(
@@ -204,6 +320,10 @@ class TokenizerTest {
                 Token.Character(data = 'e'),
                 Token.Character(data = 'l'),
                 Token.Character(data = 'l'),
+                Token.Character(data = ' '),
+                Token.Character(data = 'y'),
+                Token.Character(data = 'o'),
+                Token.Character(data = 'u'),
                 Token.EndTag(name = "p")
             ),
             tokenizer.emittedTokens
@@ -211,51 +331,15 @@ class TokenizerTest {
     }
 
     @Test
-    fun `test nbsp char ref in string`() {
+    fun `named char ref in string`(){
         val tokenizer = Tokenizer()
-        val html1 = """
-                &nbsp;&nbsp;&nbsp;
+        val html = """
+            &amp
         """.trimIndent()
-        tokenizer.tokenize(html1)
+        tokenizer.tokenize(html)
         assertEquals(
             listOf<Token>(
-                Token.Character(data = ' '),
-                Token.Character(data = ' '),
-                Token.Character(data = ' '),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `numeric entity test`() {
-        val tokenizer = Tokenizer()
-        val html = """
-            <p>&#2324;</p>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "p"),
-                Token.Character(data = 'औ'),
-                Token.EndTag(name = "p")
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `test numeric entity with hex`() {
-        val tokenizer = Tokenizer()
-        val html = """
-            <p>&#x7E;</p>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "p"),
-                Token.Character(data = '~'),
-                Token.EndTag(name = "p")
+                Token.Character(data = '&'),
             ),
             tokenizer.emittedTokens
         )
