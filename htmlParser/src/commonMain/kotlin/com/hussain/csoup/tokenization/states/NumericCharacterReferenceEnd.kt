@@ -42,6 +42,6 @@ internal class NumericCharacterReferenceEnd(
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.append(tokenizer.charRefCode.toChar())
         returnState.flushCodePoints(tokenizer)
-        return consumeNextChar { returnState }
+        return reconsumeCurrentChar { returnState }
     }
 }

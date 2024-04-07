@@ -3,8 +3,8 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.util.isAsciiDigit
-import com.hussain.csoup.util.isAsciiLowerHexDigit
-import com.hussain.csoup.util.isAsciiUpperHexDigit
+import com.hussain.csoup.util.isAsciiLowerAlpha
+import com.hussain.csoup.util.isAsciiUpperAlpha
 
 internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
@@ -17,13 +17,13 @@ internal class HexadecimalCharacterReference(
                 consumeNextChar { this }
             }
 
-            codePoint.isAsciiUpperHexDigit() -> {
+            codePoint.isAsciiUpperAlpha() -> {
                 tokenizer.charRefCode *= 16
                 tokenizer.charRefCode += codePoint - 0x0037
                 consumeNextChar { this }
             }
 
-            codePoint.isAsciiLowerHexDigit() -> {
+            codePoint.isAsciiLowerAlpha() -> {
                 tokenizer.charRefCode *= 16
                 tokenizer.charRefCode += codePoint - 0x0057
                 consumeNextChar { this }
