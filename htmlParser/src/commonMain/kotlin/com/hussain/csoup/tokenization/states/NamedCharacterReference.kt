@@ -21,7 +21,7 @@ internal class NamedCharacterReference(
 
         return when {
             matches.isEmpty() -> {
-                flushCodePoints(codePoint, tokenizer)
+                flushCodePoints(tokenizer)
                 consumeNextChar { AmbiguousAmpersand(returnState) }
             }
 
@@ -34,7 +34,7 @@ internal class NamedCharacterReference(
                     tokenizer.tempBuffer.last().code != CharCodes.SemiColon.code
                     && (nextChar == CharCodes.Equals.code || nextChar.isAsciiAlphaNumeric())
                 ) {
-                    flushCodePoints(codePoint, tokenizer)
+                    flushCodePoints(tokenizer)
                     return consumeNextChar { returnState }
                 } else {
                     if (tokenizer.tempBuffer.last().code != CharCodes.SemiColon.code) {
@@ -49,7 +49,7 @@ internal class NamedCharacterReference(
                         tokenizer.tempBuffer.clear()
                         tokenizer.tempBuffer.append(referenceName)
                     }
-                    flushCodePoints(codePoint, tokenizer)
+                    flushCodePoints(tokenizer)
                     return consumeNextChar { returnState }
                 }
             }

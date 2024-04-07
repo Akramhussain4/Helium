@@ -1,6 +1,5 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.flushCodePoints
 import com.hussain.csoup.util.isAsciiDigit
@@ -18,7 +17,7 @@ internal class DecimalCharacterReferenceStart(
 
             else -> {
                 // TODO: Implement parse error
-                returnState.flushCodePoints(codePoint, tokenizer)
+                returnState.flushCodePoints(tokenizer)
                 reconsumeCurrentChar { returnState }
             }
         }

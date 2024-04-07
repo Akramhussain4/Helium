@@ -228,16 +228,16 @@ class TokenizerTest {
     }
 
     @Test
-    fun `numeric entity test`(){
+    fun `numeric entity test`() {
         val tokenizer = Tokenizer()
         val html = """
-            <p>&#8230;</p>
+            <p>&#2324;</p>
         """.trimIndent()
         tokenizer.tokenize(html)
         assertEquals(
             listOf(
                 Token.StartTag(name = "p"),
-                Token.Character(data = '…'),
+                Token.Character(data = 'औ'),
                 Token.EndTag(name = "p")
             ),
             tokenizer.emittedTokens

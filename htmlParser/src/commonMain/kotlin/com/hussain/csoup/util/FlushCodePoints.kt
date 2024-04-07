@@ -7,29 +7,31 @@ import com.hussain.csoup.tokenization.states.AttributeValueSingleQuoted
 import com.hussain.csoup.tokenization.states.AttributeValueUnquoted
 import com.hussain.csoup.tokenization.states.TokenizationState
 
-internal fun TokenizationState.flushCodePoints(codePoint: Int, tokenizer: Tokenizer) {
-    when (this) {
-        is AttributeValueDoubleQuoted -> {
-            val currentToken = currentTagToken
-            val attributeName = currentAttributeName
-            currentToken.updateAttributeValue(attributeName, tokenizer)
-        }
+internal fun TokenizationState.flushCodePoints(tokenizer: Tokenizer) {
+    tokenizer.tempBuffer.forEach { char ->
+        when (this) {
+            is AttributeValueDoubleQuoted -> {
+                val currentToken = currentTagToken
+                val attributeName = currentAttributeName
+                currentToken.updateAttributeValue(attributeName, tokenizer)
+            }
 
-        is AttributeValueSingleQuoted -> {
-            val currentToken = currentTagToken
-            val attributeName = currentAttributeName
-            currentToken.updateAttributeValue(attributeName, tokenizer)
-        }
+            is AttributeValueSingleQuoted -> {
+                val currentToken = currentTagToken
+                val attributeName = currentAttributeName
+                currentToken.updateAttributeValue(attributeName, tokenizer)
+            }
 
-        is AttributeValueUnquoted -> {
-            val currentToken = currentTagToken
-            val attributeName = currentAttributeName
-            currentToken.updateAttributeValue(attributeName, tokenizer)
-        }
+            is AttributeValueUnquoted -> {
+                val currentToken = currentTagToken
+                val attributeName = currentAttributeName
+                currentToken.updateAttributeValue(attributeName, tokenizer)
+            }
 
-        else -> {
-            val token = Token.Character(codePoint.toChar())
-            tokenizer.emitToken(token)
+            else -> {
+                val token = Token.Character(char)
+                tokenizer.emitToken(token)
+            }
         }
     }
 }
