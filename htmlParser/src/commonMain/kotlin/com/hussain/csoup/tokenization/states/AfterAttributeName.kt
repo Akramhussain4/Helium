@@ -31,7 +31,7 @@ internal class AfterAttributeName(
 
             else -> {
                 val emptyAttribute = "" to ""
-                updateAttribute(emptyAttribute)
+                addEmptyAttribute(emptyAttribute)
                 reconsumeCurrentChar {
                     AttributeName(
                         currentTagToken = currentTagToken,
@@ -42,7 +42,7 @@ internal class AfterAttributeName(
         }
     }
 
-    private fun updateAttribute(newAttribute: Pair<String, String>) {
+    private fun addEmptyAttribute(newAttribute: Pair<String, String>) {
         when (currentTagToken) {
             is Token.StartTag -> {
                 currentTagToken.attributes.plus(newAttribute).toMutableMap()
