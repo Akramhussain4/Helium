@@ -6,7 +6,7 @@ import com.hussain.csoup.tokenization.states.TokenizationState
 
 internal class Tokenizer {
     var charRefCode = 0
-    var tempBuffer = StringBuilder()
+    val tempBuffer = StringBuilder()
     val emittedTokens: MutableList<Token> = mutableListOf()
 
     private var currentPosition = 0
