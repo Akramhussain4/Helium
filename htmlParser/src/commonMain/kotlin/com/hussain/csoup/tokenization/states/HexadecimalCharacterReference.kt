@@ -12,20 +12,20 @@ internal class HexadecimalCharacterReference(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
             codePoint.isAsciiDigit() -> {
-                tokenizer.charRefCode *= 16
-                tokenizer.charRefCode += codePoint - CharCodes.Zero.code
+                tokenizer.characterReferenceCode *= 16
+                tokenizer.characterReferenceCode += codePoint - CharCodes.Zero.code
                 consumeNextChar { this }
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                tokenizer.charRefCode *= 16
-                tokenizer.charRefCode += codePoint - 0x0037
+                tokenizer.characterReferenceCode *= 16
+                tokenizer.characterReferenceCode += codePoint - 0x0037
                 consumeNextChar { this }
             }
 
             codePoint.isAsciiLowerAlpha() -> {
-                tokenizer.charRefCode *= 16
-                tokenizer.charRefCode += codePoint - 0x0057
+                tokenizer.characterReferenceCode *= 16
+                tokenizer.characterReferenceCode += codePoint - 0x0057
                 consumeNextChar { this }
             }
 

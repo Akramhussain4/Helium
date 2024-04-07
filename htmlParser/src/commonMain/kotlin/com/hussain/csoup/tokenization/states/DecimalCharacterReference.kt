@@ -10,8 +10,8 @@ internal class DecimalCharacterReference(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
             codePoint.isAsciiDigit() -> {
-                tokenizer.charRefCode *= 10
-                tokenizer.charRefCode += codePoint - 0x30
+                tokenizer.characterReferenceCode *= 10
+                tokenizer.characterReferenceCode += codePoint - 0x30
                 consumeNextChar { this }
             }
 
