@@ -10,21 +10,21 @@ internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        val number = tokenizer.charRefCode
+        val number = tokenizer.characterReferenceCode
         when {
             number == 0x00 -> {
                 // TODO Implement parse error
-                tokenizer.charRefCode = 0xFFFD
+                tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number > 0x10FFFF -> {
                 // TODO Implement parse error
-                tokenizer.charRefCode = 0xFFFD
+                tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number.isSurrogate() -> {
                 // TODO Implement parse error
-                tokenizer.charRefCode = 0xFFFD
+                tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number.isNonCharacter() -> {
@@ -35,12 +35,12 @@ internal class NumericCharacterReferenceEnd(
         if (number == 0x0D || (number.toChar().isISOControl() && !number.toChar().isWhitespace())) {
             // TODO Implement parse error
             if (NumCharRef.containsKey(number)) {
-                tokenizer.charRefCode = NumCharRef[number]!!
+                tokenizer.characterReferenceCode = NumCharRef[number]!!
             }
         }
 
         tokenizer.tempBuffer.clear()
-        tokenizer.tempBuffer.append(tokenizer.charRefCode.toChar())
+        tokenizer.tempBuffer.append(tokenizer.characterReferenceCode.toChar())
         returnState.flushCodePoints(tokenizer)
         return reconsumeCurrentChar { returnState }
     }

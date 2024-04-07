@@ -5,7 +5,7 @@ import com.hussain.csoup.tokenization.states.Data
 import com.hussain.csoup.tokenization.states.TokenizationState
 
 internal class Tokenizer {
-    var charRefCode = 0
+    var characterReferenceCode = 0
     val tempBuffer = StringBuilder()
     val emittedTokens: MutableList<Token> = mutableListOf()
 

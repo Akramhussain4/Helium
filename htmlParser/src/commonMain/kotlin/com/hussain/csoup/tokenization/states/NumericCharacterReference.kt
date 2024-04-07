@@ -8,7 +8,7 @@ internal class NumericCharacterReference(
 ) : TokenizationState() {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        tokenizer.charRefCode = 0
+        tokenizer.characterReferenceCode = 0
         return when (codePoint) {
             CharCodes.LowerX.code,
             CharCodes.UpperX.code -> {
