@@ -27,3 +27,8 @@ internal fun Int.isScalarValue() = isSurrogate().not()
 internal fun Int.isNonCharacter() = this in 0xFDD0..0xFDEF
         || this and 0xFFFE == 0xFFFE
         || this and 0xFFFF == 0xFFFF
+
+internal fun Int.isWhiteSpace() = this == CharCodes.Space.code
+        || this == CharCodes.Tab.code
+        || this == CharCodes.LineFeed.code
+        || this == CharCodes.FormFeed.code
