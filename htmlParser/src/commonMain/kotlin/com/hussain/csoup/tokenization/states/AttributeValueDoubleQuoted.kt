@@ -14,7 +14,14 @@ internal class AttributeValueDoubleQuoted(
                 AfterAttributeValueQuoted(currentTagToken)
             }
 
-            CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
+            CharCodes.Ampersand.code -> consumeNextChar {
+                CharacterReference(
+                    returnState = AttributeValueDoubleQuoted(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = currentAttributeName
+                    )
+                )
+            }
 
             else -> {
                 when (currentTagToken) {

@@ -1,5 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
+import com.hussain.csoup.entity.NamedChars
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.util.flushCodePoints
@@ -16,9 +17,12 @@ internal class NamedCharacterReference(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         tokenizer.tempBuffer.append(codePoint.toChar())
 
-        val match = "" // TODO: Implement Iterator
+        val match = NamedChars.keys.firstOrNull { it.startsWith(tokenizer.tempBuffer) }
+        if (match.isNullOrEmpty().not()) {
+            return consumeNextChar { this }
+        }
 
-        if (match.isEmpty()) {
+        if (match.isNullOrEmpty()) {
             flushCodePoints(tokenizer)
             return consumeNextChar { AmbiguousAmpersand(returnState) }
         }
