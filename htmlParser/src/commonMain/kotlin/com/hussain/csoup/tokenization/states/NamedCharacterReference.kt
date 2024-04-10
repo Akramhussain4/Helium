@@ -3,9 +3,9 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.entity.NamedChars
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.CharCodes
-import com.hussain.csoup.util.flushCodePoints
+import com.hussain.csoup.tokenization.util.flushCodePoints
 import com.hussain.csoup.util.isAsciiAlphaNumeric
-import com.hussain.csoup.util.isAttributeState
+import com.hussain.csoup.tokenization.util.isAttributeState
 
 /**
  * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state

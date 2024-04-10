@@ -3,7 +3,10 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.updateKey
+import com.hussain.csoup.tokenization.util.IS
+import com.hussain.csoup.tokenization.util.updateKey
+import com.hussain.csoup.util.isAsciiUpperAlpha
+import com.hussain.csoup.util.isWhiteSpace
 
 internal class AttributeName(
     private val currentTagToken: Token,
@@ -11,27 +14,25 @@ internal class AttributeName(
 ) : TokenizationState() {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            CharCodes.Tab.code,
-            CharCodes.LineFeed.code,
-            CharCodes.FormFeed.code,
-            CharCodes.Space.code,
-            CharCodes.Solidus.code,
-            CharCodes.GreaterThan.code -> reconsumeCurrentChar {
+        return when {
+            codePoint.IS(
+                CharCodes.Solidus,
+                CharCodes.GreaterThan
+            ) || codePoint.isWhiteSpace() -> reconsumeCurrentChar {
                 AfterAttributeName(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            CharCodes.Equals.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Equals) -> consumeNextChar {
                 BeforeAttributeValue(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            in CharCodes.UpperA.code..CharCodes.UpperZ.code -> {
+            codePoint.isAsciiUpperAlpha() -> {
                 val attributeName = currentAttributeName + codePoint.toChar() + 0x0020
                 updateAttributeName(attributeName = attributeName)
                 consumeNextChar {
@@ -42,10 +43,12 @@ internal class AttributeName(
                 }
             }
 
-            CharCodes.QuotationMark.code,
-            CharCodes.Apostrophe.code,
-            CharCodes.LessThan.code -> {
-                // TODO Implement parse error
+            codePoint.IS(
+                CharCodes.QuestionMark,
+                CharCodes.Apostrophe,
+                CharCodes.LessThan
+            ) -> {
+                tokenizer.logParseError("unexpected-character-in-attribute-name")
                 val attributeName = currentAttributeName + codePoint.toChar()
                 updateAttributeName(attributeName = attributeName)
                 consumeNextChar {

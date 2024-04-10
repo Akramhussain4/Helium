@@ -2,9 +2,11 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.entity.NumCharRef
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.flushCodePoints
+import com.hussain.csoup.tokenization.util.flushCodePoints
+import com.hussain.csoup.util.isAsciiWhitespace
 import com.hussain.csoup.util.isNonCharacter
 import com.hussain.csoup.util.isSurrogate
+import com.hussain.csoup.util.isWhiteSpace
 
 internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
@@ -13,29 +15,29 @@ internal class NumericCharacterReferenceEnd(
         val number = tokenizer.characterReferenceCode
         when {
             number == 0x00 -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("null-character-reference")
                 tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number > 0x10FFFF -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("character-reference-outside-unicode-range")
                 tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number.isSurrogate() -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("surrogate-character-reference")
                 tokenizer.characterReferenceCode = 0xFFFD
             }
 
             number.isNonCharacter() -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("noncharacter-character-reference")
             }
         }
 
-        if (number == 0x0D || (number.toChar().isISOControl() && !number.toChar().isWhitespace())) {
-            // TODO Implement parse error
-            if (NumCharRef.containsKey(number)) {
-                tokenizer.characterReferenceCode = NumCharRef[number]!!
+        if (number == 0x0D || (number.toChar().isISOControl() && !number.isAsciiWhitespace())) {
+            tokenizer.logParseError("control-character-reference")
+            NumCharRef[number]?.let {
+                tokenizer.characterReferenceCode = it
             }
         }
 

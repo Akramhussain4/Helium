@@ -3,18 +3,19 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
 
 internal class AttributeValueDoubleQuoted(
     val currentTagToken: Token,
     val currentAttributeName: String
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            CharCodes.QuotationMark.code -> consumeNextChar {
+        return when {
+            codePoint.IS(CharCodes.QuotationMark) -> consumeNextChar {
                 AfterAttributeValueQuoted(currentTagToken)
             }
 
-            CharCodes.Ampersand.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Ampersand) -> consumeNextChar {
                 CharacterReference(
                     returnState = AttributeValueDoubleQuoted(
                         currentTagToken = currentTagToken,

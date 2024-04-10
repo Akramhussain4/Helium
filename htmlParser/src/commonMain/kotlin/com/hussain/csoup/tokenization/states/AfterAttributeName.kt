@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
 internal class AfterAttributeName(
@@ -13,25 +14,24 @@ internal class AfterAttributeName(
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { this }
 
-            codePoint == CharCodes.Solidus.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Solidus) -> consumeNextChar {
                 SelfClosingStartTag(currentTagToken)
             }
 
-            codePoint == CharCodes.Equals.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Equals) -> consumeNextChar {
                 BeforeAttributeValue(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            codePoint == CharCodes.GreaterThan.code -> {
+            codePoint.IS(CharCodes.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
 
             else -> {
-                val emptyAttribute = "" to ""
-                addEmptyAttribute(emptyAttribute)
+                addEmptyAttribute()
                 reconsumeCurrentChar {
                     AttributeName(
                         currentTagToken = currentTagToken,
@@ -42,10 +42,10 @@ internal class AfterAttributeName(
         }
     }
 
-    private fun addEmptyAttribute(newAttribute: Pair<String, String>) {
+    private fun addEmptyAttribute() {
         when (currentTagToken) {
             is Token.StartTag -> {
-                currentTagToken.attributes.plus(newAttribute).toMutableMap()
+                currentTagToken.attributes.plus("" to "")
             }
 
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")

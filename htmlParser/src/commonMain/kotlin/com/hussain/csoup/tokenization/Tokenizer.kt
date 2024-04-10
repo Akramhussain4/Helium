@@ -37,4 +37,8 @@ internal class Tokenizer {
         }
         return '\u0000'
     }
+
+    fun logParseError(error: String) {
+        println("‼️Parse error: $error at position: $currentPosition")
+    }
 }
