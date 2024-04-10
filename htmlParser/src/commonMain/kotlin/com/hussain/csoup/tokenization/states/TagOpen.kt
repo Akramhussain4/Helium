@@ -3,28 +3,30 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
+import com.hussain.csoup.util.isAsciiAlpha
 
 internal data object TagOpen : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            CharCodes.ExclamationMark.code -> consumeNextChar { MarkupDeclarationOpen }
-            CharCodes.Solidus.code -> consumeNextChar { EndTagOpen }
+        return when {
+            codePoint.IS(CharCodes.ExclamationMark) -> consumeNextChar { MarkupDeclarationOpen }
 
-            in CharCodes.UpperA.code..CharCodes.UpperZ.code,
-            in CharCodes.LowerA.code..CharCodes.LowerZ.code -> {
+            codePoint.IS(CharCodes.Solidus) -> consumeNextChar { EndTagOpen }
+
+            codePoint.isAsciiAlpha() -> {
                 val startTagToken = Token.StartTag(name = "")
                 reconsumeCurrentChar { TagName(startTagToken) }
             }
 
-            CharCodes.QuestionMark.code -> {
-                // TODO: Implement parse error
+            codePoint.IS(CharCodes.QuestionMark) -> {
+                tokenizer.logParseError("unexpected-question-mark-instead-of-tag-name")
                 val commentToken = Token.Comment(data = "")
                 reconsumeCurrentChar { BogusComment(commentToken) }
             }
 
             else -> {
-                // TODO: Implement parse error
-                val charToken = Token.Character(data = CharCodes.LessThan.code.toChar())
+                tokenizer.logParseError("invalid-first-character-of-tag-name")
+                val charToken = Token.Character(data = '<')
                 tokenizer.emitToken(charToken)
                 reconsumeCurrentChar { Data }
             }

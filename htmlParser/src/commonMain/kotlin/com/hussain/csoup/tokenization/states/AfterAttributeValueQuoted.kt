@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
 internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : TokenizationState() {
@@ -10,17 +11,17 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { BeforeAttributeName(currentTagToken) }
 
-            codePoint == CharCodes.Solidus.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Solidus) -> consumeNextChar {
                 SelfClosingStartTag(currentTagToken)
             }
 
-            codePoint == CharCodes.GreaterThan.code -> {
+            codePoint.IS(CharCodes.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
 
             else -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("missing-whitespace-between-attributes")
                 reconsumeCurrentChar { BeforeAttributeName(currentTagToken) }
             }
         }

@@ -3,33 +3,36 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
+import com.hussain.csoup.util.isWhiteSpace
 
 internal class AttributeValueUnquoted(
     val currentTagToken: Token,
     val currentAttributeName: String
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            CharCodes.Tab.code,
-            CharCodes.LineFeed.code,
-            CharCodes.FormFeed.code,
-            CharCodes.Space.code -> consumeNextChar {
+        return when {
+            codePoint.isWhiteSpace() -> consumeNextChar {
                 BeforeAttributeName(currentTagToken = currentTagToken)
             }
 
-            CharCodes.Ampersand.code -> consumeNextChar { CharacterReference(this) }
+            codePoint.IS(CharCodes.Ampersand) -> consumeNextChar {
+                CharacterReference(this)
+            }
 
-            CharCodes.GreaterThan.code -> {
+            codePoint.IS(CharCodes.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
 
-            CharCodes.QuotationMark.code,
-            CharCodes.Apostrophe.code,
-            CharCodes.LessThan.code,
-            CharCodes.Equals.code,
-            CharCodes.GraveAccent.code -> {
-                // TODO Implement parse error
+            codePoint.IS(
+                CharCodes.QuotationMark,
+                CharCodes.Apostrophe,
+                CharCodes.LessThan,
+                CharCodes.Equals,
+                CharCodes.GraveAccent
+            ) -> {
+                tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
                 updateAttributeValue(codePoint)
                 consumeNextChar { this }
             }

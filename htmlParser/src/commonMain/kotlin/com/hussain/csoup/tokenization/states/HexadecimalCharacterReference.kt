@@ -1,6 +1,7 @@
 package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.util.isAsciiDigit
 import com.hussain.csoup.util.isAsciiLowerHexDigit
@@ -29,14 +30,14 @@ internal class HexadecimalCharacterReference(
                 consumeNextChar { this }
             }
 
-            codePoint == CharCodes.SemiColon.code -> {
+            codePoint.IS(CharCodes.SemiColon) -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(returnState = returnState)
                 }
             }
 
             else -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("missing-semicolon-after-character-reference")
                 reconsumeCurrentChar {
                     NumericCharacterReferenceEnd(returnState = returnState)
                 }

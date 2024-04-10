@@ -3,16 +3,7 @@ package com.hussain.csoup
 import com.hussain.csoup.entity.NamedChars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.tokenization.states.Action
-import com.hussain.csoup.tokenization.states.AmbiguousAmpersand
-import com.hussain.csoup.tokenization.states.AttributeValueDoubleQuoted
-import com.hussain.csoup.tokenization.states.AttributeValueSingleQuoted
-import com.hussain.csoup.tokenization.states.AttributeValueUnquoted
-import com.hussain.csoup.tokenization.states.TokenizationState
-import com.hussain.csoup.tokenization.states.consumeNextChar
 import com.hussain.csoup.util.CharCodes
-import com.hussain.csoup.util.isAsciiAlphaNumeric
-import com.hussain.csoup.util.isAttributeState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -27,6 +18,60 @@ class PlaygroundTest {
         val expected2 = """<p class="Hello&">I'm & I tell</p>"""
         val actual = translator.translate(input2)
         assertEquals(expected2, actual)
+    }
+
+    @Test
+    fun test() {
+        val tokenizer = Tokenizer()
+        tokenizer.tokenize("""<a href="hello&amp;world">""")
+        assertEquals(
+            listOf<Token>(
+                Token.StartTag("a", attributes = mutableMapOf("href" to "hello&amp;world")),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun test1() {
+        val tokenizer = Tokenizer()
+        tokenizer.tokenize("""&amp;""")
+        assertEquals(
+            listOf<Token>(
+                Token.Character('&'),
+            ),
+            tokenizer.emittedTokens
+        )
+    }
+
+    @Test
+    fun namedchar() {
+        val tokenizer = Tokenizer()
+        tokenizer.tokenize("I'm &notit; I tell you")
+        assertEquals(
+            listOf<Token>(
+                Token.Character('I'),
+                Token.Character('\''),
+                Token.Character('m'),
+                Token.Character(' '),
+                Token.Character('¬'),
+                Token.Character('i'),
+                Token.Character('t'),
+                Token.Character(';'),
+                Token.Character(' '),
+                Token.Character('I'),
+                Token.Character(' '),
+                Token.Character('t'),
+                Token.Character('e'),
+                Token.Character('l'),
+                Token.Character('l'),
+                Token.Character(' '),
+                Token.Character('y'),
+                Token.Character('o'),
+                Token.Character('u')
+            ),
+            tokenizer.emittedTokens
+        )
     }
 }
 
@@ -106,215 +151,5 @@ internal class LookupTranslator(private val lookupMap: Map<String, String>) {
             }
         }
         return 0
-    }
-}
-
-/**
- * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
- */
-internal class NamedCharacterReference2(
-    private val returnState: TokenizationState,
-    private val tempBuffer: StringBuilder
-) : TokenizationState() {
-
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        tempBuffer.append(codePoint.toChar())
-
-        val matches = NamedChars.keys.filter { it.startsWith(tempBuffer.toString()) }
-
-        return when {
-            matches.isEmpty() -> {
-                parse(tokenizer)
-                consumeNextChar { AmbiguousAmpersand(returnState) }
-            }
-
-            matches.size == 1 && matches.contains(tempBuffer.toString()) -> {
-                if (tempBuffer.last().code != CharCodes.SemiColon.code
-                    && (codePoint == CharCodes.Equals.code || codePoint.isAsciiAlphaNumeric())
-                ) {
-                    // Do not consume the character reference and switch to the return state
-                    parse(tokenizer)
-                    return consumeNextChar { returnState }
-                } else {
-                    if (tempBuffer.last().code != CharCodes.SemiColon.code) {
-                        // This is a missing-semicolon-after-character-reference parse error.
-                        // We handle this by appending a semicolon to the buffer.
-                        tempBuffer.append(CharCodes.SemiColon.code.toChar())
-                    }
-                    val referenceName =
-                        NamedChars[matches.first()] ?: error("Unexpected reference name")
-                    tempBuffer.clear()
-                    tempBuffer.append(referenceName)
-                    parse(tokenizer)
-                    return consumeNextChar { returnState }
-                }
-            }
-
-            else -> consumeNextChar { this }
-        }
-    }
-
-    private fun parse(tokenizer: Tokenizer) {
-        var start = 0
-        while (start < tempBuffer.length) {
-            var foundMatch = false
-            for ((key, value) in NamedChars) {
-                if (tempBuffer.substring(start).startsWith(key)) {
-                    tokenizer.emitToken(Token.Character(value[0]))
-                    start += key.length
-                    foundMatch = true
-                    break
-                }
-            }
-            if (!foundMatch) {
-                tokenizer.emitToken(Token.Character(tempBuffer[start]))
-                start++
-            }
-        }
-        tempBuffer.clear()
-    }
-
-    private fun flushCodePoints(tokenizer: Tokenizer) {
-        when (returnState) {
-            is AttributeValueDoubleQuoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            is AttributeValueSingleQuoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            is AttributeValueUnquoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            else -> {
-                val token = Token.Character(tempBuffer[0])
-                tokenizer.emitToken(token)
-            }
-        }
-    }
-
-    private fun updateAttributeValue(currentToken: Token, attributeName: String) {
-        when (currentToken) {
-            is Token.StartTag -> {
-                val currentValue = currentToken.attributes.getValue(attributeName)
-                currentToken.attributes[attributeName] = currentValue + tempBuffer.toString()
-            }
-
-            else -> throw IllegalStateException("Expected a StartTag token, got $currentToken")
-        }
-    }
-}
-
-
-//////// WORKING EXCEPT WITHOUT ; in ATTRIBUTE ////////
-internal class NamedCharacterReference(
-    private val returnState: TokenizationState,
-    private val tempBuffer: StringBuilder
-) : TokenizationState() {
-
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        tempBuffer.append(codePoint.toChar())
-
-        val matches = NamedChars.keys.filter { it.startsWith(tempBuffer.toString()) }
-
-        return when {
-            matches.isEmpty() -> {
-                parse(tokenizer)
-                consumeNextChar { AmbiguousAmpersand(returnState) }
-            }
-
-            matches.size == 1 && matches.contains(tempBuffer.toString()) -> {
-                if (returnState.isAttributeState()) {
-                    flushCodePoints(tokenizer)
-                    return consumeNextChar { returnState }
-                } else if (tempBuffer.last().code != CharCodes.SemiColon.code) {
-                    flushCodePoints(tokenizer)
-                    return consumeNextChar { returnState }
-                } else if (codePoint == CharCodes.Equals.code || codePoint.isAsciiAlphaNumeric()) {
-                    flushCodePoints(tokenizer)
-                    return consumeNextChar { returnState }
-                } else {
-                    if (tempBuffer.last().code != CharCodes.SemiColon.code) {
-                        // This is a missing-semicolon-after-character-reference parse error.
-                        // We handle this by appending a semicolon to the buffer.
-//                        tempBuffer.append(CharCodes.SemiColon.code.toChar())
-                    }
-                    val referenceName =
-                        NamedChars[matches.first()] ?: error("Unexpected reference name")
-                    tempBuffer.clear()
-                    tempBuffer.append(referenceName)
-                    flushCodePoints(tokenizer)
-                    return consumeNextChar { returnState }
-                }
-            }
-
-            else -> consumeNextChar { this }
-        }
-    }
-
-    private fun parse(tokenizer: Tokenizer) {
-        var start = 0
-        while (start < tempBuffer.length) {
-            var foundMatch = false
-            for ((key, value) in NamedChars) {
-                if (tempBuffer.substring(start).startsWith(key)) {
-                    tokenizer.emitToken(Token.Character(value[0]))
-                    start += key.length
-                    foundMatch = true
-                    break
-                }
-            }
-            if (!foundMatch) {
-                tokenizer.emitToken(Token.Character(tempBuffer[start]))
-                start++
-            }
-        }
-        tempBuffer.clear()
-    }
-
-    private fun flushCodePoints(tokenizer: Tokenizer) {
-        when (returnState) {
-            is AttributeValueDoubleQuoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            is AttributeValueSingleQuoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            is AttributeValueUnquoted -> {
-                val currentToken = returnState.currentTagToken
-                val attributeName = returnState.currentAttributeName
-                updateAttributeValue(currentToken, attributeName)
-            }
-
-            else -> {
-                val token = Token.Character(tempBuffer[0])
-                tokenizer.emitToken(token)
-            }
-        }
-    }
-
-    private fun updateAttributeValue(currentToken: Token, attributeName: String) {
-        when (currentToken) {
-            is Token.StartTag -> {
-                val currentValue = currentToken.attributes.getValue(attributeName)
-                currentToken.attributes[attributeName] = currentValue + tempBuffer.toString()
-            }
-
-            else -> throw IllegalStateException("Expected a StartTag token, got $currentToken")
-        }
     }
 }

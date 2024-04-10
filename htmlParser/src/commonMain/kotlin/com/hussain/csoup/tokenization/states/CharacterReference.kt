@@ -2,7 +2,8 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.flushCodePoints
+import com.hussain.csoup.tokenization.util.IS
+import com.hussain.csoup.tokenization.util.flushCodePoints
 import com.hussain.csoup.util.isAsciiAlphaNumeric
 
 /**
@@ -21,7 +22,7 @@ internal class CharacterReference(
                 NamedCharacterReference(returnState)
             }
 
-            codePoint == CharCodes.NumberSign.code -> {
+            codePoint.IS(CharCodes.NumberSign) -> {
                 tokenizer.tempBuffer.append(codePoint.toChar())
                 consumeNextChar { NumericCharacterReference(returnState) }
             }

@@ -3,34 +3,33 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
+import com.hussain.csoup.util.isWhiteSpace
 
 internal class BeforeAttributeValue(
     private val currentTagToken: Token,
     private val currentAttributeName: String
 ) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        return when (codePoint) {
-            CharCodes.Tab.code,
-            CharCodes.LineFeed.code,
-            CharCodes.FormFeed.code,
-            CharCodes.Space.code -> consumeNextChar { this }
+        return when {
+            codePoint.isWhiteSpace() -> consumeNextChar { this }
 
-            CharCodes.QuotationMark.code -> consumeNextChar {
+            codePoint.IS(CharCodes.QuotationMark) -> consumeNextChar {
                 AttributeValueDoubleQuoted(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            CharCodes.Apostrophe.code -> consumeNextChar {
+            codePoint.IS(CharCodes.Apostrophe) -> consumeNextChar {
                 AttributeValueSingleQuoted(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            CharCodes.GreaterThan.code -> {
-                // TODO Implement parse error
+            codePoint.IS(CharCodes.GreaterThan) -> {
+                tokenizer.logParseError("missing-attribute-value")
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }

@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.util.CharCodes
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isAsciiAlpha
 
 internal data object EndTagOpen : TokenizationState() {
@@ -14,13 +15,13 @@ internal data object EndTagOpen : TokenizationState() {
                 reconsumeCurrentChar { TagName(endTagToken) }
             }
 
-            codePoint == CharCodes.GreaterThan.code -> {
-                // TODO Implement parse error
+            codePoint.IS(CharCodes.GreaterThan) -> {
+                tokenizer.logParseError("missing-end-tag-name")
                 consumeNextChar { Data }
             }
 
             else -> {
-                // TODO Implement parse error
+                tokenizer.logParseError("invalid-first-character-of-tag-name")
                 val commentToken = Token.Comment(data = "")
                 reconsumeCurrentChar { BogusComment(commentToken) }
             }

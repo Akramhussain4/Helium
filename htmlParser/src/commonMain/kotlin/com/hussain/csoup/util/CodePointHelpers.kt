@@ -28,7 +28,13 @@ internal fun Int.isNonCharacter() = this in 0xFDD0..0xFDEF
         || this and 0xFFFE == 0xFFFE
         || this and 0xFFFF == 0xFFFF
 
-internal fun Int.isWhiteSpace() = this == CharCodes.Space.code
-        || this == CharCodes.Tab.code
-        || this == CharCodes.LineFeed.code
-        || this == CharCodes.FormFeed.code
+internal fun Int.isAsciiWhitespace() = this == CharCodes.Space.code
+        || isWhiteSpace()
+        || this == CharCodes.CarriageReturn.code
+
+internal fun Int.isWhiteSpace(): Boolean {
+    return this == CharCodes.Space.code
+            || this == CharCodes.Tab.code
+            || this == CharCodes.LineFeed.code
+            || this == CharCodes.FormFeed.code
+}
