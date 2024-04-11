@@ -2,7 +2,7 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.util.isAsciiDigit
 
 internal class DecimalCharacterReference(
@@ -16,7 +16,7 @@ internal class DecimalCharacterReference(
                 consumeNextChar { this }
             }
 
-            codePoint.IS(CharCodes.SemiColon) -> {
+            codePoint.IS(Chars.SemiColon) -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(returnState = returnState)
                 }

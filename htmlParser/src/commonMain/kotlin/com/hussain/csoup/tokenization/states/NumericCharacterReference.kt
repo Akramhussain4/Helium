@@ -2,7 +2,7 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 
 internal class NumericCharacterReference(
     private val returnState: TokenizationState
@@ -12,8 +12,8 @@ internal class NumericCharacterReference(
         tokenizer.characterReferenceCode = 0
         return when {
             codePoint.IS(
-                CharCodes.LowerX,
-                CharCodes.UpperX
+                Chars.LowerX,
+                Chars.UpperX
             ) -> {
                 tokenizer.tempBuffer.append(codePoint.toChar())
                 consumeNextChar {

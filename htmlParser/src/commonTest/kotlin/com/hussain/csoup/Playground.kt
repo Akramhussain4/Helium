@@ -3,7 +3,7 @@ package com.hussain.csoup
 import com.hussain.csoup.entity.NamedChars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -135,7 +135,7 @@ internal class LookupTranslator(private val lookupMap: Map<String, String>) {
 
     private fun translate(input: String, offset: Int, stringBuilder: StringBuilder): Int {
         // check if translation exists for the input at position offset
-        if (CharCodes.Ampersand.code == input[offset].code) {
+        if (Chars.Ampersand.char.code == input[offset].code) {
             var max = longest
             if (offset + longest > input.length) {
                 max = input.length - offset

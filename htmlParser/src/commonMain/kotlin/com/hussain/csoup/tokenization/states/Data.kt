@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -13,11 +13,11 @@ internal data object Data : TokenizationState() {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
-            codePoint.IS(CharCodes.Ampersand) -> consumeNextChar {
+            codePoint.IS(Chars.Ampersand) -> consumeNextChar {
                 CharacterReference(returnState = this)
             }
 
-            codePoint.IS(CharCodes.LessThan) -> consumeNextChar { TagOpen }
+            codePoint.IS(Chars.LessThan) -> consumeNextChar { TagOpen }
 
             else -> {
                 val characterToken = Token.Character(data = codePoint.toChar())

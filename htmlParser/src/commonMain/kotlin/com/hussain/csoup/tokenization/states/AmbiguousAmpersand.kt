@@ -3,7 +3,7 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.util.isAsciiAlphaNumeric
 import com.hussain.csoup.tokenization.util.isAttributeState
 
@@ -23,7 +23,7 @@ internal class AmbiguousAmpersand(
         }
 
         return when {
-            codePoint.IS(CharCodes.SemiColon) -> {
+            codePoint.IS(Chars.SemiColon) -> {
                 tokenizer.logParseError("unknown-named-character-reference")
                 reconsumeCurrentChar { returnState }
             }

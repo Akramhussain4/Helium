@@ -2,7 +2,7 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.util.isAsciiDigit
 import com.hussain.csoup.util.isAsciiLowerHexDigit
 import com.hussain.csoup.util.isAsciiUpperHexDigit
@@ -14,7 +14,7 @@ internal class HexadecimalCharacterReference(
         return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 16
-                tokenizer.characterReferenceCode += codePoint - CharCodes.Zero.code
+                tokenizer.characterReferenceCode += codePoint - Chars.Zero.char.code
                 consumeNextChar { this }
             }
 
@@ -30,7 +30,7 @@ internal class HexadecimalCharacterReference(
                 consumeNextChar { this }
             }
 
-            codePoint.IS(CharCodes.SemiColon) -> {
+            codePoint.IS(Chars.SemiColon) -> {
                 consumeNextChar {
                     NumericCharacterReferenceEnd(returnState = returnState)
                 }

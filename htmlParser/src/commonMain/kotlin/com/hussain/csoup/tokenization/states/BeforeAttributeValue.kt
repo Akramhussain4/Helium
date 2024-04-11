@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -14,21 +14,21 @@ internal class BeforeAttributeValue(
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { this }
 
-            codePoint.IS(CharCodes.QuotationMark) -> consumeNextChar {
+            codePoint.IS(Chars.QuotationMark) -> consumeNextChar {
                 AttributeValueDoubleQuoted(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            codePoint.IS(CharCodes.Apostrophe) -> consumeNextChar {
+            codePoint.IS(Chars.Apostrophe) -> consumeNextChar {
                 AttributeValueSingleQuoted(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
             }
 
-            codePoint.IS(CharCodes.GreaterThan) -> {
+            codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-attribute-value")
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
