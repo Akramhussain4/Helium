@@ -1,4 +1,4 @@
-package com.hussain.csoup.entity
+package com.hussain.csoup.tokenization.util
 
 internal val NumCharRef by lazy {
     mapOf(

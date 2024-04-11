@@ -16,5 +16,5 @@ internal sealed class Token {
 
     data class Character(val data: Char) : Token()
 
-    data class EOF(val data: String) : Token()
+    data object EOF : Token()
 }
