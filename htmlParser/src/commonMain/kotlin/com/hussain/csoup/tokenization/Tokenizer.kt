@@ -3,6 +3,7 @@ package com.hussain.csoup.tokenization
 import com.hussain.csoup.tokenization.states.Action
 import com.hussain.csoup.tokenization.states.Data
 import com.hussain.csoup.tokenization.states.TokenizationState
+import com.hussain.csoup.util.Chars
 
 internal class Tokenizer {
     var characterReferenceCode = 0
@@ -14,15 +15,30 @@ internal class Tokenizer {
 
     fun tokenize(html: String) {
         htmlBuffer = html
-        var currentState: TokenizationState = Data
-        while (currentPosition < htmlBuffer.length) {
+        tokenizeRecursive(Data)
+    }
+
+    private tailrec fun tokenizeRecursive(currentState: TokenizationState) {
+        if (currentPosition < htmlBuffer.length) {
             val codePoint = htmlBuffer[currentPosition].code
             val (nextState, action) = currentState.consume(codePoint, this)
 
-            currentState = nextState
             when (action) {
-                is Action.ConsumeNext -> currentPosition++
-                is Action.Reconsume -> Unit // Do nothing, reconsume
+                Action.ConsumeNext -> {
+                    currentPosition++
+                    tokenizeRecursive(nextState)
+                }
+
+                Action.Reconsume -> {
+                    tokenizeRecursive(nextState)
+                }
+
+                Action.None -> Unit
+            }
+        } else {
+            val (nextState, _) = currentState.consume(Chars.EOF.char.code, this)
+            if (nextState != currentState) {
+//                tokenizeRecursive(nextState)
             }
         }
     }

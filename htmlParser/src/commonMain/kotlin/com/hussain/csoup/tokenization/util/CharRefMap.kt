@@ -1,8 +1,7 @@
 package com.hussain.csoup.tokenization.util
 
 /**
- * This map lists the character reference names that are supported by HTML,
- * and the code points to which they refer.
+ * This map lists the character reference names that are supported by HTML.
  * https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references
  */
 internal val NamedChars by lazy {
