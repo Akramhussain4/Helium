@@ -8,7 +8,7 @@ import com.hussain.csoup.util.Chars
 
 internal fun <K, V> MutableMap<K, V>.updateKey(oldKey: K, newKey: K) {
     this[oldKey]?.let { value ->
-        this.remove(oldKey)
+        remove(oldKey)
         this[newKey] = value
     }
 }

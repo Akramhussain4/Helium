@@ -1,6 +1,6 @@
 package com.hussain.csoup
 
-import com.hussain.csoup.entity.NamedChars
+import com.hussain.csoup.tokenization.util.NamedChars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.util.Chars

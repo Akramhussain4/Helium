@@ -1,12 +1,11 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.entity.NumCharRef
+import com.hussain.csoup.tokenization.util.NumCharRef
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.flushCodePoints
 import com.hussain.csoup.util.isAsciiWhitespace
 import com.hussain.csoup.util.isNonCharacter
 import com.hussain.csoup.util.isSurrogate
-import com.hussain.csoup.util.isWhiteSpace
 
 internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,

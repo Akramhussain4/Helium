@@ -1,8 +1,9 @@
-package com.hussain.csoup.entity
+package com.hussain.csoup.tokenization.util
 
 /**
- * A map from entity name to character value.
- * https://html.spec.whatwg.org/multipage/named#named-character-references
+ * This map lists the character reference names that are supported by HTML,
+ * and the code points to which they refer.
+ * https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references
  */
 internal val NamedChars by lazy {
     mapOf(
