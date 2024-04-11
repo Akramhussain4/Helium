@@ -14,7 +14,7 @@ class TokenizerTest2 {
         tokenizer.tokenize("&#0000;")
         assertEquals(
             listOf<Token>(
-                Token.Character('\u0000'),
+                Token.Character('\uFFFD'),
             ),
             tokenizer.emittedTokens
         )
@@ -70,7 +70,7 @@ class TokenizerTest2 {
         tokenizer.tokenize("&#xaBcD;")
         assertEquals(
             listOf<Token>(
-                Token.Character('\u01A9'),
+                Token.Character('ꯍ'),
             ),
             tokenizer.emittedTokens
         )
@@ -172,7 +172,7 @@ class TokenizerTest2 {
 
     @Test
     fun `Double-quoted attribute value`() {
-        tokenizer.tokenize("""<h a=\"b\">""".trimIndent())
+        tokenizer.tokenize("""<h a="b">""".trimIndent())
         assertEquals(
             listOf<Token>(
                 Token.StartTag(
@@ -315,14 +315,14 @@ class TokenizerTest2 {
 
     @Test
     fun `Double-quote after attribute name`() {
-        tokenizer.tokenize("""<h a \">""")
+        tokenizer.tokenize("""<h a ">""")
         assertEquals(
             listOf<Token>(
                 Token.StartTag(
                     name = "h",
                     attributes = mutableMapOf(
                         "a" to "",
-                        "\\" to "",
+                        "\"" to "",
                     )
                 ),
             ),

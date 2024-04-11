@@ -9,13 +9,16 @@ internal abstract class TokenizationState {
 internal sealed class Action {
     data object ConsumeNext : Action()
     data object Reconsume : Action()
+    data object None : Action()
 }
 
-internal fun consumeNextChar(nextState: () -> TokenizationState) =
-    nextState() to Action.ConsumeNext
-internal fun reconsumeCurrentChar(nextState: () -> TokenizationState) =
-    nextState() to Action.Reconsume
+internal fun consumeNextChar(switchTo: () -> TokenizationState) =
+    switchTo() to Action.ConsumeNext
 
+internal fun reconsumeCurrentChar(switchTo: () -> TokenizationState) =
+    switchTo() to Action.Reconsume
+
+internal fun endOfFile(switchTo: () -> TokenizationState) = switchTo() to Action.None
 
 
 //internal data object RcData : TokenizationState()

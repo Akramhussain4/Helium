@@ -30,4 +30,5 @@ internal enum class Chars(val char: Char) {
     UpperX('X'),
     GraveAccent('`'),
     OpeningSquareBracket('['),
+    EOF('\u001A'),
 }
