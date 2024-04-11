@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -12,8 +12,8 @@ internal class BeforeAttributeName(private val currentTagToken: Token) : Tokeniz
             codePoint.isWhiteSpace() -> consumeNextChar { this }
 
             codePoint.IS(
-                CharCodes.Solidus,
-                CharCodes.GreaterThan
+                Chars.Solidus,
+                Chars.GreaterThan
             ) -> reconsumeCurrentChar {
                 AfterAttributeName(
                     currentTagToken = currentTagToken,
@@ -21,7 +21,7 @@ internal class BeforeAttributeName(private val currentTagToken: Token) : Tokeniz
                 )
             }
 
-            codePoint.IS(CharCodes.Equals) -> {
+            codePoint.IS(Chars.Equals) -> {
                 tokenizer.logParseError("unexpected-equals-sign-before-attribute-name")
                 val attributeName = codePoint.toChar().toString()
                 updateAttribute(attributeName)

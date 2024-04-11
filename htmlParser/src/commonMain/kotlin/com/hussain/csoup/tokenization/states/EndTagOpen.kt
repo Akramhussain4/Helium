@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -15,7 +15,7 @@ internal data object EndTagOpen : TokenizationState() {
                 reconsumeCurrentChar { TagName(endTagToken) }
             }
 
-            codePoint.IS(CharCodes.GreaterThan) -> {
+            codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-end-tag-name")
                 consumeNextChar { Data }
             }

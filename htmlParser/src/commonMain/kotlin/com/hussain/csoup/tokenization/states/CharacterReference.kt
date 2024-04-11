@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.tokenization.util.flushCodePoints
@@ -15,14 +15,14 @@ internal class CharacterReference(
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         tokenizer.tempBuffer.clear()
-        tokenizer.tempBuffer.append(CharCodes.Ampersand.code.toChar())
+        tokenizer.tempBuffer.append(Chars.Ampersand.char.code.toChar())
 
         return when {
             codePoint.isAsciiAlphaNumeric() -> reconsumeCurrentChar {
                 NamedCharacterReference(returnState)
             }
 
-            codePoint.IS(CharCodes.NumberSign) -> {
+            codePoint.IS(Chars.NumberSign) -> {
                 tokenizer.tempBuffer.append(codePoint.toChar())
                 consumeNextChar { NumericCharacterReference(returnState) }
             }

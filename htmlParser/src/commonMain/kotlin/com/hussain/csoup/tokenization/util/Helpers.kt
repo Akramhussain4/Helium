@@ -4,7 +4,7 @@ import com.hussain.csoup.tokenization.states.AttributeValueDoubleQuoted
 import com.hussain.csoup.tokenization.states.AttributeValueSingleQuoted
 import com.hussain.csoup.tokenization.states.AttributeValueUnquoted
 import com.hussain.csoup.tokenization.states.TokenizationState
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 
 internal fun <K, V> MutableMap<K, V>.updateKey(oldKey: K, newKey: K) {
     this[oldKey]?.let { value ->
@@ -20,4 +20,4 @@ internal fun TokenizationState.isAttributeState(): Boolean {
 }
 
 @Suppress("FunctionName")
-internal fun Int.IS(vararg codepoints: CharCodes) = codepoints.any { this == it.code }
+internal fun Int.IS(vararg codepoints: Chars) = codepoints.any { this == it.char.code }

@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -11,11 +11,11 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { BeforeAttributeName(currentTagToken) }
 
-            codePoint.IS(CharCodes.Solidus) -> consumeNextChar {
+            codePoint.IS(Chars.Solidus) -> consumeNextChar {
                 SelfClosingStartTag(currentTagToken)
             }
 
-            codePoint.IS(CharCodes.GreaterThan) -> {
+            codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }

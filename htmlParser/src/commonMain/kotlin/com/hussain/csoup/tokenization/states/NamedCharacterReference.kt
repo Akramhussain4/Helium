@@ -2,7 +2,7 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.entity.NamedChars
 import com.hussain.csoup.tokenization.Tokenizer
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.util.flushCodePoints
 import com.hussain.csoup.util.isAsciiAlphaNumeric
 import com.hussain.csoup.tokenization.util.isAttributeState
@@ -29,15 +29,15 @@ internal class NamedCharacterReference(
 
         val nextChar = tokenizer.peekNextChar().code
         if (returnState.isAttributeState() &&
-            tokenizer.tempBuffer.last().code != CharCodes.SemiColon.code
+            tokenizer.tempBuffer.last().code != Chars.SemiColon.char.code
         ) {
-            if (nextChar == CharCodes.Equals.code || nextChar.isAsciiAlphaNumeric()) {
+            if (nextChar == Chars.Equals.char.code || nextChar.isAsciiAlphaNumeric()) {
                 flushCodePoints(tokenizer)
                 return consumeNextChar { returnState }
             }
         }
 
-        if (tokenizer.tempBuffer.last().code != CharCodes.SemiColon.code) {
+        if (tokenizer.tempBuffer.last().code != Chars.SemiColon.char.code) {
             // TODO Implement parse error
         }
 

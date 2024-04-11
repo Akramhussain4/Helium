@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -16,21 +16,21 @@ internal class AttributeValueUnquoted(
                 BeforeAttributeName(currentTagToken = currentTagToken)
             }
 
-            codePoint.IS(CharCodes.Ampersand) -> consumeNextChar {
+            codePoint.IS(Chars.Ampersand) -> consumeNextChar {
                 CharacterReference(this)
             }
 
-            codePoint.IS(CharCodes.GreaterThan) -> {
+            codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
 
             codePoint.IS(
-                CharCodes.QuotationMark,
-                CharCodes.Apostrophe,
-                CharCodes.LessThan,
-                CharCodes.Equals,
-                CharCodes.GraveAccent
+                Chars.QuotationMark,
+                Chars.Apostrophe,
+                Chars.LessThan,
+                Chars.Equals,
+                Chars.GraveAccent
             ) -> {
                 tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
                 updateAttributeValue(codePoint)

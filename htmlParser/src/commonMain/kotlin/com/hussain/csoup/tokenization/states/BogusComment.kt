@@ -3,12 +3,12 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 
 internal class BogusComment(private val commentToken: Token.Comment) : TokenizationState() {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
-            codePoint.IS(CharCodes.GreaterThan) -> {
+            codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(commentToken)
                 consumeNextChar { Data }
             }

@@ -1,6 +1,6 @@
 package com.hussain.csoup.tokenization.states
 
-import com.hussain.csoup.util.CharCodes
+import com.hussain.csoup.util.Chars
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
@@ -16,8 +16,8 @@ internal class AttributeName(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
         return when {
             codePoint.IS(
-                CharCodes.Solidus,
-                CharCodes.GreaterThan
+                Chars.Solidus,
+                Chars.GreaterThan
             ) || codePoint.isWhiteSpace() -> reconsumeCurrentChar {
                 AfterAttributeName(
                     currentTagToken = currentTagToken,
@@ -25,7 +25,7 @@ internal class AttributeName(
                 )
             }
 
-            codePoint.IS(CharCodes.Equals) -> consumeNextChar {
+            codePoint.IS(Chars.Equals) -> consumeNextChar {
                 BeforeAttributeValue(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
@@ -44,9 +44,9 @@ internal class AttributeName(
             }
 
             codePoint.IS(
-                CharCodes.QuestionMark,
-                CharCodes.Apostrophe,
-                CharCodes.LessThan
+                Chars.QuestionMark,
+                Chars.Apostrophe,
+                Chars.LessThan
             ) -> {
                 tokenizer.logParseError("unexpected-character-in-attribute-name")
                 val attributeName = currentAttributeName + codePoint.toChar()
