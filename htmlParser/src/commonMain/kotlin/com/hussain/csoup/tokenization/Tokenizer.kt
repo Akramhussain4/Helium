@@ -36,10 +36,7 @@ internal class Tokenizer {
                 Action.None -> Unit
             }
         } else {
-            val (nextState, _) = currentState.consume(Chars.EOF.char.code, this)
-            if (nextState != currentState) {
-//                tokenizeRecursive(nextState)
-            }
+            currentState.consume(Chars.EOF.char.code, this)
         }
     }
 
@@ -51,7 +48,7 @@ internal class Tokenizer {
         if (currentPosition + 1 < htmlBuffer.length) {
             return htmlBuffer[currentPosition + 1]
         }
-        return '\u0000'
+        return Chars.Null.char
     }
 
     fun logParseError(error: String) {
