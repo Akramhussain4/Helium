@@ -661,11 +661,15 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD7FF'),
+                Token.Character('\uFFFD'),
+                Token.Character('\uFFFD'),
+                Token.Character('\uFFFD'),
+                Token.Character('\uFFFD'),
+                Token.Character('\uE000'),
             ),
             tokenizer.emittedTokens
         )
-//        "output":[["Character", "\uD7FF\uFFFD\uFFFD\uFFFD\uFFFD\uE000"]],
     }
 
     @Test

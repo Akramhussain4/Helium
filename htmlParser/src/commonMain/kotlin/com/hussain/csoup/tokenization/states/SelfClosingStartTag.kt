@@ -15,9 +15,18 @@ internal class SelfClosingStartTag(private val currentTagToken: Token) : Tokeniz
                         tokenizer.emitToken(token)
                     }
 
+                    is Token.EndTag -> {
+                        tokenizer.emitToken(currentTagToken)
+                    }
+
                     else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
                 }
                 consumeNextChar { Data }
+            }
+
+            codePoint.IS(Chars.EOF) -> {
+                tokenizer.logParseError("eof-in-tag")
+                endOfFile { this }
             }
 
             else -> {
