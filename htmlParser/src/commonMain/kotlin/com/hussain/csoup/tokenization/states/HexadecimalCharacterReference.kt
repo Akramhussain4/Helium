@@ -14,7 +14,7 @@ internal class HexadecimalCharacterReference(
         return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 16
-                tokenizer.characterReferenceCode += codePoint - Chars.Zero.char.code
+                tokenizer.characterReferenceCode += codePoint - 0x0030
                 consumeNextChar { this }
             }
 

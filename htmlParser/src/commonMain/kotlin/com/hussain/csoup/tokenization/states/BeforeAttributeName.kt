@@ -51,6 +51,8 @@ internal class BeforeAttributeName(private val currentTagToken: Token) : Tokeniz
                 currentTagToken.attributes[attributeName] = ""
             }
 
+            is Token.EndTag -> Unit
+
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
