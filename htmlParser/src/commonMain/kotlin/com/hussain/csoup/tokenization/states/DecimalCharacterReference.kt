@@ -12,7 +12,7 @@ internal class DecimalCharacterReference(
         return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 10
-                tokenizer.characterReferenceCode += codePoint - 0x30
+                tokenizer.characterReferenceCode += codePoint - 0x0030
                 consumeNextChar { this }
             }
 
