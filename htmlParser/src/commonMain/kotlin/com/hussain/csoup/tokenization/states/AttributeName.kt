@@ -17,7 +17,8 @@ internal class AttributeName(
         return when {
             codePoint.IS(
                 Chars.Solidus,
-                Chars.GreaterThan
+                Chars.GreaterThan,
+                Chars.EOF,
             ) || codePoint.isWhiteSpace() -> reconsumeCurrentChar {
                 AfterAttributeName(
                     currentTagToken = currentTagToken,

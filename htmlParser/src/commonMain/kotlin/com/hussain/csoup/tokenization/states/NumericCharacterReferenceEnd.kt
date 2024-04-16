@@ -7,6 +7,9 @@ import com.hussain.csoup.util.isAsciiWhitespace
 import com.hussain.csoup.util.isNonCharacter
 import com.hussain.csoup.util.isSurrogate
 
+/**
+ * https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
+ */
 internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
@@ -43,6 +46,7 @@ internal class NumericCharacterReferenceEnd(
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.append(tokenizer.characterReferenceCode.toChar())
         returnState.flushCodePoints(tokenizer)
+        // FIXME: This should be consumeNextChar
         return reconsumeCurrentChar { returnState }
     }
 }
