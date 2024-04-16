@@ -143,12 +143,7 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-                Token.Character('\\'),
-                Token.Character('u'),
-                Token.Character('F'),
-                Token.Character('F'),
-                Token.Character('F'),
-                Token.Character('D')
+                Token.Character('Ǉ'),
             ),
             actual
         )
