@@ -20,6 +20,13 @@ internal data object EndTagOpen : TokenizationState() {
                 consumeNextChar { Data }
             }
 
+            codePoint.IS(Chars.EOF) -> {
+                tokenizer.logParseError("eof-before-tag-name")
+                tokenizer.emitToken(Token.Character(data = '<'))
+                tokenizer.emitToken(Token.Character(data = '/'))
+                endOfFile { this }
+            }
+
             else -> {
                 tokenizer.logParseError("invalid-first-character-of-tag-name")
                 val commentToken = Token.Comment(data = "")
