@@ -48,6 +48,8 @@ internal class AfterAttributeName(
                 currentTagToken.attributes[""] = ""
             }
 
+            is Token.EndTag -> Unit
+
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }

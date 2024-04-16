@@ -601,7 +601,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character(0xFFFD.toChar())
+                Token.Character('\uFFFD')
             ),
             tokenizer.emittedTokens
         )
@@ -613,7 +613,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character(0xFFFD.toChar())
+                Token.Character('\uFFFD')
             ),
             tokenizer.emittedTokens
         )
@@ -625,7 +625,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character(0xFFFD.toChar())
+                Token.Character('\uFFFD')
             ),
             tokenizer.emittedTokens
         )
@@ -637,7 +637,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character(0xFFFD.toChar())
+                    Token.Character('\uFFFD')
             ),
             tokenizer.emittedTokens
         )
@@ -649,7 +649,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character(0xFFFD.toChar())
+                Token.Character('\uFFFD')
             ),
             tokenizer.emittedTokens
         )
@@ -863,7 +863,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character('\n'),
+                Token.Character('\r'),
                 Token.Character('?'),
             ),
             tokenizer.emittedTokens
@@ -876,7 +876,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character('\n'),
+                Token.Character('\r'),
             ),
             tokenizer.emittedTokens
         )
@@ -900,6 +900,7 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
+                Token.Character('\r'),
                 Token.Character('\n'),
             ),
             tokenizer.emittedTokens
@@ -912,8 +913,8 @@ class TokenizerTest4 {
         tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
-                Token.Character('\n'),
-                Token.Character('\n'),
+                Token.Character('\r'),
+                Token.Character('\r'),
             ),
             tokenizer.emittedTokens
         )
@@ -939,7 +940,7 @@ class TokenizerTest4 {
         assertEquals(
             listOf<Token>(
                 Token.Character('\n'),
-                Token.Character('\n'),
+                Token.Character('\r'),
             ),
             tokenizer.emittedTokens
         )
@@ -955,9 +956,9 @@ class TokenizerTest4 {
                 Token.Character('e'),
                 Token.Character('x'),
                 Token.Character('t'),
-                Token.Character('\n'),
-                Token.Character('\n'),
-                Token.Character('\n'),
+                Token.Character('\r'),
+                Token.Character('\r'),
+                Token.Character('\r'),
                 Token.Character('t'),
                 Token.Character('e'),
                 Token.Character('x'),
