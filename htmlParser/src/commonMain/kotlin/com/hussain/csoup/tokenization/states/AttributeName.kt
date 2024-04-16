@@ -33,7 +33,7 @@ internal class AttributeName(
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                val attributeName = currentAttributeName + codePoint.toChar() + 0x0020
+                val attributeName = currentAttributeName + (codePoint + 0x0020).toChar()
                 updateAttributeName(attributeName = attributeName)
                 consumeNextChar {
                     AttributeName(
