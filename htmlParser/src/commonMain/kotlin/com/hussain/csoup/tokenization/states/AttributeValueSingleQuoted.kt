@@ -26,16 +26,17 @@ internal class AttributeValueSingleQuoted(
                         val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
                         currentTagToken.attributes[currentAttributeName] =
                             currentValue + codePoint.toChar()
-
-                        consumeNextChar {
-                            AttributeValueSingleQuoted(
-                                currentTagToken = currentTagToken,
-                                currentAttributeName = currentAttributeName
-                            )
-                        }
                     }
 
+                    is Token.EndTag -> Unit
+
                     else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
+                }
+                consumeNextChar {
+                    AttributeValueSingleQuoted(
+                        currentTagToken = currentTagToken,
+                        currentAttributeName = currentAttributeName
+                    )
                 }
             }
         }
