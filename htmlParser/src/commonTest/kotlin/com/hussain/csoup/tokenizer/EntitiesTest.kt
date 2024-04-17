@@ -1138,7 +1138,6 @@ class EntitiesTest {
                 Token.Character(data = 'm'),
                 Token.Character(data = 'm'),
                 Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
                 Token.Character(data = 'p'),
                 Token.Character(data = ';')
             ),

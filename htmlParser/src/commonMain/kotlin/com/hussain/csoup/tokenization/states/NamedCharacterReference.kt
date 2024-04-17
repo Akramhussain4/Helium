@@ -29,7 +29,7 @@ internal class NamedCharacterReference(
 
         val nextChar = tokenizer.peekNextChar().code
         if (returnState.isAttributeState() &&
-            tokenizer.tempBuffer.last().code != Chars.SemiColon.char.code
+            match.last().code != Chars.SemiColon.char.code
         ) {
             if (nextChar == Chars.Equals.char.code || nextChar.isAsciiAlphaNumeric()) {
                 returnState.flushCodePoints(tokenizer)
@@ -37,8 +37,8 @@ internal class NamedCharacterReference(
             }
         }
 
-        if (tokenizer.tempBuffer.last().code != Chars.SemiColon.char.code) {
-            // TODO Implement parse error
+        if (match.last().code != Chars.SemiColon.char.code) {
+            tokenizer.logParseError("missing-semicolon-after-character-reference")
         }
 
         tokenizer.tempBuffer.clear()
