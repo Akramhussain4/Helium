@@ -4,9 +4,10 @@ import com.hussain.csoup.tokenization.Tokenizer
 
 public class HTMLParser {
 
+    private val tokenizer = Tokenizer()
+
     public fun parse(html: String) {
         val normalizedHtml = normalizeHtml(html)
-        val tokenizer = Tokenizer()
         tokenizer.tokenize(normalizedHtml)
     }
 
@@ -24,4 +25,5 @@ public class HTMLParser {
                 " "
         }.trim()
     }
+
 }
