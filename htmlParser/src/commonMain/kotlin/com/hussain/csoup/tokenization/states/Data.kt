@@ -19,9 +19,7 @@ internal data object Data : TokenizationState() {
 
             codePoint.IS(Chars.LessThan) -> consumeNextChar { TagOpen }
 
-            codePoint.IS(Chars.EOF) -> {
-                endOfFile { this }
-            }
+            codePoint.IS(Chars.EOF) -> endOfFile { this }
 
             else -> {
                 val characterToken = Token.Character(data = codePoint.toChar())

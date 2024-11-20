@@ -3962,7 +3962,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD800'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -3975,7 +3976,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD83F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -3988,7 +3990,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD840'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4001,7 +4004,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD87F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4014,7 +4018,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD880'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4027,7 +4032,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD8BF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4040,7 +4046,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD8C0'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4053,7 +4060,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD8FF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4066,7 +4074,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD900'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4079,7 +4088,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD93F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4092,7 +4102,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD940'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4105,7 +4116,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD97F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4118,7 +4130,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD980'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4131,7 +4144,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD9BF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4144,7 +4158,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD9C0'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4157,7 +4172,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uD9FF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4170,7 +4186,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDA00'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4183,7 +4200,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDA3F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4196,7 +4214,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDA40'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4209,7 +4228,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDA7F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4222,7 +4242,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDA80'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4235,7 +4256,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDABF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4248,7 +4270,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDAC0'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4261,7 +4284,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDAFF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4274,7 +4298,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDB00'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4287,7 +4312,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDB3F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4300,7 +4326,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDB40'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4313,7 +4340,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDB7F'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4326,7 +4354,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDB80'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4339,7 +4368,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-                Token.Character('\uFFFD'),
+                Token.Character('\uDBBF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )
@@ -4352,7 +4382,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-
+                Token.Character('\uDBC0'),
+                Token.Character('\uDC00')
             ),
             actual
         )
@@ -4365,18 +4396,8 @@ class NumericEntitiesTest {
         val actual = tokenizer.emittedTokens
         assertEquals(
             listOf<Token>(
-                Token.Character('\\'),
-                Token.Character('u'),
-                Token.Character('D'),
-                Token.Character('B'),
-                Token.Character('F'),
-                Token.Character('F'),
-                Token.Character('\\'),
-                Token.Character('u'),
-                Token.Character('D'),
-                Token.Character('F'),
-                Token.Character('F'),
-                Token.Character('D'),
+                Token.Character('\uDBFF'),
+                Token.Character('\uDFFD')
             ),
             actual
         )

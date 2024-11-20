@@ -21,10 +21,8 @@ internal class NumericCharacterReference(
                 }
             }
 
-            else -> {
-                reconsumeCurrentChar {
-                    DecimalCharacterReferenceStart(returnState = returnState)
-                }
+            else -> reconsumeCurrentChar {
+                DecimalCharacterReferenceStart(returnState = returnState)
             }
         }
     }
