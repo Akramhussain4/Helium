@@ -15,8 +15,15 @@ internal class NamedCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
 
+    private val MAX_LENGTH = NamedChars.keys.maxOf { it.removePrefix("&").length }
+
     private fun findNamedCharacterReference(buffer: String): Triple<String?, String?, Boolean> {
-        // Check for potential longer matches
+        // If the buffer is too long, don't even try to match
+        if (buffer.length > MAX_LENGTH) {
+            return Triple(null, null, false)
+        }
+
+        // Check for potential matches
         val potentialMatches = NamedChars.keys.filter { ref ->
             ref.startsWith("&$buffer")
         }
@@ -24,25 +31,38 @@ internal class NamedCharacterReference(
         // If there's a possibility of a longer match, continue consuming
         if (potentialMatches.any { ref ->
                 ref.removePrefix("&").length > buffer.length
-            }) {
+            }
+        ) {
             return Triple(null, null, true)
         }
 
-        // If we can't continue, check for partial matches
-        for (refLength in buffer.length downTo 1) {
-            val partialBuffer = buffer.substring(0, refLength)
-            val match = "&$partialBuffer"
-            NamedChars[match]?.let { replacement ->
-                return Triple(match, replacement, false)
+        // No potential matches, check for partial matches
+        for (i in buffer.length downTo 1) {
+            val partial = buffer.substring(0, i)
+            val match = "&$partial"
+            NamedChars[match]?.let { value ->
+                return Triple(match, value, false)
             }
         }
 
+        // No matches found
         return Triple(null, null, false)
     }
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+        // Add current character to buffer
         tokenizer.tempBuffer.append(codePoint.toChar())
         val currentBuffer = tokenizer.tempBuffer.toString().removePrefix("&")
+
+        // If we exceed max length, immediately emit all characters
+        if (currentBuffer.length > MAX_LENGTH) {
+            val chars = tokenizer.tempBuffer.toString()
+            tokenizer.tempBuffer.clear()
+            chars.forEach { char ->
+                tokenizer.emitToken(Token.Character(char))
+            }
+            return consumeNextChar { returnState }
+        }
 
         val (match, replacement, canContinue) = findNamedCharacterReference(currentBuffer)
 
@@ -62,15 +82,20 @@ internal class NamedCharacterReference(
                     tokenizer.logParseError("missing-semicolon-after-character-reference")
                 }
 
-                // Clear buffer and emit replacement
+                // Emit replacement character
                 tokenizer.tempBuffer.clear()
                 replacement.forEach { char ->
                     tokenizer.emitToken(Token.Character(char))
                 }
 
-                // Handle remaining characters after match
-                val matchText = match.removePrefix("&")
-                val remainingText = currentBuffer.substring(matchText.length)
+                // Handle remaining characters
+                val matchLength = match.removePrefix("&").length
+                val remainingText = if (currentBuffer.length > matchLength) {
+                    currentBuffer.substring(matchLength)
+                } else {
+                    ""
+                }
+
                 remainingText.forEach { char ->
                     tokenizer.emitToken(Token.Character(char))
                 }
@@ -78,23 +103,15 @@ internal class NamedCharacterReference(
                 consumeNextChar { returnState }
             }
 
-            canContinue -> {
-                consumeNextChar { this }
-            }
+            canContinue -> consumeNextChar { this }
 
             else -> {
-                // Failed to match - emit & and character
+                // Failed to match - emit & and all accumulated characters
+                tokenizer.tempBuffer.toString().forEach { char ->
+                    tokenizer.emitToken(Token.Character(char))
+                }
                 tokenizer.tempBuffer.clear()
-                tokenizer.emitToken(Token.Character('&'))
-                if (currentBuffer.isNotEmpty()) {
-                    tokenizer.emitToken(Token.Character(currentBuffer[0]))
-                }
-
-                if (currentBuffer.length > 1) {
-                    reconsumeCurrentChar { returnState }
-                } else {
-                    consumeNextChar { returnState }
-                }
+                consumeNextChar { returnState }
             }
         }
     }
