@@ -14,8 +14,13 @@ internal class Tokenizer {
     private var htmlBuffer: String = ""
 
     fun tokenize(html: String) {
-        htmlBuffer = html
+        htmlBuffer = preprocess(html)
         tokenizeRecursive(Data)
+    }
+
+    private fun preprocess(input: String): String {
+        val step1 = input.replace("\r\n", "\n")
+        return step1.replace('\r', '\n')
     }
 
     private tailrec fun tokenizeRecursive(currentState: TokenizationState) {
@@ -36,7 +41,7 @@ internal class Tokenizer {
                 Action.None -> Unit
             }
         } else {
-            currentState.consume(Chars.EOF.char.code, this)
+            currentState.consume(-1, this)
         }
     }
 

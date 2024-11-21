@@ -81,16 +81,12 @@ class UnicodeCharsProblematic {
 
     @Test
     fun `CR followed by U+0000`(){
-        tokenizer.tokenize("""\r\u0000""")
+        val input = "\r\u0000"
+        tokenizer.tokenize(input)
         assertEquals(
             listOf<Token>(
                 Token.Character('\n'),
-                Token.Character('\\'),
-                Token.Character('u'),
-                Token.Character('0'),
-                Token.Character('0'),
-                Token.Character('0'),
-                Token.Character('0'),
+                Token.Character('\u0000')
             ),
             tokenizer.emittedTokens
         )
