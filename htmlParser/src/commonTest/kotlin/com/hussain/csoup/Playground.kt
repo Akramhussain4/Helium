@@ -8,18 +8,6 @@ import kotlin.test.assertEquals
 class PlaygroundTest {
 
     @Test
-    fun test() {
-        val tokenizer = Tokenizer()
-        tokenizer.tokenize("""<a href="hello&amp;world">""")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag("a", attributes = mutableMapOf("href" to "hello&amp;world")),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
     fun test1() {
         val tokenizer = Tokenizer()
         tokenizer.tokenize("""&amp;""")
