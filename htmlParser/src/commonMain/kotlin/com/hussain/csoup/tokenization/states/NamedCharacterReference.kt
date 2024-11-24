@@ -15,104 +15,72 @@ internal class NamedCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
 
-    private val MAX_LENGTH = NamedChars.keys.maxOf { it.removePrefix("&").length }
-
-    private fun findNamedCharacterReference(buffer: String): Triple<String?, String?, Boolean> {
-        // If the buffer is too long, don't even try to match
-        if (buffer.length > MAX_LENGTH) {
-            return Triple(null, null, false)
-        }
-
-        // Check for potential matches
-        val potentialMatches = NamedChars.keys.filter { ref ->
-            ref.startsWith("&$buffer")
-        }
-
-        // If there's a possibility of a longer match, continue consuming
-        if (potentialMatches.any { ref ->
-                ref.removePrefix("&").length > buffer.length
-            }
-        ) {
-            return Triple(null, null, true)
-        }
-
-        // No potential matches, check for partial matches
-        for (i in buffer.length downTo 1) {
-            val partial = buffer.substring(0, i)
-            val match = "&$partial"
-            NamedChars[match]?.let { value ->
-                return Triple(match, value, false)
-            }
-        }
-
-        // No matches found
-        return Triple(null, null, false)
-    }
-
     override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
-        // Add current character to buffer
-        tokenizer.tempBuffer.append(codePoint.toChar())
-        val currentBuffer = tokenizer.tempBuffer.toString().removePrefix("&")
+        // Look at what we have without the current character
+        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
+        val nextChar = codePoint.toChar()
 
-        // If we exceed max length, immediately emit all characters
-        if (currentBuffer.length > MAX_LENGTH) {
+        // Special handling for attribute context where we want to preserve the original text
+        if (returnState.isAttributeState() &&
+            (nextChar.code == Chars.Equals.char.code || nextChar.code.isAsciiAlphaNumeric())) {
+            // Add current character to buffer before flushing
+            tokenizer.tempBuffer.append(nextChar)
+            // Emit the complete buffer contents in attribute context
+            returnState.flushCodePoints(tokenizer)
+            return consumeNextChar { returnState }
+        }
+
+        // See if adding the current character would complete a named reference
+        val withNextChar = "$currentText$nextChar"
+
+        // If the current character is semicolon, try to match the complete reference
+        if (nextChar == ';' && NamedChars.containsKey("&$currentText;")) {
+            tokenizer.tempBuffer.clear()
+            NamedChars["&$currentText;"]!!.forEach { char ->
+                tokenizer.emitToken(Token.Character(char))
+            }
+            return consumeNextChar { Data }
+        }
+
+        // If we have a match without semicolon
+        if (NamedChars.containsKey("&$currentText")) {
+            // Check if adding next char would make a longer valid reference
+            val couldBeLonger = NamedChars.keys.any { key ->
+                key.startsWith("&$withNextChar") || key.startsWith("&$withNextChar;")
+            }
+
+            if (!couldBeLonger) {
+                tokenizer.tempBuffer.clear()
+                tokenizer.logParseError("missing-semicolon-after-character-reference")
+                NamedChars["&$currentText"]!!.forEach { char ->
+                    tokenizer.emitToken(Token.Character(char))
+                }
+                return reconsumeCurrentChar { Data }
+            }
+        }
+
+        // See if we should keep consuming
+        if (NamedChars.keys.any { key ->
+                key.startsWith("&$withNextChar") || key.startsWith("&$withNextChar;")
+            }) {
+            tokenizer.tempBuffer.append(nextChar)
+            return consumeNextChar { this }
+        }
+
+        // No valid match found or possible
+        if (tokenizer.tempBuffer.isEmpty()) {
+            // If buffer is empty, just emit the current character
+            tokenizer.emitToken(Token.Character(nextChar))
+        } else {
+            // Otherwise emit buffer contents and reconsume current character
             val chars = tokenizer.tempBuffer.toString()
             tokenizer.tempBuffer.clear()
             chars.forEach { char ->
                 tokenizer.emitToken(Token.Character(char))
             }
-            return consumeNextChar { returnState }
+            return reconsumeCurrentChar { returnState }
         }
 
-        val (match, replacement, canContinue) = findNamedCharacterReference(currentBuffer)
-
-        return when {
-            returnState.isAttributeState() -> {
-                val nextChar = tokenizer.peekNextChar().code
-                if (nextChar == Chars.Equals.char.code || nextChar.isAsciiAlphaNumeric()) {
-                    returnState.flushCodePoints(tokenizer)
-                    consumeNextChar { returnState }
-                } else {
-                    consumeNextChar { this }
-                }
-            }
-
-            match != null && replacement != null -> {
-                if (!match.endsWith(";")) {
-                    tokenizer.logParseError("missing-semicolon-after-character-reference")
-                }
-
-                // Emit replacement character
-                tokenizer.tempBuffer.clear()
-                replacement.forEach { char ->
-                    tokenizer.emitToken(Token.Character(char))
-                }
-
-                // Handle remaining characters
-                val matchLength = match.removePrefix("&").length
-                val remainingText = if (currentBuffer.length > matchLength) {
-                    currentBuffer.substring(matchLength)
-                } else {
-                    ""
-                }
-
-                remainingText.forEach { char ->
-                    tokenizer.emitToken(Token.Character(char))
-                }
-
-                consumeNextChar { returnState }
-            }
-
-            canContinue -> consumeNextChar { this }
-
-            else -> {
-                // Failed to match - emit & and all accumulated characters
-                tokenizer.tempBuffer.toString().forEach { char ->
-                    tokenizer.emitToken(Token.Character(char))
-                }
-                tokenizer.tempBuffer.clear()
-                consumeNextChar { returnState }
-            }
-        }
+        return consumeNextChar { returnState }
     }
 }
