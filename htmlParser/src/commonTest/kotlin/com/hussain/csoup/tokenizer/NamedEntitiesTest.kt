@@ -22123,7 +22123,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbsp without a semicolon`() = assertTokenization(
         input = "&nbsp",
         expectedTokens = listOf(
-            char(' ')
+            char(' ')
         )
     )
 
@@ -22131,7 +22131,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbsp with a semicolon`() = assertTokenization(
         input = "&nbsp;",
         expectedTokens = listOf(
-            char(' ')
+            char(' ')
         )
     )
 

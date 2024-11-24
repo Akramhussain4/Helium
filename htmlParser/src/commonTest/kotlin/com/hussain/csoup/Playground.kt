@@ -1,51 +1,23 @@
 package com.hussain.csoup
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tokenizer.TokenizerTestBase
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class PlaygroundTest {
-
-    @Test
-    fun test1() {
-        val tokenizer = Tokenizer()
-        tokenizer.tokenize("""&amp;""")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+internal class PlaygroundTest : TokenizerTestBase() {
 
     @Test
-    fun namedchar() {
-        val tokenizer = Tokenizer()
-        tokenizer.tokenize("I'm &notit; I tell you")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('I'),
-                Token.Character('\''),
-                Token.Character('m'),
-                Token.Character(' '),
-                Token.Character('¬'),
-                Token.Character('i'),
-                Token.Character('t'),
-                Token.Character(';'),
-                Token.Character(' '),
-                Token.Character('I'),
-                Token.Character(' '),
-                Token.Character('t'),
-                Token.Character('e'),
-                Token.Character('l'),
-                Token.Character('l'),
-                Token.Character(' '),
-                Token.Character('y'),
-                Token.Character('o'),
-                Token.Character('u')
-            ),
-            tokenizer.emittedTokens
+    fun namedchar() = assertTokenization(
+        input = "I'm &notit; I tell you",
+        expectedTokens = chars(
+            "I'm ¬it; I tell you"
         )
-    }
+    )
+
+    @Test
+    fun namedChar2() = assertTokenization(
+        input = "I'm &notin; I tell you",
+        expectedTokens = chars(
+            "I'm ∉ I tell you"
+        )
+    )
 }
