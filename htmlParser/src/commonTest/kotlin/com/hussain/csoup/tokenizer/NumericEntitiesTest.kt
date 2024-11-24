@@ -474,37 +474,17 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+1FFFF`() = assertTokenization(
         input = "&#x1ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
-        ),
+            char('\uD83F'),
+            char('\uDFFF')
+        )
     )
 
     @Test
     fun `Invalid numeric entity character U+2FFFE`() = assertTokenization(
         input = "&#x2fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD87F'),
+            char('\uDFFE')
         ),
     )
 
@@ -512,18 +492,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+2FFFF`() = assertTokenization(
         input = "&#x2ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD87F'),
+            char('\uDFFF')
         ),
     )
 
@@ -531,18 +501,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+3FFFE`() = assertTokenization(
         input = "&#x3fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD8BF'),
+            char('\uDFFE')
         ),
     )
 
@@ -550,18 +510,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+3FFFF`() = assertTokenization(
         input = "&#x3ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD8BF'),
+            char('\uDFFF')
         ),
     )
 
@@ -569,18 +519,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+4FFFE`() = assertTokenization(
         input = "&#x4fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD8FF'),
+            char('\uDFFE')
         ),
     )
 
@@ -588,18 +528,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+4FFFF`() = assertTokenization(
         input = "&#x4ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD8FF'),
+            char('\uDFFF')
         ),
     )
 
@@ -607,18 +537,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+5FFFE`() = assertTokenization(
         input = "&#x5fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD93F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -626,18 +546,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+5FFFF`() = assertTokenization(
         input = "&#x5ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD93F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -645,18 +555,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+6FFFE`() = assertTokenization(
         input = "&#x6fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD97F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -664,18 +564,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+6FFFF`() = assertTokenization(
         input = "&#x6ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD97F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -683,18 +573,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+7FFFE`() = assertTokenization(
         input = "&#x7fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD9BF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -702,18 +582,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+7FFFF`() = assertTokenization(
         input = "&#x7ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD9BF'),
+            char('\uDFFF'),
         ),
     )
 
@@ -721,18 +591,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+8FFFE`() = assertTokenization(
         input = "&#x8fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uD9FF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -740,18 +600,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+8FFFF`() = assertTokenization(
         input = "&#x8ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('9'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uD9FF'),
+            char('\uDFFF'),
         ),
     )
 
@@ -759,18 +609,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+9FFFE`() = assertTokenization(
         input = "&#x9fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDA3F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -778,18 +618,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+9FFFF`() = assertTokenization(
         input = "&#x9ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDA3F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -797,18 +627,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+AFFFE`() = assertTokenization(
         input = "&#xafffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDA7F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -816,18 +636,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+AFFFF`() = assertTokenization(
         input = "&#xaffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDA7F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -835,18 +645,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+BFFFE`() = assertTokenization(
         input = "&#xbfffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDABF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -854,18 +654,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+BFFFF`() = assertTokenization(
         input = "&#xbffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDABF'),
+            char('\uDFFF'),
         ),
     )
 
@@ -873,18 +663,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+CFFFE`() = assertTokenization(
         input = "&#xcfffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDAFF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -892,18 +672,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+CFFFF`() = assertTokenization(
         input = "&#xcffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('A'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDAFF'),
+            char('\uDFFF'),
         ),
     )
 
@@ -911,18 +681,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+DFFFE`() = assertTokenization(
         input = "&#xdfffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDB3F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -930,18 +690,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+DFFFF`() = assertTokenization(
         input = "&#xdffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('3'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDB3F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -949,18 +699,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+EFFFE`() = assertTokenization(
         input = "&#xefffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDB7F'),
+            char('\uDFFE'),
         ),
     )
 
@@ -968,18 +708,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+EFFFF`() = assertTokenization(
         input = "&#xeffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('7'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDB7F'),
+            char('\uDFFF'),
         ),
     )
 
@@ -987,18 +717,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+FFFFE`() = assertTokenization(
         input = "&#xffffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDBBF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -1006,18 +726,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+FFFFF`() = assertTokenization(
         input = "&#xfffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('B'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDBBF'),
+            char('\uDFFF'),
         ),
     )
 
@@ -1025,18 +735,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+10FFFE`() = assertTokenization(
         input = "&#x10fffe;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('E'),
+            char('\uDBFF'),
+            char('\uDFFE'),
         ),
     )
 
@@ -1044,18 +744,8 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid numeric entity character U+10FFFF`() = assertTokenization(
         input = "&#x10ffff;",
         expectedTokens = listOf(
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('B'),
-            char('F'),
-            char('F'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
+            char('\uDBFF'),
+            char('\uDFFF'),
         ),
     )
 
