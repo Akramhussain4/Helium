@@ -1,401 +1,397 @@
 package com.hussain.csoup.tokenizer
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class TokenizerTest2 {
+/**
+ * Contains all 45 tests from here:
+ * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test2.test
+ *
+ * The commented (17) test cases are for Tokenization states that haven't been implemented yet.
+ */
+internal class TokenizerTest2 : TokenizerTestBase() {
 
-    private val tokenizer = Tokenizer()
+//    @Test
+//    fun `DOCTYPE without name`() = assertTokenization(
+//        input = "<!DOCTYPE>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = null, publicId = null, systemId = null, forceQuirks = false)
+//        )
+//    )
 
-    @Test
-    fun `Numeric entity representing the NUL character`() {
-        tokenizer.tokenize("&#0000;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE without space before name`() = assertTokenization(
+//        input = "<!DOCTYPEhtml>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
-    @Test
-    fun `Hexadecimal entity representing the NUL character`() {
-        tokenizer.tokenize("&#x0000;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `Incorrect DOCTYPE without a space before name`() = assertTokenization(
+//        input = "<!DOCTYPEfoo>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "foo", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
-    @Test
-    fun `Numeric entity representing a codepoint after U+10FFFF`() {
-        tokenizer.tokenize("&#2225222;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with publicId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(
+//                name = "html",
+//                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
+//                systemId = null,
+//                forceQuirks = true
+//            )
+//        )
+//    )
 
-    @Test
-    fun `Hexadecimal entity representing a codepoint after U+10FFFF`() {
-        tokenizer.tokenize("&#x1010FFFF;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with EOF after PUBLIC`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
+//        )
+//    )
 
-    @Test
-    fun `Hexadecimal entity pair representing a surrogate pair`() {
-        tokenizer.tokenize("&#xD869;&#xDED6;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-                Token.Character('\uFFFD'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with EOF after PUBLIC '`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC '",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false)
+//        )
+//    )
 
-    @Test
-    fun `Hexadecimal entity with mixed uppercase and lowercase`() {
-        tokenizer.tokenize("&#xaBcD;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ꯍ'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with EOF after PUBLIC 'x`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC 'x",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "x", systemId = null, forceQuirks = false)
+//        )
+//    )
 
-    @Test
-    fun `Entity without a name`() {
-        tokenizer.tokenize("&;")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character(';'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with systemId`() = assertTokenization(
+//        input = "<!DOCTYPE html SYSTEM \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(
+//                name = "html",
+//                publicId = null,
+//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+//                forceQuirks = true
+//            )
+//        )
+//    )
 
-    @Test
-    fun `Unescaped ampersand in attribute value`() {
-        tokenizer.tokenize("<h a='&'>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&")
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with single-quoted systemId`() = assertTokenization(
+//        input = "<!DOCTYPE html SYSTEM '-//W3C//DTD HTML Transitional 4.01//EN'>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(
+//                name = "html",
+//                publicId = null,
+//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+//                forceQuirks = true
+//            )
+//        )
+//    )
 
-    @Test
-    fun `StartTag containing lt`() {
-        tokenizer.tokenize("<a<b>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "a<b"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with publicId and systemId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\" \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(
+//                name = "html",
+//                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
+//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+//                forceQuirks = true
+//            )
+//        )
+//    )
 
-    @Test
-    fun `Non-void element containing trailing slash`() {
-        tokenizer.tokenize("<h/>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    selfClosing = true
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with greater than in double-quoted publicId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC \">x",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false),
+//            char('x')
+//        )
+//    )
 
-    @Test
-    fun `Void element with permitted slash`() {
-        tokenizer.tokenize("<br/>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "br",
-                    selfClosing = true
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with greater than in single-quoted publicId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC '>x",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false),
+//            char('x')
+//        )
+//    )
 
-    @Test
-    fun `Void element with permitted slash with attribute`() {
-        tokenizer.tokenize("<br foo='bar'/>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "br",
-                    selfClosing = true,
-                    attributes = mutableMapOf("foo" to "bar")
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with greater than in double-quoted systemId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC \"foo\" \">x",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "foo", systemId = "", forceQuirks = false),
+//            char('x')
+//        )
+//    )
 
-    @Test
-    fun `StartTag containing slash`() {
-        tokenizer.tokenize("<h/a='b'>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "b")
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `DOCTYPE with greater than in single-quoted systemId`() = assertTokenization(
+//        input = "<!DOCTYPE html PUBLIC 'foo' '>x",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = "foo", systemId = "", forceQuirks = false),
+//            char('x')
+//        )
+//    )
+
+//    @Test
+//    fun `Incomplete doctype`() = assertTokenization(
+//        input = "<!DOCTYPE html ",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
+//        )
+//    )
 
     @Test
-    fun `Double-quoted attribute value`() {
-        tokenizer.tokenize("""<h a="b">""".trimIndent())
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "b")
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Numeric entity representing the NUL character`() = assertTokenization(
+        input = "&#0000;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
 
     @Test
-    fun `Unescaped slash`() {
-        tokenizer.tokenize("</")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('<'),
-                Token.Character('/'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Hexadecimal entity representing the NUL character`() = assertTokenization(
+        input = "&#x0000;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
 
     @Test
-    fun `Illegal end tag name`() {
-        tokenizer.tokenize("</1>")
-        assertEquals(
-            listOf<Token>(
-                Token.Comment("1"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Numeric entity representing a codepoint after 1114111 U+10FFFF`() = assertTokenization(
+        input = "&#2225222;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
 
     @Test
-    fun `Simili processing instruction`() {
-        tokenizer.tokenize("<?namespace>")
-        assertEquals(
-            listOf<Token>(
-                Token.Comment("?namespace"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Hexadecimal entity representing a codepoint after 1114111 U+10FFFF`() = assertTokenization(
+        input = "&#x1010FFFF;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
 
     @Test
-    fun `A bogus comment stops at gt even if preceded by two dashes`() {
-        tokenizer.tokenize("<?foo-->")
-        assertEquals(
-            listOf<Token>(
-                Token.Comment("?foo--"),
-            ),
-            tokenizer.emittedTokens
+    fun `Hexadecimal entity pair representing a surrogate pair`() = assertTokenization(
+        input = "&#xD869;&#xDED6;",
+        expectedTokens = listOf(
+            char('\uFFFD'),
+            char('\uFFFD')
         )
-    }
+    )
 
     @Test
-    fun `Unescaped lt`() {
-        tokenizer.tokenize("foo < bar")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('f'),
-                Token.Character('o'),
-                Token.Character('o'),
-                Token.Character(' '),
-                Token.Character('<'),
-                Token.Character(' '),
-                Token.Character('b'),
-                Token.Character('a'),
-                Token.Character('r'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Hexadecimal entity with mixed uppercase and lowercase`() = assertTokenization(
+        input = "&#xaBcD;",
+        expectedTokens = listOf(char('\uABCD'))
+    )
 
     @Test
-    fun `Null Byte Replacement`() {
-        tokenizer.tokenize("\u0000")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0000'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Entity without a name`() = assertTokenization(
+        input = "&;",
+        expectedTokens = chars("&;")
+    )
 
     @Test
-    fun `Comment with dash`() {
-        tokenizer.tokenize("<!---x")
-        assertEquals(
-            listOf<Token>(
-                Token.Comment("-x"),
-            ),
-            tokenizer.emittedTokens
+    fun `Unescaped ampersand in attribute value`() = assertTokenization(
+        input = "<h a='&'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "&")
+            )
         )
-    }
+    )
 
     @Test
-    fun `Entity + newline`() {
-        tokenizer.tokenize("\nx\n&gt;\n")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\n'),
-                Token.Character('x'),
-                Token.Character('\n'),
-                Token.Character('>'),
-                Token.Character('\n'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `StartTag containing less than`() = assertTokenization(
+        input = "<a<b>",
+        expectedTokens = listOf(startTag("a<b"))
+    )
 
     @Test
-    fun `Start tag with no attributes but space before the greater-than sign`() {
-        tokenizer.tokenize("<h >")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "h"),
-            ),
-            tokenizer.emittedTokens
+    fun `Non-void element containing trailing -`() = assertTokenization(
+        input = "<h/>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                selfClosing = true
+            )
         )
-    }
+    )
 
     @Test
-    fun `Empty attribute followed by uppercase attribute`() {
-        tokenizer.tokenize("<h a B=''>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "",
-                        "b" to ""
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Void element with permitted slash`() = assertTokenization(
+        input = "<br/>",
+        expectedTokens = listOf(
+            startTag(
+                name = "br",
+                selfClosing = true
+            )
         )
-    }
+    )
 
     @Test
-    fun `Double-quote after attribute name`() {
-        tokenizer.tokenize("""<h a ">""")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "",
-                        "\"" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Void element with permitted slash with attribute`() = assertTokenization(
+        input = "<br foo='bar'/>",
+        expectedTokens = listOf(
+            startTag(
+                name = "br",
+                selfClosing = true,
+                attributes = mapOf("foo" to "bar")
+            )
         )
-    }
+    )
 
     @Test
-    fun `Single-quote after attribute name`() {
-        tokenizer.tokenize("<h a '>")
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "",
-                        "'" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `StartTag containing -`() = assertTokenization(
+        input = "<h/a='b'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "b")
+            )
         )
-    }
+    )
 
     @Test
-    fun `Empty end tag with following characters`() {
-        tokenizer.tokenize("a</>bc")
-        assertEquals(
-            listOf<Token>(
-                Token.Character('a'),
-                Token.Character('b'),
-                Token.Character('c'),
-            ),
-            tokenizer.emittedTokens
+    fun `Double-quoted attribute value`() = assertTokenization(
+        input = "<h a=\"b\">",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "b")
+            )
         )
-    }
+    )
 
     @Test
-    fun `Empty end tag with following tag`(){
-        tokenizer.tokenize("a</><b>c")
-        assertEquals(
-            listOf(
-                Token.Character('a'),
-                Token.StartTag(name = "b"),
-                Token.Character('c'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Unescaped less than-`() = assertTokenization(
+        input = "</",
+        expectedTokens = chars("</")
+    )
 
     @Test
-    fun `Empty end tag with following comment`(){
-        tokenizer.tokenize("a</><!--b-->c")
-        assertEquals(
-            listOf(
-                Token.Character('a'),
-                Token.Comment("b"),
-                Token.Character('c'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Illegal end tag name`() = assertTokenization(
+        input = "</1>",
+        expectedTokens = listOf(comment("1"))
+    )
 
     @Test
-    fun `Empty end tag with following end tag`(){
-        tokenizer.tokenize("a</></b>c")
-        assertEquals(
-            listOf(
-                Token.Character('a'),
-                Token.EndTag("b"),
-                Token.Character('c'),
-            ),
-            tokenizer.emittedTokens
+    fun `Simili processing instruction`() = assertTokenization(
+        input = "<?namespace>",
+        expectedTokens = listOf(comment("?namespace"))
+    )
+
+    @Test
+    fun `A bogus comment stops at greater than even if preceded by two dashes`() = assertTokenization(
+        input = "<?foo-->",
+        expectedTokens = listOf(comment("?foo--"))
+    )
+
+    @Test
+    fun `Unescaped less than`() = assertTokenization(
+        input = "foo < bar",
+        expectedTokens = chars("foo < bar")
+    )
+
+    @Test
+    fun `Null Byte Replacement`() = assertTokenization(
+        input = "\u0000",
+        expectedTokens = chars("\u0000")
+    )
+
+//    @Test
+//    fun `Comment with dash`() = assertTokenization(
+//        input = "<!---x",
+//        expectedTokens = listOf(comment("-x"))
+//    )
+
+    @Test
+    fun `Entity + newline`() = assertTokenization(
+        input = "\nx\n&gt;\n",
+        expectedTokens = chars("\nx\n>\n")
+    )
+
+    @Test
+    fun `Start tag with no attributes but space before the greater-than sign`() = assertTokenization(
+        input = "<h >",
+        expectedTokens = listOf(startTag("h"))
+    )
+
+    @Test
+    fun `Empty attribute followed by uppercase attribute`() = assertTokenization(
+        input = "<h a B=''>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "", "b" to "")
+            )
         )
-    }
+    )
+
+    @Test
+    fun `Double-quote after attribute name`() = assertTokenization(
+        input = "<h a \">",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "", "\"" to "")
+            )
+        )
+    )
+
+    @Test
+    fun `Single-quote after attribute name`() = assertTokenization(
+        input = "<h a '>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mapOf("a" to "", "'" to "")
+            )
+        )
+    )
+
+    @Test
+    fun `Empty end tag with following characters`() = assertTokenization(
+        input = "a</>bc",
+        expectedTokens = chars("abc")
+    )
+
+    @Test
+    fun `Empty end tag with following tag`() = assertTokenization(
+        input = "a</><b>c",
+        expectedTokens = listOf(
+            char('a'),
+            startTag("b"),
+            char('c')
+        )
+    )
+
+//    @Test
+//    fun `Empty end tag with following comment`() = assertTokenization(
+//        input = "a</><!--b-->c",
+//        expectedTokens = listOf(
+//            *chars("a").toTypedArray(),
+//            comment("b"),
+//            *chars("c").toTypedArray()
+//        )
+//    )
+
+    @Test
+    fun `Empty end tag with following end tag`() = assertTokenization(
+        input = "a</></b>c",
+        expectedTokens = listOf(
+            char('a'),
+            endTag("b"),
+            char('c')
+        )
+    )
 }

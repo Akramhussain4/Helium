@@ -20,7 +20,7 @@ internal data object EndTagOpen : TokenizationState() {
                 consumeNextChar { Data }
             }
 
-            codePoint.IS(Chars.EOF) -> {
+            codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
                 tokenizer.emitToken(Token.Character(data = '<'))
                 tokenizer.emitToken(Token.Character(data = '/'))

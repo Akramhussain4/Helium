@@ -1,603 +1,514 @@
 package com.hussain.csoup.tokenizer
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class TokenizerTest1 {
+/**
+ * Contains all 69 tests from here:
+ * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test1.test
+ *
+ * The commented (34) test cases are for Tokenization states that haven't been implemented yet.
+ */
+internal class TokenizerTest1 : TokenizerTestBase() {
 
-    private val tokenizer = Tokenizer()
+//    @Test
+//    fun `Correct Doctype lowercase`() = assertTokenization(
+//        input = "<!DOCTYPE html>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
-    @Test
-    fun `Single Start Tag`() {
-        val html = "<p>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "p"),
-            ),
-            tokenizer.emittedTokens,
-        )
-    }
+//    @Test
+//    fun `Correct Doctype uppercase`() = assertTokenization(
+//        input = "<!DOCTYPE HTML>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
-    @Test
-    fun `Single End tag`() {
-        val html = "</p>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.EndTag(name = "p"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `Correct Doctype mixed case`() = assertTokenization(
+//        input = "<!DOCTYPE HtMl>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
-    @Test
-    fun `Empty end tag`() {
-        val html = "</>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `Correct Doctype case with EOF`() = assertTokenization(
+//        input = "<!DOCTYPE HtMl",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
+//        )
+//    )
 
-    @Test
-    fun `Empty start tag`() {
-        val html = "<>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '<'),
-                Token.Character(data = '>'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `Truncated doctype start`() = assertTokenization(
+//        input = "<!DOC>",
+//        expectedTokens = listOf(
+//            Token.Comment(data = "DOC")
+//        )
+//    )
 
-    @Test
-    fun `Start Tag with attribute`() {
-        val html = "<h a='b'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "b")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+//    @Test
+//    fun `Doctype in error`() = assertTokenization(
+//        input = "<!DOCTYPE foo>",
+//        expectedTokens = listOf(
+//            Token.DOCTYPE(name = "foo", publicId = null, systemId = null, forceQuirks = true)
+//        )
+//    )
 
     @Test
-    fun `Start Tag with attribute no quotes`(){
-        val html = "<h a=b>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "b")
-                )
-            ),
-            tokenizer.emittedTokens
+    fun `Single Start Tag`() = assertTokenization(
+        input = "<h>",
+        expectedTokens = listOf(
+            startTag(name = "h")
         )
-    }
+    )
 
     @Test
-    fun `Start and End Tag`(){
-        val html = "<h></h>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "h"),
-                Token.EndTag(name = "h"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Empty end tag`() = assertTokenization(
+        input = "</>",
+        expectedTokens = emptyList()
+    )
 
     @Test
-    fun `Two unclosed start tags`() {
-        val html = "<p>One<p>Two"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "p"),
-                Token.Character(data = 'O'),
-                Token.Character(data = 'n'),
-                Token.Character(data = 'e'),
-                Token.StartTag(name = "p"),
-                Token.Character(data = 'T'),
-                Token.Character(data = 'w'),
-                Token.Character(data = 'o'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Empty start tag`() = assertTokenization(
+        input = "<>",
+        expectedTokens = chars("<>")
+    )
 
     @Test
-    fun `End Tag with attribute`() {
-        val html = "<h></h a='b'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "h"),
-                Token.EndTag(name = "h"),
-            ),
-            tokenizer.emittedTokens
+    fun `Start Tag w-attribute`() = assertTokenization(
+        input = "<h a='b'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "b"))
         )
-    }
+    )
 
     @Test
-    fun `Multiple attributes`() {
-        val html = "<h a='b' c='d'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                        "c" to "d",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Start Tag w-attribute no quotes`() = assertTokenization(
+        input = "<h a=b>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "b"))
         )
-    }
+    )
 
     @Test
-    fun `Multiple attributes no space`() {
-        val html = "<h a='b'c='d'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                        "c" to "d",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Start-End Tag`() = assertTokenization(
+        input = "<h></h>",
+        expectedTokens = listOf(
+            startTag(name = "h"),
+            endTag("h")
         )
-    }
+    )
 
     @Test
-    fun `Repeated attributes`() {
-        val html = "<h a='b' a='d'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Two unclosed start tags`() = assertTokenization(
+        input = "<p>One<p>Two",
+        expectedTokens = listOf(
+            startTag(name = "p"),
+            *chars("One").toTypedArray(),
+            startTag(name = "p"),
+            *chars("Two").toTypedArray()
         )
-    }
+    )
 
     @Test
-    fun `Ampersand EOF`() {
-        val input = "&"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-            ),
-            tokenizer.emittedTokens
+    fun `End Tag w-attribute`() = assertTokenization(
+        input = "<h></h a='b'>",
+        expectedTokens = listOf(
+            startTag(name = "h"),
+            endTag("h")
         )
-    }
+    )
 
     @Test
-    fun `Ampersand ampersand EOF`() {
-        val input = "&&"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = '&'),
-            ),
-            tokenizer.emittedTokens
+    fun `Multiple atts`() = assertTokenization(
+        input = "<h a='b' c='d'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "b", "c" to "d"))
         )
-    }
+    )
 
     @Test
-    fun `Ampersand space EOF`() {
-        val input = "& "
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = ' '),
-            ),
-            tokenizer.emittedTokens
+    fun `Multiple atts no space`() = assertTokenization(
+        input = "<h a='b'c='d'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "b", "c" to "d"))
         )
-    }
+    )
 
     @Test
-    fun `Unfinished entity`() {
-        val input = "&f"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = 'f'),
-            ),
-            tokenizer.emittedTokens
+    fun `Repeated attr`() = assertTokenization(
+        input = "<h a='b' a='d'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "b"))
         )
-    }
+    )
+
+//    @Test
+//    fun `Simple comment`() = assertTokenization(
+//        input = "<!--comment-->",
+//        expectedTokens = listOf(
+//            comment("comment")
+//        )
+//    )
+
+//    @Test
+//    fun `Comment Central dash no space`() = assertTokenization(
+//        input = "<!----->",
+//        expectedTokens = listOf(
+//            comment("-")
+//        )
+//    )
+
+//    @Test
+//    fun `Comment two central dashes`() = assertTokenization(
+//        input = "<!-- --comment -->",
+//        expectedTokens = listOf(
+//            comment(" --comment ")
+//        )
+//    )
+
+//    @Test
+//    fun `Comment central less-than bang`() = assertTokenization(
+//        input = "<!--<!-->",
+//        expectedTokens = listOf(
+//            comment("<!")
+//        )
+//    )
+
+//    @Test
+//    fun `Unfinished comment`() = assertTokenization(
+//        input = "<!--comment",
+//        expectedTokens = listOf(
+//            comment("comment")
+//        )
+//    )
+
+//    @Test
+//    fun `Unfinished comment after start of nested comment`() = assertTokenization(
+//        input = "<!-- <!--",
+//        expectedTokens = listOf(
+//            comment(" <!")
+//        )
+//    )
+
+//    @Test
+//    fun `Start of a comment`() = assertTokenization(
+//        input = "<!-",
+//        expectedTokens = listOf(
+//            comment("-")
+//        )
+//    )
+
+//    @Test
+//    fun `Short comment`() = assertTokenization(
+//        input = "<!-->",
+//        expectedTokens = listOf(
+//            comment("")
+//        )
+//    )
+
+//    @Test
+//    fun `Short comment two`() = assertTokenization(
+//        input = "<!--->",
+//        expectedTokens = listOf(
+//            comment("")
+//        )
+//    )
+
+//    @Test
+//    fun `Short comment three`() = assertTokenization(
+//        input = "<!---->",
+//        expectedTokens = listOf(
+//            comment("")
+//        )
+//    )
+
+//    @Test
+//    fun `less than in comment`() = assertTokenization(
+//        input = "<!-- <test-->",
+//        expectedTokens = listOf(
+//            comment(" <test")
+//        )
+//    )
+
+//    @Test
+//    fun `less than x2 in comment`() = assertTokenization(
+//        input = "<!--<<-->",
+//        expectedTokens = listOf(
+//            comment("<<")
+//        )
+//    )
+
+//    @Test
+//    fun `less than ! in comment`() = assertTokenization(
+//        input = "<!-- <!test-->",
+//        expectedTokens = listOf(
+//            comment(" <!test")
+//        )
+//    )
+
+//    @Test
+//    fun `less than !- in comment`() = assertTokenization(
+//        input = "<!-- <!-test-->",
+//        expectedTokens = listOf(
+//            comment(" <!-test")
+//        )
+//    )
+
+//    @Test
+//    fun `Nested comment`() = assertTokenization(
+//        input = "<!-- <!--test-->",
+//        expectedTokens = listOf(
+//            comment(" <!--test")
+//        )
+//    )
+
+//    @Test
+//    fun `Nested comment with extra less than`() = assertTokenization(
+//        input = "<!-- <<!--test-->",
+//        expectedTokens = listOf(
+//            comment(" <<!--test")
+//        )
+//    )
 
     @Test
-    fun `Ampersand and number sign`() {
-        val input = "&#"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = '#'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `less than in script data`() = assertTokenization(
+        input = "<test-->",
+        expectedTokens = chars("<test-->")
+    )
+
+//    @Test
+//    fun `less than! in script data`() = assertTokenization(
+//        input = "<!test-->",
+//        expectedTokens = chars("<!test-->")
+//    )
+
+//    @Test
+//    fun `less than!- in script data`() = assertTokenization(
+//        input = "<!-test-->",
+//        expectedTokens = chars("<!-test-->")
+//    )
+
+//    @Test
+//    fun `Escaped script data`() = assertTokenization(
+//        input = "<!--test-->",
+//        expectedTokens = chars("<!--test-->")
+//    )
+
+//    @Test
+//    fun `less than in script HTML comment`() = assertTokenization(
+//        input = "<!-- < test -->",
+//        expectedTokens = chars("<!-- < test -->")
+//    )
+
+//    @Test
+//    fun `less than- in script HTML comment`() = assertTokenization(
+//        input = "<!-- </ test -->",
+//        expectedTokens = chars("<!-- </ test -->")
+//    )
+
+//    @Test
+//    fun `Start tag in script HTML comment`() = assertTokenization(
+//        input = "<!-- <test> -->",
+//        expectedTokens = chars("<!-- <test> -->")
+//    )
+
+//    @Test
+//    fun `End tag in script HTML comment`() = assertTokenization(
+//        input = "<!-- </test> -->",
+//        expectedTokens = chars("<!-- </test> -->")
+//    )
+
+//    @Test
+//    fun `- in script HTML comment double escaped`() = assertTokenization(
+//        input = "<!--<script>-</script>-->",
+//        expectedTokens = chars("<!--<script>-</script>-->")
+//    )
+
+//    @Test
+//    fun `-- in script HTML comment double escaped`() = assertTokenization(
+//        input = "<!--<script>--</script>-->",
+//        expectedTokens = chars("<!--<script>--</script>-->")
+//    )
+
+//    @Test
+//    fun `--- in script HTML comment double escaped`() = assertTokenization(
+//        input = "<!--<script>---</script>-->",
+//        expectedTokens = chars("<!--<script>---</script>-->")
+//    )
+
+//    @Test
+//    fun `- spaced in script HTML comment double escaped`() = assertTokenization(
+//        input = "<!--<script> - </script>-->",
+//        expectedTokens = chars("<!--<script> - </script>-->")
+//    )
+
+//    @Test
+//    fun `-- spaced in script HTML comment double escaped`() = assertTokenization(
+//        input = "<!--<script> -- </script>-->",
+//        expectedTokens = chars("<!--<script> -- </script>-->")
+//    )
 
     @Test
-    fun `Unfinished numeric entity`() {
-        val input = "&#x"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = '#'),
-                Token.Character(data = 'x'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Ampersand EOF`() = assertTokenization(
+        input = "&",
+        expectedTokens = chars("&")
+    )
 
     @Test
-    fun `Self closing start tag`() {
-        val html = """
-            <br/>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "br",
-                    selfClosing = true,
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Ampersand ampersand EOF`() = assertTokenization(
+        input = "&&",
+        expectedTokens = chars("&&")
+    )
 
     @Test
-    fun `Entity with trailing semicolon 1`() {
-        val input = "I'm &not;it"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '¬'),
-                Token.Character(data = 'i'),
-                Token.Character(data = 't'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Ampersand space EOF`() = assertTokenization(
+        input = "& ",
+        expectedTokens = chars("& ")
+    )
 
     @Test
-    fun `Entity with trailing semicolon 2`() {
-        val input = "I'm &notin;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '∉'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Unfinished entity`() = assertTokenization(
+        input = "&f",
+        expectedTokens = chars("&f")
+    )
 
     @Test
-    fun `Entity without trailing semicolon 1`() {
-        val input = "I'm &notit"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '¬'),
-                Token.Character(data = 'i'),
-                Token.Character(data = 't'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Ampersand number sign`() = assertTokenization(
+        input = "&#",
+        expectedTokens = chars("&#")
+    )
 
     @Test
-    fun `Entity without trailing semicolon 2`() {
-        val input = "I'm &notin"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '∉'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Unfinished numeric entity`() = assertTokenization(
+        input = "&#x",
+        expectedTokens = chars("&#x")
+    )
 
     @Test
-    fun `Partial entity match at end of file`() {
-        val input = "I'm &no"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '&'),
-                Token.Character(data = 'n'),
-                Token.Character(data = 'o'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Entity with trailing semicolon 1`() = assertTokenization(
+        input = "I'm &not;it",
+        expectedTokens = chars("I'm \u00ACit")
+    )
 
     @Test
-    fun `Non-ASCII character reference name`() {
-        val input = "&\u00AC;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = '¬'),
-                Token.Character(data = ';'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Entity with trailing semicolon 2`() = assertTokenization(
+        input = "I'm &notin;",
+        expectedTokens = chars("I'm \u2209")
+    )
 
     @Test
-    fun `ASCII decimal entity`() {
-        val input = "&#0036;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '$'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Entity without trailing semicolon 1`() = assertTokenization(
+        input = "I'm &notit",
+        expectedTokens = chars("I'm \u00ACit")
+    )
 
     @Test
-    fun `ASCII hexadecimal entity`() {
-        val input = "&#x3f;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '?'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Entity without trailing semicolon 2`() = assertTokenization(
+        input = "I'm &notin",
+        expectedTokens = chars("I'm \u00ACin")
+    )
 
     @Test
-    fun `Hexadecimal entity in attribute`() {
-        val html = "<h a='&#x3f;'></h>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf(
-                        "a" to "?",
-                    )
-                ),
-                Token.EndTag(name = "h"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Partial entity match at end of file`() = assertTokenization(
+        input = "I'm &no",
+        expectedTokens = chars("I'm &no")
+    )
 
     @Test
-    fun `Entity in attribute without semicolon ending in x`() {
-        val html = "<h a='&notx'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&notx")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Non-ASCII character reference name`() = assertTokenization(
+        input = "&\u00AC;",
+        expectedTokens = chars("&\u00AC;")
+    )
 
     @Test
-    fun `Entity in attribute without semicolon ending in 1`() {
-        val html = "<h a='&not1'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&not1")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `ASCII decimal entity`() = assertTokenization(
+        input = "&#0036;",
+        expectedTokens = chars("$")
+    )
 
     @Test
-    fun `Entity in attribute without semicolon ending in i`() {
-        val html = "<h a='&noti'>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&noti")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `ASCII hexadecimal entity`() = assertTokenization(
+        input = "&#x3f;",
+        expectedTokens = chars("?")
+    )
 
     @Test
-    fun `Entity in attribute without semicolon`() {
-        val html = """
-            <h a='&COPY'>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "©")
-                ),
-            ),
-            tokenizer.emittedTokens
+    fun `Hexadecimal entity in attribute`() = assertTokenization(
+        input = "<h a='&#x3f;'></h>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "?")),
+            endTag("h")
         )
-    }
+    )
 
     @Test
-    fun `Unquoted attribute ending in ampersand`() {
-        val html = "<s o=& t>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "s",
-                    attributes = mutableMapOf(
-                        "o" to "&",
-                        "t" to "",
-                    )
-                )
-            ),
-            tokenizer.emittedTokens
+    fun `Entity in attribute without semicolon ending in x`() = assertTokenization(
+        input = "<h a='&notx'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "&notx"))
         )
-    }
+    )
 
     @Test
-    fun `Unquoted attribute at end of tag with final character and with tag followed by characters`() {
-        val html = "<a a=a&>foo"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(
-                    name = "a",
-                    attributes = mutableMapOf("a" to "a&")
-                ),
-                Token.Character('f'),
-                Token.Character('o'),
-                Token.Character('o'),
-            ),
-            tokenizer.emittedTokens
+    fun `Entity in attribute without semicolon ending in 1`() = assertTokenization(
+        input = "<h a='&not1'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "&not1"))
         )
-    }
+    )
 
     @Test
-    fun `Open angled bracket in unquoted attribute value state`() {
-        val html = "<a a=f<>"
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "a",
-                    attributes = mutableMapOf(
-                        "a" to "f<"
-                    )
-                )
-            ),
-            tokenizer.emittedTokens
+    fun `Entity in attribute without semicolon ending in i`() = assertTokenization(
+        input = "<h a='&noti'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "&noti"))
         )
-    }
+    )
 
     @Test
-    fun `Entity '∉' in string`() {
-        val html = """
-            <p>I'm &notin; I tell you</p>
-        """.trimIndent()
-        tokenizer.tokenize(html)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "p"),
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '∉'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'I'),
-                Token.Character(data = ' '),
-                Token.Character(data = 't'),
-                Token.Character(data = 'e'),
-                Token.Character(data = 'l'),
-                Token.Character(data = 'l'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'y'),
-                Token.Character(data = 'o'),
-                Token.Character(data = 'u'),
-                Token.EndTag(name = "p")
-            ),
-            tokenizer.emittedTokens
+    fun `Entity in attribute without semicolon`() = assertTokenization(
+        input = "<h a='&COPY'>",
+        expectedTokens = listOf(
+            startTag(name = "h", attributes = mapOf("a" to "\u00A9"))
         )
-    }
+    )
 
     @Test
-    fun `Entity ¬it in string`() {
-        val html1 = """
-            <p>I'm &notit; I tell you</p>
-        """.trimIndent()
-        tokenizer.tokenize(html1)
-        assertEquals(
-            listOf(
-                Token.StartTag(name = "p"),
-                Token.Character(data = 'I'),
-                Token.Character(data = '\''),
-                Token.Character(data = 'm'),
-                Token.Character(data = ' '),
-                Token.Character(data = '¬'),
-                Token.Character(data = 'i'),
-                Token.Character(data = 't'),
-                Token.Character(data = ';'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'I'),
-                Token.Character(data = ' '),
-                Token.Character(data = 't'),
-                Token.Character(data = 'e'),
-                Token.Character(data = 'l'),
-                Token.Character(data = 'l'),
-                Token.Character(data = ' '),
-                Token.Character(data = 'y'),
-                Token.Character(data = 'o'),
-                Token.Character(data = 'u'),
-                Token.EndTag(name = "p")
-            ),
-            tokenizer.emittedTokens
+    fun `Unquoted attribute ending in ampersand`() = assertTokenization(
+        input = "<s o=& t>",
+        expectedTokens = listOf(
+            startTag(name = "s", attributes = mapOf("o" to "&", "t" to ""))
         )
-    }
+    )
+
+    @Test
+    fun `Unquoted attribute at end of tag with final character of and with tag followed by characters`() = assertTokenization(
+        input = "<a a=a&>foo",
+        expectedTokens = listOf(
+            startTag(name = "a", attributes = mapOf("a" to "a&")),
+            *chars("foo").toTypedArray()
+        )
+    )
+
+    @Test
+    fun `plaintext element`() = assertTokenization(
+        input = "<plaintext>foobar",
+        expectedTokens = listOf(
+            startTag(name = "plaintext"),
+            *chars("foobar").toTypedArray()
+        )
+    )
+
+    @Test
+    fun `Open angled bracket in unquoted attribute value state`() = assertTokenization(
+        input = "<a a=f<>",
+        expectedTokens = listOf(
+            startTag(name = "a", attributes = mapOf("a" to "f<"))
+        )
+    )
 }
