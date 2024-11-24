@@ -1,23 +1,14 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
     applyDefaultHierarchyTemplate()
     explicitApi()
 
-    androidNativeArm32()
-    androidNativeArm64()
-    androidNativeX86()
-    androidNativeX64()
-
-    jvm {
-        jvmToolchain(11)
-    }
-
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    jvmToolchain(11)
+    jvm { }
 
     sourceSets {
         commonMain.dependencies {
@@ -25,6 +16,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotlinx.json)
         }
     }
 }
