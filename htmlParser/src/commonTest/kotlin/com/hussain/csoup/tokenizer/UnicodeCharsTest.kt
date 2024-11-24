@@ -1,3626 +1,2440 @@
 package com.hussain.csoup.tokenizer
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class UnicodeCharsTest {
+/**
+ * Contains all 323 tests from here:
+ * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/unicodeChars.test
+ */
+internal class UnicodeCharsTest : TokenizerTestBase() {
 
-    private val tokenizer = Tokenizer()
-
     @Test
-    fun `Invalid Unicode character U+0001`() {
-        val input = "\u0001"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0001')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0001`() = assertTokenization(
+        input = "\u0001",
+        expectedTokens = listOf(char('\u0001'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0002`() {
-        val input = "\u0002"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0002')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0002`() = assertTokenization(
+        input = "\u0002",
+        expectedTokens = listOf(char('\u0002'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0003`() {
-        val input = "\u0003"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0003')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0003`() = assertTokenization(
+        input = "\u0003",
+        expectedTokens = listOf(char('\u0003'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0004`() {
-        val input = "\u0004"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0004')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0004`() = assertTokenization(
+        input = "\u0004",
+        expectedTokens = listOf(char('\u0004'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0005`() {
-        val input = "\u0005"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0005')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0005`() = assertTokenization(
+        input = "\u0005",
+        expectedTokens = listOf(char('\u0005'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0006`() {
-        val input = "\u0006"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0006')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0006`() = assertTokenization(
+        input = "\u0006",
+        expectedTokens = listOf(char('\u0006'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0007`() {
-        val input = "\u0007"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0007')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0007`() = assertTokenization(
+        input = "\u0007",
+        expectedTokens = listOf(char('\u0007'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0008`() {
-        val input = "\u0008"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0008')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0008`() = assertTokenization(
+        input = "\u0008",
+        expectedTokens = listOf(char('\u0008'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+000B`() {
-        val input = "\u000B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u000B')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+000B`() = assertTokenization(
+        input = "\u000B",
+        expectedTokens = listOf(char('\u000B'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+000E`() {
-        val input = "\u000E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u000E')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+000E`() = assertTokenization(
+        input = "\u000E",
+        expectedTokens = listOf(char('\u000E'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+000F`() {
-        val input = "\u000F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u000F')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+000F`() = assertTokenization(
+        input = "\u000F",
+        expectedTokens = listOf(char('\u000F'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0010`() {
-        val input = "\u0010"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0010')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0010`() = assertTokenization(
+        input = "\u0010",
+        expectedTokens = listOf(char('\u0010'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0011`() {
-        val input = "\u0011"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0011')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0011`() = assertTokenization(
+        input = "\u0011",
+        expectedTokens = listOf(char('\u0011'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0012`() {
-        val input = "\u0012"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0012')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0012`() = assertTokenization(
+        input = "\u0012",
+        expectedTokens = listOf(char('\u0012'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0013`() {
-        val input = "\u0013"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0013')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0013`() = assertTokenization(
+        input = "\u0013",
+        expectedTokens = listOf(char('\u0013'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0014`() {
-        val input = "\u0014"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0014')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0014`() = assertTokenization(
+        input = "\u0014",
+        expectedTokens = listOf(char('\u0014'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0015`() {
-        val input = "\u0015"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0015')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0015`() = assertTokenization(
+        input = "\u0015",
+        expectedTokens = listOf(char('\u0015'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0016`() {
-        val input = "\u0016"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0016')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0016`() = assertTokenization(
+        input = "\u0016",
+        expectedTokens = listOf(char('\u0016'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0017`() {
-        val input = "\u0017"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0017')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0017`() = assertTokenization(
+        input = "\u0017",
+        expectedTokens = listOf(char('\u0017'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0018`() {
-        val input = "\u0018"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0018')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0018`() = assertTokenization(
+        input = "\u0018",
+        expectedTokens = listOf(char('\u0018'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+0019`() {
-        val input = "\u0019"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0019')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+0019`() = assertTokenization(
+        input = "\u0019",
+        expectedTokens = listOf(char('\u0019'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001A`() {
-        val input = "\u001A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001A')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001A`() = assertTokenization(
+        input = "\u001A",
+        expectedTokens = listOf(char('\u001A'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001B`() {
-        val input = "\u001B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001B')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001B`() = assertTokenization(
+        input = "\u001B",
+        expectedTokens = listOf(char('\u001B'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001C`() {
-        val input = "\u001C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001C')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001C`() = assertTokenization(
+        input = "\u001C",
+        expectedTokens = listOf(char('\u001C'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001D`() {
-        val input = "\u001D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001D')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001D`() = assertTokenization(
+        input = "\u001D",
+        expectedTokens = listOf(char('\u001D'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001E`() {
-        val input = "\u001E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001E')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001E`() = assertTokenization(
+        input = "\u001E",
+        expectedTokens = listOf(char('\u001E'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+001F`() {
-        val input = "\u001F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u001F')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+001F`() = assertTokenization(
+        input = "\u001F",
+        expectedTokens = listOf(char('\u001F'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+007F`() {
-        val input = "\u007F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007F')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+007F`() = assertTokenization(
+        input = "\u007F",
+        expectedTokens = listOf(char('\u007F'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD0`() {
-        val input = "\uFDD0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD0')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD0`() = assertTokenization(
+        input = "\uFDD0",
+        expectedTokens = listOf(char('\uFDD0'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD1`() {
-        val input = "\uFDD1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD1')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD1`() = assertTokenization(
+        input = "\uFDD1",
+        expectedTokens = listOf(char('\uFDD1'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD2`() {
-        val input = "\uFDD2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD2')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD2`() = assertTokenization(
+        input = "\uFDD2",
+        expectedTokens = listOf(char('\uFDD2'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD3`() {
-        val input = "\uFDD3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD3')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD3`() = assertTokenization(
+        input = "\uFDD3",
+        expectedTokens = listOf(char('\uFDD3'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD4`() {
-        val input = "\uFDD4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD4')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD4`() = assertTokenization(
+        input = "\uFDD4",
+        expectedTokens = listOf(char('\uFDD4'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD5`() {
-        val input = "\uFDD5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD5')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD5`() = assertTokenization(
+        input = "\uFDD5",
+        expectedTokens = listOf(char('\uFDD5'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD6`() {
-        val input = "\uFDD6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD6')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD6`() = assertTokenization(
+        input = "\uFDD6",
+        expectedTokens = listOf(char('\uFDD6'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD7`() {
-        val input = "\uFDD7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD7')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD7`() = assertTokenization(
+        input = "\uFDD7",
+        expectedTokens = listOf(char('\uFDD7'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD8`() {
-        val input = "\uFDD8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD8')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD8`() = assertTokenization(
+        input = "\uFDD8",
+        expectedTokens = listOf(char('\uFDD8'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDD9`() {
-        val input = "\uFDD9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDD9')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDD9`() = assertTokenization(
+        input = "\uFDD9",
+        expectedTokens = listOf(char('\uFDD9'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDA`() {
-        val input = "\uFDDA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDA')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDA`() = assertTokenization(
+        input = "\uFDDA",
+        expectedTokens = listOf(char('\uFDDA'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDB`() {
-        val input = "\uFDDB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDB')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDB`() = assertTokenization(
+        input = "\uFDDB",
+        expectedTokens = listOf(char('\uFDDB'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDC`() {
-        val input = "\uFDDC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDC')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDC`() = assertTokenization(
+        input = "\uFDDC",
+        expectedTokens = listOf(char('\uFDDC'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDD`() {
-        val input = "\uFDDD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDD')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDD`() = assertTokenization(
+        input = "\uFDDD",
+        expectedTokens = listOf(char('\uFDDD'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDE`() {
-        val input = "\uFDDE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDE')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDE`() = assertTokenization(
+        input = "\uFDDE",
+        expectedTokens = listOf(char('\uFDDE'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDDF`() {
-        val input = "\uFDDF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDDF')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDDF`() = assertTokenization(
+        input = "\uFDDF",
+        expectedTokens = listOf(char('\uFDDF'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE0`() {
-        val input = "\uFDE0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE0')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE0`() = assertTokenization(
+        input = "\uFDE0",
+        expectedTokens = listOf(char('\uFDE0'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE1`() {
-        val input = "\uFDE1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE1')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE1`() = assertTokenization(
+        input = "\uFDE1",
+        expectedTokens = listOf(char('\uFDE1'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE2`() {
-        val input = "\uFDE2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE2')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE2`() = assertTokenization(
+        input = "\uFDE2",
+        expectedTokens = listOf(char('\uFDE2'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE3`() {
-        val input = "\uFDE3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE3')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE3`() = assertTokenization(
+        input = "\uFDE3",
+        expectedTokens = listOf(char('\uFDE3'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE4`() {
-        val input = "\uFDE4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE4')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE4`() = assertTokenization(
+        input = "\uFDE4",
+        expectedTokens = listOf(char('\uFDE4'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE5`() {
-        val input = "\uFDE5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE5')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE5`() = assertTokenization(
+        input = "\uFDE5",
+        expectedTokens = listOf(char('\uFDE5'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE6`() {
-        val input = "\uFDE6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE6')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE6`() = assertTokenization(
+        input = "\uFDE6",
+        expectedTokens = listOf(char('\uFDE6'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE7`() {
-        val input = "\uFDE7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE7')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE7`() = assertTokenization(
+        input = "\uFDE7",
+        expectedTokens = listOf(char('\uFDE7'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE8`() {
-        val input = "\uFDE8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE8')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE8`() = assertTokenization(
+        input = "\uFDE8",
+        expectedTokens = listOf(char('\uFDE8'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDE9`() {
-        val input = "\uFDE9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDE9')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDE9`() = assertTokenization(
+        input = "\uFDE9",
+        expectedTokens = listOf(char('\uFDE9'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDEA`() {
-        val input = "\uFDEA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDEA')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDEA`() = assertTokenization(
+        input = "\uFDEA",
+        expectedTokens = listOf(char('\uFDEA'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDEB`() {
-        val input = "\uFDEB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDEB')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDEB`() = assertTokenization(
+        input = "\uFDEB",
+        expectedTokens = listOf(char('\uFDEB'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDEC`() {
-        val input = "\uFDEC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDEC')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDEC`() = assertTokenization(
+        input = "\uFDEC",
+        expectedTokens = listOf(char('\uFDEC'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDED`() {
-        val input = "\uFDED"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDED')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDED`() = assertTokenization(
+        input = "\uFDED",
+        expectedTokens = listOf(char('\uFDED'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDEE`() {
-        val input = "\uFDEE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDEE')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDEE`() = assertTokenization(
+        input = "\uFDEE",
+        expectedTokens = listOf(char('\uFDEE'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FDEF`() {
-        val input = "\uFDEF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDEF')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FDEF`() = assertTokenization(
+        input = "\uFDEF",
+        expectedTokens = listOf(char('\uFDEF'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FFFE`() {
-        val input = "\uFFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFE')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FFFE`() = assertTokenization(
+        input = "\uFFFE",
+        expectedTokens = listOf(char('\uFFFE'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+FFFF`() {
-        val input = "\uFFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFF')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Invalid Unicode character U+FFFF`() = assertTokenization(
+        input = "\uFFFF",
+        expectedTokens = listOf(char('\uFFFF'))
+    )
 
     @Test
-    fun `Invalid Unicode character U+1FFFE`() {
-        val input = "\uD83F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD83F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+1FFFE`() = assertTokenization(
+        input = "\uD83F\uDFFE",
+        expectedTokens = listOf(
+            char('\uD83F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+1FFFF`() {
-        val input = "\uD83F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD83F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+1FFFF`() = assertTokenization(
+        input = "\uD83F\uDFFF",
+        expectedTokens = listOf(
+            char('\uD83F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+2FFFE`() {
-        val input = "\uD87F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD87F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+2FFFE`() = assertTokenization(
+        input = "\uD87F\uDFFE",
+        expectedTokens = listOf(
+            char('\uD87F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+2FFFF`() {
-        val input = "\uD87F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD87F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+2FFFF`() = assertTokenization(
+        input = "\uD87F\uDFFF",
+        expectedTokens = listOf(
+            char('\uD87F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+3FFFE`() {
-        val input = "\uD8BF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8BF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+3FFFE`() = assertTokenization(
+        input = "\uD8BF\uDFFE",
+        expectedTokens = listOf(
+            char('\uD8BF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+3FFFF`() {
-        val input = "\uD8BF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8BF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+3FFFF`() = assertTokenization(
+        input = "\uD8BF\uDFFF",
+        expectedTokens = listOf(
+            char('\uD8BF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+4FFFE`() {
-        val input = "\uD8FF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8FF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+4FFFE`() = assertTokenization(
+        input = "\uD8FF\uDFFE",
+        expectedTokens = listOf(
+            char('\uD8FF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+4FFFF`() {
-        val input = "\uD8FF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8FF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+4FFFF`() = assertTokenization(
+        input = "\uD8FF\uDFFF",
+        expectedTokens = listOf(
+            char('\uD8FF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+5FFFE`() {
-        val input = "\uD93F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD93F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+5FFFE`() = assertTokenization(
+        input = "\uD93F\uDFFE",
+        expectedTokens = listOf(
+            char('\uD93F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+5FFFF`() {
-        val input = "\uD93F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD93F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+5FFFF`() = assertTokenization(
+        input = "\uD93F\uDFFF",
+        expectedTokens = listOf(
+            char('\uD93F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+6FFFE`() {
-        val input = "\uD97F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD97F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+6FFFE`() = assertTokenization(
+        input = "\uD97F\uDFFE",
+        expectedTokens = listOf(
+            char('\uD97F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+6FFFF`() {
-        val input = "\uD97F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD97F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+6FFFF`() = assertTokenization(
+        input = "\uD97F\uDFFF",
+        expectedTokens = listOf(
+            char('\uD97F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+7FFFE`() {
-        val input = "\uD9BF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9BF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+7FFFE`() = assertTokenization(
+        input = "\uD9BF\uDFFE",
+        expectedTokens = listOf(
+            char('\uD9BF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+7FFFF`() {
-        val input = "\uD9BF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9BF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+7FFFF`() = assertTokenization(
+        input = "\uD9BF\uDFFF",
+        expectedTokens = listOf(
+            char('\uD9BF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+8FFFE`() {
-        val input = "\uD9FF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9FF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+8FFFE`() = assertTokenization(
+        input = "\uD9FF\uDFFE",
+        expectedTokens = listOf(
+            char('\uD9FF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+8FFFF`() {
-        val input = "\uD9FF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9FF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+8FFFF`() = assertTokenization(
+        input = "\uD9FF\uDFFF",
+        expectedTokens = listOf(
+            char('\uD9FF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+9FFFE`() {
-        val input = "\uDA3F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA3F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+9FFFE`() = assertTokenization(
+        input = "\uDA3F\uDFFE",
+        expectedTokens = listOf(
+            char('\uDA3F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+9FFFF`() {
-        val input = "\uDA3F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA3F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+9FFFF`() = assertTokenization(
+        input = "\uDA3F\uDFFF",
+        expectedTokens = listOf(
+            char('\uDA3F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+AFFFE`() {
-        val input = "\uDA7F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA7F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+AFFFE`() = assertTokenization(
+        input = "\uDA7F\uDFFE",
+        expectedTokens = listOf(
+            char('\uDA7F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+AFFFF`() {
-        val input = "\uDA7F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA7F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+AFFFF`() = assertTokenization(
+        input = "\uDA7F\uDFFF",
+        expectedTokens = listOf(
+            char('\uDA7F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+BFFFE`() {
-        val input = "\uDABF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDABF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+BFFFE`() = assertTokenization(
+        input = "\uDABF\uDFFE",
+        expectedTokens = listOf(
+            char('\uDABF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+BFFFF`() {
-        val input = "\uDABF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDABF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+BFFFF`() = assertTokenization(
+        input = "\uDABF\uDFFF",
+        expectedTokens = listOf(
+            char('\uDABF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+CFFFE`() {
-        val input = "\uDAFF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDAFF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+CFFFE`() = assertTokenization(
+        input = "\uDAFF\uDFFE",
+        expectedTokens = listOf(
+            char('\uDAFF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+CFFFF`() {
-        val input = "\uDAFF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDAFF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+CFFFF`() = assertTokenization(
+        input = "\uDAFF\uDFFF",
+        expectedTokens = listOf(
+            char('\uDAFF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+DFFFE`() {
-        val input = "\uDB3F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB3F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+DFFFE`() = assertTokenization(
+        input = "\uDB3F\uDFFE",
+        expectedTokens = listOf(
+            char('\uDB3F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+DFFFF`() {
-        val input = "\uDB3F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB3F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+DFFFF`() = assertTokenization(
+        input = "\uDB3F\uDFFF",
+        expectedTokens = listOf(
+            char('\uDB3F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+EFFFE`() {
-        val input = "\uDB7F\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB7F'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+EFFFE`() = assertTokenization(
+        input = "\uDB7F\uDFFE",
+        expectedTokens = listOf(
+            char('\uDB7F'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+EFFFF`() {
-        val input = "\uDB7F\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB7F'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+EFFFF`() = assertTokenization(
+        input = "\uDB7F\uDFFF",
+        expectedTokens = listOf(
+            char('\uDB7F'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+FFFFE`() {
-        val input = "\uDBBF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBBF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+FFFFE`() = assertTokenization(
+        input = "\uDBBF\uDFFE",
+        expectedTokens = listOf(
+            char('\uDBBF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+FFFFF`() {
-        val input = "\uDBBF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBBF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+FFFFF`() = assertTokenization(
+        input = "\uDBBF\uDFFF",
+        expectedTokens = listOf(
+            char('\uDBBF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+10FFFE`() {
-        val input = "\uDBFF\uDFFE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBFF'),
-                Token.Character('\uDFFE')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+10FFFE`() = assertTokenization(
+        input = "\uDBFF\uDFFE",
+        expectedTokens = listOf(
+            char('\uDBFF'),
+            char('\uDFFE')
         )
-    }
+    )
 
     @Test
-    fun `Invalid Unicode character U+10FFFF`() {
-        val input = "\uDBFF\uDFFF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBFF'),
-                Token.Character('\uDFFF')
-            ), tokenizer.emittedTokens
+    fun `Invalid Unicode character U+10FFFF`() = assertTokenization(
+        input = "\uDBFF\uDFFF",
+        expectedTokens = listOf(
+            char('\uDBFF'),
+            char('\uDFFF')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0009`() {
-        val input = "\u0009"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0009')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0009`() = assertTokenization(
+        input = "\u0009",
+        expectedTokens = listOf(char('\u0009'))
+    )
 
     @Test
-    fun `Valid Unicode character U+000A`() {
-        val input = "\u000A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u000A')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+000A`() = assertTokenization(
+        input = "\u000A",
+        expectedTokens = listOf(char('\u000A'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0020`() {
-        val input = "\u0020"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0020')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0020`() = assertTokenization(
+        input = "\u0020",
+        expectedTokens = listOf(char('\u0020'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0021`() {
-        val input = "\u0021"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0021')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0021`() = assertTokenization(
+        input = "\u0021",
+        expectedTokens = listOf(char('\u0021'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0022`() {
-        val input = "\u0022"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0022')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0022`() = assertTokenization(
+        input = "\u0022",
+        expectedTokens = listOf(char('\u0022'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0023`() {
-        val input = "\u0023"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0023')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0023`() = assertTokenization(
+        input = "\u0023",
+        expectedTokens = listOf(char('\u0023'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0024`() {
-        val input = "\u0024"
-        tokenizer.tokenize(input)
-        assertEquals(listOf<Token>(
-            Token.Character('\u0024')
-        ), tokenizer.emittedTokens)
-    }
+    fun `Valid Unicode character U+0024`() = assertTokenization(
+        input = "\u0024",
+        expectedTokens = listOf(char('\u0024'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0025`() {
-        val input = "\u0025"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0025')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0025`() = assertTokenization(
+        input = "\u0025",
+        expectedTokens = listOf(char('\u0025'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0026`() {
-        val input = "\u0026"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0026')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0026`() = assertTokenization(
+        input = "\u0026",
+        expectedTokens = listOf(char('\u0026'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0027`() {
-        val input = "\u0027"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0027')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0027`() = assertTokenization(
+        input = "\u0027",
+        expectedTokens = listOf(char('\u0027'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0028`() {
-        val input = "\u0028"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0028')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0028`() = assertTokenization(
+        input = "\u0028",
+        expectedTokens = listOf(char('\u0028'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0029`() {
-        val input = "\u0029"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0029')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0029`() = assertTokenization(
+        input = "\u0029",
+        expectedTokens = listOf(char('\u0029'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002A`() {
-        val input = "\u002A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002A')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002A`() = assertTokenization(
+        input = "\u002A",
+        expectedTokens = listOf(char('\u002A'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002B`() {
-        val input = "\u002B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002B')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002B`() = assertTokenization(
+        input = "\u002B",
+        expectedTokens = listOf(char('\u002B'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002C`() {
-        val input = "\u002C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002C')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002C`() = assertTokenization(
+        input = "\u002C",
+        expectedTokens = listOf(char('\u002C'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002D`() {
-        val input = "\u002D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002D')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002D`() = assertTokenization(
+        input = "\u002D",
+        expectedTokens = listOf(char('\u002D'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002E`() {
-        val input = "\u002E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002E')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002E`() = assertTokenization(
+        input = "\u002E",
+        expectedTokens = listOf(char('\u002E'))
+    )
 
     @Test
-    fun `Valid Unicode character U+002F`() {
-        val input = "\u002F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u002F')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+002F`() = assertTokenization(
+        input = "\u002F",
+        expectedTokens = listOf(char('\u002F'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0030`() {
-        val input = "\u0030"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0030')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0030`() = assertTokenization(
+        input = "\u0030",
+        expectedTokens = listOf(char('\u0030'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0031`() {
-        val input = "\u0031"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0031')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0031`() = assertTokenization(
+        input = "\u0031",
+        expectedTokens = listOf(char('\u0031'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0032`() {
-        val input = "\u0032"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0032')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0032`() = assertTokenization(
+        input = "\u0032",
+        expectedTokens = listOf(char('\u0032'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0033`() {
-        val input = "\u0033"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0033')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0033`() = assertTokenization(
+        input = "\u0033",
+        expectedTokens = listOf(char('\u0033'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0034`() {
-        val input = "\u0034"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0034')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0034`() = assertTokenization(
+        input = "\u0034",
+        expectedTokens = listOf(char('\u0034'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0035`() {
-        val input = "\u0035"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0035')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0035`() = assertTokenization(
+        input = "\u0035",
+        expectedTokens = listOf(char('\u0035'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0036`() {
-        val input = "\u0036"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0036')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0036`() = assertTokenization(
+        input = "\u0036",
+        expectedTokens = listOf(char('\u0036'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0037`() {
-        val input = "\u0037"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0037')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0037`() = assertTokenization(
+        input = "\u0037",
+        expectedTokens = listOf(char('\u0037'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0038`() {
-        val input = "\u0038"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0038')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0038`() = assertTokenization(
+        input = "\u0038",
+        expectedTokens = listOf(char('\u0038'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0039`() {
-        val input = "\u0039"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0039')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0039`() = assertTokenization(
+        input = "\u0039",
+        expectedTokens = listOf(char('\u0039'))
+    )
 
     @Test
-    fun `Valid Unicode character U+003A`() {
-        val input = "\u003A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u003A')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+003A`() = assertTokenization(
+        input = "\u003A",
+        expectedTokens = listOf(char('\u003A'))
+    )
 
     @Test
-    fun `Valid Unicode character U+003B`() {
-        val input = "\u003B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u003B')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+003B`() = assertTokenization(
+        input = "\u003B",
+        expectedTokens = listOf(char('\u003B'))
+    )
 
     @Test
-    fun `Valid Unicode character U+003D`() {
-        val input = "\u003D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u003D')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+003D`() = assertTokenization(
+        input = "\u003D",
+        expectedTokens = listOf(char('\u003D'))
+    )
 
     @Test
-    fun `Valid Unicode character U+003E`() {
-        val input = "\u003E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u003E')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+003E`() = assertTokenization(
+        input = "\u003E",
+        expectedTokens = listOf(char('\u003E'))
+    )
 
     @Test
-    fun `Valid Unicode character U+003F`() {
-        val input = "\u003F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u003F')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+003F`() = assertTokenization(
+        input = "\u003F",
+        expectedTokens = listOf(char('\u003F'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0040`() {
-        val input = "\u0040"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0040')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0040`() = assertTokenization(
+        input = "\u0040",
+        expectedTokens = listOf(char('\u0040'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0041`() {
-        val input = "\u0041"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0041')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0041`() = assertTokenization(
+        input = "\u0041",
+        expectedTokens = listOf(char('\u0041'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0042`() {
-        val input = "\u0042"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0042')
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+0042`() = assertTokenization(
+        input = "\u0042",
+        expectedTokens = listOf(char('\u0042'))
+    )
 
     @Test
-    fun `Valid Unicode character U+0043`() {
-        val input = "\u0043"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0043')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0043`() = assertTokenization(
+        input = "\u0043",
+        expectedTokens = listOf(
+            char('\u0043')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0044`() {
-        val input = "\u0044"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0044')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0044`() = assertTokenization(
+        input = "\u0044",
+        expectedTokens = listOf(
+            char('\u0044')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0045`() {
-        val input = "\u0045"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0045')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0045`() = assertTokenization(
+        input = "\u0045",
+        expectedTokens = listOf(
+            char('\u0045')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0046`() {
-        val input = "\u0046"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0046')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0046`() = assertTokenization(
+        input = "\u0046",
+        expectedTokens = listOf(
+            char('\u0046')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0047`() {
-        val input = "\u0047"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0047')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0047`() = assertTokenization(
+        input = "\u0047",
+        expectedTokens = listOf(
+            char('\u0047')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0048`() {
-        val input = "\u0048"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0048')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0048`() = assertTokenization(
+        input = "\u0048",
+        expectedTokens = listOf(
+            char('\u0048')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0049`() {
-        val input = "\u0049"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0049')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0049`() = assertTokenization(
+        input = "\u0049",
+        expectedTokens = listOf(
+            char('\u0049')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004A`() {
-        val input = "\u004A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004A')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004A`() = assertTokenization(
+        input = "\u004A",
+        expectedTokens = listOf(
+            char('\u004A')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004B`() {
-        val input = "\u004B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004B')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004B`() = assertTokenization(
+        input = "\u004B",
+        expectedTokens = listOf(
+            char('\u004B')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004C`() {
-        val input = "\u004C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004C')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004C`() = assertTokenization(
+        input = "\u004C",
+        expectedTokens = listOf(
+            char('\u004C')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004D`() {
-        val input = "\u004D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004D')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004D`() = assertTokenization(
+        input = "\u004D",
+        expectedTokens = listOf(
+            char('\u004D')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004E`() {
-        val input = "\u004E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004E')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004E`() = assertTokenization(
+        input = "\u004E",
+        expectedTokens = listOf(
+            char('\u004E')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+004F`() {
-        val input = "\u004F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u004F')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+004F`() = assertTokenization(
+        input = "\u004F",
+        expectedTokens = listOf(
+            char('\u004F')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0050`() {
-        val input = "\u0050"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0050')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0050`() = assertTokenization(
+        input = "\u0050",
+        expectedTokens = listOf(
+            char('\u0050')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0051`() {
-        val input = "\u0051"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0051')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0051`() = assertTokenization(
+        input = "\u0051",
+        expectedTokens = listOf(
+            char('\u0051')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0052`() {
-        val input = "\u0052"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0052')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0052`() = assertTokenization(
+        input = "\u0052",
+        expectedTokens = listOf(
+            char('\u0052')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0053`() {
-        val input = "\u0053"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0053')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0053`() = assertTokenization(
+        input = "\u0053",
+        expectedTokens = listOf(
+            char('\u0053')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0054`() {
-        val input = "\u0054"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0054')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0054`() = assertTokenization(
+        input = "\u0054",
+        expectedTokens = listOf(
+            char('\u0054')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0055`() {
-        val input = "\u0055"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0055')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0055`() = assertTokenization(
+        input = "\u0055",
+        expectedTokens = listOf(
+            char('\u0055')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0056`() {
-        val input = "\u0056"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0056')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0056`() = assertTokenization(
+        input = "\u0056",
+        expectedTokens = listOf(
+            char('\u0056')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0057`() {
-        val input = "\u0057"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0057')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0057`() = assertTokenization(
+        input = "\u0057",
+        expectedTokens = listOf(
+            char('\u0057')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0058`() {
-        val input = "\u0058"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0058')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0058`() = assertTokenization(
+        input = "\u0058",
+        expectedTokens = listOf(
+            char('\u0058')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0059`() {
-        val input = "\u0059"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0059')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0059`() = assertTokenization(
+        input = "\u0059",
+        expectedTokens = listOf(
+            char('\u0059')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005A`() {
-        val input = "\u005A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005A')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005A`() = assertTokenization(
+        input = "\u005A",
+        expectedTokens = listOf(
+            char('\u005A')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005B`() {
-        val input = "\u005B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005B')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005B`() = assertTokenization(
+        input = "\u005B",
+        expectedTokens = listOf(
+            char('\u005B')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005C`() {
-        val input = "\u005C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005C')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005C`() = assertTokenization(
+        input = "\u005C",
+        expectedTokens = listOf(
+            char('\u005C')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005D`() {
-        val input = "\u005D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005D')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005D`() = assertTokenization(
+        input = "\u005D",
+        expectedTokens = listOf(
+            char('\u005D')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005E`() {
-        val input = "\u005E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005E')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005E`() = assertTokenization(
+        input = "\u005E",
+        expectedTokens = listOf(
+            char('\u005E')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+005F`() {
-        val input = "\u005F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u005F')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+005F`() = assertTokenization(
+        input = "\u005F",
+        expectedTokens = listOf(
+            char('\u005F')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0060`() {
-        val input = "\u0060"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0060')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0060`() = assertTokenization(
+        input = "\u0060",
+        expectedTokens = listOf(
+            char('\u0060')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0061`() {
-        val input = "\u0061"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0061')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0061`() = assertTokenization(
+        input = "\u0061",
+        expectedTokens = listOf(
+            char('\u0061')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0062`() {
-        val input = "\u0062"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0062')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0062`() = assertTokenization(
+        input = "\u0062",
+        expectedTokens = listOf(
+            char('\u0062')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0063`() {
-        val input = "\u0063"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0063')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0063`() = assertTokenization(
+        input = "\u0063",
+        expectedTokens = listOf(
+            char('\u0063')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0064`() {
-        val input = "\u0064"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0064')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0064`() = assertTokenization(
+        input = "\u0064",
+        expectedTokens = listOf(
+            char('\u0064')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0065`() {
-        val input = "\u0065"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0065')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0065`() = assertTokenization(
+        input = "\u0065",
+        expectedTokens = listOf(
+            char('\u0065')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0066`() {
-        val input = "\u0066"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0066')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0066`() = assertTokenization(
+        input = "\u0066",
+        expectedTokens = listOf(
+            char('\u0066')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0067`() {
-        val input = "\u0067"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0067')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0067`() = assertTokenization(
+        input = "\u0067",
+        expectedTokens = listOf(
+            char('\u0067')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0068`() {
-        val input = "\u0068"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0068')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0068`() = assertTokenization(
+        input = "\u0068",
+        expectedTokens = listOf(
+            char('\u0068')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0069`() {
-        val input = "\u0069"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0069')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0069`() = assertTokenization(
+        input = "\u0069",
+        expectedTokens = listOf(
+            char('\u0069')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006A`() {
-        val input = "\u006A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006A')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006A`() = assertTokenization(
+        input = "\u006A",
+        expectedTokens = listOf(
+            char('\u006A')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006B`() {
-        val input = "\u006B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006B')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006B`() = assertTokenization(
+        input = "\u006B",
+        expectedTokens = listOf(
+            char('\u006B')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006C`() {
-        val input = "\u006C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006C')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006C`() = assertTokenization(
+        input = "\u006C",
+        expectedTokens = listOf(
+            char('\u006C')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006D`() {
-        val input = "\u006D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006D')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006D`() = assertTokenization(
+        input = "\u006D",
+        expectedTokens = listOf(
+            char('\u006D')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006E`() {
-        val input = "\u006E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006E')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006E`() = assertTokenization(
+        input = "\u006E",
+        expectedTokens = listOf(
+            char('\u006E')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+006F`() {
-        val input = "\u006F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u006F')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+006F`() = assertTokenization(
+        input = "\u006F",
+        expectedTokens = listOf(
+            char('\u006F')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0070`() {
-        val input = "\u0070"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0070')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0070`() = assertTokenization(
+        input = "\u0070",
+        expectedTokens = listOf(
+            char('\u0070')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0071`() {
-        val input = "\u0071"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0071')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0071`() = assertTokenization(
+        input = "\u0071",
+        expectedTokens = listOf(
+            char('\u0071')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0072`() {
-        val input = "\u0072"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0072')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0072`() = assertTokenization(
+        input = "\u0072",
+        expectedTokens = listOf(
+            char('\u0072')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0073`() {
-        val input = "\u0073"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0073')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0073`() = assertTokenization(
+        input = "\u0073",
+        expectedTokens = listOf(
+            char('\u0073')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0074`() {
-        val input = "\u0074"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0074')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0074`() = assertTokenization(
+        input = "\u0074",
+        expectedTokens = listOf(
+            char('\u0074')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0075`() {
-        val input = "\u0075"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0075')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0075`() = assertTokenization(
+        input = "\u0075",
+        expectedTokens = listOf(
+            char('\u0075')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0076`() {
-        val input = "\u0076"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0076')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0076`() = assertTokenization(
+        input = "\u0076",
+        expectedTokens = listOf(
+            char('\u0076')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0077`() {
-        val input = "\u0077"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0077')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0077`() = assertTokenization(
+        input = "\u0077",
+        expectedTokens = listOf(
+            char('\u0077')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0078`() {
-        val input = "\u0078"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0078')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0078`() = assertTokenization(
+        input = "\u0078",
+        expectedTokens = listOf(
+            char('\u0078')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+0079`() {
-        val input = "\u0079"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u0079')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+0079`() = assertTokenization(
+        input = "\u0079",
+        expectedTokens = listOf(
+            char('\u0079')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+007A`() {
-        val input = "\u007A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007A')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+007A`() = assertTokenization(
+        input = "\u007A",
+        expectedTokens = listOf(
+            char('\u007A')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+007B`() {
-        val input = "\u007B"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007B')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+007B`() = assertTokenization(
+        input = "\u007B",
+        expectedTokens = listOf(
+            char('\u007B')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+007C`() {
-        val input = "\u007C"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007C')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+007C`() = assertTokenization(
+        input = "\u007C",
+        expectedTokens = listOf(
+            char('\u007C')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+007D`() {
-        val input = "\u007D"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007D')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+007D`() = assertTokenization(
+        input = "\u007D",
+        expectedTokens = listOf(
+            char('\u007D')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+007E`() {
-        val input = "\u007E"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u007E')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+007E`() = assertTokenization(
+        input = "\u007E",
+        expectedTokens = listOf(
+            char('\u007E')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A0`() {
-        val input = "\u00A0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A0')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A0`() = assertTokenization(
+        input = "\u00A0",
+        expectedTokens = listOf(
+            char('\u00A0')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A1`() {
-        val input = "\u00A1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A1')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A1`() = assertTokenization(
+        input = "\u00A1",
+        expectedTokens = listOf(
+            char('\u00A1')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A2`() {
-        val input = "\u00A2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A2')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A2`() = assertTokenization(
+        input = "\u00A2",
+        expectedTokens = listOf(
+            char('\u00A2')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A3`() {
-        val input = "\u00A3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A3')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A3`() = assertTokenization(
+        input = "\u00A3",
+        expectedTokens = listOf(
+            char('\u00A3')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A4`() {
-        val input = "\u00A4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A4')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A4`() = assertTokenization(
+        input = "\u00A4",
+        expectedTokens = listOf(
+            char('\u00A4')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A5`() {
-        val input = "\u00A5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A5')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A5`() = assertTokenization(
+        input = "\u00A5",
+        expectedTokens = listOf(
+            char('\u00A5')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A6`() {
-        val input = "\u00A6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A6')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A6`() = assertTokenization(
+        input = "\u00A6",
+        expectedTokens = listOf(
+            char('\u00A6')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A7`() {
-        val input = "\u00A7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A7')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A7`() = assertTokenization(
+        input = "\u00A7",
+        expectedTokens = listOf(
+            char('\u00A7')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A8`() {
-        val input = "\u00A8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A8')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A8`() = assertTokenization(
+        input = "\u00A8",
+        expectedTokens = listOf(
+            char('\u00A8')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00A9`() {
-        val input = "\u00A9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00A9')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00A9`() = assertTokenization(
+        input = "\u00A9",
+        expectedTokens = listOf(
+            char('\u00A9')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AA`() {
-        val input = "\u00AA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AA')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AA`() = assertTokenization(
+        input = "\u00AA",
+        expectedTokens = listOf(
+            char('\u00AA')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AB`() {
-        val input = "\u00AB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AB')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AB`() = assertTokenization(
+        input = "\u00AB",
+        expectedTokens = listOf(
+            char('\u00AB')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AC`() {
-        val input = "\u00AC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AC')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AC`() = assertTokenization(
+        input = "\u00AC",
+        expectedTokens = listOf(
+            char('\u00AC')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AD`() {
-        val input = "\u00AD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AD')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AD`() = assertTokenization(
+        input = "\u00AD",
+        expectedTokens = listOf(
+            char('\u00AD')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AE`() {
-        val input = "\u00AE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AE')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AE`() = assertTokenization(
+        input = "\u00AE",
+        expectedTokens = listOf(
+            char('\u00AE')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00AF`() {
-        val input = "\u00AF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00AF')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00AF`() = assertTokenization(
+        input = "\u00AF",
+        expectedTokens = listOf(
+            char('\u00AF')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B0`() {
-        val input = "\u00B0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B0')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B0`() = assertTokenization(
+        input = "\u00B0",
+        expectedTokens = listOf(
+            char('\u00B0')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B1`() {
-        val input = "\u00B1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B1')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B1`() = assertTokenization(
+        input = "\u00B1",
+        expectedTokens = listOf(
+            char('\u00B1')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B2`() {
-        val input = "\u00B2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B2')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B2`() = assertTokenization(
+        input = "\u00B2",
+        expectedTokens = listOf(
+            char('\u00B2')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B3`() {
-        val input = "\u00B3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B3')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B3`() = assertTokenization(
+        input = "\u00B3",
+        expectedTokens = listOf(
+            char('\u00B3')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B4`() {
-        val input = "\u00B4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B4')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B4`() = assertTokenization(
+        input = "\u00B4",
+        expectedTokens = listOf(
+            char('\u00B4')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B5`() {
-        val input = "\u00B5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B5')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B5`() = assertTokenization(
+        input = "\u00B5",
+        expectedTokens = listOf(
+            char('\u00B5')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B6`() {
-        val input = "\u00B6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B6')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B6`() = assertTokenization(
+        input = "\u00B6",
+        expectedTokens = listOf(
+            char('\u00B6')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B7`() {
-        val input = "\u00B7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B7')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B7`() = assertTokenization(
+        input = "\u00B7",
+        expectedTokens = listOf(
+            char('\u00B7')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B8`() {
-        val input = "\u00B8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B8')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B8`() = assertTokenization(
+        input = "\u00B8",
+        expectedTokens = listOf(
+            char('\u00B8')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00B9`() {
-        val input = "\u00B9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00B9')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00B9`() = assertTokenization(
+        input = "\u00B9",
+        expectedTokens = listOf(
+            char('\u00B9')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BA`() {
-        val input = "\u00BA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BA')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BA`() = assertTokenization(
+        input = "\u00BA",
+        expectedTokens = listOf(
+            char('\u00BA')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BB`() {
-        val input = "\u00BB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BB')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BB`() = assertTokenization(
+        input = "\u00BB",
+        expectedTokens = listOf(
+            char('\u00BB')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BC`() {
-        val input = "\u00BC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BC')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BC`() = assertTokenization(
+        input = "\u00BC",
+        expectedTokens = listOf(
+            char('\u00BC')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BD`() {
-        val input = "\u00BD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BD')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BD`() = assertTokenization(
+        input = "\u00BD",
+        expectedTokens = listOf(
+            char('\u00BD')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BE`() {
-        val input = "\u00BE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BE')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BE`() = assertTokenization(
+        input = "\u00BE",
+        expectedTokens = listOf(
+            char('\u00BE')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00BF`() {
-        val input = "\u00BF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00BF')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00BF`() = assertTokenization(
+        input = "\u00BF",
+        expectedTokens = listOf(
+            char('\u00BF')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C0`() {
-        val input = "\u00C0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C0')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C0`() = assertTokenization(
+        input = "\u00C0",
+        expectedTokens = listOf(
+            char('\u00C0')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C1`() {
-        val input = "\u00C1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C1')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C1`() = assertTokenization(
+        input = "\u00C1",
+        expectedTokens = listOf(
+            char('\u00C1')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C2`() {
-        val input = "\u00C2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C2')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C2`() = assertTokenization(
+        input = "\u00C2",
+        expectedTokens = listOf(
+            char('\u00C2')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C3`() {
-        val input = "\u00C3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C3')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C3`() = assertTokenization(
+        input = "\u00C3",
+        expectedTokens = listOf(
+            char('\u00C3')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C4`() {
-        val input = "\u00C4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C4')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C4`() = assertTokenization(
+        input = "\u00C4",
+        expectedTokens = listOf(
+            char('\u00C4')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C5`() {
-        val input = "\u00C5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C5')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C5`() = assertTokenization(
+        input = "\u00C5",
+        expectedTokens = listOf(
+            char('\u00C5')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C6`() {
-        val input = "\u00C6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C6')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C6`() = assertTokenization(
+        input = "\u00C6",
+        expectedTokens = listOf(
+            char('\u00C6')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C7`() {
-        val input = "\u00C7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C7')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C7`() = assertTokenization(
+        input = "\u00C7",
+        expectedTokens = listOf(
+            char('\u00C7')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C8`() {
-        val input = "\u00C8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C8')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C8`() = assertTokenization(
+        input = "\u00C8",
+        expectedTokens = listOf(
+            char('\u00C8')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00C9`() {
-        val input = "\u00C9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00C9')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00C9`() = assertTokenization(
+        input = "\u00C9",
+        expectedTokens = listOf(
+            char('\u00C9')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CA`() {
-        val input = "\u00CA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CA')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CA`() = assertTokenization(
+        input = "\u00CA",
+        expectedTokens = listOf(
+            char('\u00CA')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CB`() {
-        val input = "\u00CB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CB')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CB`() = assertTokenization(
+        input = "\u00CB",
+        expectedTokens = listOf(
+            char('\u00CB')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CC`() {
-        val input = "\u00CC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CC')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CC`() = assertTokenization(
+        input = "\u00CC",
+        expectedTokens = listOf(
+            char('\u00CC')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CD`() {
-        val input = "\u00CD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CD')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CD`() = assertTokenization(
+        input = "\u00CD",
+        expectedTokens = listOf(
+            char('\u00CD')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CE`() {
-        val input = "\u00CE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CE')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CE`() = assertTokenization(
+        input = "\u00CE",
+        expectedTokens = listOf(
+            char('\u00CE')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00CF`() {
-        val input = "\u00CF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00CF')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00CF`() = assertTokenization(
+        input = "\u00CF",
+        expectedTokens = listOf(
+            char('\u00CF')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D0`() {
-        val input = "\u00D0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D0')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D0`() = assertTokenization(
+        input = "\u00D0",
+        expectedTokens = listOf(
+            char('\u00D0')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D1`() {
-        val input = "\u00D1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D1')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D1`() = assertTokenization(
+        input = "\u00D1",
+        expectedTokens = listOf(
+            char('\u00D1')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D2`() {
-        val input = "\u00D2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D2')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D2`() = assertTokenization(
+        input = "\u00D2",
+        expectedTokens = listOf(
+            char('\u00D2')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D3`() {
-        val input = "\u00D3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D3')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D3`() = assertTokenization(
+        input = "\u00D3",
+        expectedTokens = listOf(
+            char('\u00D3')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D4`() {
-        val input = "\u00D4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D4')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D4`() = assertTokenization(
+        input = "\u00D4",
+        expectedTokens = listOf(
+            char('\u00D4')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D5`() {
-        val input = "\u00D5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D5')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D5`() = assertTokenization(
+        input = "\u00D5",
+        expectedTokens = listOf(
+            char('\u00D5')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D6`() {
-        val input = "\u00D6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D6')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D6`() = assertTokenization(
+        input = "\u00D6",
+        expectedTokens = listOf(
+            char('\u00D6')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D7`() {
-        val input = "\u00D7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D7')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D7`() = assertTokenization(
+        input = "\u00D7",
+        expectedTokens = listOf(
+            char('\u00D7')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D8`() {
-        val input = "\u00D8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D8')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D8`() = assertTokenization(
+        input = "\u00D8",
+        expectedTokens = listOf(
+            char('\u00D8')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00D9`() {
-        val input = "\u00D9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00D9')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00D9`() = assertTokenization(
+        input = "\u00D9",
+        expectedTokens = listOf(
+            char('\u00D9')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DA`() {
-        val input = "\u00DA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DA')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DA`() = assertTokenization(
+        input = "\u00DA",
+        expectedTokens = listOf(
+            char('\u00DA')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DB`() {
-        val input = "\u00DB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DB')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DB`() = assertTokenization(
+        input = "\u00DB",
+        expectedTokens = listOf(
+            char('\u00DB')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DC`() {
-        val input = "\u00DC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DC')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DC`() = assertTokenization(
+        input = "\u00DC",
+        expectedTokens = listOf(
+            char('\u00DC')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DD`() {
-        val input = "\u00DD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DD')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DD`() = assertTokenization(
+        input = "\u00DD",
+        expectedTokens = listOf(
+            char('\u00DD')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DE`() {
-        val input = "\u00DE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DE')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DE`() = assertTokenization(
+        input = "\u00DE",
+        expectedTokens = listOf(
+            char('\u00DE')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00DF`() {
-        val input = "\u00DF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00DF')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00DF`() = assertTokenization(
+        input = "\u00DF",
+        expectedTokens = listOf(
+            char('\u00DF')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E0`() {
-        val input = "\u00E0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E0')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E0`() = assertTokenization(
+        input = "\u00E0",
+        expectedTokens = listOf(
+            char('\u00E0')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E1`() {
-        val input = "\u00E1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E1')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E1`() = assertTokenization(
+        input = "\u00E1",
+        expectedTokens = listOf(
+            char('\u00E1')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E2`() {
-        val input = "\u00E2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E2')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E2`() = assertTokenization(
+        input = "\u00E2",
+        expectedTokens = listOf(
+            char('\u00E2')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E3`() {
-        val input = "\u00E3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E3')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E3`() = assertTokenization(
+        input = "\u00E3",
+        expectedTokens = listOf(
+            char('\u00E3')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E4`() {
-        val input = "\u00E4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E4')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E4`() = assertTokenization(
+        input = "\u00E4",
+        expectedTokens = listOf(
+            char('\u00E4')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E5`() {
-        val input = "\u00E5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E5')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E5`() = assertTokenization(
+        input = "\u00E5",
+        expectedTokens = listOf(
+            char('\u00E5')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E6`() {
-        val input = "\u00E6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E6')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E6`() = assertTokenization(
+        input = "\u00E6",
+        expectedTokens = listOf(
+            char('\u00E6')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E7`() {
-        val input = "\u00E7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E7')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E7`() = assertTokenization(
+        input = "\u00E7",
+        expectedTokens = listOf(
+            char('\u00E7')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E8`() {
-        val input = "\u00E8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E8')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E8`() = assertTokenization(
+        input = "\u00E8",
+        expectedTokens = listOf(
+            char('\u00E8')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00E9`() {
-        val input = "\u00E9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00E9')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00E9`() = assertTokenization(
+        input = "\u00E9",
+        expectedTokens = listOf(
+            char('\u00E9')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00EA`() {
-        val input = "\u00EA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00EA')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00EA`() = assertTokenization(
+        input = "\u00EA",
+        expectedTokens = listOf(
+            char('\u00EA')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00EB`() {
-        val input = "\u00EB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00EB')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00EB`() = assertTokenization(
+        input = "\u00EB",
+        expectedTokens = listOf(
+            char('\u00EB')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00EC`() {
-        val input = "\u00EC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00EC')
-            ), tokenizer.emittedTokens
+    fun `Valid Unicode character U+00EC`() = assertTokenization(
+        input = "\u00EC",
+        expectedTokens = listOf(
+            char('\u00EC')
         )
-    }
+    )
 
     @Test
-    fun `Valid Unicode character U+00ED`() {
-        val input = "\u00ED"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00ED'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00ED`() = assertTokenization(
+        input = "\u00ED",
+        expectedTokens = listOf(
+            char('\u00ED'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00EE`() {
-        val input = "\u00EE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00EE'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00EE`() = assertTokenization(
+        input = "\u00EE",
+        expectedTokens = listOf(
+            char('\u00EE'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00EF`() {
-        val input = "\u00EF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00EF'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00EF`() = assertTokenization(
+        input = "\u00EF",
+        expectedTokens = listOf(
+            char('\u00EF'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F0`() {
-        val input = "\u00F0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F0'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F0`() = assertTokenization(
+        input = "\u00F0",
+        expectedTokens = listOf(
+            char('\u00F0'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F1`() {
-        val input = "\u00F1"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F1'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F1`() = assertTokenization(
+        input = "\u00F1",
+        expectedTokens = listOf(
+            char('\u00F1'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F2`() {
-        val input = "\u00F2"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F2'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F2`() = assertTokenization(
+        input = "\u00F2",
+        expectedTokens = listOf(
+            char('\u00F2'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F3`() {
-        val input = "\u00F3"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F3'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F3`() = assertTokenization(
+        input = "\u00F3",
+        expectedTokens = listOf(
+            char('\u00F3'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F4`() {
-        val input = "\u00F4"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F4'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F4`() = assertTokenization(
+        input = "\u00F4",
+        expectedTokens = listOf(
+            char('\u00F4'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F5`() {
-        val input = "\u00F5"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F5'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F5`() = assertTokenization(
+        input = "\u00F5",
+        expectedTokens = listOf(
+            char('\u00F5'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F6`() {
-        val input = "\u00F6"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F6'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F6`() = assertTokenization(
+        input = "\u00F6",
+        expectedTokens = listOf(
+            char('\u00F6'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F7`() {
-        val input = "\u00F7"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F7'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F7`() = assertTokenization(
+        input = "\u00F7",
+        expectedTokens = listOf(
+            char('\u00F7'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F8`() {
-        val input = "\u00F8"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F8'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F8`() = assertTokenization(
+        input = "\u00F8",
+        expectedTokens = listOf(
+            char('\u00F8'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00F9`() {
-        val input = "\u00F9"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00F9'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00F9`() = assertTokenization(
+        input = "\u00F9",
+        expectedTokens = listOf(
+            char('\u00F9'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FA`() {
-        val input = "\u00FA"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FA'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FA`() = assertTokenization(
+        input = "\u00FA",
+        expectedTokens = listOf(char('\u00FA')),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FB`() {
-        val input = "\u00FB"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FB'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FB`() = assertTokenization(
+        input = "\u00FB",
+        expectedTokens = listOf(char('\u00FB')),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FC`() {
-        val input = "\u00FC"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FC'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FC`() = assertTokenization(
+        input = "\u00FC",
+        expectedTokens = listOf(char('\u00FC')),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FD`() {
-        val input = "\u00FD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FD`() = assertTokenization(
+        input = "\u00FD",
+        expectedTokens = listOf(char('\u00FD')),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FE`() {
-        val input = "\u00FE"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FE'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FE`() = assertTokenization(
+        input = "\u00FE",
+        expectedTokens = listOf(char('\u00FE')),
+    )
 
     @Test
-    fun `Valid Unicode character U+00FF`() {
-        val input = "\u00FF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\u00FF'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+00FF`() = assertTokenization(
+        input = "\u00FF",
+        expectedTokens = listOf(char('\u00FF')),
+    )
 
     @Test
-    fun `Valid Unicode character U+D7FF`() {
-        val input = "\uD7FF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD7FF'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+D7FF`() = assertTokenization(
+        input = "\uD7FF",
+        expectedTokens = listOf(char('\uD7FF')),
+    )
 
     @Test
-    fun `Valid Unicode character U+E000`() {
-        val input = "\uE000"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uE000'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+E000`() = assertTokenization(
+        input = "\uE000",
+        expectedTokens = listOf(char('\uE000')),
+    )
 
     @Test
-    fun `Valid Unicode character U+FDCF`() {
-        val input = "\uFDCF"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDCF'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+FDCF`() = assertTokenization(
+        input = "\uFDCF",
+        expectedTokens = listOf(char('\uFDCF')),
+    )
 
     @Test
-    fun `Valid Unicode character U+FDF0`() {
-        val input = "\uFDF0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFDF0'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+FDF0`() = assertTokenization(
+        input = "\uFDF0",
+        expectedTokens = listOf(char('\uFDF0')),
+    )
 
     @Test
-    fun `Valid Unicode character U+FFFD`() {
-        val input = "\uFFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+FFFD`() = assertTokenization(
+        input = "\uFFFD",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
 
     @Test
-    fun `Valid Unicode character U+10000`() {
-        val input = "\uD800\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD800'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+10000`() = assertTokenization(
+        input = "\uD800\uDC00",
+        expectedTokens = listOf(
+            char('\uD800'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+1FFFD`() {
-        val input = "\uD83F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD83F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+1FFFD`() = assertTokenization(
+        input = "\uD83F\uDFFD",
+        expectedTokens = listOf(
+            char('\uD83F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+20000`() {
-        val input = "\uD840\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD840'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+20000`() = assertTokenization(
+        input = "\uD840\uDC00",
+        expectedTokens = listOf(
+            char('\uD840'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+2FFFD`() {
-        val input = "\uD87F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD87F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+2FFFD`() = assertTokenization(
+        input = "\uD87F\uDFFD",
+        expectedTokens = listOf(
+            char('\uD87F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+30000`() {
-        val input = "\uD880\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD880'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+30000`() = assertTokenization(
+        input = "\uD880\uDC00",
+        expectedTokens = listOf(
+            char('\uD880'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+3FFFD`() {
-        val input = "\uD8BF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8BF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+3FFFD`() = assertTokenization(
+        input = "\uD8BF\uDFFD",
+        expectedTokens = listOf(
+            char('\uD8BF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+40000`() {
-        val input = "\uD8C0\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8C0'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+40000`() = assertTokenization(
+        input = "\uD8C0\uDC00",
+        expectedTokens = listOf(
+            char('\uD8C0'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+4FFFD`() {
-        val input = "\uD8FF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD8FF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+4FFFD`() = assertTokenization(
+        input = "\uD8FF\uDFFD",
+        expectedTokens = listOf(
+            char('\uD8FF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+50000`() {
-        val input = "\uD900\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD900'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+50000`() = assertTokenization(
+        input = "\uD900\uDC00",
+        expectedTokens = listOf(
+            char('\uD900'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+5FFFD`() {
-        val input = "\uD93F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD93F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+5FFFD`() = assertTokenization(
+        input = "\uD93F\uDFFD",
+        expectedTokens = listOf(
+            char('\uD93F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+60000`() {
-        val input = "\uD940\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD940'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+60000`() = assertTokenization(
+        input = "\uD940\uDC00",
+        expectedTokens = listOf(
+            char('\uD940'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+6FFFD`() {
-        val input = "\uD97F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD97F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+6FFFD`() = assertTokenization(
+        input = "\uD97F\uDFFD",
+        expectedTokens = listOf(
+            char('\uD97F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+70000`() {
-        val input = "\uD980\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD980'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+70000`() = assertTokenization(
+        input = "\uD980\uDC00",
+        expectedTokens = listOf(
+            char('\uD980'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+7FFFD`() {
-        val input = "\uD9BF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9BF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+7FFFD`() = assertTokenization(
+        input = "\uD9BF\uDFFD",
+        expectedTokens = listOf(
+            char('\uD9BF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+80000`() {
-        val input = "\uD9C0\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9C0'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+80000`() = assertTokenization(
+        input = "\uD9C0\uDC00",
+        expectedTokens = listOf(
+            char('\uD9C0'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+8FFFD`() {
-        val input = "\uD9FF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD9FF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+8FFFD`() = assertTokenization(
+        input = "\uD9FF\uDFFD",
+        expectedTokens = listOf(
+            char('\uD9FF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+90000`() {
-        val input = "\uDA00\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA00'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+90000`() = assertTokenization(
+        input = "\uDA00\uDC00",
+        expectedTokens = listOf(
+            char('\uDA00'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+9FFFD`() {
-        val input = "\uDA3F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA3F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+9FFFD`() = assertTokenization(
+        input = "\uDA3F\uDFFD",
+        expectedTokens = listOf(
+            char('\uDA3F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+A0000`() {
-        val input = "\uDA40\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA40'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+A0000`() = assertTokenization(
+        input = "\uDA40\uDC00",
+        expectedTokens = listOf(
+            char('\uDA40'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+AFFFD`() {
-        val input = "\uDA7F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA7F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+AFFFD`() = assertTokenization(
+        input = "\uDA7F\uDFFD",
+        expectedTokens = listOf(
+            char('\uDA7F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+B0000`() {
-        val input = "\uDA80\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDA80'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+B0000`() = assertTokenization(
+        input = "\uDA80\uDC00",
+        expectedTokens = listOf(
+            char('\uDA80'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+BFFFD`() {
-        val input = "\uDABF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDABF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+BFFFD`() = assertTokenization(
+        input = "\uDABF\uDFFD",
+        expectedTokens = listOf(
+            char('\uDABF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+C0000`() {
-        val input = "\uDAC0\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDAC0'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+C0000`() = assertTokenization(
+        input = "\uDAC0\uDC00",
+        expectedTokens = listOf(
+            char('\uDAC0'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+CFFFD`() {
-        val input = "\uDAFF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDAFF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+CFFFD`() = assertTokenization(
+        input = "\uDAFF\uDFFD",
+        expectedTokens = listOf(
+            char('\uDAFF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+D0000`() {
-        val input = "\uDB00\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB00'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+D0000`() = assertTokenization(
+        input = "\uDB00\uDC00",
+        expectedTokens = listOf(
+            char('\uDB00'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+DFFFD`() {
-        val input = "\uDB3F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB3F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+DFFFD`() = assertTokenization(
+        input = "\uDB3F\uDFFD",
+        expectedTokens = listOf(
+            char('\uDB3F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+E0000`() {
-        val input = "\uDB40\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB40'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+E0000`() = assertTokenization(
+        input = "\uDB40\uDC00",
+        expectedTokens = listOf(
+            char('\uDB40'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+EFFFD`() {
-        val input = "\uDB7F\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB7F'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+EFFFD`() = assertTokenization(
+        input = "\uDB7F\uDFFD",
+        expectedTokens = listOf(
+            char('\uDB7F'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+F0000`() {
-        val input = "\uDB80\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDB80'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+F0000`() = assertTokenization(
+        input = "\uDB80\uDC00",
+        expectedTokens = listOf(
+            char('\uDB80'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+FFFFD`() {
-        val input = "\uDBBF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBBF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+FFFFD`() = assertTokenization(
+        input = "\uDBBF\uDFFD",
+        expectedTokens = listOf(
+            char('\uDBBF'),
+            char('\uDFFD'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+100000`() {
-        val input = "\uDBC0\uDC00"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBC0'),
-                Token.Character('\uDC00'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+100000`() = assertTokenization(
+        input = "\uDBC0\uDC00",
+        expectedTokens = listOf(
+            char('\uDBC0'),
+            char('\uDC00'),
+        ),
+    )
 
     @Test
-    fun `Valid Unicode character U+10FFFD`() {
-        val input = "\uDBFF\uDFFD"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uDBFF'),
-                Token.Character('\uDFFD'),
-            ), tokenizer.emittedTokens
-        )
-    }
+    fun `Valid Unicode character U+10FFFD`() = assertTokenization(
+        input = "\uDBFF\uDFFD",
+        expectedTokens = listOf(
+            char('\uDBFF'),
+            char('\uDFFD'),
+        ),
+    )
 }

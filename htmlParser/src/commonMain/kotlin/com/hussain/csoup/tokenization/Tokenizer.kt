@@ -23,25 +23,25 @@ internal class Tokenizer {
         return step1.replace('\r', '\n')
     }
 
-    private tailrec fun tokenizeRecursive(currentState: TokenizationState) {
-        if (currentPosition < htmlBuffer.length) {
-            val codePoint = htmlBuffer[currentPosition].code
-            val (nextState, action) = currentState.consume(codePoint, this)
-
-            when (action) {
-                Action.ConsumeNext -> {
-                    currentPosition++
-                    tokenizeRecursive(nextState)
-                }
-
-                Action.Reconsume -> {
-                    tokenizeRecursive(nextState)
-                }
-
-                Action.None -> Unit
-            }
-        } else {
+    private fun tokenizeRecursive(currentState: TokenizationState) {
+        if (currentPosition >= htmlBuffer.length) {
+            // We're at EOF, let the current state handle it
             currentState.consume(-1, this)
+            return
+        }
+
+        val codePoint = htmlBuffer[currentPosition].code
+        val (nextState, action) = currentState.consume(codePoint, this)
+
+        when (action) {
+            Action.ConsumeNext -> {
+                currentPosition++
+                tokenizeRecursive(nextState)
+            }
+            Action.Reconsume -> {
+                tokenizeRecursive(nextState)
+            }
+            Action.None -> return
         }
     }
 

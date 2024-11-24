@@ -1,1111 +1,799 @@
 package com.hussain.csoup.tokenizer
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class TokenizerTest4 {
-
-    private val tokenizer = Tokenizer()
+/**
+ * Contains all 85 tests from here:
+ * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test4.test
+ */
+internal class TokenizerTest4 : TokenizerTestBase() {
 
     @Test
-    fun `lt in attribute name`() {
-        val input = "<z/0  <>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "0" to "",
-                        "<" to "",
-                    )
+    fun `lt in attribute name`() = assertTokenization(
+        input = "<z/0  <>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "0" to "",
+                    "<" to "",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `lt in unquoted attribute value`() = assertTokenization(
+        input = "<z x=<>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "x" to "<",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `= in unquoted attribute value`() = assertTokenization(
+        input = "<z z=z=z>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "z=z",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `= attribute`() = assertTokenization(
+        input = "<z =>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "=" to "",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `== attribute`() = assertTokenization(
+        input = "<z ==>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "=" to "",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `=== attribute`() = assertTokenization(
+        input = "<z ===>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "=" to "=",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `==== attribute`() = assertTokenization(
+        input = "<z ====>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "=" to "==",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `solidus after ampersand in double-quoted attribute value`() = assertTokenization(
+        input = "<z z=\"&\">",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `' after ampersand in double-quoted attribute value`() = assertTokenization(
+        input = "<z z=\"&'\">",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&'",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `' after ampersand in single-quoted attribute value`() = assertTokenization(
+        input = "<z z='&'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `solidus after ampersand in single-quoted attribute value`() = assertTokenization(
+        input = "<z z='&\"'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&\"",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Text after bogus character reference`() = assertTokenization(
+        input = "<z z='&xlink_xmlns;'>bar<z>",
+        listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&xlink_xmlns;",
+                )
+            ),
+            char('b'),
+            char('a'),
+            char('r'),
+            startTag(name = "z"),
+        )
+    )
+
+    @Test
+    fun `Text after hex character reference`() = assertTokenization(
+        input = "<z z='&#x0020; foo'>bar<z>",
+        expectedTokens = listOf(
+            startTag(
+                name = "z",
+                attributes = mapOf(
+                    "z" to "&#x0020; foo",
+                )
+            ),
+            char('b'),
+            char('a'),
+            char('r'),
+            startTag(name = "z"),
+        )
+    )
+
+    @Test
+    fun `Attribute name starting with quote`() = assertTokenization(
+        input = "<foo \"='bar'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "\"" to "bar",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Attribute name starting with '`() = assertTokenization(
+        input = "<foo '='bar'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "'" to "bar",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Attribute name containing`() = assertTokenization(
+        input = "<foo a\"b='bar'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a\"b" to "bar",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Attribute name containing '`() = assertTokenization(
+        input = "<foo a'b='bar'>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a'b" to "bar",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Unquoted attribute value containing '`() = assertTokenization(
+        input = "<foo a=b'c>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a" to "b'c",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Unquoted attribute value containing`() = assertTokenization(
+        input = "<foo a=b\"c>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a" to "b\"c",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Double-quoted attribute value not followed by whitespace`() = assertTokenization(
+        input = "<foo a=\"b\"c>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a" to "b",
+                    "c" to "",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Single-quoted attribute value not followed by whitespace`() = assertTokenization(
+        input = "<foo a='b'c>",
+        expectedTokens = listOf(
+            startTag(
+                name = "foo",
+                attributes = mapOf(
+                    "a" to "b",
+                    "c" to "",
+                )
+            ),
+        )
+    )
+
+    @Test
+    fun `Quoted attribute followed by permitted slash`() = assertTokenization(
+        input = "<br a='b'/>",
+        expectedTokens = listOf(
+            startTag(
+                name = "br",
+                attributes = mapOf(
+                    "a" to "b",
                 ),
+                selfClosing = true
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `lt in unquoted attribute value`() {
-        val input = "<z x=<>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "x" to "<",
-                    )
+    fun `Quoted attribute followed by non-permitted slash`() = assertTokenization(
+        input = "<bar a='b'/>",
+        expectedTokens = listOf(
+            startTag(
+                name = "bar",
+                attributes = mapOf(
+                    "a" to "b",
                 ),
+                selfClosing = true
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `= in unquoted attribute value`() {
-        val input = "<z z=z=z>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "z=z",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `CR EOF after doctype name`() = assertTokenization(
+        input = "<!doctype html \r",
+        emptyList()
+        // "output":[["DOCTYPE", "html", null, null, false]],
+    )
 
     @Test
-    fun `= attribute`() {
-        val input = "<z =>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "=" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `CR EOF in tag name`() = assertTokenization(
+        input = "<z\r",
+        emptyList()
+    )
 
     @Test
-    fun `== attribute`() {
-        val input = "<z ==>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "=" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Slash EOF in tag name`() = assertTokenization(
+        input = "<z/",
+        emptyList()
+    )
 
     @Test
-    fun `=== attribute`() {
-        val input = "<z ===>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "=" to "=",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `==== attribute`() {
-        val input = "<z ====>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "=" to "==",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `solidus after ampersand in double-quoted attribute value`() {
-        val input = "<z z=\"&\">"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `' after ampersand in double-quoted attribute value`() {
-        val input = "<z z=\"&'\">"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&'",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `' after ampersand in single-quoted attribute value`() {
-        val input = "<z z='&'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `solidus after ampersand in single-quoted attribute value`() {
-        val input = "<z z='&\"'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&\"",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Text after bogus character reference`() {
-        val input = "<z z='&xlink_xmlns;'>bar<z>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&xlink_xmlns;",
-                    )
-                ),
-                Token.Character('b'),
-                Token.Character('a'),
-                Token.Character('r'),
-                Token.StartTag(name = "z"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Text after hex character reference`() {
-        val input = "<z z='&#x0020; foo'>bar<z>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "z",
-                    attributes = mutableMapOf(
-                        "z" to "&#x0020; foo",
-                    )
-                ),
-                Token.Character('b'),
-                Token.Character('a'),
-                Token.Character('r'),
-                Token.StartTag(name = "z"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Attribute name starting with quote`() {
-        val input = "<foo \"='bar'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "\"" to "bar",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Attribute name starting with '`() {
-        val input = "<foo '='bar'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "'" to "bar",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Attribute name containing`() {
-        val input = "<foo a\"b='bar'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a\"b" to "bar",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Attribute name containing '`() {
-        val input = "<foo a'b='bar'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a'b" to "bar",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Unquoted attribute value containing '`() {
-        val input = "<foo a=b'c>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a" to "b'c",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Unquoted attribute value containing`() {
-        val input = "<foo a=b\"c>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a" to "b\"c",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Double-quoted attribute value not followed by whitespace`() {
-        val input = "<foo a=\"b\"c>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                        "c" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Single-quoted attribute value not followed by whitespace`() {
-        val input = "<foo a='b'c>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "foo",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                        "c" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Quoted attribute followed by permitted slash`() {
-        val input = "<br a='b'/>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "br",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                    ),
-                    selfClosing = true
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Quoted attribute followed by non-permitted slash`() {
-        val input = "<bar a='b'/>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "bar",
-                    attributes = mutableMapOf(
-                        "a" to "b",
-                    ),
-                    selfClosing = true
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `CR EOF after doctype name`() {
-        val input = "<!doctype html \r"
-//        "output":[["DOCTYPE", "html", null, null, false]],
-    }
-
-    @Test
-    fun `CR EOF in tag name`() {
-        val input = "<z\r"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Slash EOF in tag name`() {
-        val input = "<z/"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Zero hex numeric entity`() {
-        val input = "&#x0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-
-            ),
-            tokenizer.emittedTokens
-        )
+    fun `Zero hex numeric entity`() = assertTokenization(
+        input = "&#x0",
         //output":[["Character", "\uFFFD"]],
-    }
+        emptyList()
+    )
 
     @Test
-    fun `Zero decimal numeric entity`() {
-        val input = "&#0"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
+    fun `Zero decimal numeric entity`() = assertTokenization(
+        input = "&#0",
+        // "output":[["Character", "\uFFFD"]],
+        emptyList()
+    )
 
-            ),
-            tokenizer.emittedTokens
+    @Test
+    fun `Zero-prefixed hex numeric entity`() = assertTokenization(
+        input = "&#x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041;",
+        expectedTokens = listOf(char('A'))
+    )
+
+    @Test
+    fun `Zero-prefixed decimal numeric entity`() = assertTokenization(
+        input = "&#000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000065;",
+        expectedTokens = listOf(char('A'))
+    )
+
+    @Test
+    fun `Empty hex numeric entities`() = assertTokenization(
+        input = "&#x &#X ",
+        expectedTokens = listOf(
+            char('&'),
+            char('#'),
+            char('x'),
+            char(' '),
+            char('&'),
+            char('#'),
+            char('X'),
+            char(' '),
         )
-//        "output":[["Character", "\uFFFD"]],
-    }
+    )
 
     @Test
-    fun `Zero-prefixed hex numeric entity`() {
-        val input =
-            "&#x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('A')
-            ),
-            tokenizer.emittedTokens
+    fun `Invalid digit in hex numeric entity`() = assertTokenization(
+        input = "&#xZ",
+        expectedTokens = listOf(
+            char('&'),
+            char('#'),
+            char('x'),
+            char('Z'),
         )
-    }
+    )
 
     @Test
-    fun `Zero-prefixed decimal numeric entity`() {
-        val input =
-            "&#000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000065;"
-
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('A')
-            ),
-            tokenizer.emittedTokens
+    fun `Empty decimal numeric entities`() = assertTokenization(
+        input = "&# &#; ",
+        expectedTokens = listOf(
+            char('&'),
+            char('#'),
+            char(' '),
+            char('&'),
+            char('#'),
+            char(';'),
+            char(' '),
         )
-    }
+    )
 
     @Test
-    fun `Empty hex numeric entities`() {
-        val input = "&#x &#X "
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character('x'),
-                Token.Character(' '),
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character('X'),
-                Token.Character(' '),
-            ),
-            tokenizer.emittedTokens
+    fun `Invalid digit in decimal numeric entity`() = assertTokenization(
+        input = "&#A",
+        expectedTokens = listOf(
+            char('&'),
+            char('#'),
+            char('A'),
         )
-    }
+    )
 
     @Test
-    fun `Invalid digit in hex numeric entity`() {
-        val input = "&#xZ"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character('x'),
-                Token.Character('Z'),
-            ),
-            tokenizer.emittedTokens
+    fun `Non-BMP numeric entity`() = assertTokenization(
+        input = "&#x10000;",
+        expectedTokens = listOf(char(0x10000.toChar()))
+    )
+
+    @Test
+    fun `Maximum non-BMP numeric entity`() = assertTokenization(
+        input = "&#X10FFFF;",
+        expectedTokens = listOf(char(0x10FFFF.toChar()))
+    )
+
+    @Test
+    fun `Above maximum numeric entity`() = assertTokenization(
+        input = "&#x110000;",
+        expectedTokens = listOf(char(0xFFFD.toChar()))
+    )
+
+    @Test
+    fun `32-bit hex numeric entity`() = assertTokenization(
+        input = "&#x80000041;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
+
+    @Test
+    fun `33-bit hex numeric entity`() = assertTokenization(
+        input = "&#x100000041;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
+
+    @Test
+    fun `33-bit decimal numeric entity`() = assertTokenization(
+        input = "&#4294967361;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
+
+    @Test
+    fun `65-bit hex numeric entity`() = assertTokenization(
+        input = "&#x10000000000000041;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
+
+    @Test
+    fun `65-bit decimal numeric entity`() = assertTokenization(
+        input = "&#18446744073709551681;",
+        expectedTokens = listOf(char('\uFFFD'))
+    )
+
+    @Test
+    fun `Surrogate code point edge cases`() = assertTokenization(
+        input = "&#xD7FF;&#xD800;&#xD801;&#xDFFE;&#xDFFF;&#xE000;",
+        expectedTokens = listOf(
+            char('\uD7FF'),
+            char('\uFFFD'),
+            char('\uFFFD'),
+            char('\uFFFD'),
+            char('\uFFFD'),
+            char('\uE000'),
         )
-    }
+    )
 
     @Test
-    fun `Empty decimal numeric entities`() {
-        val input = "&# &#; "
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character(' '),
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character(';'),
-                Token.Character(' '),
+    fun `Uppercase start tag name`() = assertTokenization(
+        input = "<X>",
+        expectedTokens = listOf(startTag(name = "x"))
+    )
+
+    @Test
+    fun `Uppercase end tag name`() = assertTokenization(
+        input = "</X>",
+        expectedTokens = listOf(endTag(name = "x"))
+    )
+
+    @Test
+    fun `Uppercase attribute name`() = assertTokenization(
+        input = "<x X>",
+        expectedTokens = listOf(
+            startTag(
+                name = "x",
+                attributes = mapOf(
+                    "x" to "",
+                )
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `Invalid digit in decimal numeric entity`() {
-        val input = "&#A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character('#'),
-                Token.Character('A'),
+    fun `Tag attribute name case edge values`() = assertTokenization(
+        input = "<x@AZ[`az{ @AZ[`az{>",
+        expectedTokens = listOf(
+            startTag(
+                name = "x@az[`az{",
+                attributes = mapOf(
+                    "@az[`az{" to "",
+                )
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `Non-BMP numeric entity`() {
-        val input = "&#x10000;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(0x10000.toChar())
+    fun `Duplicate different-case attributes`() = assertTokenization(
+        input = "<x x=1 x=2 X=3>",
+        expectedTokens = listOf(
+            startTag(
+                name = "x",
+                attributes = mapOf(
+                    "x" to "1",
+                )
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `Maximum non-BMP numeric entity`() {
-        val input = "&#X10FFFF;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(0x10FFFF.toChar())
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
+    fun `Uppercase close tag attributes`() = assertTokenization(
+        input = "</x X>",
+        expectedTokens = listOf(endTag(name = "x"))
+    )
 
     @Test
-    fun `Above maximum numeric entity`() {
-        val input = "&#x110000;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(0xFFFD.toChar())
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Duplicate close tag attributes`() = assertTokenization(
+        input = "</x x x>",
+        expectedTokens = listOf(endTag(name = "x"))
+    )
 
     @Test
-    fun `32-bit hex numeric entity`() {
-        val input = "&#x80000041;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Permitted slash`() = assertTokenization(
+        input = "<br/>",
+        expectedTokens = listOf(startTag(name = "br", selfClosing = true))
+    )
 
     @Test
-    fun `33-bit hex numeric entity`() {
-        val input = "&#x100000041;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Non-permitted slash`() = assertTokenization(
+        input = "<xr/>",
+        expectedTokens = listOf(startTag(name = "xr", selfClosing = true))
+    )
 
     @Test
-    fun `33-bit decimal numeric entity`() {
-        val input = "&#4294967361;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Permitted slash but in close tag`() = assertTokenization(
+        input = "</br/>",
+        expectedTokens = listOf(endTag(name = "br"))
+    )
 
     @Test
-    fun `65-bit hex numeric entity`() {
-        val input = "&#x10000000000000041;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                    Token.Character('\uFFFD')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Doctype public case-sensitivity 1`() = assertTokenization(
+        input = "<!DoCtYpE HtMl PuBlIc \"AbC\" \"XyZ\">",
+        // "output":[["DOCTYPE", "html", "AbC", "XyZ", true]]
+        emptyList(),
+    )
 
     @Test
-    fun `65-bit decimal numeric entity`() {
-        val input = "&#18446744073709551681;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uFFFD')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Doctype public case-sensitivity 2`() = assertTokenization(
+        input = "<!dOcTyPe hTmL pUbLiC \"aBc\" \"xYz\">",
+        // "output":[["DOCTYPE", "html", "aBc", "xYz", true]]
+        emptyList(),
+    )
 
     @Test
-    fun `Surrogate code point edge cases`() {
-        val input = "&#xD7FF;&#xD800;&#xD801;&#xDFFE;&#xDFFF;&#xE000;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\uD7FF'),
-                Token.Character('\uFFFD'),
-                Token.Character('\uFFFD'),
-                Token.Character('\uFFFD'),
-                Token.Character('\uFFFD'),
-                Token.Character('\uE000'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Doctype system case-sensitivity 1`() = assertTokenization(
+        input = "<!DoCtYpE HtMl SyStEm \"XyZ\">",
+        // "output":[["DOCTYPE", "html", null, "XyZ", true]]
+        emptyList()
+    )
 
     @Test
-    fun `Uppercase start tag name`() {
-        val input = "<X>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "x"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Doctype system case-sensitivity 2`() = assertTokenization(
+        input = "<!dOcTyPe hTmL sYsTeM \"xYz\">",
+        // "output":[["DOCTYPE", "html", null, "xYz", true]]
+        emptyList()
+    )
 
     @Test
-    fun `Uppercase end tag name`() {
-        val input = "</X>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.EndTag(name = "x"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `U+0000 in lookahead region after non-matching character`() = assertTokenization(
+        input = "<!doc>\u0000",
+        // "output":[["Comment", "doc"], ["Character", "\u0000"]],
+        emptyList()
+    )
 
     @Test
-    fun `Uppercase attribute name`() {
-        val input = "<x X>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "x",
-                    attributes = mutableMapOf(
-                        "x" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `U+0000 in lookahead region`() = assertTokenization(
+        input = "<!doc\u0000",
+        // "output":[["Comment", "doc\uFFFD"]],
+        emptyList()
+    )
 
     @Test
-    fun `Tag attribute name case edge values`() {
-        val input = "<x@AZ[`az{ @AZ[`az{>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "x@az[`az{",
-                    attributes = mutableMapOf(
-                        "@az[`az{" to "",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Duplicate different-case attributes`() {
-        val input = "<x x=1 x=2 X=3>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "x",
-                    attributes = mutableMapOf(
-                        "x" to "1",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Uppercase close tag attributes`() {
-        val input = "</x X>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.EndTag(name = "x"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Duplicate close tag attributes`() {
-        val input = "</x x x>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.EndTag(name = "x"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Permitted slash`() {
-        val input = "<br/>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "br", selfClosing = true),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Non-permitted slash`() {
-        val input = "<xr/>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(name = "xr", selfClosing = true)
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Permitted slash but in close tag`() {
-        val input = "</br/>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.EndTag(name = "br"),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Doctype public case-sensitivity 1`() {
-        val input = "<!DoCtYpE HtMl PuBlIc \"AbC\" \"XyZ\">"
-//        "output":[["DOCTYPE", "html", "AbC", "XyZ", true]]
-    }
-
-    @Test
-    fun `Doctype public case-sensitivity 2`() {
-        val input = "<!dOcTyPe hTmL pUbLiC \"aBc\" \"xYz\">"
-//        "output":[["DOCTYPE", "html", "aBc", "xYz", true]]
-    }
-
-    @Test
-    fun `Doctype system case-sensitivity 1`() {
-        val input = "<!DoCtYpE HtMl SyStEm \"XyZ\">"
-//        "output":[["DOCTYPE", "html", null, "XyZ", true]]
-    }
-
-    @Test
-    fun `Doctype system case-sensitivity 2`() {
-        val input = "<!dOcTyPe hTmL sYsTeM \"xYz\">"
-//        "output":[["DOCTYPE", "html", null, "xYz", true]]
-    }
-
-    @Test
-    fun `U+0000 in lookahead region after non-matching character`() {
-        val input = "<!doc>\u0000"
-//        "output":[["Comment", "doc"], ["Character", "\u0000"]],
-    }
-
-    @Test
-    fun `U+0000 in lookahead region`() {
-        val input = "<!doc\u0000"
-//        "output":[["Comment", "doc\uFFFD"]],
-    }
-
-    @Test
-    fun `U+0080 in lookahead region`() {
-        val input = "<!doc\u0080"
+    fun `U+0080 in lookahead region`() = assertTokenization(
+        input = "<!doc\u0080",
         // output":[["Comment", "doc\u0080"]],
-    }
+        emptyList()
+    )
 
     @Test
-    fun `U+FDD1 in lookahead region`() {
-        val input = "<!doc\uFDD1"
-//        "output":[["Comment", "doc\uFDD1"]],
-    }
+    fun `U+FDD1 in lookahead region`() = assertTokenization(
+        input = "<!doc\uFDD1",
+        // "output":[["Comment", "doc\uFDD1"]],
+        emptyList()
+    )
 
     @Test
-    fun `U+1FFFF in lookahead region`() {
-        val input = "<!doc\uD83F\uDFFF"
-//        "output":[["Comment", "doc\uD83F\uDFFF"]],
-    }
+    fun `U+1FFFF in lookahead region`() = assertTokenization(
+        input = "<!doc\uD83F\uDFFF",
+        // "output":[["Comment", "doc\uD83F\uDFFF"]],
+        emptyList()
+    )
 
     @Test
-    fun `CR followed by non-LF`() {
-        val input = "\r?"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r'),
-                Token.Character('?'),
+    fun `CR followed by non-LF`() = assertTokenization(
+        input = "\r?",
+        expectedTokens = listOf(
+            char('\r'),
+            char('?'),
+        )
+    )
+
+    @Test
+    fun `CR at EOF`() = assertTokenization(
+        input = "\r",
+        expectedTokens = listOf(char('\r'))
+    )
+
+    @Test
+    fun `LF at EOF`() = assertTokenization(
+        input = "\n",
+        expectedTokens = listOf(char('\n'))
+    )
+
+    @Test
+    fun `CR LF`() = assertTokenization(
+        input = "\r\n",
+        expectedTokens = listOf(
+            char('\r'),
+            char('\n'),
+        )
+    )
+
+    @Test
+    fun `CR CR`() = assertTokenization(
+        input = "\r\r",
+        expectedTokens = listOf(
+            char('\r'),
+            char('\r'),
+        )
+    )
+
+    @Test
+    fun `LF LF`() = assertTokenization(
+        input = "\n\n",
+        expectedTokens = listOf(
+            char('\n'),
+            char('\n'),
+        )
+    )
+
+    @Test
+    fun `LF CR`() = assertTokenization(
+        input = "\n\r",
+        expectedTokens = listOf(
+            char('\n'),
+            char('\r'),
+        )
+    )
+
+    @Test
+    fun `text CR CR CR text`() = assertTokenization(
+        input = "text\r\r\rtext",
+        expectedTokens = listOf(
+            char('t'),
+            char('e'),
+            char('x'),
+            char('t'),
+            char('\r'),
+            char('\r'),
+            char('\r'),
+            char('t'),
+            char('e'),
+            char('x'),
+            char('t'),
+        )
+    )
+
+    @Test
+    fun `Doctype publik`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIK \"AbC\" \"XyZ\">",
+        // "output":[["DOCTYPE", "html", null, null, false]],
+        emptyList()
+    )
+
+    @Test
+    fun `Doctype publi`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLI",
+        // "output":[["DOCTYPE", "html", null, null, false]],
+        emptyList()
+    )
+
+    @Test
+    fun `Doctype sistem`() = assertTokenization(
+        input = "<!DOCTYPE html SISTEM \"AbC\">",
+        // "output":[["DOCTYPE", "html", null, null, false]],
+        emptyList()
+    )
+
+    @Test
+    fun `Doctype sys`() = assertTokenization(
+        input = "<!DOCTYPE html SYS",
+        // "output":[["DOCTYPE", "html", null, null, false]],
+        emptyList()
+    )
+
+    @Test
+    fun `Doctype html xgt text`() = assertTokenization(
+        input = "<!DOCTYPE html x>text",
+        // "output":[["DOCTYPE", "html", null, null, false], ["Character", "text"]],
+        emptyList()
+    )
+
+    @Test
+    fun `Grave accent in unquoted attribute`() = assertTokenization(
+        input = "<a a=aa`>",
+        expectedTokens = listOf(
+            startTag(
+                name = "a",
+                attributes = mapOf(
+                    "a" to "aa`",
+                )
             ),
-            tokenizer.emittedTokens
         )
-    }
+    )
 
     @Test
-    fun `CR at EOF`() {
-        val input = "\r"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in tag name state `() = assertTokenization(
+        input = "<a",
+        emptyList()
+    )
 
     @Test
-    fun `LF at EOF`() {
-        val input = "\n"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\n'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in before attribute name state`() = assertTokenization(
+        input = "<a ",
+        emptyList()
+    )
 
     @Test
-    fun `CR LF`() {
-        val input = "\r\n"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r'),
-                Token.Character('\n'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in attribute name state`() = assertTokenization(
+        input = "<a a",
+        emptyList()
+    )
 
     @Test
-    fun `CR CR`() {
-        val input = "\r\r"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r'),
-                Token.Character('\r'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in after attribute name state`() = assertTokenization(
+        input = "<a a ",
+        emptyList()
+    )
 
     @Test
-    fun `LF LF`() {
-        val input = "\n\n"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\n'),
-                Token.Character('\n'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in before attribute value state`() = assertTokenization(
+        input = "<a a =",
+        emptyList()
+    )
 
     @Test
-    fun `LF CR`() {
-        val input = "\n\r"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\n'),
-                Token.Character('\r'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in attribute value double quoted state`() = assertTokenization(
+        input = "<a a =\"a",
+        emptyList()
+    )
 
     @Test
-    fun `text CR CR CR text`() {
-        val input = "text\r\r\rtext"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('t'),
-                Token.Character('e'),
-                Token.Character('x'),
-                Token.Character('t'),
-                Token.Character('\r'),
-                Token.Character('\r'),
-                Token.Character('\r'),
-                Token.Character('t'),
-                Token.Character('e'),
-                Token.Character('x'),
-                Token.Character('t'),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in attribute value single quoted state`() = assertTokenization(
+        input = "<a a ='a",
+        emptyList()
+    )
 
     @Test
-    fun `Doctype publik`() {
-        val input = "<!DOCTYPE html PUBLIK \"AbC\" \"XyZ\">"
-//        "output":[["DOCTYPE", "html", null, null, false]],
-    }
+    fun `EOF in attribute value unquoted state`() = assertTokenization(
+        input = "<a a =a",
+        emptyList()
+    )
 
     @Test
-    fun `Doctype publi`() {
-        val input = "<!DOCTYPE html PUBLI"
-//        "output":[["DOCTYPE", "html", null, null, false]],
-    }
-
-    @Test
-    fun `Doctype sistem`() {
-        val input = "<!DOCTYPE html SISTEM \"AbC\">"
-//        "output":[["DOCTYPE", "html", null, null, false]],
-    }
-
-    @Test
-    fun `Doctype sys`() {
-        val input = "<!DOCTYPE html SYS"
-//        "output":[["DOCTYPE", "html", null, null, false]],
-    }
-
-    @Test
-    fun `Doctype html xgt text`() {
-        val input = "<!DOCTYPE html x>text"
-//        "output":[["DOCTYPE", "html", null, null, false], ["Character", "text"]],
-    }
-
-    @Test
-    fun `Grave accent in unquoted attribute`() {
-        val input = "<a a=aa`>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "a",
-                    attributes = mutableMapOf(
-                        "a" to "aa`",
-                    )
-                ),
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in tag name state `() {
-        val input = "<a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in before attribute name state`() {
-        val input = "<a "
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in attribute name state`() {
-        val input = "<a a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in after attribute name state`() {
-        val input = "<a a "
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in before attribute value state`() {
-        val input = "<a a ="
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in attribute value double quoted state`() {
-        val input = "<a a =\"a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in attribute value single quoted state`() {
-        val input = "<a a ='a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in attribute value unquoted state`() {
-        val input = "<a a =a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `EOF in after attribute value state`() {
-        val input = "<a a ='a'"
-        tokenizer.tokenize(input)
-        assertEquals(
-            emptyList(),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `EOF in after attribute value state`() = assertTokenization(
+        input = "<a a ='a'",
+        emptyList()
+    )
 }

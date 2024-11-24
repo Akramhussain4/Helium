@@ -1,1967 +1,668 @@
 package com.hussain.csoup.tokenizer
 
-import com.hussain.csoup.tokenization.Token
-import com.hussain.csoup.tokenization.Tokenizer
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class EntitiesTest {
-
-    private val tokenizer = Tokenizer()
+/**
+ * Contains all 80 tests from here:
+ * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/entities.test
+ */
+internal class EntitiesTest : TokenizerTestBase() {
 
     @Test
-    fun `Undefined named entity in a double-quoted attribute value ending in semicolon and whose name starts with a known entity name`() {
-        val input = "<h a=\"&noti;\">"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Undefined named entity in a double-quoted attribute value ending in semicolon and whose name starts with a known entity name`() =
+        assertTokenization(
+            input = "<h a=\"&noti;\">",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&noti;")
                 )
-            ),
-            tokenizer.emittedTokens
+            )
         )
-    }
 
     @Test
-    fun `Entity name requiring semicolon instead followed by the equals sign in a double-quoted attribute value`() {
-        val input = "<h a=\"&lang=\">"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Entity name requiring semicolon instead followed by the equals sign in a double-quoted attribute value`() =
+        assertTokenization(
+            input = "<h a=\"&lang=\">",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&lang=")
                 )
             ),
-            tokenizer.emittedTokens
         )
-    }
 
     @Test
-    fun `Valid entity name followed by the equals sign in a double-quoted attribute value`() {
-        val input = "<h a=\"&not=\">"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&not=")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Valid entity name followed by the equals sign in a double-quoted attribute value`() = assertTokenization(
+        input = "<h a=\"&not=\">",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mutableMapOf("a" to "&not=")
+            )
+        ),
+    )
 
     @Test
-    fun `Undefined named entity in a single-quoted attribute value ending in semicolon and whose name starts with a known entity name`() {
-        val input = "<h a='&noti;'>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Undefined named entity in a single-quoted attribute value ending in semicolon and whose name starts with a known entity name`() =
+        assertTokenization(
+            input = "<h a='&noti;'>",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&noti;")
                 )
             ),
-            tokenizer.emittedTokens
         )
-    }
 
     @Test
-    fun `Entity name requiring semicolon instead followed by the equals sign in a single-quoted attribute value`() {
-        val input = "<h a='&lang='>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Entity name requiring semicolon instead followed by the equals sign in a single-quoted attribute value`() =
+        assertTokenization(
+            input = "<h a='&lang='>",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&lang=")
                 )
             ),
-            tokenizer.emittedTokens
         )
-    }
 
     @Test
-    fun `Valid entity name followed by the equals sign in a single-quoted attribute value`() {
-        val input = "<h a='&not='>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&not=")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+    fun `Valid entity name followed by the equals sign in a single-quoted attribute value`() = assertTokenization(
+        input = "<h a='&not='>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mutableMapOf("a" to "&not=")
+            )
+        ),
+    )
 
     @Test
-    fun `Undefined named entity in an unquoted attribute value ending in semicolon and whose name starts with a known entity name`() {
-        val input = "<h a=&noti;>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Undefined named entity in an unquoted attribute value ending in semicolon and whose name starts with a known entity name`() =
+        assertTokenization(
+            input = "<h a=&noti;>",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&noti;")
                 )
             ),
-            tokenizer.emittedTokens
         )
-    }
 
     @Test
-    fun `Entity name requiring semicolon instead followed by the equals sign in an unquoted attribute value`() {
-        val input = "<h a=&lang=>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
+    fun `Entity name requiring semicolon instead followed by the equals sign in an unquoted attribute value`() =
+        assertTokenization(
+            input = "<h a=&lang=>",
+            expectedTokens = listOf(
+                startTag(
                     name = "h",
                     attributes = mutableMapOf("a" to "&lang=")
                 )
             ),
-            tokenizer.emittedTokens
         )
-    }
-
-    @Test
-    fun `Valid entity name followed by the equals sign in an unquoted attribute value`() {
-        val input = "<h a=&not=>"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.StartTag(
-                    name = "h",
-                    attributes = mutableMapOf("a" to "&not=")
-                )
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Ambiguous ampersand`() {
-        val input = "&rrrraannddom;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('&'),
-                Token.Character('r'),
-                Token.Character('r'),
-                Token.Character('r'),
-                Token.Character('r'),
-                Token.Character('a'),
-                Token.Character('a'),
-                Token.Character('n'),
-                Token.Character('n'),
-                Token.Character('d'),
-                Token.Character('d'),
-                Token.Character('o'),
-                Token.Character('m'),
-                Token.Character(';')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Semicolonless named entity 'not' followed by 'i' in body`() {
-        val input = "&noti;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('¬'),
-                Token.Character('i'),
-                Token.Character(';')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Very long undefined named entity in body`() {
-        val input =
-            "&ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character(data = '&'),
-                Token.Character(data = 'a'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'm'),
-                Token.Character(data = 'p'),
-                Token.Character(data = ';')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `CR as numeric entity`() {
-        val input = "&#013;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `CR as hexadecimal numeric entity`() {
-        val input = "&#x00D;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('\r')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EURO SIGN numeric entity`() {
-        val input = "&#0128;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('€')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 REPLACEMENT CHAR numeric entity`() {
-        val input = "&#0129;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE LOW-9 QUOTATION MARK numeric entity`() {
-        val input = "&#0130;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‚')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LETTER F WITH HOOK numeric entity`() {
-        val input = "&#0131;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ƒ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DOUBLE LOW-9 QUOTATION MARK numeric entity`() {
-        val input = "&#0132;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('„')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 HORIZONTAL ELLIPSIS numeric entity`() {
-        val input = "&#0133;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('…')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DAGGER numeric entity`() {
-        val input = "&#0134;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('†')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DOUBLE DAGGER numeric entity`() {
-        val input = "&#0135;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‡')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 MODIFIER LETTER CIRCUMFLEX ACCENT numeric entity`() {
-        val input = "&#0136;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ˆ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 PER MILLE SIGN numeric entity`() {
-        val input = "&#0137;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‰')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LETTER S WITH CARON numeric entity`() {
-        val input = "&#0138;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Š')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE LEFT-POINTING ANGLE QUOTATION MARK numeric entity`() {
-        val input = "&#0139;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‹')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LIGATURE OE numeric entity`() {
-        val input = "&#0140;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Œ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 REPLACEMENT CHAR numeric entity 3`() {
-        val input = "&#0141;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LETTER Z WITH CARON numeric entity`() {
-        val input = "&#0142;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Ž')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 REPLACEMENT CHAR numeric entity 1`() {
-        val input = "&#0143;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 REPLACEMENT CHAR numeric entity 2`() {
-        val input = "&#0144;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LEFT SINGLE QUOTATION MARK numeric entity`() {
-        val input = "&#0145;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‘')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 RIGHT SINGLE QUOTATION MARK numeric entity`() {
-        val input = "&#0146;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('’')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LEFT DOUBLE QUOTATION MARK numeric entity`() {
-        val input = "&#0147;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('“')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 RIGHT DOUBLE QUOTATION MARK numeric entity`() {
-        val input = "&#0148;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('”')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 BULLET numeric entity`() {
-        val input = "&#0149;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('•')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EN DASH numeric entity`() {
-        val input = "&#0150;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('–')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EM DASH numeric entity`() {
-        val input = "&#0151;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('—')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SMALL TILDE numeric entity`() {
-        val input = "&#0152;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('˜')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 TRADE MARK SIGN numeric entity`() {
-        val input = "&#0153;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('™')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LETTER S WITH CARON numeric entity`() {
-        val input = "&#0154;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('š')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE RIGHT-POINTING ANGLE QUOTATION MARK numeric entity`() {
-        val input = "&#0155;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('›')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LIGATURE OE numeric entity`() {
-        val input = "&#0156;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('œ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows 1252 REPLACEMENT CHAR numeric entity`() {
-        val input = "&#0157;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EURO SIGN hexadecimal numeric entity`() {
-        val input = "&#x080;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('€')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 REPLACEMENT CHAR hexadecimal numeric entity`() {
-        val input = "&#x081;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE LOW-9 QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x082;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‚')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LETTER F WITH HOOK hexadecimal numeric entity`() {
-        val input = "&#x083;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ƒ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DOUBLE LOW-9 QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x084;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('„')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 HORIZONTAL ELLIPSIS hexadecimal numeric entity`() {
-        val input = "&#x085;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('…')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DAGGER hexadecimal numeric entity`() {
-        val input = "&#x086;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('†')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 DOUBLE DAGGER hexadecimal numeric entity`() {
-        val input = "&#x087;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‡')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 MODIFIER LETTER CIRCUMFLEX ACCENT hexadecimal numeric entity`() {
-        val input = "&#x088;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ˆ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 PER MILLE SIGN hexadecimal numeric entity`() {
-        val input = "&#x089;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‰')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LETTER S WITH CARON hexadecimal numeric entity`() {
-        val input = "&#x08A;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Š')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE LEFT-POINTING ANGLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x08B;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‹')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LIGATURE OE hexadecimal numeric entity`() {
-        val input = "&#x08C;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Œ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 3`() {
-        val input = "&#x08D;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LETTER Z WITH CARON hexadecimal numeric entity`() {
-        val input = "&#x08E;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Ž')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 1`() {
-        val input = "&#x08F;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 2`() {
-        val input = "&#x090;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LEFT SINGLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x091;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('‘')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 RIGHT SINGLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x092;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('’')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LEFT DOUBLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x093;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('“')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 RIGHT DOUBLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x094;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('”')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 BULLET hexadecimal numeric entity`() {
-        val input = "&#x095;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('•')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EN DASH hexadecimal numeric entity`() {
-        val input = "&#x096;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('–')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 EM DASH hexadecimal numeric entity`() {
-        val input = "&#x097;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('—')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SMALL TILDE hexadecimal numeric entity`() {
-        val input = "&#x098;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('˜')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 TRADE MARK SIGN hexadecimal numeric entity`() {
-        val input = "&#x099;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('™')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LETTER S WITH CARON hexadecimal numeric entity`() {
-        val input = "&#x09A;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('š')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 SINGLE RIGHT-POINTING ANGLE QUOTATION MARK hexadecimal numeric entity`() {
-        val input = "&#x09B;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('›')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LIGATURE OE hexadecimal numeric entity`() {
-        val input = "&#x09C;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('œ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity`() {
-        val input = "&#x09D;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN SMALL LETTER Z WITH CARON hexadecimal numeric entity`() {
-        val input = "&#x09E;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('ž')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Windows-1252 LATIN CAPITAL LETTER Y WITH DIAERESIS hexadecimal numeric entity`() {
-        val input = "&#x09F;"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('Ÿ')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Decimal numeric entity followed by hex character a`() {
-        val input = "&#97a"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('a'),
-                Token.Character('a')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Decimal numeric entity followed by hex character A 1`() {
-        val input = "&#97A"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('a'),
-                Token.Character('A')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Decimal numeric entity followed by hex character f`() {
-        val input = "&#97f"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('a'),
-                Token.Character('f')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
-
-    @Test
-    fun `Decimal numeric entity followed by hex character A 2`() {
-        val input = "&#97F"
-        tokenizer.tokenize(input)
-        assertEquals(
-            listOf<Token>(
-                Token.Character('a'),
-                Token.Character('F')
-            ),
-            tokenizer.emittedTokens
-        )
-    }
+
+    @Test
+    fun `Valid entity name followed by the equals sign in an unquoted attribute value`() = assertTokenization(
+        input = "<h a=&not=>",
+        expectedTokens = listOf(
+            startTag(
+                name = "h",
+                attributes = mutableMapOf("a" to "&not=")
+            )
+        ),
+    )
+
+    @Test
+    fun `Ambiguous ampersand`() = assertTokenization(
+        input = "&rrrraannddom;",
+        expectedTokens = listOf(
+            char('&'),
+            char('r'),
+            char('r'),
+            char('r'),
+            char('r'),
+            char('a'),
+            char('a'),
+            char('n'),
+            char('n'),
+            char('d'),
+            char('d'),
+            char('o'),
+            char('m'),
+            char(';')
+        ),
+    )
+
+    @Test
+    fun `Semicolonless named entity 'not' followed by 'i' in body`() = assertTokenization(
+        input = "&noti;",
+        expectedTokens = listOf(
+            char('¬'),
+            char('i'),
+            char(';')
+        ),
+    )
+
+    @Test
+    fun `Very long undefined named entity in body`() = assertTokenization(
+        input = "&ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;",
+        expectedTokens = chars("&ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;")
+    )
+
+    @Test
+    fun `CR as numeric entity`() = assertTokenization(
+        input = "&#013;",
+        expectedTokens = listOf(
+            char('\r')
+        ),
+    )
+
+    @Test
+    fun `CR as hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x00D;",
+        expectedTokens = listOf(
+            char('\r')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 EURO SIGN numeric entity`() = assertTokenization(
+        input = "&#0128;",
+        expectedTokens = listOf(
+            char('€')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 REPLACEMENT CHAR numeric entity`() = assertTokenization(
+        input = "&#0129;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE LOW-9 QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0130;",
+        expectedTokens = listOf(
+            char('‚')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LETTER F WITH HOOK numeric entity`() = assertTokenization(
+        input = "&#0131;",
+        expectedTokens = listOf(
+            char('ƒ')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DOUBLE LOW-9 QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0132;",
+        expectedTokens = listOf(
+            char('„')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 HORIZONTAL ELLIPSIS numeric entity`() = assertTokenization(
+        input = "&#0133;",
+        expectedTokens = listOf(
+            char('…')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DAGGER numeric entity`() = assertTokenization(
+        input = "&#0134;",
+        expectedTokens = listOf(
+            char('†')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DOUBLE DAGGER numeric entity`() = assertTokenization(
+        input = "&#0135;",
+        expectedTokens = listOf(
+            char('‡')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 MODIFIER LETTER CIRCUMFLEX ACCENT numeric entity`() = assertTokenization(
+        input = "&#0136;",
+        expectedTokens = listOf(
+            char('ˆ')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 PER MILLE SIGN numeric entity`() = assertTokenization(
+        input = "&#0137;",
+        expectedTokens = listOf(
+            char('‰')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LETTER S WITH CARON numeric entity`() = assertTokenization(
+        input = "&#0138;",
+        expectedTokens = listOf(
+            char('Š')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE LEFT-POINTING ANGLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0139;",
+        expectedTokens = listOf(
+            char('‹')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LIGATURE OE numeric entity`() = assertTokenization(
+        input = "&#0140;",
+        expectedTokens = listOf(
+            char('Œ')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 REPLACEMENT CHAR numeric entity 3`() = assertTokenization(
+        input = "&#0141;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LETTER Z WITH CARON numeric entity`() = assertTokenization(
+        input = "&#0142;",
+        expectedTokens = listOf(
+            char('Ž')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 REPLACEMENT CHAR numeric entity 1`() = assertTokenization(
+        input = "&#0143;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 REPLACEMENT CHAR numeric entity 2`() = assertTokenization(
+        input = "&#0144;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LEFT SINGLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0145;",
+        expectedTokens = listOf(
+            char('‘')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 RIGHT SINGLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0146;",
+        expectedTokens = listOf(
+            char('’')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LEFT DOUBLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0147;",
+        expectedTokens = listOf(
+            char('“')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 RIGHT DOUBLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0148;",
+        expectedTokens = listOf(
+            char('”')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 BULLET numeric entity`() = assertTokenization(
+        input = "&#0149;",
+        expectedTokens = listOf(
+            char('•')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 EN DASH numeric entity`() = assertTokenization(
+        input = "&#0150;",
+        expectedTokens = listOf(
+            char('–')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 EM DASH numeric entity`() = assertTokenization(
+        input = "&#0151;",
+        expectedTokens = listOf(
+            char('—')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SMALL TILDE numeric entity`() = assertTokenization(
+        input = "&#0152;",
+        expectedTokens = listOf(
+            char('˜')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 TRADE MARK SIGN numeric entity`() = assertTokenization(
+        input = "&#0153;",
+        expectedTokens = listOf(
+            char('™')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LETTER S WITH CARON numeric entity`() = assertTokenization(
+        input = "&#0154;",
+        expectedTokens = listOf(
+            char('š')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE RIGHT-POINTING ANGLE QUOTATION MARK numeric entity`() = assertTokenization(
+        input = "&#0155;",
+        expectedTokens = listOf(
+            char('›')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LIGATURE OE numeric entity`() = assertTokenization(
+        input = "&#0156;",
+        expectedTokens = listOf(
+            char('œ')
+        ),
+    )
+
+    @Test
+    fun `Windows 1252 REPLACEMENT CHAR numeric entity`() = assertTokenization(
+        input = "&#0157;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 EURO SIGN hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x080;",
+        expectedTokens = listOf(
+            char('€')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 REPLACEMENT CHAR hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x081;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE LOW-9 QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x082;",
+        expectedTokens = listOf(
+            char('‚')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LETTER F WITH HOOK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x083;",
+        expectedTokens = listOf(
+            char('ƒ')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DOUBLE LOW-9 QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x084;",
+        expectedTokens = listOf(
+            char('„')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 HORIZONTAL ELLIPSIS hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x085;",
+        expectedTokens = listOf(
+            char('…')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DAGGER hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x086;",
+        expectedTokens = listOf(
+            char('†')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 DOUBLE DAGGER hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x087;",
+        expectedTokens = listOf(
+            char('‡')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 MODIFIER LETTER CIRCUMFLEX ACCENT hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x088;",
+        expectedTokens = listOf(
+            char('ˆ')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 PER MILLE SIGN hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x089;",
+        expectedTokens = listOf(
+            char('‰')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LETTER S WITH CARON hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x08A;",
+        expectedTokens = listOf(
+            char('Š')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE LEFT-POINTING ANGLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x08B;",
+        expectedTokens = listOf(
+            char('‹')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LIGATURE OE hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x08C;",
+        expectedTokens = listOf(
+            char('Œ')
+        ),
+    )
+
+    @Test
+    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 3`() = assertTokenization(
+        input = "&#x08D;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LETTER Z WITH CARON hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x08E;",
+        expectedTokens = listOf(
+            char('Ž')
+        ),
+    )
+
+    @Test
+    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 1`() = assertTokenization(
+        input = "&#x08F;",
+        expectedTokens = listOf(
+            char('')
+        ),
+    )
+
+    @Test
+    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 2`() = assertTokenization(
+        input = "&#x090;",
+        expectedTokens = listOf(char(''))
+    )
+
+    @Test
+    fun `Windows-1252 LEFT SINGLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x091;",
+        expectedTokens = listOf(char('‘'))
+    )
+
+    @Test
+    fun `Windows-1252 RIGHT SINGLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x092;",
+        expectedTokens = listOf(char('’'))
+    )
+
+    @Test
+    fun `Windows-1252 LEFT DOUBLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x093;",
+        expectedTokens = listOf(char('“'))
+    )
+
+    @Test
+    fun `Windows-1252 RIGHT DOUBLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x094;",
+        expectedTokens = listOf(char('”'))
+    )
+
+    @Test
+    fun `Windows-1252 BULLET hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x095;",
+        expectedTokens = listOf(char('•'))
+    )
+
+    @Test
+    fun `Windows-1252 EN DASH hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x096;",
+        expectedTokens = listOf(char('–'))
+    )
+
+    @Test
+    fun `Windows-1252 EM DASH hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x097;",
+        expectedTokens = listOf(char('—'))
+    )
+
+    @Test
+    fun `Windows-1252 SMALL TILDE hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x098;",
+        expectedTokens = listOf(char('˜'))
+    )
+
+    @Test
+    fun `Windows-1252 TRADE MARK SIGN hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x099;",
+        expectedTokens = listOf(char('™'))
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LETTER S WITH CARON hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09A;",
+        expectedTokens = listOf(char('š'))
+    )
+
+    @Test
+    fun `Windows-1252 SINGLE RIGHT-POINTING ANGLE QUOTATION MARK hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09B;",
+        expectedTokens = listOf(char('›'))
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LIGATURE OE hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09C;",
+        expectedTokens = listOf(char('œ'))
+    )
+
+    @Test
+    fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09D;",
+        expectedTokens = listOf(char(''))
+    )
+
+    @Test
+    fun `Windows-1252 LATIN SMALL LETTER Z WITH CARON hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09E;",
+        expectedTokens = listOf(char('ž'))
+    )
+
+    @Test
+    fun `Windows-1252 LATIN CAPITAL LETTER Y WITH DIAERESIS hexadecimal numeric entity`() = assertTokenization(
+        input = "&#x09F;",
+        expectedTokens = listOf(char('Ÿ'))
+    )
+
+    @Test
+    fun `Decimal numeric entity followed by hex character a`() = assertTokenization(
+        input = "&#97a",
+        expectedTokens = listOf(
+            char('a'),
+            char('a')
+        ),
+    )
+
+    @Test
+    fun `Decimal numeric entity followed by hex character A 1`() = assertTokenization(
+        input = "&#97A",
+        expectedTokens = listOf(
+            char('a'),
+            char('A')
+        ),
+    )
+
+    @Test
+    fun `Decimal numeric entity followed by hex character f`() = assertTokenization(
+        input = "&#97f",
+        expectedTokens = listOf(
+            char('a'),
+            char('f')
+        ),
+    )
+
+    @Test
+    fun `Decimal numeric entity followed by hex character A 2`() = assertTokenization(
+        input = "&#97F",
+        expectedTokens = listOf(
+            char('a'),
+            char('F')
+        ),
+    )
 }

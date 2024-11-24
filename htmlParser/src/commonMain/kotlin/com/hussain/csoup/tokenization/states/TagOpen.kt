@@ -24,7 +24,7 @@ internal data object TagOpen : TokenizationState() {
                 reconsumeCurrentChar { BogusComment(commentToken) }
             }
 
-            codePoint.IS(Chars.EOF) -> {
+            codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
                 tokenizer.emitToken(Token.Character(data = '<'))
                 endOfFile { this }

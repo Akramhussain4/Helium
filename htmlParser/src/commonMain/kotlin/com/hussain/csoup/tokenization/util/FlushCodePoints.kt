@@ -32,6 +32,7 @@ internal fun TokenizationState.flushCodePoints(tokenizer: Tokenizer) {
                 val token = Token.Character(char)
                 tokenizer.emitToken(token)
             }
+            tokenizer.tempBuffer.clear()
         }
     }
 }
