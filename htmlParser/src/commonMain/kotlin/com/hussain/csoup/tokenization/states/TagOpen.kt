@@ -7,7 +7,7 @@ import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isAsciiAlpha
 
 internal data object TagOpen : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.ExclamationMark) -> consumeNextChar { MarkupDeclarationOpen }
 

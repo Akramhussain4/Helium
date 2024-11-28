@@ -13,7 +13,7 @@ internal class AttributeName(
     private val currentAttributeName: String
 ) : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(
                 Chars.Solidus,

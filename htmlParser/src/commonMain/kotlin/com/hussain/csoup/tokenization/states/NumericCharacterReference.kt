@@ -8,7 +8,7 @@ internal class NumericCharacterReference(
     private val returnState: TokenizationState
 ) : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.characterReferenceCode = 0
         return when {
             codePoint.IS(

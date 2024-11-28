@@ -15,7 +15,7 @@ internal class NamedCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
         val nextChar = codePoint.toChar()
 

@@ -3,8 +3,13 @@ package com.hussain.csoup.tokenization.states
 import com.hussain.csoup.tokenization.Tokenizer
 
 internal abstract class TokenizationState {
-    abstract fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action>
+    abstract fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition
 }
+
+internal data class StateTransition(
+    val nextState: TokenizationState,
+    val action: Action
+)
 
 internal sealed class Action {
     data object ConsumeNext : Action()
@@ -12,13 +17,20 @@ internal sealed class Action {
     data object None : Action()
 }
 
-internal fun consumeNextChar(switchTo: () -> TokenizationState) =
-    switchTo() to Action.ConsumeNext
+internal fun consumeNextChar(switchTo: () -> TokenizationState) = StateTransition(
+    nextState = switchTo(),
+    action = Action.ConsumeNext
+)
 
-internal fun reconsumeCurrentChar(switchTo: () -> TokenizationState) =
-    switchTo() to Action.Reconsume
+internal fun reconsumeCurrentChar(switchTo: () -> TokenizationState) = StateTransition(
+    nextState = switchTo(),
+    action = Action.Reconsume
+)
 
-internal fun endOfFile(switchTo: () -> TokenizationState) = switchTo() to Action.None
+internal fun endOfFile(switchTo: () -> TokenizationState) = StateTransition(
+    nextState = switchTo(),
+    action = Action.None
+)
 
 
 //internal data object RcData : TokenizationState()

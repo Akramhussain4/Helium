@@ -7,7 +7,7 @@ import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
 internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { BeforeAttributeName(currentTagToken) }
 

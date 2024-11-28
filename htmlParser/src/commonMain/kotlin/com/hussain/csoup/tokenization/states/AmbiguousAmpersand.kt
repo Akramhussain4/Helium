@@ -11,7 +11,7 @@ import com.hussain.csoup.tokenization.util.updateAttributeValue
 internal class AmbiguousAmpersand(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlphaNumeric() -> {
                 updateAttributeValue(returnState, codePoint, tokenizer)

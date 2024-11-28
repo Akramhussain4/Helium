@@ -10,7 +10,7 @@ import com.hussain.csoup.util.isAsciiUpperHexDigit
 internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 16

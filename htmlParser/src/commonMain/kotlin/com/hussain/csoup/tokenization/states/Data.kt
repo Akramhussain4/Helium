@@ -11,7 +11,7 @@ import com.hussain.csoup.tokenization.util.IS
  */
 internal data object Data : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.Ampersand) -> consumeNextChar {
                 CharacterReference(returnState = this)
