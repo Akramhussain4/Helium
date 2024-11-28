@@ -8,7 +8,7 @@ import com.hussain.csoup.util.isAsciiUpperAlpha
 import com.hussain.csoup.util.isWhiteSpace
 
 internal class TagName(private val currentTagToken: Token) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar {
                 BeforeAttributeName(currentTagToken)

@@ -13,7 +13,7 @@ internal class CharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.append(Chars.Ampersand.char.code.toChar())
 

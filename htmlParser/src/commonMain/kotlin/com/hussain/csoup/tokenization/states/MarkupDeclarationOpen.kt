@@ -4,7 +4,7 @@ import com.hussain.csoup.tokenization.Tokenizer
 
 internal data object MarkupDeclarationOpen : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         TODO("Not yet implemented")
     }
 }

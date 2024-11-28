@@ -9,7 +9,7 @@ internal class AttributeValueDoubleQuoted(
     val currentTagToken: Token,
     val currentAttributeName: String
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.QuotationMark) -> consumeNextChar {
                 AfterAttributeValueQuoted(currentTagToken)

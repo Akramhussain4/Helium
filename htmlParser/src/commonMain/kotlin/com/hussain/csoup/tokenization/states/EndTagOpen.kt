@@ -8,7 +8,7 @@ import com.hussain.csoup.util.isAsciiAlpha
 
 internal data object EndTagOpen : TokenizationState() {
 
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlpha() -> {
                 val endTagToken = Token.EndTag(name = "")

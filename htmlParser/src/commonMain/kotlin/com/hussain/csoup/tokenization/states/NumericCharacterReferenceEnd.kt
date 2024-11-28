@@ -13,7 +13,7 @@ import com.hussain.csoup.util.isSurrogate
 internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         val number = tokenizer.characterReferenceCode
         when {
             number == 0x00 -> {

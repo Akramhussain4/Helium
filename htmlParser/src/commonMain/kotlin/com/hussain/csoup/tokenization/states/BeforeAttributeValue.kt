@@ -10,7 +10,7 @@ internal class BeforeAttributeValue(
     private val currentTagToken: Token,
     private val currentAttributeName: String
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { this }
 

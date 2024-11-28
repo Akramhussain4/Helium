@@ -6,7 +6,7 @@ import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.Chars
 
 internal class SelfClosingStartTag(private val currentTagToken: Token) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
                 when (currentTagToken) {

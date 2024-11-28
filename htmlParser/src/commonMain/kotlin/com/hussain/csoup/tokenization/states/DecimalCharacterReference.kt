@@ -8,7 +8,7 @@ import com.hussain.csoup.util.isAsciiDigit
 internal class DecimalCharacterReference(
     private val returnState: TokenizationState,
 ) : TokenizationState() {
-    override fun consume(codePoint: Int, tokenizer: Tokenizer): Pair<TokenizationState, Action> {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 10
