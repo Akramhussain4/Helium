@@ -16,87 +16,82 @@ internal class NamedCharacterReference(
 ) : TokenizationState() {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
-        val nextChar = codePoint.toChar()
-
-        // Early exit for attribute context
         if (returnState.isAttributeState() &&
-            (nextChar.code == Chars.Equals.char.code || nextChar.code.isAsciiAlphaNumeric())
+            (codePoint == Chars.Equals.char.code || codePoint.isAsciiAlphaNumeric())
         ) {
-            tokenizer.tempBuffer.append(nextChar)
+            tokenizer.tempBuffer.append(codePoint.toChar())
             returnState.flushCodePoints(tokenizer)
             return consumeNextChar { returnState }
         }
 
-        val currentReference = "&$currentText"
-        val withNextChar = "$currentText$nextChar"
-        val withNextCharReference = "&$withNextChar"
+        val nextChar = codePoint.toChar()
+        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
+        val currentRef = "&$currentText"
+        val withNextChar = "$currentRef$nextChar"
 
-        // Check current reference without semicolon
-        val currentMatch = NamedChars[currentReference]
-
-        // Check if adding next char with semicolon would make a valid reference
-        val nextCharWithSemicolonMatch = if (nextChar == ';') {
-            NamedChars[withNextCharReference]
-        } else null
-
-        when {
-            // Perfect match with semicolon
-            nextCharWithSemicolonMatch != null -> {
-                tokenizer.tempBuffer.clear()
-                nextCharWithSemicolonMatch.forEach { char ->
-                    tokenizer.emitToken(Token.Character(char))
-                }
-                return consumeNextChar { returnState }
-            }
-
-            // Current reference exists without semicolon
-            currentMatch != null -> {
-                // Only consume the current reference if:
-                // 1. The next character wouldn't form part of a longer valid reference, or
-                // 2. We're in a special case where we need to consume immediately
-                val shouldConsumeNow = when {
-                    // Special case for "&not" followed by "i"
-                    currentReference == "&not" && nextChar == 'i' -> {
-                        // Only consume if this isn't part of "&notin;"
-                        !(withNextChar == "noti" && tokenizer.peekNextChar() == 'n')
-                    }
-                    // Otherwise, check if this could be part of a longer reference
-                    else -> !NamedChars.keys.any { key ->
-                        key.startsWith(withNextCharReference) ||
-                                (nextChar != ';' && key.startsWith("$withNextCharReference;"))
-                    }
-                }
-
-                if (shouldConsumeNow) {
-                    tokenizer.tempBuffer.clear()
-                    currentMatch.forEach { char ->
-                        tokenizer.emitToken(Token.Character(char))
-                    }
-                    return reconsumeCurrentChar { returnState }
-                }
-            }
-        }
-
-        // If we reach here, either:
-        // 1. This could be the start of a valid reference, or
-        // 2. We need to flush invalid characters
-        if (NamedChars.keys.any { it.startsWith(withNextCharReference) }) {
-            tokenizer.tempBuffer.append(nextChar)
-            return consumeNextChar { this }
-        }
-
-        // No valid reference possible, flush characters
-        if (tokenizer.tempBuffer.isEmpty()) {
-            tokenizer.emitToken(Token.Character(nextChar))
-            return consumeNextChar { returnState }
-        } else {
-            val chars = tokenizer.tempBuffer.toString()
+        // Quick check for perfect match with semicolon
+        if (codePoint == Chars.SemiColon.char.code && NamedChars[withNextChar] != null) {
             tokenizer.tempBuffer.clear()
-            chars.forEach { char ->
-                tokenizer.emitToken(Token.Character(char))
-            }
-            return reconsumeCurrentChar { returnState }
+            emitString(NamedChars[withNextChar]!!, tokenizer)
+            return consumeNextChar { returnState }
         }
+
+        // Find potential longer matches
+        val hasPotentialLongerMatch = NamedChars.keys.any { key ->
+            key.startsWith(withNextChar) && key != withNextChar
+        }
+
+        // Check for exact match with semicolon
+        val hasMatchWithSemicolon = NamedChars["$withNextChar;"] != null
+
+        val matchingPrefix = NamedChars.entries
+            .filter { (key, _) -> currentRef.startsWith(key) && key.length < currentRef.length }
+            .maxByOrNull { it.key.length }
+
+        return when {
+            // Could match longer
+            hasPotentialLongerMatch || hasMatchWithSemicolon -> {
+                tokenizer.tempBuffer.append(nextChar)
+                consumeNextChar { NamedCharacterReference(returnState) }
+            }
+
+            // Found shorter match (like "&not" in "&notit")
+            matchingPrefix != null -> {
+                tokenizer.logParseError("missing-semicolon-after-character-reference")
+                tokenizer.tempBuffer.clear()
+
+                // Emit the matched entity
+                emitString(matchingPrefix.value, tokenizer)
+
+                // Emit remaining characters
+                val remainingText = currentText.substring(matchingPrefix.key.length - 1)
+                emitString(remainingText, tokenizer)
+
+                reconsumeCurrentChar { returnState }
+            }
+
+            // Exact match (not in attribute context)
+            NamedChars[currentRef] != null && !returnState.isAttributeState() -> {
+                tokenizer.logParseError("missing-semicolon-after-character-reference")
+                tokenizer.tempBuffer.clear()
+                emitString(NamedChars[currentRef]!!, tokenizer)
+                reconsumeCurrentChar { returnState }
+            }
+
+            // No valid matches
+            else -> {
+                if (currentText.all { it.code.isAsciiAlphaNumeric() } && nextChar == ';') {
+                    tokenizer.logParseError("unknown-named-character-reference")
+                }
+                tokenizer.emitToken(Token.Character('&'))
+                emitString(currentText, tokenizer)
+                tokenizer.tempBuffer.clear()
+                reconsumeCurrentChar { returnState }
+            }
+        }
+    }
+
+    private fun emitString(str: String, tokenizer: Tokenizer) {
+        str.forEach { char -> tokenizer.emitToken(Token.Character(char)) }
     }
 }
