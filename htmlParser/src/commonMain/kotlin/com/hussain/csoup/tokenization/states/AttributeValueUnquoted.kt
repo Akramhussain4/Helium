@@ -37,6 +37,11 @@ internal class AttributeValueUnquoted(
                 consumeNextChar { this }
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-attribute-value")
+                endOfFile { Data }
+            }
+
             else -> {
                 updateAttributeValue(codePoint)
                 consumeNextChar { this }

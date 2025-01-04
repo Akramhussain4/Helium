@@ -20,6 +20,11 @@ internal class AttributeValueSingleQuoted(
                 consumeNextChar { CharacterReference(returnState) }
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-attribute-value")
+                endOfFile { Data }
+            }
+
             else -> {
                 when (currentTagToken) {
                     is Token.StartTag -> {

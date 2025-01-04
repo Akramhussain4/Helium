@@ -17,13 +17,17 @@ internal class AttributeName(
         return when {
             codePoint.IS(
                 Chars.Solidus,
-                Chars.GreaterThan,
-                Chars.EOF,
+                Chars.GreaterThan
             ) || codePoint.isWhiteSpace() -> reconsumeCurrentChar {
                 AfterAttributeName(
                     currentTagToken = currentTagToken,
                     currentAttributeName = currentAttributeName
                 )
+            }
+
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-attribute-name")
+                endOfFile { Data }
             }
 
             codePoint.IS(Chars.Equals) -> consumeNextChar {

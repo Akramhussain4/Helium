@@ -28,6 +28,11 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState {
                 consumeNextChar { TagName(token) }
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-tag")
+                endOfFile { Data }
+            }
+
             else -> {
                 val token = updateTagName(codePoint)
                 consumeNextChar { TagName(currentTagToken = token) }

@@ -30,6 +30,11 @@ internal class AfterAttributeName(
                 consumeNextChar { Data }
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-tag")
+                endOfFile { Data }
+            }
+
             else -> {
                 addEmptyAttribute()
                 reconsumeCurrentChar {

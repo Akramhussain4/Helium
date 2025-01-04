@@ -24,6 +24,11 @@ internal class AttributeValueDoubleQuoted(
                 )
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-attribute-value")
+                endOfFile { Data }
+            }
+
             else -> {
                 when (currentTagToken) {
                     is Token.StartTag -> {
