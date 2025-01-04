@@ -11,7 +11,7 @@ https://html.spec.whatwg.org/multipage/parsing.html#character-reference-state
  */
 internal class CharacterReference(
     private val returnState: TokenizationState,
-) : TokenizationState() {
+) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.tempBuffer.clear()

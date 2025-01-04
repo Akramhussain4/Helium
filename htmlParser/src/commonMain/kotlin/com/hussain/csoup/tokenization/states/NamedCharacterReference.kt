@@ -13,7 +13,7 @@ import com.hussain.csoup.util.isAsciiAlphaNumeric
  */
 internal class NamedCharacterReference(
     private val returnState: TokenizationState,
-) : TokenizationState() {
+) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         if (returnState.isAttributeState() &&

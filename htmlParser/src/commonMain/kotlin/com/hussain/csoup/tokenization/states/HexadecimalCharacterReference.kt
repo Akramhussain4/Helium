@@ -9,7 +9,7 @@ import com.hussain.csoup.util.isAsciiUpperHexDigit
 
 internal class HexadecimalCharacterReference(
     private val returnState: TokenizationState,
-) : TokenizationState() {
+) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiDigit() -> {

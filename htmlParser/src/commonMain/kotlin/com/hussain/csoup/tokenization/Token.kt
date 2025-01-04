@@ -1,18 +1,23 @@
 package com.hussain.csoup.tokenization
 
-internal sealed class Token {
+internal sealed interface Token {
 
-    data object DocType : Token()
+    data object DocType : Token
 
     data class StartTag(
         val name: String,
         val selfClosing: Boolean = false,
-        val attributes: MutableMap<String, String> = mutableMapOf()
-    ) : Token()
+        val attributes: MutableMap<String, String> = LinkedHashMap()
+    ) : Token {
 
-    data class EndTag(val name: String) : Token()
+        fun addAttribute(name: String, value: String) {
+            attributes[name.lowercase()] = value
+        }
+    }
 
-    data class Comment(val data: String) : Token()
+    data class EndTag(val name: String) : Token
 
-    data class Character(val data: Char) : Token()
+    data class Comment(val data: String) : Token
+
+    data class Character(val data: Char) : Token
 }

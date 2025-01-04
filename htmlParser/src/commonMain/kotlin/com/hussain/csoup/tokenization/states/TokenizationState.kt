@@ -2,8 +2,8 @@ package com.hussain.csoup.tokenization.states
 
 import com.hussain.csoup.tokenization.Tokenizer
 
-internal abstract class TokenizationState {
-    abstract fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition
+internal interface TokenizationState {
+    fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition
 }
 
 internal data class StateTransition(
@@ -11,10 +11,10 @@ internal data class StateTransition(
     val action: Action
 )
 
-internal sealed class Action {
-    data object ConsumeNext : Action()
-    data object Reconsume : Action()
-    data object None : Action()
+internal sealed interface Action {
+    data object ConsumeNext : Action
+    data object Reconsume : Action
+    data object None : Action
 }
 
 internal fun consumeNextChar(switchTo: () -> TokenizationState) = StateTransition(

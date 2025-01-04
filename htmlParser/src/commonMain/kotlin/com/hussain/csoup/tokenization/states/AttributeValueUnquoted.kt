@@ -9,7 +9,7 @@ import com.hussain.csoup.util.isWhiteSpace
 internal class AttributeValueUnquoted(
     val currentTagToken: Token,
     val currentAttributeName: String
-) : TokenizationState() {
+) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar {

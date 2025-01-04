@@ -6,7 +6,7 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isAsciiAlpha
 
-internal data object EndTagOpen : TokenizationState() {
+internal data object EndTagOpen : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

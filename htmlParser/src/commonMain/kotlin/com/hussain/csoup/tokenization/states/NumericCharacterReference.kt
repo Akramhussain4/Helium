@@ -6,7 +6,7 @@ import com.hussain.csoup.util.Chars
 
 internal class NumericCharacterReference(
     private val returnState: TokenizationState
-) : TokenizationState() {
+) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.characterReferenceCode = 0

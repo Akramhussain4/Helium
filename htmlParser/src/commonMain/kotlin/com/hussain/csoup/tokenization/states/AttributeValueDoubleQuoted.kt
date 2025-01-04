@@ -8,7 +8,7 @@ import com.hussain.csoup.tokenization.util.IS
 internal class AttributeValueDoubleQuoted(
     val currentTagToken: Token,
     val currentAttributeName: String
-) : TokenizationState() {
+) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.QuotationMark) -> consumeNextChar {
