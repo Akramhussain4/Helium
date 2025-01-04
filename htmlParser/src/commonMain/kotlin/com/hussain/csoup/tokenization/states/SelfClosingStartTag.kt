@@ -24,9 +24,9 @@ internal class SelfClosingStartTag(private val currentTagToken: Token) : Tokeniz
                 consumeNextChar { Data }
             }
 
-            codePoint.IS(Chars.EOF) -> {
+            codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                endOfFile { this }
+                endOfFile { Data }
             }
 
             else -> {

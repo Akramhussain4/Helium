@@ -20,6 +20,11 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
                 consumeNextChar { Data }
             }
 
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-tag")
+                endOfFile { Data }
+            }
+
             else -> {
                 tokenizer.logParseError("missing-whitespace-between-attributes")
                 reconsumeCurrentChar { BeforeAttributeName(currentTagToken) }
