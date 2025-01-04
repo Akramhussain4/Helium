@@ -5,7 +5,7 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.Chars
 
-internal class BogusComment(private val commentToken: Token.Comment) : TokenizationState() {
+internal class BogusComment(private val commentToken: Token.Comment) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {

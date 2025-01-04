@@ -9,7 +9,7 @@ import com.hussain.csoup.tokenization.util.IS
  * The data state is the state when the parser is not in any special state.
  * https://html.spec.whatwg.org/multipage/parsing.html#data-state
  */
-internal data object Data : TokenizationState() {
+internal data object Data : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

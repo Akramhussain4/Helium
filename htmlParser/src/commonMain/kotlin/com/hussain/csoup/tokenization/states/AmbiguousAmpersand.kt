@@ -5,12 +5,11 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.Chars
 import com.hussain.csoup.util.isAsciiAlphaNumeric
-import com.hussain.csoup.tokenization.util.isAttributeState
 import com.hussain.csoup.tokenization.util.updateAttributeValue
 
 internal class AmbiguousAmpersand(
     private val returnState: TokenizationState,
-) : TokenizationState() {
+) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlphaNumeric() -> {

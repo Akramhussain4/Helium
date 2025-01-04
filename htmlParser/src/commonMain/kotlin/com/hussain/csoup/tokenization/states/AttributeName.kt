@@ -11,7 +11,7 @@ import com.hussain.csoup.util.isWhiteSpace
 internal class AttributeName(
     private val currentTagToken: Token,
     private val currentAttributeName: String
-) : TokenizationState() {
+) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

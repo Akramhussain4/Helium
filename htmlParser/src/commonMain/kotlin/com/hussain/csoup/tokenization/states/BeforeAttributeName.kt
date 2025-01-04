@@ -6,7 +6,7 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
-internal class BeforeAttributeName(private val currentTagToken: Token) : TokenizationState() {
+internal class BeforeAttributeName(private val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { this }

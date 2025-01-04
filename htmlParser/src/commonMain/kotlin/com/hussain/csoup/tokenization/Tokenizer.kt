@@ -6,16 +6,40 @@ import com.hussain.csoup.tokenization.states.TokenizationState
 import com.hussain.csoup.util.Chars
 
 internal class Tokenizer {
-    var characterReferenceCode = 0
-    val tempBuffer = StringBuilder()
-    val emittedTokens: MutableList<Token> = mutableListOf()
-
+    private var currentState: TokenizationState = Data
     private var currentPosition = 0
-    private var htmlBuffer: String = ""
+    private lateinit var htmlBuffer: String
+
+    var characterReferenceCode = 0
+    val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)
+    val emittedTokens = mutableListOf<Token>()
 
     fun tokenize(html: String) {
         htmlBuffer = preprocess(html)
-        tokenizeRecursive(Data)
+
+        while (currentPosition <= htmlBuffer.length) {
+            if (currentPosition == htmlBuffer.length) {
+                val (nextState, action) = handleEOF()
+                if (action == Action.None) break
+                currentState = nextState
+                continue
+            }
+
+            val (nextState, action) = currentState.consume(
+                codePoint = htmlBuffer[currentPosition].code,
+                tokenizer = this
+            )
+
+            when (action) {
+                Action.ConsumeNext -> {
+                    currentPosition++
+                    currentState = nextState
+                }
+
+                Action.Reconsume -> currentState = nextState
+                Action.None -> break
+            }
+        }
     }
 
     private fun preprocess(input: String): String {
@@ -23,40 +47,11 @@ internal class Tokenizer {
         return step1.replace('\r', '\n')
     }
 
-    private fun tokenizeRecursive(currentState: TokenizationState) {
-        if (currentPosition >= htmlBuffer.length) {
-            // We're at EOF, let the current state handle it
-            currentState.consume(-1, this)
-            return
-        }
+    private fun handleEOF() = currentState.consume(-1, this)
 
-        val codePoint = htmlBuffer[currentPosition].code
-        val (nextState, action) = currentState.consume(codePoint, this)
+    fun emitToken(token: Token) = emittedTokens.add(token)
 
-        when (action) {
-            Action.ConsumeNext -> {
-                currentPosition++
-                tokenizeRecursive(nextState)
-            }
-            Action.Reconsume -> {
-                tokenizeRecursive(nextState)
-            }
-            Action.None -> return
-        }
-    }
+    fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + 1) ?: Chars.EOF.char
 
-    fun emitToken(token: Token) {
-        emittedTokens.add(token)
-    }
-
-    fun peekNextChar(): Char {
-        if (currentPosition + 1 < htmlBuffer.length) {
-            return htmlBuffer[currentPosition + 1]
-        }
-        return Chars.Null.char
-    }
-
-    fun logParseError(error: String) {
-        println("‼️Parse error: $error at position: $currentPosition")
-    }
+    fun logParseError(error: String) = System.err.println("Parse error: $error at position: $currentPosition")
 }
