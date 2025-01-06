@@ -49,12 +49,8 @@ internal class AfterAttributeName(
 
     private fun addEmptyAttribute() {
         when (currentTagToken) {
-            is Token.StartTag -> {
-                currentTagToken.attributes[""] = ""
-            }
-
             is Token.EndTag -> Unit
-
+            is Token.StartTag -> currentTagToken.attributes[""] = ""
             else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }

@@ -16,18 +16,18 @@ internal class NamedCharacterReference(
 ) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
+        val nextChar = codePoint.toChar()
+        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
+        val withNextChar = "&$currentText$nextChar"
+
+        // Fast path for attribute context
         if (returnState.isAttributeState() &&
             (codePoint == Chars.Equals.char.code || codePoint.isAsciiAlphaNumeric())
         ) {
-            tokenizer.tempBuffer.append(codePoint.toChar())
+            tokenizer.tempBuffer.append(nextChar)
             returnState.flushCodePoints(tokenizer)
             return consumeNextChar { returnState }
         }
-
-        val nextChar = codePoint.toChar()
-        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
-        val currentRef = "&$currentText"
-        val withNextChar = "$currentRef$nextChar"
 
         // Quick check for perfect match with semicolon
         if (codePoint == Chars.SemiColon.char.code && NamedChars[withNextChar] != null) {
@@ -36,59 +36,94 @@ internal class NamedCharacterReference(
             return consumeNextChar { returnState }
         }
 
-        // Find potential longer matches
-        val hasPotentialLongerMatch = NamedChars.keys.any { key ->
-            key.startsWith(withNextChar) && key != withNextChar
-        }
-
-        // Check for exact match with semicolon
-        val hasMatchWithSemicolon = NamedChars["$withNextChar;"] != null
-
-        val matchingPrefix = NamedChars.entries
-            .filter { (key, _) -> currentRef.startsWith(key) && key.length < currentRef.length }
-            .maxByOrNull { it.key.length }
+        // Try to find the longest possible match
+        val possibleMatch = findLongestMatch(withNextChar)
 
         return when {
-            // Could match longer
-            hasPotentialLongerMatch || hasMatchWithSemicolon -> {
+            // Continue consuming if there could be a longer match or if adding semicolon would make a match
+            possibleMatch.couldMatchLonger || possibleMatch.hasMatchWithSemicolon -> {
                 tokenizer.tempBuffer.append(nextChar)
                 consumeNextChar { NamedCharacterReference(returnState) }
             }
 
-            // Found shorter match (like "&not" in "&notit")
-            matchingPrefix != null -> {
+            // Case 2: Found shorter match (like "&not" in "&notit")
+            possibleMatch.partialMatch != null -> {
+                handlePartialMatch(
+                    tokenizer,
+                    possibleMatch.partialMatch,
+                    currentText,
+                    returnState
+                )
+            }
+
+            // Case 3: Exact match without semicolon (not in attribute context)
+            possibleMatch.exactMatch != null && !returnState.isAttributeState() -> {
                 tokenizer.logParseError("missing-semicolon-after-character-reference")
                 tokenizer.tempBuffer.clear()
-
-                // Emit the matched entity
-                emitString(matchingPrefix.value, tokenizer)
-
-                // Emit remaining characters
-                val remainingText = currentText.substring(matchingPrefix.key.length - 1)
-                emitString(remainingText, tokenizer)
-
+                emitString(possibleMatch.exactMatch, tokenizer)
                 reconsumeCurrentChar { returnState }
             }
 
-            // Exact match (not in attribute context)
-            NamedChars[currentRef] != null && !returnState.isAttributeState() -> {
-                tokenizer.logParseError("missing-semicolon-after-character-reference")
-                tokenizer.tempBuffer.clear()
-                emitString(NamedChars[currentRef]!!, tokenizer)
-                reconsumeCurrentChar { returnState }
-            }
-
-            // No valid matches
+            // Case 4: No valid matches - Switch to ambiguous ampersand state
             else -> {
-                if (currentText.all { it.code.isAsciiAlphaNumeric() } && nextChar == ';') {
-                    tokenizer.logParseError("unknown-named-character-reference")
-                }
+                // First flush any consumed code points
                 tokenizer.emitToken(Token.Character('&'))
                 emitString(currentText, tokenizer)
                 tokenizer.tempBuffer.clear()
-                reconsumeCurrentChar { returnState }
+
+                reconsumeCurrentChar { AmbiguousAmpersand(returnState) }
             }
         }
+    }
+
+    private data class MatchResult(
+        val couldMatchLonger: Boolean,
+        val hasMatchWithSemicolon: Boolean,
+        val exactMatch: String?,
+        val partialMatch: Map.Entry<String, String>?
+    )
+
+    private fun findLongestMatch(withNextChar: String): MatchResult {
+        // Check for potential longer matches (including with semicolon)
+        val couldMatchLonger = NamedChars.keys.any { key ->
+            key.startsWith(withNextChar) && key != withNextChar
+        }
+
+        val hasMatchWithSemicolon = NamedChars["$withNextChar;"] != null
+        val exactMatch = NamedChars[withNextChar]
+
+        // Find partial matches (like "&not" in "&notit")
+        val partialMatch = NamedChars.entries
+            .filter { (key, _) ->
+                withNextChar.startsWith(key) && key.length < withNextChar.length
+            }
+            .maxByOrNull { it.key.length }
+
+        return MatchResult(
+            couldMatchLonger = couldMatchLonger,
+            hasMatchWithSemicolon = hasMatchWithSemicolon,
+            exactMatch = exactMatch,
+            partialMatch = partialMatch
+        )
+    }
+
+    private fun handlePartialMatch(
+        tokenizer: Tokenizer,
+        matchingPrefix: Map.Entry<String, String>,
+        currentText: String,
+        returnState: TokenizationState
+    ): StateTransition {
+        tokenizer.logParseError("missing-semicolon-after-character-reference")
+        tokenizer.tempBuffer.clear()
+
+        // Emit the matched entity
+        emitString(matchingPrefix.value, tokenizer)
+
+        // Emit remaining characters
+        val remainingText = currentText.substring(matchingPrefix.key.length - 1)
+        emitString(remainingText, tokenizer)
+
+        return reconsumeCurrentChar { returnState }
     }
 
     private fun emitString(str: String, tokenizer: Tokenizer) {
