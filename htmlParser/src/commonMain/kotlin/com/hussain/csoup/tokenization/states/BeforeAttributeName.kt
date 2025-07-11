@@ -15,45 +15,26 @@ internal class BeforeAttributeName(private val currentTagToken: Token) : Tokeniz
                 Chars.Solidus,
                 Chars.GreaterThan
             ) -> reconsumeCurrentChar {
-                AfterAttributeName(
-                    currentTagToken = currentTagToken,
-                    currentAttributeName = ""
-                )
+                AfterAttributeName(currentTagToken = currentTagToken)
             }
 
             codePoint.IS(Chars.Equals) -> {
                 tokenizer.logParseError("unexpected-equals-sign-before-attribute-name")
-                val attributeName = codePoint.toChar().toString()
-                updateAttribute(attributeName)
+                tokenizer.currentAttributeName.clear()
+                tokenizer.currentAttributeValue.clear()
+                tokenizer.currentAttributeName.append(codePoint.toChar())
                 consumeNextChar {
-                    AttributeName(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = attributeName
-                    )
+                    AttributeName(currentTagToken = currentTagToken)
                 }
             }
 
             else -> {
-                updateAttribute("")
+                tokenizer.currentAttributeName.clear()
+                tokenizer.currentAttributeValue.clear()
                 reconsumeCurrentChar {
-                    AttributeName(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = ""
-                    )
+                    AttributeName(currentTagToken = currentTagToken)
                 }
             }
-        }
-    }
-
-    private fun updateAttribute(attributeName: String) {
-        when (currentTagToken) {
-            is Token.StartTag -> {
-                currentTagToken.attributes[attributeName] = ""
-            }
-
-            is Token.EndTag -> Unit
-
-            else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
 }

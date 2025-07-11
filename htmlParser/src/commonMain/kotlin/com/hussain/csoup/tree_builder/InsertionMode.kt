@@ -3,7 +3,7 @@ package com.hussain.csoup.tree_builder
 import com.hussain.csoup.tokenization.Token
 
 internal interface InsertionMode {
-    fun process(token: Token, builder: TreeBuilder)
+    fun process(token: Token)
 }
 
 //internal data object BeforeHTML : InsertionMode

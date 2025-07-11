@@ -14,6 +14,9 @@ internal class Tokenizer {
     val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)
     val emittedTokens = mutableListOf<Token>()
 
+    var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)
+    var currentAttributeValue = StringBuilder(DEFAULT_BUFFER_SIZE)
+
     fun tokenize(html: String) {
         htmlBuffer = preprocess(html)
 
@@ -45,6 +48,17 @@ internal class Tokenizer {
     private fun preprocess(input: String): String {
         val step1 = input.replace("\r\n", "\n")
         return step1.replace('\r', '\n')
+    }
+
+    fun addCurrentAttributeToToken(currentToken: Token) {
+        if (currentToken is Token.StartTag && currentAttributeName.isNotEmpty()) {
+            val name = currentAttributeName.toString()
+            val value = currentAttributeValue.toString()
+            currentToken.addAttribute(name, value)
+        }
+        // Clear buffers for the next attribute
+        currentAttributeName.clear()
+        currentAttributeValue.clear()
     }
 
     private fun handleEOF() = currentState.consume(-1, this)

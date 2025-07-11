@@ -6,14 +6,14 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
-internal class AttributeValueUnquoted(
-    val currentTagToken: Token,
-    val currentAttributeName: String
-) : TokenizationState {
+internal class AttributeValueUnquoted(val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.isWhiteSpace() -> consumeNextChar {
-                BeforeAttributeName(currentTagToken = currentTagToken)
+            codePoint.isWhiteSpace() -> {
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
+                consumeNextChar {
+                    BeforeAttributeName(currentTagToken = currentTagToken)
+                }
             }
 
             codePoint.IS(Chars.Ampersand) -> consumeNextChar {
@@ -21,6 +21,7 @@ internal class AttributeValueUnquoted(
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
@@ -33,31 +34,20 @@ internal class AttributeValueUnquoted(
                 Chars.GraveAccent
             ) -> {
                 tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
-                updateAttributeValue(codePoint)
+                tokenizer.currentAttributeValue.append(codePoint.toChar())
                 consumeNextChar { this }
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
                 endOfFile { Data }
             }
 
             else -> {
-                updateAttributeValue(codePoint)
+                tokenizer.currentAttributeValue.append(codePoint.toChar())
                 consumeNextChar { this }
             }
-        }
-    }
-
-    private fun updateAttributeValue(codePoint: Int) {
-        when (currentTagToken) {
-            is Token.StartTag -> {
-                val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
-                currentTagToken.attributes[currentAttributeName] =
-                    currentValue + codePoint.toChar()
-            }
-
-            else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
 }

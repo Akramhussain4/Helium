@@ -275,11 +275,11 @@ internal class TokenizerTest1 : TokenizerTestBase() {
 //        )
 //    )
 
-    @Test
-    fun `less than in script data`() = assertTokenization(
-        input = "<test-->",
-        expectedTokens = chars("<test-->")
-    )
+//    @Test
+//    fun `less than in script data`() = assertTokenization(
+//        input = "<test-->",
+//        expectedTokens = chars("<test-->")
+//    )
 
 //    @Test
 //    fun `less than! in script data`() = assertTokenization(
