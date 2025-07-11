@@ -11,7 +11,9 @@ internal sealed interface Token {
     ) : Token {
 
         fun addAttribute(name: String, value: String) {
-            attributes[name.lowercase()] = value
+            if (!attributes.containsKey(name)) {
+                attributes[name.lowercase()] = value
+            }
         }
     }
 

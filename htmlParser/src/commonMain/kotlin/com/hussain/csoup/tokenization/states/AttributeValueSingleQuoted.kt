@@ -5,10 +5,7 @@ import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 
-internal class AttributeValueSingleQuoted(
-    val currentTagToken: Token,
-    val currentAttributeName: String
-) : TokenizationState {
+internal class AttributeValueSingleQuoted(val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.Apostrophe) -> consumeNextChar {
@@ -16,7 +13,7 @@ internal class AttributeValueSingleQuoted(
             }
 
             codePoint.IS(Chars.Ampersand) -> {
-                val returnState = AttributeValueSingleQuoted(currentTagToken, currentAttributeName)
+                val returnState = AttributeValueSingleQuoted(currentTagToken)
                 consumeNextChar { CharacterReference(returnState) }
             }
 
@@ -26,23 +23,8 @@ internal class AttributeValueSingleQuoted(
             }
 
             else -> {
-                when (currentTagToken) {
-                    is Token.StartTag -> {
-                        val currentValue = currentTagToken.attributes.getValue(currentAttributeName)
-                        currentTagToken.attributes[currentAttributeName] =
-                            currentValue + codePoint.toChar()
-                    }
-
-                    is Token.EndTag -> Unit
-
-                    else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
-                }
-                consumeNextChar {
-                    AttributeValueSingleQuoted(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = currentAttributeName
-                    )
-                }
+                tokenizer.currentAttributeValue.append(codePoint.toChar())
+                consumeNextChar { this }
             }
         }
     }

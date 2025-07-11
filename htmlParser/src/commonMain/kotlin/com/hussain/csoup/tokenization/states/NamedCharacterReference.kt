@@ -29,7 +29,7 @@ internal class NamedCharacterReference(
             return consumeNextChar { returnState }
         }
 
-        // Quick check for perfect match with semicolon
+        // Quick check for a perfect match with semicolon
         if (codePoint == Chars.SemiColon.char.code && NamedChars[withNextChar] != null) {
             tokenizer.tempBuffer.clear()
             emitString(NamedChars[withNextChar]!!, tokenizer)
@@ -57,7 +57,7 @@ internal class NamedCharacterReference(
             }
 
             // Case 3: Exact match without semicolon (not in attribute context)
-            possibleMatch.exactMatch != null && !returnState.isAttributeState() -> {
+            possibleMatch.exactMatch != null -> {
                 tokenizer.logParseError("missing-semicolon-after-character-reference")
                 tokenizer.tempBuffer.clear()
                 emitString(possibleMatch.exactMatch, tokenizer)

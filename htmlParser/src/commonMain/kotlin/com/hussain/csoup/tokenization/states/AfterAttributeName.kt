@@ -6,26 +6,24 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.IS
 import com.hussain.csoup.util.isWhiteSpace
 
-internal class AfterAttributeName(
-    private val currentTagToken: Token,
-    private val currentAttributeName: String
-) : TokenizationState {
+internal class AfterAttributeName(private val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> consumeNextChar { this }
 
-            codePoint.IS(Chars.Solidus) -> consumeNextChar {
-                SelfClosingStartTag(currentTagToken)
+            codePoint.IS(Chars.Solidus) -> {
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
+                consumeNextChar {
+                    SelfClosingStartTag(currentTagToken)
+                }
             }
 
             codePoint.IS(Chars.Equals) -> consumeNextChar {
-                BeforeAttributeValue(
-                    currentTagToken = currentTagToken,
-                    currentAttributeName = currentAttributeName
-                )
+                BeforeAttributeValue(currentTagToken = currentTagToken)
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
                 tokenizer.emitToken(currentTagToken)
                 consumeNextChar { Data }
             }
@@ -36,22 +34,13 @@ internal class AfterAttributeName(
             }
 
             else -> {
-                addEmptyAttribute()
+                tokenizer.addCurrentAttributeToToken(currentTagToken)
+                tokenizer.currentAttributeName.clear()
+                tokenizer.currentAttributeValue.clear()
                 reconsumeCurrentChar {
-                    AttributeName(
-                        currentTagToken = currentTagToken,
-                        currentAttributeName = ""
-                    )
+                    AttributeName(currentTagToken = currentTagToken)
                 }
             }
-        }
-    }
-
-    private fun addEmptyAttribute() {
-        when (currentTagToken) {
-            is Token.EndTag -> Unit
-            is Token.StartTag -> currentTagToken.attributes[""] = ""
-            else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
         }
     }
 }
