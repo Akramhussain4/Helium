@@ -5,8 +5,6 @@ import com.hussain.csoup.tokenization.Tokenizer
 import com.hussain.csoup.tokenization.util.NamedChars
 import com.hussain.csoup.tokenization.util.flushCodePoints
 import com.hussain.csoup.tokenization.util.isAttributeState
-import com.hussain.csoup.util.Chars
-import com.hussain.csoup.util.isAsciiAlphaNumeric
 
 /**
  * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
@@ -16,117 +14,97 @@ internal class NamedCharacterReference(
 ) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val nextChar = codePoint.toChar()
-        val currentText = tokenizer.tempBuffer.toString().removePrefix("&")
-        val withNextChar = "&$currentText$nextChar"
+        var currentNode = EntityTrie.root
+        var consumedChars = ""
+        var lastMatch: Triple<String, IntArray, Int>? = null
+        var currentPosition = 0
 
-        // Fast path for attribute context
-        if (returnState.isAttributeState() &&
-            (codePoint == Chars.Equals.char.code || codePoint.isAsciiAlphaNumeric())
-        ) {
-            tokenizer.tempBuffer.append(nextChar)
-            returnState.flushCodePoints(tokenizer)
-            return consumeNextChar { returnState }
+        val inputBuffer = tokenizer.htmlBuffer
+        val initialPosition = tokenizer.currentPosition
+
+        // 1. Consume as many characters as possible that form a valid path in the Trie.
+        while (true) {
+            val charCode = inputBuffer.getOrNull(initialPosition + currentPosition)?.code ?: -1
+            if (charCode == -1) break
+
+            val char = charCode.toChar()
+            val nextNode = currentNode.children[char] ?: break
+
+            currentNode = nextNode
+            consumedChars += char
+            currentPosition++
+
+            currentNode.codepoints?.let {
+                lastMatch = Triple(consumedChars, it, currentPosition)
+            }
         }
 
-        // Quick check for a perfect match with semicolon
-        if (codePoint == Chars.SemiColon.char.code && NamedChars[withNextChar] != null) {
-            tokenizer.tempBuffer.clear()
-            emitString(NamedChars[withNextChar]!!, tokenizer)
-            return consumeNextChar { returnState }
+        // 2. PROCESS THE RESULT of the maximal munch.
+        if (lastMatch == null) {
+            // No valid named entity was ever matched (e.g., "&foo").
+            // This is an "ambiguous ampersand". Flush the ampersand and switch to the return state.
+            returnState.flushCodePoints(tokenizer) // Flushes the initial '&' from the temp buffer
+            return reconsumeCurrentChar { returnState }
         }
 
-        // Try to find the longest possible match
-        val possibleMatch = findLongestMatch(withNextChar)
+        val (match, codepoints, matchLength) = lastMatch
+        val isSemicolonTerminated = match.endsWith(';')
 
-        return when {
-            // Continue consuming if there could be a longer match or if adding semicolon would make a match
-            possibleMatch.couldMatchLonger || possibleMatch.hasMatchWithSemicolon -> {
-                tokenizer.tempBuffer.append(nextChar)
-                consumeNextChar { NamedCharacterReference(returnState) }
-            }
+        val nextChar = inputBuffer.getOrNull(initialPosition + matchLength)
+        if (returnState.isAttributeState() && !isSemicolonTerminated && nextChar != null && (nextChar.isLetterOrDigit() || nextChar == '=')) {
+            // Legacy behavior: The entity is NOT decoded. Treat the ampersand and the
+            // matched characters as literal text.
+            returnState.flushCodePoints(tokenizer) // Flushes the initial '&'
+            tokenizer.currentAttributeValue.append(match) // Appends the matched text e.g., "not"
 
-            // Case 2: Found shorter match (like "&not" in "&notit")
-            possibleMatch.partialMatch != null -> {
-                handlePartialMatch(
-                    tokenizer,
-                    possibleMatch.partialMatch,
-                    currentText,
-                    returnState
-                )
-            }
-
-            // Case 3: Exact match without semicolon (not in attribute context)
-            possibleMatch.exactMatch != null -> {
+            tokenizer.currentPosition += matchLength
+            return reconsumeCurrentChar { returnState }
+        } else {
+            // Standard behavior for all other cases (in the data state or terminated correctly in the attribute state).
+            if (!isSemicolonTerminated) {
                 tokenizer.logParseError("missing-semicolon-after-character-reference")
-                tokenizer.tempBuffer.clear()
-                emitString(possibleMatch.exactMatch, tokenizer)
-                reconsumeCurrentChar { returnState }
             }
 
-            // Case 4: No valid matches - Switch to ambiguous ampersand state
-            else -> {
-                // First flush any consumed code points
-                tokenizer.emitToken(Token.Character('&'))
-                emitString(currentText, tokenizer)
-                tokenizer.tempBuffer.clear()
-
-                reconsumeCurrentChar { AmbiguousAmpersand(returnState) }
-            }
+            tokenizer.currentPosition += matchLength
+            emitCodepoints(codepoints, tokenizer)
+            return reconsumeCurrentChar { returnState }
         }
     }
 
-    private data class MatchResult(
-        val couldMatchLonger: Boolean,
-        val hasMatchWithSemicolon: Boolean,
-        val exactMatch: String?,
-        val partialMatch: Map.Entry<String, String>?
-    )
-
-    private fun findLongestMatch(withNextChar: String): MatchResult {
-        // Check for potential longer matches (including with semicolon)
-        val couldMatchLonger = NamedChars.keys.any { key ->
-            key.startsWith(withNextChar) && key != withNextChar
-        }
-
-        val hasMatchWithSemicolon = NamedChars["$withNextChar;"] != null
-        val exactMatch = NamedChars[withNextChar]
-
-        // Find partial matches (like "&not" in "&notit")
-        val partialMatch = NamedChars.entries
-            .filter { (key, _) ->
-                withNextChar.startsWith(key) && key.length < withNextChar.length
+    private fun emitCodepoints(codepoints: IntArray, tokenizer: Tokenizer) {
+        val decodedChars = String(codepoints, 0, codepoints.size)
+        if (returnState.isAttributeState()) {
+            tokenizer.currentAttributeValue.append(decodedChars)
+        } else {
+            decodedChars.forEach { char ->
+                tokenizer.emitToken(Token.Character(char))
             }
-            .maxByOrNull { it.key.length }
-
-        return MatchResult(
-            couldMatchLonger = couldMatchLonger,
-            hasMatchWithSemicolon = hasMatchWithSemicolon,
-            exactMatch = exactMatch,
-            partialMatch = partialMatch
-        )
-    }
-
-    private fun handlePartialMatch(
-        tokenizer: Tokenizer,
-        matchingPrefix: Map.Entry<String, String>,
-        currentText: String,
-        returnState: TokenizationState
-    ): StateTransition {
-        tokenizer.logParseError("missing-semicolon-after-character-reference")
+        }
         tokenizer.tempBuffer.clear()
-
-        // Emit the matched entity
-        emitString(matchingPrefix.value, tokenizer)
-
-        // Emit remaining characters
-        val remainingText = currentText.substring(matchingPrefix.key.length - 1)
-        emitString(remainingText, tokenizer)
-
-        return reconsumeCurrentChar { returnState }
-    }
-
-    private fun emitString(str: String, tokenizer: Tokenizer) {
-        str.forEach { char -> tokenizer.emitToken(Token.Character(char)) }
     }
 }
+
+/**
+ * A singleton object responsible for building and holding the master Trie
+ * for all named character references. This ensures the expensive build process
+ * happens only once.
+ */
+private object EntityTrie {
+    val root = TrieNode()
+    init {
+        NamedChars.forEach { (name, characters) ->
+            val entityName = name.removePrefix("&")
+            var currentNode = root
+            entityName.forEach { char ->
+                currentNode = currentNode.children.getOrPut(char) { TrieNode() }
+            }
+            currentNode.codepoints = characters.codePoints().toArray()
+        }
+    }
+}
+
+private data class TrieNode(
+    val children: MutableMap<Char, TrieNode> = mutableMapOf(),
+    // If this node marks the end of a valid entity, 'codepoints' will hold the decoded value.
+    var codepoints: IntArray? = null
+)
