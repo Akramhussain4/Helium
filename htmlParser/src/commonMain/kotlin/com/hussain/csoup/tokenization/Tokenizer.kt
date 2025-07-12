@@ -6,9 +6,9 @@ import com.hussain.csoup.tokenization.states.TokenizationState
 import com.hussain.csoup.util.Chars
 
 internal class Tokenizer {
+    var currentPosition = 0
+    lateinit var htmlBuffer: String
     private var currentState: TokenizationState = Data
-    private var currentPosition = 0
-    private lateinit var htmlBuffer: String
 
     var characterReferenceCode = 0
     val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)

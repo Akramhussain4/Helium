@@ -6,7 +6,7 @@ import kotlin.test.Test
  * Contains all 69 tests from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test1.test
  *
- * The commented (34) test cases are for Tokenization states that haven't been implemented yet.
+ * The commented (35) test cases are for Tokenization states that haven't been implemented yet.
  */
 internal class TokenizerTest1 : TokenizerTestBase() {
 
