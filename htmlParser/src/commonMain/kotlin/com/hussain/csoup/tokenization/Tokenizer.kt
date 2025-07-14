@@ -5,14 +5,13 @@ import com.hussain.csoup.tokenization.states.Data
 import com.hussain.csoup.tokenization.states.TokenizationState
 import com.hussain.csoup.util.Chars
 
-internal class Tokenizer {
+internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     var currentPosition = 0
     lateinit var htmlBuffer: String
     private var currentState: TokenizationState = Data
 
     var characterReferenceCode = 0
     val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)
-    val emittedTokens = mutableListOf<Token>()
 
     var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)
     var currentAttributeValue = StringBuilder(DEFAULT_BUFFER_SIZE)
@@ -63,7 +62,7 @@ internal class Tokenizer {
 
     private fun handleEOF() = currentState.consume(-1, this)
 
-    fun emitToken(token: Token) = emittedTokens.add(token)
+    fun emitToken(token: Token) = onTokenEmitted(token)
 
     fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + 1) ?: Chars.EOF.char
 
