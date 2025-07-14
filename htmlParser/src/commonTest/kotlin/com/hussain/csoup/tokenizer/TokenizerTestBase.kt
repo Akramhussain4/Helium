@@ -2,28 +2,34 @@ package com.hussain.csoup.tokenizer
 
 import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
-import kotlin.test.assertEquals
 
 internal abstract class TokenizerTestBase {
 
-    protected val tokenizer = Tokenizer()
+    private val emittedTokens = mutableListOf<Token>()
+    private val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
 
-    protected fun assertTokenization(
-        input: String,
-        expectedTokens: List<Token>
-    ) {
-        tokenizer.tokenize(input)
-        assertEquals(expectedTokens, tokenizer.emittedTokens)
+    protected fun tokenize(input: String): List<Token> {
+        tokenizer.tokenize(html = input)
+        return emittedTokens.toList()
     }
 
-    protected fun assertTokenizationWithErrors(
-        input: String,
-        expectedTokens: List<Token>,
-        expectedErrors: List<String>
-    ) {
-        tokenizer.tokenize(input)
-        assertEquals(expectedTokens, tokenizer.emittedTokens)
-        //assertEquals(expectedErrors, tokenizer.errors)
+    protected fun assertTokenization(input: String, expectedTokens: List<Token>) {
+        val actualTokens = tokenize(input)
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}," +
+                        " but got ${actualTokens.size}\nExpected: $expectedTokens\nActual:   $actualTokens"
+            )
+        }
+
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError(
+                    "Token mismatch at index $i.\n" +
+                            "Expected: $token\nActual:   ${actualTokens[i]}"
+                )
+            }
+        }
     }
 
     protected companion object {

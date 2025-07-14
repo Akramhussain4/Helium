@@ -1,14 +1,21 @@
-package com.hussain.csoup.parser
+package com.hussain.csoup
 
+import com.hussain.csoup.tokenization.Token
 import com.hussain.csoup.tokenization.Tokenizer
+import com.hussain.csoup.tree_builder.TreeBuilder
 
 public class HTMLParser {
 
-    private val tokenizer = Tokenizer()
+    private val tokenizer = Tokenizer(onTokenEmitted = ::processToken)
+    private val treeBuilder = TreeBuilder()
 
     public fun parse(html: String) {
         val normalizedHtml = normalizeHtml(html)
         tokenizer.tokenize(normalizedHtml)
+    }
+
+    private fun processToken(token: Token) {
+        treeBuilder.process(token)
     }
 
     private fun normalizeHtml(html: String): String {
@@ -25,5 +32,4 @@ public class HTMLParser {
                 " "
         }.trim()
     }
-
 }
