@@ -28,7 +28,7 @@ internal class PlaygroundTest : TokenizerTestBase() {
         expectedTokens = listOf(
             Token.StartTag(
                 "h1",
-                attributes = mutableMapOf("class" to "I'm &notin; I tell you")
+                attributes = mutableMapOf("class" to "I'm ∉ I tell you")
             ),
             char('H'),
             char('e'),
