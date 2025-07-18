@@ -9,6 +9,7 @@ internal abstract class TokenizerTestBase {
     private val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
 
     protected fun tokenize(input: String): List<Token> {
+        emittedTokens.clear()
         tokenizer.tokenize(html = input)
         return emittedTokens.toList()
     }

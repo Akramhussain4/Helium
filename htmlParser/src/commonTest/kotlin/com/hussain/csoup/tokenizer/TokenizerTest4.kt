@@ -6,7 +6,7 @@ import kotlin.test.Test
  * Contains all 85 tests from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test4.test
  *
- * The commented (16) test cases are for Tokenization states that haven't been implemented yet.
+ * The commented (15) test cases are for Tokenization states that haven't been implemented yet.
  */
 internal class TokenizerTest4 : TokenizerTestBase() {
 
@@ -178,7 +178,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
             startTag(
                 name = "z",
                 attributes = mapOf(
-                    "z" to "&#x0020; foo",
+                    "z" to "  foo",
                 )
             ),
             char('b'),
@@ -415,16 +415,22 @@ internal class TokenizerTest4 : TokenizerTestBase() {
         )
     )
 
-//    @Test
-//    fun `Non-BMP numeric entity`() = assertTokenization(
-//        input = "&#x10000;",
-//        expectedTokens = listOf(char(0x10000.toChar()))
-//    )
+    @Test
+    fun `Non-BMP numeric entity`() = assertTokenization(
+        input = "&#x10000;",
+        expectedTokens = listOf(
+            char('\uD800'),
+            char('\uDC00')
+        )
+    )
 
     @Test
     fun `Maximum non-BMP numeric entity`() = assertTokenization(
         input = "&#X10FFFF;",
-        expectedTokens = listOf(char(0x10FFFF.toChar()))
+        expectedTokens = listOf(
+            char('\uDBFF'),
+            char('\uDFFF')
+        )
     )
 
     @Test
@@ -624,7 +630,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     fun `CR followed by non-LF`() = assertTokenization(
         input = "\r?",
         expectedTokens = listOf(
-            char('\r'),
+            char('\n'),
             char('?'),
         )
     )
@@ -632,7 +638,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     @Test
     fun `CR at EOF`() = assertTokenization(
         input = "\r",
-        expectedTokens = listOf(char('\r'))
+        expectedTokens = listOf(char('\n'))
     )
 
     @Test
@@ -645,7 +651,6 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     fun `CR LF`() = assertTokenization(
         input = "\r\n",
         expectedTokens = listOf(
-            char('\r'),
             char('\n'),
         )
     )
@@ -654,8 +659,8 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     fun `CR CR`() = assertTokenization(
         input = "\r\r",
         expectedTokens = listOf(
-            char('\r'),
-            char('\r'),
+            char('\n'),
+            char('\n'),
         )
     )
 
@@ -673,7 +678,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
         input = "\n\r",
         expectedTokens = listOf(
             char('\n'),
-            char('\r'),
+            char('\n'),
         )
     )
 
@@ -685,9 +690,9 @@ internal class TokenizerTest4 : TokenizerTestBase() {
             char('e'),
             char('x'),
             char('t'),
-            char('\r'),
-            char('\r'),
-            char('\r'),
+            char('\n'),
+            char('\n'),
+            char('\n'),
             char('t'),
             char('e'),
             char('x'),
