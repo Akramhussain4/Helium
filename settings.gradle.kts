@@ -1,4 +1,4 @@
-rootProject.name = "HTMLtoCompose"
+rootProject.name = "Helium"
 
 pluginManagement {
     repositories {
@@ -15,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":htmlParser")
+include(":html-parser")
