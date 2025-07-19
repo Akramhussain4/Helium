@@ -1,7 +1,7 @@
-package com.theakram.helium.tree_builder
+package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree_builder.modes.Initial
+import com.theakram.helium.treebuilder.modes.Initial
 
 internal class TreeBuilder {
     private var insertionMode: InsertionMode = Initial

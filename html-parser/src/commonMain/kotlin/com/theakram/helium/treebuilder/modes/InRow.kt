@@ -1,8 +1,8 @@
-package com.theakram.helium.tree_builder.modes
+package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree_builder.InsertionMode
-import com.theakram.helium.tree_builder.TreeBuilder
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.TreeBuilder
 
 internal object InRow : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder) {
