@@ -2,7 +2,7 @@ package com.theakram.helium
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
-import com.theakram.helium.tree_builder.TreeBuilder
+import com.theakram.helium.treebuilder.TreeBuilder
 
 public class HTMLParser {
 

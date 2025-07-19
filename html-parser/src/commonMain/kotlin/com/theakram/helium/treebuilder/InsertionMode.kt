@@ -1,4 +1,4 @@
-package com.theakram.helium.tree_builder
+package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Token
 
