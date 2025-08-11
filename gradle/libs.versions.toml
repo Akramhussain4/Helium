@@ -1,10 +1,10 @@
 [versions]
-agp = "8.2.0"
-kotlin = "2.0.21"
-compose-plugin = "1.5.11"
+agp = "8.12.0"
+kotlin = "2.2.0"
+composeMultiplatform = "1.8.2"
 
-coroutines = "1.7.3"
-kotlinx-json = "1.7.3"
+coroutines = "1.10.2"
+kotlinx-json = "1.9.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -14,6 +14,6 @@ kotlinx-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", ve
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
