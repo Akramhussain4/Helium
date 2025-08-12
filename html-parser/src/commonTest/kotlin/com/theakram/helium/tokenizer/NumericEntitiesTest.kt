@@ -55,7 +55,7 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid unterminated numeric entity character overflow 1`() = assertTokenization(
         input = "&#11111111111x",
         expectedTokens = listOf(
-            char('ᧇ'),
+            char('\uFFFD'),
             char('x'),
         )
     )
@@ -73,7 +73,7 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     fun `Invalid unterminated numeric entity character overflow 3`() = assertTokenization(
         input = "&#111111111111x",
         expectedTokens = listOf(
-            char('Ǉ'),
+            char('\uFFFD'),
             char('x'),
         ),
     )
@@ -81,7 +81,7 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     @Test
     fun `Invalid numeric entity character overflow 1`() = assertTokenization(
         input = "&#11111111111;",
-        expectedTokens = listOf(char('ᧇ')),
+        expectedTokens = listOf(char('\uFFFD')),
     )
 
     @Test
@@ -93,7 +93,7 @@ internal class NumericEntitiesTest : TokenizerTestBase() {
     @Test
     fun `Invalid numeric entity character overflow 3`() = assertTokenization(
         input = "&#111111111111;",
-        expectedTokens = listOf(char('Ǉ')),
+        expectedTokens = listOf(char('\uFFFD')),
     )
 
     @Test

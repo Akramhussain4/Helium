@@ -35,7 +35,7 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     lateinit var htmlBuffer: String
     private var currentState: TokenizationState = Data
 
-    var characterReferenceCode = 0
+    var characterReferenceCode = 0L
     val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)
 
     var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)

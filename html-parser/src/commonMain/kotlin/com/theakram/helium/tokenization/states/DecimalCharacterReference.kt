@@ -38,6 +38,9 @@ internal class DecimalCharacterReference(
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 10
                 tokenizer.characterReferenceCode += codePoint - 0x0030
+                if (tokenizer.characterReferenceCode > 0x10FFFF) {
+                    tokenizer.characterReferenceCode = 0x110000L
+                }
                 consumeNextChar { this }
             }
 
