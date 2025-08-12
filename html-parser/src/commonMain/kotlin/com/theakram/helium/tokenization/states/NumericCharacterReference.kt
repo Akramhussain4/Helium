@@ -34,7 +34,7 @@ internal class NumericCharacterReference(
 ) : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        tokenizer.characterReferenceCode = 0
+        tokenizer.characterReferenceCode = 0L
         return when {
             codePoint.IS(
                 Chars.LowerX,
