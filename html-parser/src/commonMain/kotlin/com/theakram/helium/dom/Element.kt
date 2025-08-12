@@ -1,307 +1,399 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Mohammed Akram Hussain
+ * Website: https://theakram.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.theakram.helium.dom
 
 /**
- * Element is the most common kind of node. It corresponds to an HTML tag.
+ * WHATWG-compliant Element.
  *
  * Spec: https://dom.spec.whatwg.org/#interface-element
  */
 public class Element(
-    public val tagName: String,
-    public override val ownerDocument: Document
-) : Node {
-
-    public override val nodeType: Short = Node.ELEMENT_NODE
-    public override val nodeName: String
-        get() = tagName
-    public override val baseURI: String = ""
-    public override val isConnected: Boolean
-        get() = parentNode != null
-    public override var parentNode: Node? = null
-        internal set
-    public override val parentElement: Element?
-        get() = parentNode as? Element
-    private val _childNodes = mutableListOf<Node>()
-    public override val childNodes: List<Node> get() = _childNodes
-    public override val previousSibling: Node?
-        get() = parentNode?.childNodes?.let {
-            val index = it.indexOf(this)
-            if (index > 0) it[index - 1] else null
-        }
-
-    public override val nextSibling: Node?
-        get() = parentNode?.childNodes?.let {
-            val index = it.indexOf(this)
-            if (index != -1 && index < it.size - 1) it[index + 1] else null
-        }
-    public override var nodeValue: String?
-        get() = null
-        set(_) {}
-    public override var textContent: String?
-        get() = childNodes.joinToString("") { it.textContent ?: "" }
-        set(value) {
-            // TODO: Set text content
-        }
-
+    public val localName: String,
     public val namespaceURI: String? = null
-    public val prefix: String? = null
-    public val localName: String
-        get() = tagName
+) : Node() {
+    
+    override val nodeType: Short = ELEMENT_NODE
+    override val nodeName: String = if (namespaceURI == HTML_NAMESPACE) localName.uppercase() else localName
+    override val nodeValue: String? = null
+    override var textContent: String?
+        get() = getTextContentRecursive(this)
+        set(value) {
+            // WHATWG textContent setter algorithm
+            internalChildNodes.toList().forEach { removeChild(it) }
+            if (!value.isNullOrEmpty()) {
+                appendChild(ownerDocument?.createTextNode(value) ?: Text(value))
+            }
+        }
+    
+    private fun getTextContentRecursive(node: Node): String {
+        return when (node.nodeType) {
+            DOCUMENT_FRAGMENT_NODE, ELEMENT_NODE -> {
+                node.internalChildNodes.joinToString("") { getTextContentRecursive(it) }
+            }
+            TEXT_NODE, CDATA_SECTION_NODE -> {
+                (node as? CharacterData)?.data ?: ""
+            }
+            PROCESSING_INSTRUCTION_NODE, COMMENT_NODE -> {
+                (node as? CharacterData)?.data ?: ""
+            }
+            else -> ""
+        }
+    }
+    override val ownerDocument: Document? get() = generateSequence(parentNode) { it.parentNode }.filterIsInstance<Document>().firstOrNull()
+    
+    public val tagName: String = nodeName
+    
+    private val _attributes = NamedNodeMap(this)
+    public val attributes: NamedNodeMap get() = _attributes
+    
     public var id: String
         get() = getAttribute("id") ?: ""
-        set(value) {
-            setAttribute("id", value)
-        }
+        set(value) = setAttribute("id", value)
+    
     public var className: String
         get() = getAttribute("class") ?: ""
+        set(value) = setAttribute("class", value)
+    
+    public val classList: DOMTokenList by lazy { DOMTokenList(this, "class") }
+    
+    public var innerHTML: String
+        get() = internalChildNodes.joinToString("") { htmlParser.serializeHTML(it) }
         set(value) {
-            setAttribute("class", value)
+            // WHATWG-compliant innerHTML setter algorithm
+            
+            // 1. Remove all children
+            internalChildNodes.toList().forEach { removeChild(it) }
+            
+            // 2. Parse HTML fragment
+            val fragment = htmlParser.parseHTMLFragment(value, this)
+            
+            // 3. Append parsed nodes
+            fragment.childNodes.forEach { child ->
+                appendChild(child)
+            }
         }
-    public val classList: DOMTokenList = DOMTokenList(this)
+    
+    public var outerHTML: String
+        get() = htmlParser.serializeHTML(this)
+        set(value) {
+            // WHATWG-compliant outerHTML setter algorithm
+            
+            parentNode?.let { parent ->
+                val fragment = htmlParser.parseHTML(value, ownerDocument ?: Document())
+                
+                // Replace this element with the parsed content
+                if (fragment.hasChildNodes()) {
+                    // Insert all nodes from the fragment before this element
+                    fragment.childNodes.toList().forEach { node ->
+                        parent.insertBefore(node, this)
+                    }
+                }
+                
+                // Remove this element
+                parent.removeChild(this)
+            } ?: throw DOMException("Cannot set outerHTML on element without parent", "NoModificationAllowedError")
+        }
+    
+    public val prefix: String? = if (nodeName.contains(':')) nodeName.substringBefore(':') else null
+    
+    // Scroll properties - would be implemented by layout engine
+    public var scrollTop: Double = 0.0
+    public var scrollLeft: Double = 0.0
+    public val scrollWidth: Double get() = 0.0  // Would be computed by layout
+    public val scrollHeight: Double get() = 0.0  // Would be computed by layout
+    
+    // Client dimensions - would be implemented by layout engine  
+    public val clientTop: Double get() = 0.0  // Border top width
+    public val clientLeft: Double get() = 0.0  // Border left width
+    public val clientWidth: Double get() = 0.0  // Inner width
+    public val clientHeight: Double get() = 0.0  // Inner height
+    
+    // Shadow DOM support
     public var slot: String
         get() = getAttribute("slot") ?: ""
-        set(value) {
-            setAttribute("slot", value)
+        set(value) = setAttribute("slot", value)
+    
+    public fun getAttribute(name: String): String? {
+        return _attributes.getNamedItem(name)?.value
+    }
+    
+    public fun getAttributeNS(namespaceURI: String?, localName: String): String? {
+        return _attributes.getNamedItemNS(namespaceURI, localName)?.value
+    }
+    
+    public fun setAttribute(name: String, value: String) {
+        val attr = Attr(name, value)
+        _attributes.setNamedItem(attr)
+    }
+    
+    public fun setAttributeNS(namespaceURI: String?, qualifiedName: String, value: String) {
+        val attr = Attr(qualifiedName, value, namespaceURI)
+        _attributes.setNamedItemNS(attr)
+    }
+    
+    public fun removeAttribute(name: String) {
+        try {
+            _attributes.removeNamedItem(name)
+        } catch (e: DOMException) {
+            // Ignore NotFoundError when removing non-existent attributes
         }
-
-    public val attributes: MutableMap<String, String> = mutableMapOf()
-
-    override fun getRootNode(options: GetRootNodeOptions?): Node {
-        TODO("Not yet implemented")
     }
-
-    override fun hasChildNodes(): Boolean = _childNodes.isNotEmpty()
-
-    override fun normalize() {
-        // TODO: Implement this
-    }
-
-    override fun cloneNode(deep: Boolean): Node {
-        val newElement = Element(tagName, ownerDocument)
-        // Copy attributes
-        this.attributes.forEach { (key, value) ->
-            newElement.setAttribute(key, value)
+    
+    public fun removeAttributeNS(namespaceURI: String?, localName: String) {
+        try {
+            _attributes.removeNamedItemNS(namespaceURI, localName)
+        } catch (e: DOMException) {
+            // Ignore NotFoundError when removing non-existent attributes
         }
-
-        if (deep) {
-            // Recursively clone children
-            this.childNodes.forEach { child ->
-                newElement.appendChild(child.cloneNode(true))
-            }
-        }
-
-        return newElement
     }
-
-    override fun isEqualNode(other: Node?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun hasAttribute(name: String): Boolean {
+        return _attributes.getNamedItem(name) != null
     }
-
-    override fun isSameNode(other: Node?): Boolean = other === this
-
-    override fun compareDocumentPosition(other: Node): UShort {
-        TODO("Not yet implemented")
+    
+    public fun hasAttributeNS(namespaceURI: String?, localName: String): Boolean {
+        return _attributes.getNamedItemNS(namespaceURI, localName) != null
     }
-
-    override fun contains(other: Node?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun hasAttributes(): Boolean {
+        return _attributes.length > 0
     }
-
-    override fun lookupPrefix(namespace: String?): String? {
-        TODO("Not yet implemented")
+    
+    public fun getAttributeNames(): List<String> {
+        return _attributes.keys().toList()
     }
-
-    override fun lookupNamespaceURI(prefix: String?): String? {
-        TODO("Not yet implemented")
+    
+    public fun getAttributeNode(name: String): Attr? {
+        return _attributes.getNamedItem(name)
     }
-
-    override fun isDefaultNamespace(namespace: String?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun getAttributeNodeNS(namespaceURI: String?, localName: String): Attr? {
+        return _attributes.getNamedItemNS(namespaceURI, localName)
     }
-
-    public fun hasAttributes(): Boolean = attributes.isNotEmpty()
-
-    public fun getAttributeNames(): List<String> = attributes.keys.toList()
-
-    public fun getAttribute(qualifiedName: String): String? = attributes[qualifiedName.lowercase()]
-
-    public fun getAttributeNS(namespace: String?, localName: String): String? {
-        TODO("Not yet implemented")
-    }
-
-    public fun setAttribute(qualifiedName: String, value: String) {
-        attributes[qualifiedName.lowercase()] = value
-    }
-
-    public fun setAttributeNS(namespace: String?, qualifiedName: String, value: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun removeAttribute(qualifiedName: String) {
-        attributes.remove(qualifiedName.lowercase())
-    }
-
-    public fun removeAttributeNS(namespace: String?, localName: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun toggleAttribute(qualifiedName: String, force: Boolean? = null): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun hasAttribute(qualifiedName: String): Boolean = attributes.containsKey(qualifiedName.lowercase())
-
-    public fun hasAttributeNS(namespace: String?, localName: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun getAttributeNode(qualifiedName: String): Attr? {
-        TODO("Not yet implemented")
-    }
-
-    public fun getAttributeNodeNS(namespace: String?, localName: String): Attr? {
-        TODO("Not yet implemented")
-    }
-
+    
     public fun setAttributeNode(attr: Attr): Attr? {
-        TODO("Not yet implemented")
+        return _attributes.setNamedItem(attr)
     }
-
+    
     public fun setAttributeNodeNS(attr: Attr): Attr? {
-        TODO("Not yet implemented")
+        return _attributes.setNamedItemNS(attr)
     }
-
+    
     public fun removeAttributeNode(attr: Attr): Attr {
-        TODO("Not yet implemented")
+        if (attr.ownerElement !== this) {
+            throw DOMException("Attribute is not owned by this element", "NotFoundError")
+        }
+        return _attributes.removeNamedItem(attr.name)
     }
-
-    public fun attachShadow(init: ShadowRootInit): ShadowRoot {
-        TODO("Not yet implemented")
-    }
-
-    public val shadowRoot: ShadowRoot? = null
-
+    
     public fun closest(selectors: String): Element? {
-        TODO("Not yet implemented")
-    }
-
-    public fun matches(selectors: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun webkitMatchesSelector(selectors: String): Boolean = matches(selectors)
-
-    public fun getElementsByTagName(qualifiedName: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun getElementsByTagNameNS(namespace: String?, localName: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun getElementsByClassName(classNames: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun insertAdjacentElement(where: String, element: Element): Element? {
-        TODO("Not yet implemented")
-    }
-
-    public fun insertAdjacentText(where: String, data: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun insertBefore(newNode: Node, referenceNode: Node?): Node {
-        // If referenceNode is null, append to the end.
-        if (referenceNode == null) {
-            return appendChild(newNode)
-        }
-
-        val index = _childNodes.indexOf(referenceNode)
-        if (index == -1) {
-            throw DOMException(
-                message = "Reference node not found in child list.",
-                name = "NotFoundError"
-            )
-        }
-
-        // If the node already has a parent, it must be removed first.
-        (newNode as? Element)?.parentNode?.removeChild(newNode)
-
-        _childNodes.add(index, newNode)
-        when (newNode) {
-            is Element -> newNode.parentNode = this
-            is Text -> newNode.parentNode = this
-            is Comment -> newNode.parentNode = this
-            else -> {}
-        }
-        return newNode
-    }
-
-    override fun appendChild(node: Node): Node {
-        // If the node already has a parent, it must be removed first.
-        (node as? Element)?.parentNode?.removeChild(node)
-
-        _childNodes.add(node)
-        when (node) {
-            is Element -> node.parentNode = this
-            is Text -> node.parentNode = this
-            is Comment -> node.parentNode = this
-            else -> {}
-        }
-        return node
-    }
-
-    override fun replaceChild(node: Node, child: Node): Node {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeChild(node: Node): Node {
-        if (_childNodes.remove(node)) {
-            when (node) {
-                is Element -> node.parentNode = null
-                is Text -> node.parentNode = null
-                is Comment -> node.parentNode = null
-                else -> {}
+        // WHATWG-compliant closest algorithm
+        var current: Element? = this
+        while (current != null) {
+            if (cssSelector.matches(current, selectors)) {
+                return current
             }
-            return node
-        } else {
-            throw DOMException(
-                message = "Node not found in child list.",
-                name = "NotFoundError"
-            )
+            current = current.parentElement
+        }
+        return null
+    }
+    
+    public fun matches(selectors: String): Boolean {
+        return try {
+            cssSelector.matches(this, selectors)
+        } catch (e: Exception) {
+            throw DOMException("Invalid selector: $selectors", "SyntaxError")
         }
     }
+    
+    public fun querySelector(selectors: String): Element? {
+        return try {
+            cssSelector.querySelector(this, selectors)
+        } catch (e: Exception) {
+            throw DOMException("Invalid selector: $selectors", "SyntaxError")
+        }
+    }
+    
+    public fun querySelectorAll(selectors: String): NodeList {
+        return try {
+            val results = cssSelector.querySelectorAll(this, selectors)
+            StaticNodeList(results)
+        } catch (e: Exception) {
+            throw DOMException("Invalid selector: $selectors", "SyntaxError")
+        }
+    }
+    
+    public fun insertAdjacentElement(where: String, element: Element): Element? {
+        return when (where.lowercase()) {
+            "beforebegin" -> {
+                parentNode?.insertBefore(element, this)
+                element
+            }
+            "afterbegin" -> {
+                insertBefore(element, firstChild)
+                element
+            }
+            "beforeend" -> {
+                appendChild(element)
+                element
+            }
+            "afterend" -> {
+                parentNode?.insertBefore(element, nextSibling)
+                element
+            }
+            else -> throw DOMException("Invalid position: $where", "SyntaxError")
+        }
+    }
+    
+    public fun insertAdjacentHTML(where: String, html: String) {
+        val fragment = htmlParser.parseHTMLFragment(html, this)
+        
+        when (where.lowercase()) {
+            "beforebegin" -> {
+                parentNode?.let { parent ->
+                    fragment.childNodes.toList().forEach { node ->
+                        parent.insertBefore(node, this)
+                    }
+                }
+            }
+            "afterbegin" -> {
+                fragment.childNodes.toList().reversed().forEach { node ->
+                    insertBefore(node, firstChild)
+                }
+            }
+            "beforeend" -> {
+                fragment.childNodes.toList().forEach { node ->
+                    appendChild(node)
+                }
+            }
+            "afterend" -> {
+                parentNode?.let { parent ->
+                    var referenceNode = nextSibling
+                    fragment.childNodes.toList().forEach { node ->
+                        parent.insertBefore(node, referenceNode)
+                        referenceNode = node.nextSibling
+                    }
+                }
+            }
+            else -> throw DOMException("Invalid position: $where", "SyntaxError")
+        }
+    }
+    
+    public fun insertAdjacentText(where: String, text: String) {
+        val textNode = ownerDocument?.createTextNode(text) ?: Text(text)
+        when (where.lowercase()) {
+            "beforebegin" -> parentNode?.insertBefore(textNode, this)
+            "afterbegin" -> insertBefore(textNode, firstChild)
+            "beforeend" -> appendChild(textNode)
+            "afterend" -> parentNode?.insertBefore(textNode, nextSibling)
+            else -> throw DOMException("Invalid position: $where", "SyntaxError")
+        }
+    }
+    
+    public fun remove() {
+        parentNode?.removeChild(this)
+    }
+    
+    public fun getElementsByTagName(tagName: String): HTMLCollection {
+        return LiveHTMLCollection(this) { element ->
+            tagName == "*" || element.tagName.equals(tagName, ignoreCase = true)
+        }
+    }
+    
+    public fun getElementsByClassName(className: String): HTMLCollection {
+        return LiveHTMLCollection(this) { element ->
+            element.classList.contains(className)
+        }
+    }
+    
+    public override fun lookupPrefix(namespaceURI: String?): String? {
+        if (namespaceURI == null || namespaceURI.isEmpty()) return null
+        
+        // Check this element's namespace
+        if (this.namespaceURI == namespaceURI && prefix != null) {
+            return prefix
+        }
+        
+        // Check attributes for namespace declarations
+        for (attr in _attributes.values()) {
+            if (attr.name.startsWith("xmlns:") && attr.value == namespaceURI) {
+                return attr.name.substring(6) // Remove "xmlns:" prefix
+            }
+        }
+        
+        // Check parent
+        return parentNode?.lookupPrefix(namespaceURI)
+    }
+    
+    public override fun lookupNamespaceURI(prefix: String?): String? {
+        if (prefix == null || prefix.isEmpty()) {
+            // Default namespace
+            return getAttribute("xmlns")
+        }
+        
+        // Look for xmlns:prefix attribute
+        val attr = getAttribute("xmlns:$prefix")
+        if (attr != null) return attr
+        
+        // Check this element's namespace
+        if (this.prefix == prefix) {
+            return namespaceURI
+        }
+        
+        // Check parent
+        return parentNode?.lookupNamespaceURI(prefix)
+    }
+    
+    
+    override fun cloneNode(deep: Boolean): Element {
+        val clone = Element(localName, namespaceURI)
+        
+        // Copy attributes
+        _attributes.values().forEach { attr ->
+            clone.setAttributeNode(Attr(attr.name, attr.value, attr.namespaceURI))
+        }
+        
+        if (deep) {
+            childNodes.forEach { child ->
+                clone.appendChild(child.cloneNode(true))
+            }
+        }
+        
+        return clone
+    }
+    
+    public companion object {
+        public const val HTML_NAMESPACE: String = "http://www.w3.org/1999/xhtml"
+    }
 }
 
-public class DOMTokenList(private val element: Element) {
-    public fun item(index: Int): String? {
-        TODO("Not yet implemented")
-    }
-
-    public fun contains(token: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun add(vararg tokens: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun remove(vararg tokens: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun toggle(token: String, force: Boolean? = null): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun replace(oldToken: String, newToken: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun supports(token: String): Boolean {
-        TODO("Not yet implemented")
-    }
+/**
+ * Extension function to check if an element is an HTML element.
+ * Per WHATWG spec, an HTML element is an element with HTML namespace.
+ */
+internal fun Element.isHTMLElement(): Boolean {
+    return namespaceURI == Element.HTML_NAMESPACE
 }
-
-public class ShadowRootInit
-public class ShadowRoot
