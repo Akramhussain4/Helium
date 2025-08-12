@@ -40,18 +40,27 @@ internal class HexadecimalCharacterReference(
             codePoint.isAsciiDigit() -> {
                 tokenizer.characterReferenceCode *= 16
                 tokenizer.characterReferenceCode += codePoint - 0x0030
+                if (tokenizer.characterReferenceCode > 0x10FFFF) {
+                    tokenizer.characterReferenceCode = 0x110000L
+                }
                 consumeNextChar { this }
             }
 
             codePoint.isAsciiUpperHexDigit() -> {
                 tokenizer.characterReferenceCode *= 16
                 tokenizer.characterReferenceCode += codePoint - 0x0037
+                if (tokenizer.characterReferenceCode > 0x10FFFF) {
+                    tokenizer.characterReferenceCode = 0x110000L
+                }
                 consumeNextChar { this }
             }
 
             codePoint.isAsciiLowerHexDigit() -> {
                 tokenizer.characterReferenceCode *= 16
                 tokenizer.characterReferenceCode += codePoint - 0x0057
+                if (tokenizer.characterReferenceCode > 0x10FFFF) {
+                    tokenizer.characterReferenceCode = 0x110000L
+                }
                 consumeNextChar { this }
             }
 
