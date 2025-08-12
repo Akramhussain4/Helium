@@ -23,39 +23,42 @@
  * SOFTWARE.
  */
 
-package com.theakram.helium.dom
+package com.theakram.helium.treebuilder
+
+import com.theakram.helium.tokenization.Tokenizer
 
 /**
- * WHATWG-compliant Attr interface.
- *
- * Spec: https://dom.spec.whatwg.org/#interface-attr
+ * Base class for tree construction tests.
+ * Follows the exact pattern established by TokenizerTestBase.
  */
-public class Attr(
-    public val name: String,
-    public var value: String,
-    public val namespaceURI: String? = null
-) : Node() {
+internal abstract class TreeConstructionTestBase {
     
-    override val nodeType: Short = ATTRIBUTE_NODE
-    override val nodeName: String = name
-    override var nodeValue: String?
-        get() = value
-        set(newValue) { value = newValue ?: "" }
-    override var textContent: String?
-        get() = value
-        set(newValue) { value = newValue ?: "" }
-    override val ownerDocument: Document? 
-        get() = ownerElement?.ownerDocument
+    private val treeBuilder = TreeBuilder()
+    private val tokenizer = Tokenizer { token ->
+        treeBuilder.process(token)
+    }
     
-    public var ownerElement: Element? = null
-        internal set
+    /**
+     * Parse HTML input and return the resulting tree structure.
+     */
+    protected fun parseTree(input: String): String {
+        treeBuilder.reset()
+        tokenizer.tokenize(input)
+        return treeBuilder.toTreeString().trim()
+    }
     
-    public val localName: String = if (name.contains(':')) name.substringAfter(':') else name
-    public val prefix: String? = if (name.contains(':')) name.substringBefore(':') else null
-    
-    public val specified: Boolean = true
-    
-    override fun cloneNode(deep: Boolean): Attr {
-        return Attr(name, value, namespaceURI)
+    /**
+     * Assert that HTML input produces the expected tree structure.
+     */
+    protected fun assertTreeConstruction(input: String, expectedTree: String) {
+        val actualTree = parseTree(input)
+        if (actualTree != expectedTree.trim()) {
+            throw AssertionError(
+                "Tree structure mismatch.\n" +
+                "Input: $input\n" +
+                "Expected:\n${expectedTree.trim()}\n" +
+                "Actual:\n$actualTree"
+            )
+        }
     }
 }

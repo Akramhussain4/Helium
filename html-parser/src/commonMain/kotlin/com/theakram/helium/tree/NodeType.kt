@@ -23,38 +23,19 @@
  * SOFTWARE.
  */
 
-package com.theakram.helium.dom
+package com.theakram.helium.tree
 
 /**
- * WHATWG-compliant DocumentFragment.
- *
- * Spec: https://dom.spec.whatwg.org/#interface-documentfragment
+ * Simple node types for the tree construction phase.
+ * Maps to WHATWG DOM node types but simplified for tree building.
  */
-public class DocumentFragment : Node() {
-    
-    override val nodeType: Short = DOCUMENT_FRAGMENT_NODE
-    override val nodeName: String = "#document-fragment"
-    override val nodeValue: String? = null
-    override var textContent: String?
-        get() = childNodes.mapNotNull { it.textContent }.joinToString("")
-        set(value) {
-            childNodes.toList().forEach { removeChild(it) }
-            if (!value.isNullOrEmpty()) {
-                appendChild(Text(value))
-            }
-        }
-    override val ownerDocument: Document? 
-        get() = parentNode?.ownerDocument
-    
-    override fun cloneNode(deep: Boolean): DocumentFragment {
-        val clone = DocumentFragment()
-        
-        if (deep) {
-            childNodes.forEach { child ->
-                clone.appendChild(child.cloneNode(true))
-            }
-        }
-        
-        return clone
-    }
+public enum class NodeType {
+    DOCUMENT,
+    DOCUMENT_TYPE,
+    DOCUMENT_FRAGMENT,
+    ELEMENT,
+    TEXT,
+    COMMENT,
+    PROCESSING_INSTRUCTION,
+    CDATA_SECTION
 }
