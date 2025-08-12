@@ -26,16 +26,144 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.tree.NodeType
 import com.theakram.helium.treebuilder.modes.Initial
 
-internal class TreeBuilder {
+/**
+ * HTML5 Tree Builder implementing the WHATWG tree construction algorithm.
+ * 
+ * Takes tokens from the tokenizer and builds a tree structure following
+ * the HTML5 parsing rules with insertion modes and stack management.
+ */
+public class TreeBuilder {
     private var insertionMode: InsertionMode = Initial
-
-    fun process(token: Token) {
+    
+    // Tree construction state
+    public val document: TreeNode = TreeNode.createDocument()
+    private val openElements = mutableListOf<TreeNode>()
+    private var currentNode: TreeNode = document
+    
+    // Track head and form elements for special handling
+    public var headElement: TreeNode? = null
+    public var formElement: TreeNode? = null
+    
+    /**
+     * Process a token according to the current insertion mode.
+     */
+    internal fun process(token: Token) {
         insertionMode.process(token, this)
     }
-
-    fun switch(to: InsertionMode) {
+    
+    /**
+     * Switch to a new insertion mode.
+     */
+    internal fun switch(to: InsertionMode) {
         insertionMode = to
+    }
+    
+    /**
+     * Get the current insertion mode.
+     */
+    internal val currentMode: InsertionMode get() = insertionMode
+    
+    /**
+     * Insert an element into the tree and push it onto the stack.
+     */
+    public fun insertElement(tagName: String, attributes: Map<String, String> = emptyMap()): TreeNode {
+        val element = TreeNode.createElement(tagName, attributes)
+        currentNode.appendChild(element)
+        openElements.add(element)
+        currentNode = element
+        return element
+    }
+    
+    /**
+     * Insert a text node into the current node.
+     */
+    public fun insertText(data: String) {
+        // Merge with previous text node if it exists
+        val lastChild = currentNode.lastChild
+        if (lastChild?.type == NodeType.TEXT) {
+            lastChild.data = (lastChild.data ?: "") + data
+        } else {
+            val textNode = TreeNode.createText(data)
+            currentNode.appendChild(textNode)
+        }
+    }
+    
+    /**
+     * Insert a comment node into the current node.
+     */
+    public fun insertComment(data: String) {
+        val comment = TreeNode.createComment(data)
+        currentNode.appendChild(comment)
+    }
+    
+    /**
+     * Insert a DOCTYPE node into the document.
+     */
+    public fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
+        val doctype = TreeNode.createDoctype(name, publicId, systemId)
+        document.appendChild(doctype)
+    }
+    
+    /**
+     * Pop the current element from the stack.
+     */
+    public fun popCurrentElement(): TreeNode? {
+        if (openElements.isEmpty()) return null
+        
+        val popped = openElements.removeLastOrNull()
+        currentNode = openElements.lastOrNull() ?: document
+        return popped
+    }
+    
+    /**
+     * Pop elements until we find the specified tag name.
+     */
+    public fun popUntil(tagName: String) {
+        while (openElements.isNotEmpty()) {
+            val element = popCurrentElement()
+            if (element?.name?.equals(tagName, ignoreCase = true) == true) {
+                break
+            }
+        }
+    }
+    
+    /**
+     * Check if we have an element with the given tag name in scope.
+     */
+    public fun hasElementInScope(tagName: String): Boolean {
+        return openElements.any { it.name?.equals(tagName, ignoreCase = true) == true }
+    }
+    
+    /**
+     * Get the current element on the stack.
+     */
+    public val currentElement: TreeNode get() = currentNode
+    
+    /**
+     * Get the stack of open elements.
+     */
+    public val elementStack: List<TreeNode> get() = openElements.toList()
+    
+    /**
+     * Reset the tree builder to initial state (for testing).
+     */
+    public fun reset() {
+        insertionMode = Initial
+        openElements.clear()
+        currentNode = document
+        document.children.clear()
+        headElement = null
+        formElement = null
+    }
+    
+    /**
+     * Get the tree as html5lib format string for testing.
+     */
+    public fun toTreeString(): String {
+        return document.toTreeString()
     }
 }
