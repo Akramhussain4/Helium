@@ -41,7 +41,7 @@ internal class NumericCharacterReferenceEnd(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         val number = tokenizer.characterReferenceCode
         when {
-            number == 0x00 -> {
+            number == 0x00L -> {
                 tokenizer.logParseError("null-character-reference")
                 tokenizer.characterReferenceCode = 0xFFFD
             }
@@ -51,20 +51,20 @@ internal class NumericCharacterReferenceEnd(
                 tokenizer.characterReferenceCode = 0xFFFD
             }
 
-            number.isSurrogate() -> {
+            number.toInt().isSurrogate() -> {
                 tokenizer.logParseError("surrogate-character-reference")
                 tokenizer.characterReferenceCode = 0xFFFD
             }
 
-            number.isNonCharacter() -> {
+            number.toInt().isNonCharacter() -> {
                 tokenizer.logParseError("noncharacter-character-reference")
             }
         }
 
-        if (number == 0x0D || (number.toChar().isISOControl() && !number.isAsciiWhitespace())) {
+        if (number == 0x0DL || (number <= 0xFFFF && number.toInt().toChar().isISOControl() && !number.toInt().isAsciiWhitespace())) {
             tokenizer.logParseError("control-character-reference")
-            NumCharRef[number]?.let {
-                tokenizer.characterReferenceCode = it
+            NumCharRef[number.toInt()]?.let {
+                tokenizer.characterReferenceCode = it.toLong()
             }
         }
         tokenizer.tempBuffer.clear()
@@ -79,12 +79,12 @@ internal class NumericCharacterReferenceEnd(
          **/
         if (tokenizer.characterReferenceCode > 0xFFFF) {
             val cp = tokenizer.characterReferenceCode - 0x10000
-            val highSurrogate = (0xD800 + (cp shr 10)).toChar()
-            val lowSurrogate = (0xDC00 + (cp and 0x3FF)).toChar()
+            val highSurrogate = (0xD800 + (cp shr 10)).toInt().toChar()
+            val lowSurrogate = (0xDC00 + (cp and 0x3FF)).toInt().toChar()
             tokenizer.tempBuffer.append(highSurrogate)
             tokenizer.tempBuffer.append(lowSurrogate)
         } else {
-            tokenizer.tempBuffer.append(tokenizer.characterReferenceCode.toChar())
+            tokenizer.tempBuffer.append(tokenizer.characterReferenceCode.toInt().toChar())
         }
 
         returnState.flushCodePoints(tokenizer)
