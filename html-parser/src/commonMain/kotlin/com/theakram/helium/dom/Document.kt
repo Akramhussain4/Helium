@@ -1,246 +1,234 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Mohammed Akram Hussain
+ * Website: https://theakram.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.theakram.helium.dom
 
 /**
- * The Document interface represents the entire HTML or XML document. Conceptually, it is the root of the document tree,
- * and provides the primary access to the document's data.
+ * WHATWG-compliant Document.
  *
  * Spec: https://dom.spec.whatwg.org/#interface-document
  */
-
-public class Document : Node {
-
-    private val _childNodes = mutableListOf<Node>()
-
-    override val nodeType: Short = Node.DOCUMENT_NODE
+public class Document : Node() {
+    
+    override val nodeType: Short = DOCUMENT_NODE
     override val nodeName: String = "#document"
-    override val baseURI: String = ""
-    override val isConnected: Boolean
-        get() = true
-    override val ownerDocument: Document = this
-    override val parentNode: Node? = null
-    override val parentElement: Element? = null
-    override val childNodes: List<Node>
-        get() = _childNodes
-    override val previousSibling: Node? = null
-    override val nextSibling: Node? = null
-    override var nodeValue: String?
-        get() = null
-        set(_) {}
+    override val nodeValue: String? = null
     override var textContent: String?
         get() = null
-        set(_) {}
-
-    public val URL: String = ""
-    public val documentURI: String = ""
-    public val compatMode: String = ""
-    public val characterSet: String = ""
-    public val charset: String = ""
-    public val inputEncoding: String = ""
-    public val contentType: String = ""
-    public val doctype: DocumentType? = null
+        set(_) { /* Do nothing - Document textContent is not settable per WHATWG spec */ }
+    override val ownerDocument: Document? = null
+    
+    public var documentURI: String = "about:blank"
+    public val URL: String get() = documentURI
+    public var contentType: String = "text/html"
+    public var characterSet: String = "UTF-8"
+    public var domain: String = ""
+    public var referrer: String = ""
+    public var cookie: String = ""
+    public var readyState: String = "loading"
+    
+    public val doctype: DocumentType?
+        get() = internalChildNodes.filterIsInstance<DocumentType>().firstOrNull()
+    
     public val documentElement: Element?
-        get() = childNodes.filterIsInstance<Element>().firstOrNull()
-    public var title: String? = null
-    public var dir: String? = null
-    public var body: Element? = null
+        get() = internalChildNodes.filterIsInstance<Element>().firstOrNull()
+        
+    public val implementation: DOMImplementation by lazy { DOMImplementation(this) }
+    
     public val head: Element?
-        get() = documentElement?.childNodes?.filterIsInstance<Element>()
-            ?.firstOrNull { it.tagName.equals("head", ignoreCase = true) }
-    public val images: List<Element> = emptyList()
-    public val embeds: List<Element> = emptyList()
-    public val plugins: List<Element> = emptyList()
-    public val links: List<Element> = emptyList()
-    public val forms: List<Element> = emptyList()
-    public val scripts: List<Element> = emptyList()
-    public val readyState: String = ""
-    public val hidden: Boolean = false
-    public val visibilityState: String = ""
-
-    override fun getRootNode(options: GetRootNodeOptions?): Node = this
-
-    override fun hasChildNodes(): Boolean = _childNodes.isNotEmpty()
-
-    override fun normalize() {
-        // TODO: Implement this
+        get() = documentElement?.childNodes?.filterIsInstance<Element>()?.find { it.localName == "head" }
+    
+    public val body: Element?
+        get() = documentElement?.childNodes?.filterIsInstance<Element>()?.find { it.localName == "body" }
+    
+    public var title: String
+        get() = head?.childNodes?.filterIsInstance<Element>()?.find { it.localName == "title" }?.textContent ?: ""
+        set(value) {
+            val titleElement = head?.childNodes?.filterIsInstance<Element>()?.find { it.localName == "title" }
+            if (titleElement != null) {
+                titleElement.childNodes.toList().forEach { titleElement.removeChild(it) }
+                if (value.isNotEmpty()) {
+                    titleElement.appendChild(createTextNode(value))
+                }
+            }
+        }
+    
+    // Factory methods
+    
+    public fun createElement(localName: String): Element {
+        validateLocalName(localName)
+        return if (contentType == "text/html") {
+            Element(localName.lowercase(), Element.HTML_NAMESPACE)
+        } else {
+            Element(localName)
+        }
     }
-
-    override fun cloneNode(deep: Boolean): Node {
-        TODO("Not yet implemented")
+    
+    public fun createElementNS(namespace: String?, qualifiedName: String): Element {
+        validateQualifiedName(qualifiedName)
+        val colonIndex = qualifiedName.indexOf(':')
+        val localName = if (colonIndex != -1) qualifiedName.substring(colonIndex + 1) else qualifiedName
+        return Element(localName, namespace)
     }
-
-    override fun isEqualNode(other: Node?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun createTextNode(data: String): Text {
+        return Text(data)
     }
-
-    override fun isSameNode(other: Node?): Boolean = other === this
-
-    override fun compareDocumentPosition(other: Node): UShort {
-        TODO("Not yet implemented")
+    
+    public fun createComment(data: String): Comment {
+        return Comment(data)
     }
-
-    override fun contains(other: Node?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun createProcessingInstruction(target: String, data: String): ProcessingInstruction {
+        return ProcessingInstruction(target, data)
     }
-
-    override fun lookupPrefix(namespace: String?): String? {
-        TODO("Not yet implemented")
+    
+    public fun createCDATASection(data: String): CDATASection {
+        return CDATASection(data)
     }
-
-    override fun lookupNamespaceURI(prefix: String?): String? {
-        TODO("Not yet implemented")
+    
+    public fun createDocumentFragment(): DocumentFragment {
+        return DocumentFragment()
     }
-
-    override fun isDefaultNamespace(namespace: String?): Boolean {
-        TODO("Not yet implemented")
+    
+    public fun createDocumentType(qualifiedName: String, publicId: String = "", systemId: String = ""): DocumentType {
+        return DocumentType(qualifiedName, publicId, systemId)
     }
-
-    override fun insertBefore(newNode: Node, referenceNode: Node?): Node {
-        TODO("Not yet implemented")
+    
+    public fun createAttribute(name: String): Attr {
+        validateLocalName(name)
+        return Attr(name, "")
     }
-
-    override fun appendChild(node: Node): Node {
-        _childNodes.add(node)
+    
+    public fun createAttributeNS(namespaceURI: String?, qualifiedName: String): Attr {
+        validateQualifiedName(qualifiedName)
+        return Attr(qualifiedName, "", namespaceURI)
+    }
+    
+    public fun adoptNode(node: Node): Node {
+        if (node.ownerDocument === this) return node
+        
+        // Remove from current document
+        node.parentNode?.removeChild(node)
+        
+        // Recursively adopt all descendants
+        if (node is Element) {
+            node.attributes.values().forEach { attr ->
+                attr.ownerElement = node
+            }
+        }
+        
+        node.childNodes.forEach { child ->
+            adoptNode(child)
+        }
+        
         return node
     }
-
-    override fun replaceChild(node: Node, child: Node): Node {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeChild(node: Node): Node {
-        TODO("Not yet implemented")
-    }
-
-    public fun getElementsByTagName(qualifiedName: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun getElementsByTagNameNS(namespace: String?, localName: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun getElementsByClassName(classNames: String): List<Element> {
-        TODO("Not yet implemented")
-    }
-
-    public fun createElement(localName: String, options: ElementCreationOptions? = null): Element {
-        return Element(localName, this)
-    }
-
-    public fun createElementNS(
-        namespace: String?,
-        qualifiedName: String,
-        options: ElementCreationOptions? = null
-    ): Element {
-        TODO("Not yet implemented")
-    }
-
-    public fun createDocumentFragment(): DocumentFragment {
-        TODO("Not yet implemented")
-    }
-
-    public fun createTextNode(data: String): Text {
-        return Text(data).also { it.ownerDocument = this }
-    }
-
-    public fun createCDATASection(data: String): CDATASection {
-        TODO("Not yet implemented")
-    }
-
-    public fun createComment(data: String): Comment {
-        return Comment(data).also { it.ownerDocument = this }
-    }
-
-    public fun createProcessingInstruction(target: String, data: String): ProcessingInstruction {
-        TODO("Not yet implemented")
-    }
-
+    
     public fun importNode(node: Node, deep: Boolean = false): Node {
-        TODO("Not yet implemented")
+        return node.cloneNode(deep)
     }
-
-    public fun adoptNode(node: Node): Node {
-        TODO("Not yet implemented")
+    
+    // Query methods
+    
+    public fun getElementById(elementId: String): Element? {
+        return findElementById(this, elementId)
     }
-
-    public fun createAttribute(localName: String): Attr {
-        TODO("Not yet implemented")
+    
+    private fun findElementById(node: Node, id: String): Element? {
+        if (node is Element && node.id == id) {
+            return node
+        }
+        
+        for (child in node.childNodes) {
+            val result = findElementById(child, id)
+            if (result != null) return result
+        }
+        
+        return null
     }
-
-    public fun createAttributeNS(namespace: String?, qualifiedName: String): Attr {
-        TODO("Not yet implemented")
+    
+    public fun querySelector(selectors: String): Element? {
+        return try {
+            cssSelector.querySelector(this, selectors)
+        } catch (e: Exception) {
+            throw DOMException("Invalid selector: $selectors", "SyntaxError")
+        }
     }
-
-    public fun createEvent(eventInterface: String): Event {
-        TODO("Not yet implemented")
+    
+    public fun querySelectorAll(selectors: String): NodeList {
+        return try {
+            val results = cssSelector.querySelectorAll(this, selectors)
+            StaticNodeList(results)
+        } catch (e: Exception) {
+            throw DOMException("Invalid selector: $selectors", "SyntaxError")
+        }
     }
-
-    public fun createRange(): Range {
-        TODO("Not yet implemented")
+    
+    // Query methods
+    
+    public fun getElementsByTagName(tagName: String): HTMLCollection {
+        return LiveHTMLCollection(this) { element ->
+            tagName == "*" || element.tagName.equals(tagName, ignoreCase = true)
+        }
     }
-
-    public fun createNodeIterator(root: Node, whatToShow: Long = 0xFFFFFFFF, filter: NodeFilter? = null): NodeIterator {
-        TODO("Not yet implemented")
+    
+    public fun getElementsByClassName(className: String): HTMLCollection {
+        return LiveHTMLCollection(this) { element ->
+            element.classList.contains(className)
+        }
     }
-
-    public fun createTreeWalker(root: Node, whatToShow: Long = 0xFFFFFFFF, filter: NodeFilter? = null): TreeWalker {
-        TODO("Not yet implemented")
+    
+    override fun cloneNode(deep: Boolean): Document {
+        val clone = Document()
+        clone.documentURI = this.documentURI
+        clone.contentType = this.contentType
+        clone.characterSet = this.characterSet
+        
+        if (deep) {
+            childNodes.forEach { child ->
+                clone.appendChild(child.cloneNode(true))
+            }
+        }
+        
+        return clone
     }
-
-    public fun getElementsByName(elementName: String): List<Element> {
-        TODO("Not yet implemented")
+    
+    private fun validateLocalName(localName: String) {
+        require(localName.isNotEmpty() && isValidName(localName)) {
+            "Invalid local name: $localName"
+        }
     }
-
-    public fun open(url: String = "about:blank", name: String = "", features: String = "") {
-        TODO("Not yet implemented")
+    
+    private fun validateQualifiedName(qualifiedName: String) {
+        require(qualifiedName.isNotEmpty() && isValidName(qualifiedName)) {
+            "Invalid qualified name: $qualifiedName"
+        }
     }
-
-    public fun close() {
-        TODO("Not yet implemented")
-    }
-
-    public fun write(vararg text: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun writeln(vararg text: String) {
-        TODO("Not yet implemented")
-    }
-
-    public fun hasFocus(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun execCommand(commandId: String, showUI: Boolean = false, value: String = ""): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun queryCommandEnabled(commandId: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun queryCommandIndeterm(commandId: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun queryCommandState(commandId: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    public fun queryCommandSupported(commandId: String): Boolean {
-        TODO("Not yet implemented")
+    
+    private fun isValidName(name: String): Boolean {
+        return name.isNotEmpty() && name.all { it.isLetterOrDigit() || it in "-_:." }
     }
 }
-
-public class DocumentType
-public class ElementCreationOptions
-public class DocumentFragment
-public class CDATASection
-public class ProcessingInstruction
-public class Attr
-public class Event
-public class Range
-public class NodeFilter
-public class NodeIterator
-public class TreeWalker
-
