@@ -28,6 +28,10 @@ package com.theakram.helium.tree
 /**
  * Simple node types for the tree construction phase.
  * Maps to WHATWG DOM node types but simplified for tree building.
+ *
+ * Spec references:
+ * - DOM Node types: https://dom.spec.whatwg.org/#interface-node
+ * - Node type constants: https://dom.spec.whatwg.org/#dom-node-nodetype
  */
 public enum class NodeType {
     DOCUMENT,
