@@ -26,15 +26,22 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.modes.Initial
 
 /**
  * HTML5 Tree Builder implementing the WHATWG tree construction algorithm.
- * 
+ *
  * Takes tokens from the tokenizer and builds a tree structure following
  * the HTML5 parsing rules with insertion modes and stack management.
+ *
+ * Spec references:
+ * - Tree construction: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
+ * - Stack of open elements: https://html.spec.whatwg.org/multipage/parsing.html#the-stack-of-open-elements
+ * - Insertion modes: https://html.spec.whatwg.org/multipage/parsing.html#the-insertion-mode
  */
 public class TreeBuilder {
     private var insertionMode: InsertionMode = Initial
@@ -70,8 +77,16 @@ public class TreeBuilder {
     /**
      * Insert an element into the tree and push it onto the stack.
      */
-    public fun insertElement(tagName: String, attributes: Map<String, String> = emptyMap()): TreeNode {
-        val element = TreeNode.createElement(tagName, attributes)
+    public fun insertElement(
+        tagName: String,
+        namespace: String = Namespaces.HTML,
+        attributes: List<Attribute> = emptyList()
+    ): TreeNode {
+        val element = TreeNode.createElement(
+            localName = tagName,
+            namespace = namespace,
+            attributes = attributes
+        )
         currentNode.appendChild(element)
         openElements.add(element)
         currentNode = element
@@ -104,7 +119,7 @@ public class TreeBuilder {
      * Insert a DOCTYPE node into the document.
      */
     public fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
-        val doctype = TreeNode.createDoctype(name, publicId, systemId)
+        val doctype = TreeNode.createDocumentType(name, publicId, systemId)
         document.appendChild(doctype)
     }
     
@@ -125,7 +140,7 @@ public class TreeBuilder {
     public fun popUntil(tagName: String) {
         while (openElements.isNotEmpty()) {
             val element = popCurrentElement()
-            if (element?.name?.equals(tagName, ignoreCase = true) == true) {
+            if (element?.localName?.equals(tagName, ignoreCase = true) == true) {
                 break
             }
         }
@@ -135,7 +150,7 @@ public class TreeBuilder {
      * Check if we have an element with the given tag name in scope.
      */
     public fun hasElementInScope(tagName: String): Boolean {
-        return openElements.any { it.name?.equals(tagName, ignoreCase = true) == true }
+        return openElements.any { it.localName?.equals(tagName, ignoreCase = true) == true }
     }
     
     /**
