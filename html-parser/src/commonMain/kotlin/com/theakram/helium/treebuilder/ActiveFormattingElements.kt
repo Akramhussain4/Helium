@@ -44,6 +44,29 @@ internal class ActiveFormattingElements {
 
     val size: Int get() = entries.size
 
+    fun isLastEntryMarker(): Boolean {
+        val lastEntry = entries.lastOrNull()
+        return lastEntry is Entry.Marker
+    }
+
+    fun getLastElement(): TreeNode? {
+        val lastEntry = entries.lastOrNull()
+        return when (lastEntry) {
+            is Entry.Element -> lastEntry.node
+            is Entry.Marker -> null
+            null -> null
+        }
+    }
+
+    internal fun getEntriesForReconstruction(): List<TreeNode?> {
+        return entries.map { entry ->
+            when (entry) {
+                is Entry.Element -> entry.node
+                is Entry.Marker -> null
+            }
+        }
+    }
+
     fun push(element: TreeNode) {
         // Apply Noah's Ark clause
         applyNoahsArk(element)
