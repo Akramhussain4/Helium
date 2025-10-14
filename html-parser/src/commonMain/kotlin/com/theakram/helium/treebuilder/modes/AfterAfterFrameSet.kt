@@ -29,7 +29,8 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.*
 
 internal object AfterAfterFrameSet : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        // TODO: Implement AfterAfterFrameSet insertion mode
+        return continueInCurrentMode()
     }
 }
