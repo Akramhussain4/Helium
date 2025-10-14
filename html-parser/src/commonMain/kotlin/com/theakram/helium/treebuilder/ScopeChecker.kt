@@ -34,32 +34,31 @@ import com.theakram.helium.tree.TreeNode
 internal class ScopeChecker(private val stack: StackOfOpenElements) {
 
     fun hasElementInScope(tagName: String): Boolean {
-        return hasElementInScopeWithBoundaries(tagName, DEFAULT_SCOPE_BOUNDARIES)
+        return hasTagNameInScopeWithBoundaries(tagName, DEFAULT_SCOPE_BOUNDARIES)
     }
 
     fun hasElementInListItemScope(tagName: String): Boolean {
-        return hasElementInScopeWithBoundaries(tagName, LIST_ITEM_SCOPE_BOUNDARIES)
+        return hasTagNameInScopeWithBoundaries(tagName, LIST_ITEM_SCOPE_BOUNDARIES)
     }
 
     fun hasElementInButtonScope(tagName: String): Boolean {
-        return hasElementInScopeWithBoundaries(tagName, BUTTON_SCOPE_BOUNDARIES)
+        return hasTagNameInScopeWithBoundaries(tagName, BUTTON_SCOPE_BOUNDARIES)
     }
 
     fun hasElementInTableScope(tagName: String): Boolean {
-        return hasElementInScopeWithBoundaries(tagName, TABLE_SCOPE_BOUNDARIES)
+        return hasTagNameInScopeWithBoundaries(tagName, TABLE_SCOPE_BOUNDARIES)
     }
 
     /**
-     * Check if an element is in a select scope.
-     * Select scope = all elements EXCEPT optgroup and option act as boundaries
+     * Check if ANY element with the given tag name is in the select scope.
+     * Select scope is special: all elements EXCEPT optgroup and option act as boundaries.
+     * @param tagName The tag name to search for
      */
     fun hasElementInSelectScope(tagName: String): Boolean {
-        // Walk backwards through stack
         for (i in stack.lastIndex downTo 0) {
             val element = stack[i]
             val elementName = element.localName
 
-            // If we found the target element
             if (elementName?.equals(tagName, ignoreCase = true) == true) {
                 return true
             }
@@ -72,18 +71,29 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
         return false
     }
 
-    /**
-     * Generic scope checking with custom boundaries.
-     * Walks backwards from the current node until finding the target or hitting the boundary.
-     */
-    private fun hasElementInScopeWithBoundaries(tagName: String, boundaries: Set<String>): Boolean {
-        // Walk backwards through the stack of open elements
+    fun isElementInScope(element: TreeNode): Boolean {
+        return isElementInScopeWithBoundaries(element, DEFAULT_SCOPE_BOUNDARIES)
+    }
+
+    fun isElementInButtonScope(element: TreeNode): Boolean {
+        return isElementInScopeWithBoundaries(element, BUTTON_SCOPE_BOUNDARIES)
+    }
+
+    fun isElementInListItemScope(element: TreeNode): Boolean {
+        return isElementInScopeWithBoundaries(element, LIST_ITEM_SCOPE_BOUNDARIES)
+    }
+
+    fun isElementInTableScope(element: TreeNode): Boolean {
+        return isElementInScopeWithBoundaries(element, TABLE_SCOPE_BOUNDARIES)
+    }
+
+    private fun hasTagNameInScopeWithBoundaries(tagName: String, boundaries: Set<String>): Boolean {
         for (i in stack.lastIndex downTo 0) {
             val element = stack[i]
             val elementName = element.localName
             val namespace = element.namespace
 
-            // If we found the target element
+            // If we found ANY element with the target tag name
             if (elementName?.equals(tagName, ignoreCase = true) == true) {
                 return true
             }
@@ -96,7 +106,24 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
         return false
     }
 
-    private fun isScopeBoundary(localName: String?, namespace: String?, boundaries: Set<String>): Boolean {
+    private fun isElementInScopeWithBoundaries(element: TreeNode, boundaries: Set<String>): Boolean {
+        for (i in stack.lastIndex downTo 0) {
+            val node = stack[i]
+
+            // If we found the target element (by reference)
+            if (node === element) {
+                return true
+            }
+
+            // Check if this is a scope boundary
+            if (isScopeBoundary(node.localName, node.namespace, boundaries)) {
+                return false
+            }
+        }
+        return false
+    }
+
+    internal fun isScopeBoundary(localName: String?, namespace: String?, boundaries: Set<String>): Boolean {
         if (localName == null) return false
 
         if (namespace == Namespaces.HTML && localName in boundaries) {

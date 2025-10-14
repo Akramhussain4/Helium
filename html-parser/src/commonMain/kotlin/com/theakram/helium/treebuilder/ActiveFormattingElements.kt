@@ -110,9 +110,37 @@ internal class ActiveFormattingElements {
     }
 
     fun findLastElementByTagName(tagName: String): TreeNode? {
-        return entries.findLast { entry ->
-            entry is Entry.Element && entry.node.localName?.equals(tagName, ignoreCase = true) == true
-        }?.let { it as Entry.Element }?.node
+        val lastMarkerIndex = entries.indexOfLast { it is Entry.Marker }
+        val startIndex = if (lastMarkerIndex >= 0) lastMarkerIndex + 1 else 0
+
+        for (i in entries.lastIndex downTo startIndex) {
+            val entry = entries[i]
+            if (entry is Entry.Element &&
+                entry.node.localName?.equals(tagName, ignoreCase = true) == true) {
+                return entry.node
+            }
+        }
+        return null
+    }
+
+    /**
+     * Insert an element immediately after another element (or at the beginning if afterElement is null).
+     * This is used to insert elements at a bookmark position in the adoption agency algorithm.
+     */
+    fun insertAfter(afterElement: TreeNode?, element: TreeNode) {
+        if (afterElement == null) {
+            // Insert at beginning
+            entries.add(0, Entry.Element(element))
+            return
+        }
+
+        val index = entries.indexOfLast { it is Entry.Element && it.node === afterElement }
+        if (index >= 0) {
+            entries.add(index + 1, Entry.Element(element))
+        } else {
+            // Fallback: add at end
+            entries.add(Entry.Element(element))
+        }
     }
 
     fun clear() {
