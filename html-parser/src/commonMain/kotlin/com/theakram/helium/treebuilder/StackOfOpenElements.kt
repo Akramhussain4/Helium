@@ -48,9 +48,7 @@ internal class StackOfOpenElements {
         elements.add(element)
     }
 
-    fun pop(): TreeNode? {
-        return elements.removeLastOrNull()
-    }
+    fun pop(): TreeNode? = elements.removeLastOrNull()
 
     fun popUntil(tagName: String) {
         while (elements.isNotEmpty()) {
@@ -61,13 +59,22 @@ internal class StackOfOpenElements {
         }
     }
 
-    fun contains(element: TreeNode): Boolean {
-        return elements.contains(element)
+    fun popUntilElement(element: TreeNode) {
+        while (elements.isNotEmpty()) {
+            val popped = pop()
+            if (popped === element) break
+        }
     }
 
-    fun indexOf(element: TreeNode): Int {
-        return elements.indexOf(element)
+    inline fun popWhile(predicate: (TreeNode) -> Boolean) {
+        while (elements.isNotEmpty() && currentNode?.let(predicate) == true) {
+            pop()
+        }
     }
+
+    operator fun contains(element: TreeNode): Boolean = elements.contains(element)
+
+    fun indexOf(element: TreeNode): Int = elements.indexOf(element)
 
     fun indexOfLastTagName(tagName: String): Int {
         return elements.indexOfLast {
@@ -75,17 +82,36 @@ internal class StackOfOpenElements {
         }
     }
 
-    operator fun get(index: Int): TreeNode {
-        return elements[index]
+    fun insertAfter(afterElement: TreeNode, newElement: TreeNode) {
+        val index = elements.indexOf(afterElement)
+        require(index >= 0) { "Element not found in stack" }
+        elements.add(index + 1, newElement)
     }
+
+    fun replace(oldElement: TreeNode, newElement: TreeNode): Boolean {
+        val index = elements.indexOf(oldElement)
+        return if (index >= 0) {
+            elements[index] = newElement
+            true
+        } else {
+            false
+        }
+    }
+
+
+    inline fun findLast(predicate: (TreeNode) -> Boolean): TreeNode? {
+        return elements.findLast(predicate)
+    }
+
+    inline fun any(predicate: (TreeNode) -> Boolean): Boolean = elements.any(predicate)
+
+    operator fun get(index: Int): TreeNode = elements[index]
 
     operator fun set(index: Int, element: TreeNode) {
         elements[index] = element
     }
 
-    fun remove(element: TreeNode): Boolean {
-        return elements.remove(element)
-    }
+    fun remove(element: TreeNode): Boolean = elements.remove(element)
 
     fun toList(): List<TreeNode> = elements.toList()
 
@@ -96,7 +122,7 @@ internal class StackOfOpenElements {
         elements.clear()
     }
 
-    fun any(predicate: (TreeNode) -> Boolean): Boolean {
-        return elements.any(predicate)
+    override fun toString(): String {
+        return elements.joinToString(" -> ") { "<${it.localName}>" }
     }
 }
