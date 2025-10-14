@@ -29,7 +29,8 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.*
 
 internal object InHeadNoScript : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        // TODO: Implement InHeadNoScript insertion mode
+        return continueInCurrentMode()
     }
 }

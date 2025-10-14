@@ -32,7 +32,7 @@ import com.theakram.helium.tokenization.Tokenizer
  * Follows the exact pattern established by TokenizerTestBase.
  */
 internal abstract class TreeConstructionTestBase {
-    
+
     private val treeBuilder = TreeBuilder()
     private val tokenizer = Tokenizer { token ->
         treeBuilder.process(token)
@@ -44,6 +44,7 @@ internal abstract class TreeConstructionTestBase {
     protected fun parseTree(input: String): String {
         treeBuilder.reset()
         tokenizer.tokenize(input)
+        treeBuilder.finish()
         return treeBuilder.toTreeString().trim()
     }
     

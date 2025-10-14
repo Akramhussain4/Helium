@@ -31,52 +31,72 @@ import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.modes.Initial
+import com.theakram.helium.treebuilder.modes.BeforeHTML
+import com.theakram.helium.treebuilder.modes.BeforeHead
+import com.theakram.helium.treebuilder.modes.InBody
 
 /**
- * HTML5 Tree Builder implementing the WHATWG tree construction algorithm.
- *
- * Takes tokens from the tokenizer and builds a tree structure following
- * the HTML5 parsing rules with insertion modes and stack management.
- *
- * Spec references:
- * - Tree construction: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
- * - Stack of open elements: https://html.spec.whatwg.org/multipage/parsing.html#the-stack-of-open-elements
- * - Insertion modes: https://html.spec.whatwg.org/multipage/parsing.html#the-insertion-mode
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
  */
-public class TreeBuilder {
+public class TreeBuilder(
+    private val onSwitchTokenizerState: ((TokenizerStateType) -> Unit)? = null
+) {
     private var insertionMode: InsertionMode = Initial
-    
-    // Tree construction state
     public val document: TreeNode = TreeNode.createDocument()
-    private val openElements = mutableListOf<TreeNode>()
-    private var currentNode: TreeNode = document
-    
-    // Track head and form elements for special handling
+
+    private val stack = StackOfOpenElements()
+    private val scopeChecker = ScopeChecker(stack)
+    private val fosterParenting = FosterParenting(stack)
+    internal val activeFormattingElements = ActiveFormattingElements()
+    private val insertionLocation = InsertionLocation(
+        stack = stack,
+        fosterParenting = fosterParenting,
+        getCurrentNode = { currentNode },
+        getDocument = { document }
+    )
+    private val formattingElementReconstructor = FormattingElementReconstructor(
+        stack = stack,
+        activeFormattingElements = activeFormattingElements,
+        getCurrentNode = { currentNode }
+    )
+    private val adoptionAgency = AdoptionAgencyAlgorithm(
+        treeBuilder = this,
+        stack = stack,
+        scopeChecker = scopeChecker,
+        activeFormattingElements = activeFormattingElements,
+    )
+
     public var headElement: TreeNode? = null
     public var formElement: TreeNode? = null
-    
-    /**
-     * Process a token according to the current insertion mode.
-     */
-    internal fun process(token: Token) {
-        insertionMode.process(token, this)
-    }
-    
-    /**
-     * Switch to a new insertion mode.
-     */
-    internal fun switch(to: InsertionMode) {
-        insertionMode = to
-    }
-    
-    /**
-     * Get the current insertion mode.
-     */
+    private var originalInsertionMode: InsertionMode? = null
+    private val templateInsertionModes = mutableListOf<InsertionMode>()
+    private var framesetOk: Boolean = true
+
+    public val currentNode: TreeNode get() = stack.currentNode ?: document
+    public val currentElement: TreeNode get() = currentNode
+    public val elementStack: List<TreeNode> get() = stack.toList()
     internal val currentMode: InsertionMode get() = insertionMode
-    
-    /**
-     * Insert an element into the tree and push it onto the stack.
-     */
+
+    internal fun process(token: Token) {
+        var currentToken = token
+
+        while (true) {
+            val transition = insertionMode.process(currentToken, this)
+
+            when (transition) {
+                is InsertionModeTransition.Continue -> break
+                is InsertionModeTransition.SwitchMode -> {
+                    insertionMode = transition.newMode
+                    break
+                }
+
+                is InsertionModeTransition.Reprocess -> {
+                    insertionMode = transition.newMode
+                }
+            }
+        }
+    }
+
     public fun insertElement(
         tagName: String,
         namespace: String = Namespaces.HTML,
@@ -87,98 +107,155 @@ public class TreeBuilder {
             namespace = namespace,
             attributes = attributes
         )
-        currentNode.appendChild(element)
-        openElements.add(element)
-        currentNode = element
+
+        if (fosterParenting.isEnabled) {
+            fosterParenting.fosterParentElement(element)
+        } else {
+            currentNode.appendChild(element)
+        }
+
+        stack.push(element)
         return element
     }
-    
-    /**
-     * Insert a text node into the current node.
-     */
+
     public fun insertText(data: String) {
-        // Merge with previous text node if it exists
+        if (fosterParenting.isEnabled) {
+            fosterParenting.fosterParentText(data)
+            return
+        }
+
         val lastChild = currentNode.lastChild
         if (lastChild?.type == NodeType.TEXT) {
             lastChild.data = (lastChild.data ?: "") + data
         } else {
-            val textNode = TreeNode.createText(data)
-            currentNode.appendChild(textNode)
+            currentNode.appendChild(TreeNode.createText(data))
         }
     }
-    
-    /**
-     * Insert a comment node into the current node.
-     */
+
     public fun insertComment(data: String) {
-        val comment = TreeNode.createComment(data)
-        currentNode.appendChild(comment)
+        currentNode.appendChild(TreeNode.createComment(data))
     }
-    
-    /**
-     * Insert a DOCTYPE node into the document.
-     */
+
     public fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
-        val doctype = TreeNode.createDocumentType(name, publicId, systemId)
-        document.appendChild(doctype)
+        document.appendChild(TreeNode.createDocumentType(name, publicId, systemId))
     }
-    
-    /**
-     * Pop the current element from the stack.
-     */
-    public fun popCurrentElement(): TreeNode? {
-        if (openElements.isEmpty()) return null
-        
-        val popped = openElements.removeLastOrNull()
-        currentNode = openElements.lastOrNull() ?: document
-        return popped
+
+    public fun popCurrentElement(): TreeNode? = stack.pop()
+
+    public fun popUntil(tagName: String): Unit = stack.popUntil(tagName)
+
+    public fun hasElementInScope(tagName: String): Boolean =
+        scopeChecker.hasElementInScope(tagName)
+
+    public fun hasElementInListItemScope(tagName: String): Boolean =
+        scopeChecker.hasElementInListItemScope(tagName)
+
+    public fun hasElementInButtonScope(tagName: String): Boolean =
+        scopeChecker.hasElementInButtonScope(tagName)
+
+    public fun hasElementInTableScope(tagName: String): Boolean =
+        scopeChecker.hasElementInTableScope(tagName)
+
+    public fun hasElementInSelectScope(tagName: String): Boolean =
+        scopeChecker.hasElementInSelectScope(tagName)
+
+    internal fun enableFosterParenting() = fosterParenting.enable()
+
+    internal fun disableFosterParenting() = fosterParenting.disable()
+
+    internal fun runAdoptionAgency(tagName: String) = adoptionAgency.run(tagName)
+
+    internal fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
+        insertionLocation.insertAtAppropriatePlace(node, overrideTarget)
     }
-    
-    /**
-     * Pop elements until we find the specified tag name.
-     */
-    public fun popUntil(tagName: String) {
-        while (openElements.isNotEmpty()) {
-            val element = popCurrentElement()
-            if (element?.localName?.equals(tagName, ignoreCase = true) == true) {
-                break
+
+    internal fun reconstructActiveFormattingElements() {
+        formattingElementReconstructor.reconstruct()
+    }
+
+    internal fun setFramesetNotOk() {
+        framesetOk = false
+    }
+
+    internal fun isFramesetOk(): Boolean = framesetOk
+
+    internal fun saveOriginalInsertionMode() {
+        originalInsertionMode = insertionMode
+    }
+
+    internal fun getOriginalInsertionMode(): InsertionMode? = originalInsertionMode
+
+    internal fun pushTemplateInsertionMode(mode: InsertionMode) {
+        templateInsertionModes.add(mode)
+    }
+
+    internal fun popTemplateInsertionMode(): InsertionMode? =
+        templateInsertionModes.removeLastOrNull()
+
+    internal fun currentTemplateInsertionMode(): InsertionMode? =
+        templateInsertionModes.lastOrNull()
+
+    internal fun switchTokenizerState(stateType: TokenizerStateType) {
+        onSwitchTokenizerState?.invoke(stateType)
+    }
+
+    internal fun createImplicitElement(tagName: String): TreeNode =
+        insertElement(tagName = tagName, namespace = Namespaces.HTML, attributes = emptyList())
+
+    internal fun insertCharacter(char: Char) {
+        insertText(char.toString())
+    }
+
+    internal fun finish() {
+        val htmlElement = document.findChildElement("html") ?: return
+
+        if (htmlElement.findChildElement("head") == null) {
+            if (currentMode != InBody) {
+                when (currentMode) {
+                    Initial, BeforeHTML -> {}
+                    BeforeHead -> {
+                        val head = TreeNode.createElement("head")
+                        htmlElement.appendChild(head)
+                        headElement = head
+                    }
+
+                    else -> {
+                        if (headElement == null) {
+                            val head = TreeNode.createElement("head")
+                            htmlElement.insertBefore(head, htmlElement.firstChild)
+                            headElement = head
+                        }
+                    }
+                }
             }
         }
+
+        if (htmlElement.findChildElement("body") == null) {
+            htmlElement.appendChild(TreeNode.createElement("body"))
+        }
     }
-    
-    /**
-     * Check if we have an element with the given tag name in scope.
-     */
-    public fun hasElementInScope(tagName: String): Boolean {
-        return openElements.any { it.localName?.equals(tagName, ignoreCase = true) == true }
-    }
-    
-    /**
-     * Get the current element on the stack.
-     */
-    public val currentElement: TreeNode get() = currentNode
-    
-    /**
-     * Get the stack of open elements.
-     */
-    public val elementStack: List<TreeNode> get() = openElements.toList()
-    
-    /**
-     * Reset the tree builder to initial state (for testing).
-     */
+
     public fun reset() {
         insertionMode = Initial
-        openElements.clear()
-        currentNode = document
+        stack.clear()
         document.children.clear()
         headElement = null
         formElement = null
+        activeFormattingElements.clear()
+        originalInsertionMode = null
+        templateInsertionModes.clear()
+        framesetOk = true
+        fosterParenting.disable()
     }
-    
-    /**
-     * Get the tree as html5lib format string for testing.
-     */
+
     public fun toTreeString(): String {
-        return document.toTreeString()
+        val result = StringBuilder()
+        document.children.forEachIndexed { index, child ->
+            result.append(child.toTreeString())
+            if (index < document.children.size - 1) {
+                result.append("\n")
+            }
+        }
+        return result.toString()
     }
 }

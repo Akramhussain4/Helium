@@ -25,6 +25,10 @@
 
 package com.theakram.helium.treebuilder
 
+import com.theakram.helium.treebuilder.InsertionModeTransition.Continue
+import com.theakram.helium.treebuilder.InsertionModeTransition.Reprocess
+import com.theakram.helium.treebuilder.InsertionModeTransition.SwitchMode
+
 internal sealed interface InsertionModeTransition {
     data object Continue : InsertionModeTransition
 
@@ -33,11 +37,8 @@ internal sealed interface InsertionModeTransition {
     data class Reprocess(val newMode: InsertionMode) : InsertionModeTransition
 }
 
-internal fun continueInCurrentMode(): InsertionModeTransition =
-    InsertionModeTransition.Continue
+internal fun continueInCurrentMode() = Continue
 
-internal fun switchTo(mode: InsertionMode): InsertionModeTransition =
-    InsertionModeTransition.SwitchMode(mode)
+internal fun switchTo(mode: InsertionMode) = SwitchMode(mode)
 
-internal fun reprocessIn(mode: InsertionMode): InsertionModeTransition =
-    InsertionModeTransition.Reprocess(mode)
+internal fun reprocessIn(mode: InsertionMode) = Reprocess(mode)

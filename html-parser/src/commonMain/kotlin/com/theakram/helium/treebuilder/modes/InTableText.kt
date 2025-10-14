@@ -27,10 +27,13 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
 
 internal object InTableText : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        TODO("Not yet implemented")
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        // TODO: Implement InTableText insertion mode
+        return continueInCurrentMode()
     }
 }
