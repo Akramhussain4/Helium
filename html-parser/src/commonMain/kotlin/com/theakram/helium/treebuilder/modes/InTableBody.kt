@@ -26,14 +26,99 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intbody
+ */
 internal object InTableBody : InsertionMode {
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement InTableBody insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.StartTag if token.name.equals("tr", ignoreCase = true) -> {
+                clearStackBackToTableBodyContext(treeBuilder)
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement("tr", attributes = attributes)
+                switchTo(InRow)
+            }
+
+            is Token.StartTag if token.name.lowercase() in setOf("th", "td") -> {
+                clearStackBackToTableBodyContext(treeBuilder)
+                treeBuilder.insertElement("tr", attributes = emptyList())
+                reprocessIn(InRow)
+            }
+
+            is Token.EndTag if token.name.lowercase() in setOf("tbody", "tfoot", "thead") -> {
+                val tagName = token.name.lowercase()
+                if (!treeBuilder.hasElementInTableScope(tagName)) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableBodyContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    switchTo(InTable)
+                }
+            }
+
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "caption", "col", "colgroup", "tbody", "tfoot", "thead"
+            ) -> {
+                if (!hasTableBodyElementInScope(treeBuilder)) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableBodyContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTable)
+                }
+            }
+
+            is Token.EndTag if token.name.equals("table", ignoreCase = true) -> {
+                if (!hasTableBodyElementInScope(treeBuilder)) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableBodyContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTable)
+                }
+            }
+
+            is Token.EndTag if token.name.lowercase() in setOf(
+                "body", "caption", "col", "colgroup", "html", "td", "th", "tr"
+            ) -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+
+            else -> InTable.process(token, treeBuilder)
+        }
+    }
+
+    private fun clearStackBackToTableBodyContext(treeBuilder: TreeBuilder) {
+        while (true) {
+            val currentNode = treeBuilder.currentNode
+            if (currentNode.namespace == Namespaces.HTML &&
+                currentNode.localName in setOf("tbody", "tfoot", "thead", "template", "html")
+            ) {
+                break
+            }
+            treeBuilder.popCurrentElement()
+        }
+    }
+
+    private fun hasTableBodyElementInScope(treeBuilder: TreeBuilder): Boolean {
+        return treeBuilder.hasElementInTableScope("tbody") ||
+                treeBuilder.hasElementInTableScope("thead") ||
+                treeBuilder.hasElementInTableScope("tfoot")
     }
 }
