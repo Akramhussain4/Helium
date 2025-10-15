@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder.modes
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.QuirksMode
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -35,6 +36,7 @@ import com.theakram.helium.treebuilder.TreeConstructionConstants
 import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.modes.inbody.*
 import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
@@ -43,9 +45,38 @@ internal object InBody : InsertionMode {
 
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character -> CharacterTokenHandler.handleCharacter(treeBuilder, token.data)
-            is Token.Comment -> CharacterTokenHandler.handleComment(treeBuilder, token.data)
-            is Token.DocType -> CharacterTokenHandler.handleDocType()
+            is Token.Character -> {
+                when {
+                    token.data == '\u0000' -> {
+                        // Parse error: unexpected null character
+                        continueInCurrentMode()
+                    }
+
+                    token.data.code.isAsciiWhitespace() -> {
+                        treeBuilder.reconstructActiveFormattingElements()
+                        treeBuilder.insertCharacter(token.data)
+                        continueInCurrentMode()
+                    }
+
+                    else -> {
+                        treeBuilder.reconstructActiveFormattingElements()
+                        treeBuilder.insertCharacter(token.data)
+                        treeBuilder.setFramesetNotOk()
+                        continueInCurrentMode()
+                    }
+                }
+            }
+
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> {
+                // Parse error: unexpected DOCTYPE in body
+                continueInCurrentMode()
+            }
+
             is Token.StartTag -> processStartTag(token, treeBuilder)
             is Token.EndTag -> processEndTag(token, treeBuilder)
         }
@@ -61,17 +92,21 @@ internal object InBody : InsertionMode {
         return when (tagName) {
             "html" -> processHtmlStartTag(token, treeBuilder)
 
-            in setOf("base", "basefont", "bgsound", "link", "meta", "noframes",
-                "script", "style", "template", "title") -> InHead.process(token, treeBuilder)
+            in setOf(
+                "base", "basefont", "bgsound", "link", "meta", "noframes",
+                "script", "style", "template", "title"
+            ) -> InHead.process(token, treeBuilder)
 
             "body" -> processBodyStartTag(token, treeBuilder)
 
             "frameset" -> processFramesetStartTag(token, treeBuilder)
 
-            in setOf("address", "article", "aside", "blockquote", "center", "details",
+            in setOf(
+                "address", "article", "aside", "blockquote", "center", "details",
                 "dialog", "dir", "div", "dl", "fieldset", "figcaption", "figure",
                 "footer", "header", "hgroup", "main", "menu", "nav", "ol", "p",
-                "search", "section", "summary", "ul") -> {
+                "search", "section", "summary", "ul"
+            ) -> {
                 BlockElementHandler.handleBlockElement(treeBuilder, tagName, attributes)
             }
 
@@ -107,7 +142,16 @@ internal object InBody : InsertionMode {
                 SpecialElementHandler.handleAppletStartTag(treeBuilder, tagName, attributes)
             }
 
-            "table" -> TableElementHandler.handleTableStartTag(treeBuilder, attributes)
+            "table" -> {
+                if (treeBuilder.document.quirksMode != QuirksMode.QUIRKS &&
+                    treeBuilder.hasElementInButtonScope("p")
+                ) {
+                    InBodyHelpers.closePElement(treeBuilder)
+                }
+                treeBuilder.insertElement("table", attributes = attributes)
+                treeBuilder.setFramesetNotOk()
+                switchTo(InTable)
+            }
 
             in setOf("area", "br", "embed", "img", "keygen", "wbr") -> {
                 MediaElementHandler.handleAreaStartTag(treeBuilder, tagName, attributes)
@@ -140,19 +184,58 @@ internal object InBody : InsertionMode {
             }
 
             in setOf("rb", "rtc") -> {
-                RubyElementHandler.handleRbStartTag(treeBuilder, tagName, attributes)
+                if (treeBuilder.hasElementInScope("ruby")) {
+                    InBodyHelpers.generateImpliedEndTags(treeBuilder)
+                    if (treeBuilder.currentNode.localName != "ruby" ||
+                        treeBuilder.currentNode.namespace != Namespaces.HTML
+                    ) {
+                        // Parse error
+                    }
+                }
+                treeBuilder.insertElement(tagName, attributes = attributes)
+                continueInCurrentMode()
             }
 
             in setOf("rp", "rt") -> {
-                RubyElementHandler.handleRpStartTag(treeBuilder, tagName, attributes)
+                if (treeBuilder.hasElementInScope("ruby")) {
+                    InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "rtc")
+                    val currentNode = treeBuilder.currentNode
+                    if (currentNode.namespace == Namespaces.HTML &&
+                        currentNode.localName !in setOf("rtc", "ruby")
+                    ) {
+                        // Parse error
+                    }
+                }
+                treeBuilder.insertElement(tagName, attributes = attributes)
+                continueInCurrentMode()
             }
 
-            "math" -> ForeignContentHandler.handleMathStartTag(treeBuilder, token)
+            "math" -> {
+                treeBuilder.reconstructActiveFormattingElements()
+                // TODO: Adjust MathML attributes for the token
+                // TODO: Adjust foreign attributes for the token
+                treeBuilder.insertElement("math", Namespaces.MATHML, attributes)
+                if (token.selfClosing) {
+                    treeBuilder.popCurrentElement()
+                }
+                continueInCurrentMode()
+            }
 
-            "svg" -> ForeignContentHandler.handleSvgStartTag(treeBuilder, token)
+            "svg" -> {
+                treeBuilder.reconstructActiveFormattingElements()
+                // TODO: Adjust SVG attributes for the token
+                // TODO: Adjust foreign attributes for the token
+                treeBuilder.insertElement("svg", Namespaces.SVG, attributes)
+                if (token.selfClosing) {
+                    treeBuilder.popCurrentElement()
+                }
+                continueInCurrentMode()
+            }
 
-            in setOf("caption", "col", "colgroup", "frame", "head", "tbody",
-                "td", "tfoot", "th", "thead", "tr") -> continueInCurrentMode()
+            in setOf(
+                "caption", "col", "colgroup", "frame", "head", "tbody",
+                "td", "tfoot", "th", "thead", "tr"
+            ) -> continueInCurrentMode()
 
             else -> processAnyOtherStartTag(tagName, attributes, treeBuilder)
         }
@@ -169,12 +252,12 @@ internal object InBody : InsertionMode {
 
             "html" -> EndTagHandler.handleHtmlEndTag(treeBuilder)
 
-            in setOf("address", "article", "aside", "blockquote", "button", "center",
+            in setOf(
+                "address", "article", "aside", "blockquote", "button", "center",
                 "details", "dialog", "dir", "div", "dl", "fieldset", "figcaption",
                 "figure", "footer", "header", "hgroup", "listing", "main", "menu",
-                "nav", "ol", "pre", "search", "section", "summary", "ul") -> {
-                BlockElementHandler.handleBlockEndTag(treeBuilder, tagName)
-            }
+                "nav", "ol", "pre", "search", "section", "summary", "ul"
+            ) -> BlockElementHandler.handleBlockEndTag(treeBuilder, tagName)
 
             "form" -> FormElementHandler.handleFormEndTag(treeBuilder)
 
