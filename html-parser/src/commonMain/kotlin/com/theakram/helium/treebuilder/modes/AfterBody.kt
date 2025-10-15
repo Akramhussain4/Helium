@@ -26,11 +26,32 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
 internal object AfterBody : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement AfterBody insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
+
+            is Token.Comment -> {
+                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals(other = "html", ignoreCase = true) -> InBody.process(
+                token = token,
+                treeBuilder = treeBuilder
+            )
+
+            is Token.EndTag if token.name.equals(other = "html", ignoreCase = true) -> {
+                TODO("Not yet implemented")
+            }
+
+            else -> reprocessIn(InBody)
+        }
     }
 }
