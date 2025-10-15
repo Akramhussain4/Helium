@@ -144,6 +144,10 @@ public class TreeBuilder(
 
     public fun popUntil(tagName: String): Unit = stack.popUntil(tagName)
 
+    internal fun pushElement(element: TreeNode) = stack.push(element)
+
+    internal fun removeElement(element: TreeNode): Boolean = stack.remove(element)
+
     public fun hasElementInScope(tagName: String): Boolean =
         scopeChecker.hasElementInScope(tagName)
 
