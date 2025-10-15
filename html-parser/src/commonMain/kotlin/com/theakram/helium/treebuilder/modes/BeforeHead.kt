@@ -26,10 +26,73 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-before-head-insertion-mode
+ */
 internal object BeforeHead : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
 
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals(
+                other = "html",
+                ignoreCase = true
+            ) -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals(
+                other = "head",
+                ignoreCase = true
+            ) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(
+                        namespace = null,
+                        prefix = null,
+                        localName = name,
+                        value = value
+                    )
+                }
+                val headElement = treeBuilder.insertElement("head", attributes = attributes)
+                treeBuilder.headElement = headElement
+                switchTo(InHead)
+            }
+
+            is Token.EndTag -> {
+                when {
+                    token.name.lowercase() in setOf("head", "body", "html", "br") -> {
+                        createHeadElement(treeBuilder)
+                        reprocessIn(InHead)
+                    }
+
+                    else -> continueInCurrentMode()
+                }
+            }
+
+            else -> {
+                createHeadElement(treeBuilder)
+                reprocessIn(InHead)
+            }
+        }
+    }
+
+    private fun createHeadElement(treeBuilder: TreeBuilder) {
+        val headElement = treeBuilder.createImplicitElement("head")
+        treeBuilder.headElement = headElement
     }
 }

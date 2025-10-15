@@ -50,7 +50,9 @@ public class TreeNode(
     public val attributes: MutableList<Attribute> = mutableListOf(),
     public val children: MutableList<TreeNode> = mutableListOf(),
     public var parent: TreeNode? = null,
-    public var quirksMode: QuirksMode? = null
+    public var quirksMode: QuirksMode? = null,
+    public var parserCannotChangeMode: Boolean = false,
+    public var isIframeSrcdoc: Boolean = false
 ) {
 
     /**

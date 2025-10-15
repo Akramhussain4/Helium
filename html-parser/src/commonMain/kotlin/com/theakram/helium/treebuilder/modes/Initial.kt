@@ -26,19 +26,45 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.QuirksMode
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-initial-insertion-mode
+ */
 internal object Initial : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        when (token) {
-            is Token.Character -> {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
 
+            is Token.Comment -> {
+                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> {
+                // Full DOCTYPE handling requires tokenizer to emit name, publicId, systemId, forceQuirks
+                // For now, insert a basic DOCTYPE and assume no-quirks mode
+                treeBuilder.insertDoctype(name = "html", publicId = null, systemId = null)
+                treeBuilder.document.quirksMode = QuirksMode.NO_QUIRKS
+                switchTo(BeforeHTML)
             }
 
             else -> {
-                treeBuilder.switch(to = BeforeHTML)
-                treeBuilder.process(token)
+                if (!treeBuilder.document.isIframeSrcdoc) {
+                    // Parse error (not tracked yet)
+                    if (!treeBuilder.document.parserCannotChangeMode) {
+                        treeBuilder.document.quirksMode = QuirksMode.QUIRKS
+                    }
+                }
+                reprocessIn(BeforeHTML)
             }
         }
     }
