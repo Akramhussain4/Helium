@@ -29,6 +29,9 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.*
 import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inheadnoscript
+ */
 internal object InHeadNoScript : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {

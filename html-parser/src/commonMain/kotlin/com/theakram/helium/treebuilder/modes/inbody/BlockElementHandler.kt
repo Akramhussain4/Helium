@@ -66,6 +66,18 @@ internal object BlockElementHandler {
         if (treeBuilder.hasElementInButtonScope("p")) {
             InBodyHelpers.closePElement(treeBuilder)
         }
+
+        // If select in scope:
+        if (treeBuilder.hasElementInScope("select")) {
+            // Generate implied end tags
+            InBodyHelpers.generateImpliedEndTags(treeBuilder)
+
+            // If option or optgroup in scope: parse error
+            if (treeBuilder.hasElementInScope("option") || treeBuilder.hasElementInScope("optgroup")) {
+                // Parse error
+            }
+        }
+
         treeBuilder.insertElement("hr", attributes = attributes)
         treeBuilder.popCurrentElement()
         treeBuilder.setFramesetNotOk()

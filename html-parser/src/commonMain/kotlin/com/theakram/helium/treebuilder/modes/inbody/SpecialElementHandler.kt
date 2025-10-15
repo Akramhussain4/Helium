@@ -13,13 +13,6 @@ import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
-import com.theakram.helium.treebuilder.modes.InCaption
-import com.theakram.helium.treebuilder.modes.InCell
-import com.theakram.helium.treebuilder.modes.InRow
-import com.theakram.helium.treebuilder.modes.InSelect
-import com.theakram.helium.treebuilder.modes.InSelectInTable
-import com.theakram.helium.treebuilder.modes.InTable
-import com.theakram.helium.treebuilder.modes.InTableBody
 import com.theakram.helium.treebuilder.modes.Text
 import com.theakram.helium.treebuilder.switchTo
 
@@ -83,34 +76,49 @@ internal object SpecialElementHandler {
     }
 
     fun handleSelectStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        // TODO: Implement fragment case detection
+        if (treeBuilder.hasElementInScope("select")) {
+            treeBuilder.popUntil("select")
+            return continueInCurrentMode()
+        }
+
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement("select", attributes = attributes)
         treeBuilder.setFramesetNotOk()
-
-        return when (treeBuilder.currentMode) {
-            InTable,
-            InCaption,
-            InTableBody,
-            InRow,
-            InCell -> {
-                switchTo(InSelectInTable)
-            }
-            else -> {
-                switchTo(InSelect)
-            }
-        }
+        return continueInCurrentMode()
     }
 
-    fun handleOptgroupStartTag(treeBuilder: TreeBuilder,
-        tagName: String,
-        attributes: List<Attribute>
-    ): InsertionModeTransition {
-        if (treeBuilder.currentNode.localName == "option" &&
-            treeBuilder.currentNode.namespace == Namespaces.HTML) {
-            treeBuilder.popCurrentElement()
+    fun handleOptionStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        if (treeBuilder.hasElementInScope("select")) {
+            InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "optgroup")
+            if (treeBuilder.hasElementInScope("option")) {
+                // Parse error
+            }
+        } else {
+            if (treeBuilder.currentNode.localName == "option" &&
+                treeBuilder.currentNode.namespace == Namespaces.HTML) {
+                treeBuilder.popCurrentElement()
+            }
         }
         treeBuilder.reconstructActiveFormattingElements()
-        treeBuilder.insertElement(tagName, attributes = attributes)
+        treeBuilder.insertElement("option", attributes = attributes)
+        return continueInCurrentMode()
+    }
+
+    fun handleOptgroupStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        if (treeBuilder.hasElementInScope("select")) {
+            InBodyHelpers.generateImpliedEndTags(treeBuilder)
+            if (treeBuilder.hasElementInScope("option") || treeBuilder.hasElementInScope("optgroup")) {
+                // Parse error
+            }
+        } else {
+            if (treeBuilder.currentNode.localName == "option" &&
+                treeBuilder.currentNode.namespace == Namespaces.HTML) {
+                treeBuilder.popCurrentElement()
+            }
+        }
+        treeBuilder.reconstructActiveFormattingElements()
+        treeBuilder.insertElement("optgroup", attributes = attributes)
         return continueInCurrentMode()
     }
 

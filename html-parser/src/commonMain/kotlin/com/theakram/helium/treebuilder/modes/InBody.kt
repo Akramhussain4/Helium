@@ -179,9 +179,9 @@ internal object InBody : InsertionMode {
 
             "select" -> SpecialElementHandler.handleSelectStartTag(treeBuilder, attributes)
 
-            in setOf("optgroup", "option") -> {
-                SpecialElementHandler.handleOptgroupStartTag(treeBuilder, tagName, attributes)
-            }
+            "option" -> SpecialElementHandler.handleOptionStartTag(treeBuilder, attributes)
+
+            "optgroup" -> SpecialElementHandler.handleOptgroupStartTag(treeBuilder, attributes)
 
             in setOf("rb", "rtc") -> {
                 if (treeBuilder.hasElementInScope("ruby")) {
