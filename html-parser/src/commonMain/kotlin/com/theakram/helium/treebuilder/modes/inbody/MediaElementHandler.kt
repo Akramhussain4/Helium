@@ -26,10 +26,23 @@ internal object MediaElementHandler {
     }
 
     fun handleInputStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        // If fragment case AND context element is select:
+        //   Parse error, ignore, return
+        // TODO: Implement fragment case detection
+
+        // If select in scope:
+        if (treeBuilder.hasElementInScope("select")) {
+            // Parse error
+            // Pop elements until select popped
+            treeBuilder.popUntil("select")
+            return continueInCurrentMode()
+        }
+
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement("input", attributes = attributes)
         treeBuilder.popCurrentElement()
 
+        // If NOT type="hidden": set frameset-ok
         val typeAttr = attributes.find { it.localName.equals("type", ignoreCase = true) }
         if (typeAttr == null || !typeAttr.value.equals("hidden", ignoreCase = true)) {
             treeBuilder.setFramesetNotOk()

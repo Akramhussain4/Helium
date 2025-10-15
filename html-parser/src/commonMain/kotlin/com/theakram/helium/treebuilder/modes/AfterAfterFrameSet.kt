@@ -30,6 +30,9 @@ import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.*
 import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-after-after-frameset-insertion-mode
+ */
 internal object AfterAfterFrameSet : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
