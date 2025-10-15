@@ -26,14 +26,82 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-incolgroup
+ */
 internal object InColumnGroup : InsertionMode {
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement InColumnGroup insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+
+            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals("col", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement("col", attributes = attributes)
+                treeBuilder.popCurrentElement()
+                // TODO: Acknowledge the token's self-closing flag, if it is set
+                continueInCurrentMode()
+            }
+
+            is Token.EndTag if token.name.equals("colgroup", ignoreCase = true) -> {
+                if (treeBuilder.currentNode.localName != "colgroup" ||
+                    treeBuilder.currentNode.namespace != Namespaces.HTML
+                ) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    treeBuilder.popCurrentElement()
+                    switchTo(InTable)
+                }
+            }
+
+            is Token.EndTag if token.name.equals("col", ignoreCase = true) -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+
+            is Token.StartTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            else -> {
+                if (treeBuilder.currentNode.localName != "colgroup" ||
+                    treeBuilder.currentNode.namespace != Namespaces.HTML
+                ) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTable)
+                }
+            }
+        }
     }
 }
