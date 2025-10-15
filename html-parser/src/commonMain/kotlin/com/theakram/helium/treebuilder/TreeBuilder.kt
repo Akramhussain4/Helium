@@ -72,6 +72,7 @@ public class TreeBuilder(
     private val templateInsertionModes = mutableListOf<InsertionMode>()
     private var framesetOk: Boolean = true
 
+    internal val pendingTableCharacterTokens = mutableListOf<Token.Character>()
     public val currentNode: TreeNode get() = stack.currentNode ?: document
     public val currentElement: TreeNode get() = currentNode
     public val elementStack: List<TreeNode> get() = stack.toList()
