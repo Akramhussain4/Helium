@@ -26,10 +26,52 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-before-html-insertion-mode
+ */
 internal object BeforeHTML : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.DocType -> continueInCurrentMode()
 
+            is Token.Comment -> {
+                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                continueInCurrentMode()
+            }
+
+            is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement("html", attributes = attributes)
+
+                switchTo(BeforeHead)
+            }
+
+            is Token.EndTag -> when {
+                token.name in setOf("head", "body", "html", "br") -> handleAnythingElse(treeBuilder)
+
+                else -> continueInCurrentMode()
+            }
+
+            else -> handleAnythingElse(treeBuilder)
+        }
+    }
+
+    private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
+        treeBuilder.insertElement("html")
+        return reprocessIn(BeforeHead)
     }
 }
