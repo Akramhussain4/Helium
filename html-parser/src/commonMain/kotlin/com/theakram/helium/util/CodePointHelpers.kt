@@ -65,3 +65,5 @@ internal fun Int.isWhiteSpace(): Boolean {
             || this == Chars.LineFeed.char.code
             || this == Chars.FormFeed.char.code
 }
+
+internal fun Int.isNull() = this == Chars.Null.char.code

@@ -38,41 +38,34 @@ internal class FormattingElementReconstructor(
 ) {
 
     fun reconstruct() {
-        // Step 1: If there are no entries in the list of active formatting elements,
-        // then there is nothing to reconstruct; stop this algorithm
+        // Step 1:
         if (activeFormattingElements.isEmpty) return
 
-        // Step 2: If the last entry is a marker, or if it is an element that is in the
-        // stack of open elements, then there is nothing to reconstruct; stop
+        // Step 2:
         if (activeFormattingElements.isLastEntryMarker()) return
-
         val lastElement = activeFormattingElements.getLastElement()
         if (lastElement != null && stack.contains(lastElement)) return
 
-        // Step 3: Let entry be the last element in the list
-        // Get all entries (elements and markers as null)
+        // Step 3:
         val entries = activeFormattingElements.getEntriesForReconstruction()
         var entryIndex = entries.lastIndex
 
-        // Step 4-6: Rewind - find the first entry that needs reconstruction
-        // We rewind until we hit a marker (null) or an element in the stack, or the beginning
+        // Step 4-6:
         while (entryIndex > 0) {
             val previousEntry = entries[entryIndex - 1]
 
-            // Step 6: If an entry is neither a marker nor an element in the stack, continue rewinding
+            // Step 6:
             if (previousEntry == null) {
-                // Hit a marker - stop rewinding
                 break
             } else if (stack.contains(previousEntry)) {
-                // Hit an element in the stack - stop rewinding
                 break
             }
 
-            // Step 5: Let entry be the entry one earlier
+            // Step 5:
             entryIndex--
         }
 
-        // Step 7-10: Advance and Create - recreate elements from this point forward
+        // Step 7-10:
         while (entryIndex < entries.size) {
             val entry = entries[entryIndex]
 
@@ -88,7 +81,7 @@ internal class FormattingElementReconstructor(
             }
             val namespace = entry.namespace ?: Namespaces.HTML
 
-            // Step 8: Create - Insert an HTML element for the token
+            // Step 8:
             val newElement = TreeNode.createElement(
                 localName = localName,
                 namespace = namespace,
@@ -100,10 +93,10 @@ internal class FormattingElementReconstructor(
             currentNode.appendChild(newElement)
             stack.push(newElement)
 
-            // Step 9: Replace the entry for entry in the list with an entry for a new element
+            // Step 9:
             activeFormattingElements.replace(entry, newElement)
 
-            // Step 10: If not the last entry, continue to advance
+            // Step 10:
             entryIndex++
         }
     }
