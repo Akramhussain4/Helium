@@ -115,7 +115,7 @@ internal class AdoptionAgencyAlgorithm(
 
             // Step 4.12:
             var innerLoopCounter = 0
-            var nodeAboveInStack: TreeNode? = null
+            var removedNodeIndex: Int? = null
 
             // Step 4.13:
             while (true) {
@@ -124,17 +124,19 @@ internal class AdoptionAgencyAlgorithm(
 
                 // Step 4.13.2:
                 val nodeIndex = stack.indexOf(node)
-                if (nodeIndex > 0) {
-                    nodeAboveInStack = stack[nodeIndex - 1]
-                    node = nodeAboveInStack
-                } else if (nodeAboveInStack != null) {
-                    node = nodeAboveInStack
-                    val newIndex = stack.indexOf(node)
-                    if (newIndex > 0) {
-                        nodeAboveInStack = stack[newIndex - 1]
+                when {
+                    nodeIndex > 0 -> {
+                        node = stack[nodeIndex - 1]
+                        removedNodeIndex = null
                     }
-                } else {
-                    break
+                    nodeIndex == 0 -> break
+                    else -> {
+                        // Node was removed - use an element that was above it before removal
+                        val prevIndex = removedNodeIndex?.takeIf { it > 0 }?.dec()
+                        if (prevIndex == null || prevIndex >= stack.size) break
+                        node = stack[prevIndex]
+                        removedNodeIndex = null
+                    }
                 }
 
                 // Step 4.13.3:
@@ -149,6 +151,7 @@ internal class AdoptionAgencyAlgorithm(
 
                 // Step 4.13.5:
                 if (!activeFormattingElements.contains(node)) {
+                    removedNodeIndex = stack.indexOf(node)
                     stack.remove(node)
                     continue
                 }
