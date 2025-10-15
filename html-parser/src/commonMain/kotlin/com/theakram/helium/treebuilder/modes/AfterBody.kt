@@ -36,7 +36,8 @@ internal object AfterBody : InsertionMode {
             is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
 
             is Token.Comment -> {
-                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                val htmlElement = treeBuilder.elementStack.firstOrNull()
+                htmlElement?.appendChild(TreeNode.createComment(token.data))
                 continueInCurrentMode()
             }
 
@@ -48,7 +49,9 @@ internal object AfterBody : InsertionMode {
             )
 
             is Token.EndTag if token.name.equals(other = "html", ignoreCase = true) -> {
-                TODO("Not yet implemented")
+                // TODO: Implement proper fragment case detection
+                // For now, we assume we're not in a fragment case and switch to AfterAfterBody
+                switchTo(AfterAfterBody)
             }
 
             else -> reprocessIn(InBody)

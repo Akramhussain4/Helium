@@ -26,11 +26,80 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inframeset
+ */
 internal object InFrameSet : InsertionMode {
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement InFrameSet insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+
+            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals("frameset", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement("frameset", attributes = attributes)
+                continueInCurrentMode()
+            }
+
+            is Token.EndTag if token.name.equals("frameset", ignoreCase = true) -> {
+                if (treeBuilder.currentNode.localName == "html" &&
+                    treeBuilder.currentNode.namespace == Namespaces.HTML &&
+                    treeBuilder.elementStack.size == 1
+                ) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    treeBuilder.popCurrentElement()
+                    // TODO: Implement proper fragment case detection
+                    // For now, we check if current node is no longer a frameset element
+                    if (treeBuilder.currentNode.localName != "frameset" ||
+                        treeBuilder.currentNode.namespace != Namespaces.HTML
+                    ) {
+                        switchTo(AfterFrameSet)
+                    } else {
+                        continueInCurrentMode()
+                    }
+                }
+            }
+
+            is Token.StartTag if token.name.equals("frame", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement("frame", attributes = attributes)
+                treeBuilder.popCurrentElement()
+                // TODO: Acknowledge the token's self-closing flag, if it is set
+                continueInCurrentMode()
+            }
+
+            is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            else -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+        }
     }
 }
