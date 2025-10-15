@@ -13,8 +13,13 @@ import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.InCaption
+import com.theakram.helium.treebuilder.modes.InCell
+import com.theakram.helium.treebuilder.modes.InRow
 import com.theakram.helium.treebuilder.modes.InSelect
 import com.theakram.helium.treebuilder.modes.InSelectInTable
+import com.theakram.helium.treebuilder.modes.InTable
+import com.theakram.helium.treebuilder.modes.InTableBody
 import com.theakram.helium.treebuilder.modes.Text
 import com.theakram.helium.treebuilder.switchTo
 
@@ -83,11 +88,11 @@ internal object SpecialElementHandler {
         treeBuilder.setFramesetNotOk()
 
         return when (treeBuilder.currentMode) {
-            com.theakram.helium.treebuilder.modes.InTable,
-            com.theakram.helium.treebuilder.modes.InCaption,
-            com.theakram.helium.treebuilder.modes.InTableBody,
-            com.theakram.helium.treebuilder.modes.InRow,
-            com.theakram.helium.treebuilder.modes.InCell -> {
+            InTable,
+            InCaption,
+            InTableBody,
+            InRow,
+            InCell -> {
                 switchTo(InSelectInTable)
             }
             else -> {
