@@ -39,26 +39,19 @@ internal class InsertionLocation(
 ) {
 
     fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
-        // Step 1: If there was an override target specified, then let target be the override target.
-        // Otherwise, let the target be the current node.
+        // Step 1:
         val target = overrideTarget ?: getCurrentNode()
 
-        // Step 2: Determine the adjusted insertion location using the first matching steps:
-
-        // If foster parenting is enabled and target is a table, tbody, tfoot, thead, or tr element
-        if (fosterParenting.isEnabled &&
-            target.namespace == Namespaces.HTML &&
-            target.localName in setOf("table", "tbody", "tfoot", "thead", "tr")
-        ) {
+        // Step 2:
+        if (fosterParenting.isEnabled && TreeConstructionConstants.requiresFosterParenting(target)) {
             insertWithFosterParenting(node)
             return
         }
 
-        // Otherwise: Let adjusted insertion location be inside target, after its last child (if any)
+        // Otherwise:
         var adjustedInsertionParent = target
 
-        // Step 3: If the adjusted insertion location is inside a template element,
-        // let it instead be inside the template element's template contents, after its last child (if any)
+        // Step 3:
         if (adjustedInsertionParent.namespace == Namespaces.HTML &&
             adjustedInsertionParent.localName == "template"
         ) {
@@ -66,21 +59,20 @@ internal class InsertionLocation(
             // For now, insert into the template element itself
         }
 
-        // Step 4: Return the adjusted insertion location (we insert the node here)
+        // Step 4:
         adjustedInsertionParent.appendChild(node)
     }
 
     private fun insertWithFosterParenting(node: TreeNode) {
-        // Let the last template be the last template element in the stack of open elements, if any
+        // Step 1:
         val lastTemplateIndex = stack.indexOfLastTagName("template")
         val lastTemplate = if (lastTemplateIndex >= 0) stack[lastTemplateIndex] else null
 
-        // Let the last table be the last table element in the stack of open elements, if any
+        // Step 2:
         val lastTableIndex = stack.indexOfLastTagName("table")
         val lastTable = if (lastTableIndex >= 0) stack[lastTableIndex] else null
 
-        // If there is a last template, and either there is no last table, or there is one,
-        // but the last template is lower (more recently added) than the last table in the stack of open elements
+        // Step 3:
         if (lastTemplate != null && (lastTable == null || lastTemplateIndex > lastTableIndex)) {
             // Let adjusted insertion location be inside last template's template contents,
             // after its last child (if any)
@@ -90,25 +82,21 @@ internal class InsertionLocation(
             return
         }
 
-        // If there is no last table, then let the adjusted insertion location be inside
-        // the first element in the stack of open elements (the html element),
-        // after its last child (if any) (fragment case)
+        // Step 4:
         if (lastTable == null) {
             val firstElement = if (stack.size > 0) stack[0] else getDocument()
             firstElement.appendChild(node)
             return
         }
 
-        // If the last table has a parent node, then let adjusted insertion location be
-        // inside last table's parent node, immediately before last table
+        // Step 5:
         val tableParent = lastTable.parent
         if (tableParent != null) {
             tableParent.insertBefore(node, lastTable)
             return
         }
 
-        // Let the previous element be the element immediately above last table in the stack of open elements
-        // Let adjusted insertion location be inside previous element, after its last child (if any)
+        // Step 6-7:
         if (lastTableIndex > 0) {
             val previousElement = stack[lastTableIndex - 1]
             previousElement.appendChild(node)

@@ -57,7 +57,7 @@ public class TreeBuilder(
     private val formattingElementReconstructor = FormattingElementReconstructor(
         stack = stack,
         activeFormattingElements = activeFormattingElements,
-        getCurrentNode = { currentNode }
+        treeBuilder = this
     )
     private val adoptionAgency = AdoptionAgencyAlgorithm(
         treeBuilder = this,
@@ -109,12 +109,7 @@ public class TreeBuilder(
             attributes = attributes
         )
 
-        if (fosterParenting.isEnabled) {
-            fosterParenting.fosterParentElement(element)
-        } else {
-            currentNode.appendChild(element)
-        }
-
+        insertAtAppropriatePlace(element)
         stack.push(element)
         return element
     }

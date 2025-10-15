@@ -34,7 +34,7 @@ import com.theakram.helium.tree.TreeNode
 internal class FormattingElementReconstructor(
     private val stack: StackOfOpenElements,
     private val activeFormattingElements: ActiveFormattingElements,
-    private val getCurrentNode: () -> TreeNode
+    private val treeBuilder: TreeBuilder
 ) {
 
     fun reconstruct() {
@@ -82,18 +82,13 @@ internal class FormattingElementReconstructor(
             val namespace = entry.namespace ?: Namespaces.HTML
 
             // Step 8:
-            val newElement = TreeNode.createElement(
-                localName = localName,
+            val newElement = treeBuilder.insertElement(
+                tagName = localName,
                 namespace = namespace,
                 attributes = entry.attributes.toList()
             )
 
-            // Insert into the current node and push onto the stack
-            val currentNode = getCurrentNode()
-            currentNode.appendChild(newElement)
-            stack.push(newElement)
-
-            // Step 9:
+            // Step 9: Replace the entry for entry in the list with an entry for newElement.
             activeFormattingElements.replace(entry, newElement)
 
             // Step 10:

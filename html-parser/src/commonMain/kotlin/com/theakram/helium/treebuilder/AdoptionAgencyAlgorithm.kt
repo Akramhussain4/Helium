@@ -99,12 +99,12 @@ internal class AdoptionAgencyAlgorithm(
 
             // Step 4.9:
             val formattingElementIndex = stack.indexOf(formattingElement)
-            val commonAncestor = if (formattingElementIndex > 0) {
-                stack[formattingElementIndex - 1]
-            } else {
-                // This shouldn't happen in practice; treat as a document
-                continue
+            if (formattingElementIndex <= 0) {
+                // This shouldn't happen in a well-formed document, but if it does,
+                // we cannot proceed with this iteration
+                return
             }
+            val commonAncestor = stack[formattingElementIndex - 1]
 
             // Step 4.10:
             var bookmark = formattingElement

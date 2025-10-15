@@ -171,12 +171,13 @@ internal class ActiveFormattingElements {
     }
 
     private fun applyNoahsArk(newElement: TreeNode) {
-        // Find all elements that match the new element (same tag, namespace, attributes)
-        val matchingElements = entries.mapIndexedNotNull { index, entry ->
+        val lastMarkerIndex = entries.indexOfLast { it is Entry.Marker }
+        val startIndex = if (lastMarkerIndex >= 0) lastMarkerIndex + 1 else 0
+        val matchingElements = mutableListOf<Pair<Int, TreeNode>>()
+        for (i in startIndex until entries.size) {
+            val entry = entries[i]
             if (entry is Entry.Element && areElementsEquivalent(entry.node, newElement)) {
-                index to entry.node
-            } else {
-                null
+                matchingElements.add(i to entry.node)
             }
         }
 
