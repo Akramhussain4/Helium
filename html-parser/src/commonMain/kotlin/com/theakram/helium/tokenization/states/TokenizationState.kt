@@ -26,48 +26,28 @@
 package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.states.StateTransition.ContinueInCurrentState
+import com.theakram.helium.tokenization.states.StateTransition.SwitchTo
+import com.theakram.helium.tokenization.states.StateTransition.ReconsumeIn
+import com.theakram.helium.tokenization.states.StateTransition.Halt
 
 internal interface TokenizationState {
     fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition
 }
 
-internal data class StateTransition(
-    val nextState: TokenizationState,
-    val action: Action
-)
-
-internal sealed interface Action {
-    data object ConsumeNext : Action
-    data object Reconsume : Action
-    data object None : Action
+internal sealed interface StateTransition {
+    data object ContinueInCurrentState : StateTransition
+    data class SwitchTo(val newState: TokenizationState) : StateTransition
+    data class ReconsumeIn(val newState: TokenizationState) : StateTransition
+    data object Halt : StateTransition
 }
 
-internal fun consumeNextChar(switchTo: () -> TokenizationState) = StateTransition(
-    nextState = switchTo(),
-    action = Action.ConsumeNext
-)
+internal fun continueInCurrentState() = ContinueInCurrentState
+internal fun switchTo(state: TokenizationState) = SwitchTo(state)
+internal fun reconsumeIn(state: TokenizationState) = ReconsumeIn(state)
+internal fun halt() = Halt
 
-internal fun reconsumeCurrentChar(switchTo: () -> TokenizationState) = StateTransition(
-    nextState = switchTo(),
-    action = Action.Reconsume
-)
-
-internal fun endOfFile(switchTo: () -> TokenizationState) = StateTransition(
-    nextState = switchTo(),
-    action = Action.None
-)
-
-
-//internal data object RcData : TokenizationState()
-//internal data object RawText : TokenizationState()
 //internal data object ScriptData : TokenizationState()
-//internal data object PlainText : TokenizationState()
-//internal data object RcDataLessThanSign : TokenizationState()
-//internal data object RcDataEndTagOpen : TokenizationState()
-//internal data object RcDataEndTagName : TokenizationState()
-//internal data object RawTextLessThanSign : TokenizationState()
-//internal data object RawTextEndTagOpen : TokenizationState()
-//internal data object RawTextEndTagName : TokenizationState()
 //internal data object ScriptDataLessThanSign : TokenizationState()
 //internal data object ScriptDataEndTagOpen : TokenizationState()
 //internal data object ScriptDataEndTagName : TokenizationState()

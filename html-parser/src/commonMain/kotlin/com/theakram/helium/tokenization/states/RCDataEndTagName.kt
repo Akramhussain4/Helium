@@ -44,7 +44,7 @@ internal data object RCDataEndTagName : TokenizationState {
             codePoint.IS(Chars.Space) -> {
                 if (isAppropriateEndTag(tokenizer)) {
                     val currentToken = tokenizer.currentToken!!
-                    consumeNextChar { BeforeAttributeName(currentToken) }
+                    switchTo(BeforeAttributeName(currentToken))
                 } else {
                     anythingElse(tokenizer)
                 }
@@ -53,7 +53,7 @@ internal data object RCDataEndTagName : TokenizationState {
             codePoint.IS(Chars.Solidus) -> {
                 if (isAppropriateEndTag(tokenizer)) {
                     val currentToken = tokenizer.currentToken!!
-                    consumeNextChar { SelfClosingStartTag(currentToken) }
+                    switchTo(SelfClosingStartTag(currentToken))
                 } else {
                     anythingElse(tokenizer)
                 }
@@ -62,7 +62,7 @@ internal data object RCDataEndTagName : TokenizationState {
             codePoint.IS(Chars.GreaterThan) -> {
                 if (isAppropriateEndTag(tokenizer)) {
                     tokenizer.emitToken(tokenizer.currentToken!!)
-                    consumeNextChar { Data }
+                    switchTo(Data)
                 } else {
                     anythingElse(tokenizer)
                 }
@@ -72,14 +72,14 @@ internal data object RCDataEndTagName : TokenizationState {
                 val currentToken = tokenizer.currentToken as Token.EndTag
                 tokenizer.currentToken = currentToken.copy(name = currentToken.name + codePoint.toChar().lowercaseChar())
                 tokenizer.tempBuffer.append(codePoint.toChar())
-                consumeNextChar { this }
+                continueInCurrentState()
             }
 
             codePoint.isAsciiLowerAlpha() -> {
                 val currentToken = tokenizer.currentToken as Token.EndTag
                 tokenizer.currentToken = currentToken.copy(name = currentToken.name + codePoint.toChar())
                 tokenizer.tempBuffer.append(codePoint.toChar())
-                consumeNextChar { this }
+                continueInCurrentState()
             }
 
             else -> anythingElse(tokenizer)
@@ -97,6 +97,6 @@ internal data object RCDataEndTagName : TokenizationState {
         tokenizer.tempBuffer.forEach { char ->
             tokenizer.emitToken(Token.Character(char))
         }
-        return reconsumeCurrentChar { RCData }
+        return reconsumeIn(RCData)
     }
 }

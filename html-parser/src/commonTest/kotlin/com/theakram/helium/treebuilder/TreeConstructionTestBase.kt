@@ -33,11 +33,19 @@ import com.theakram.helium.tokenization.Tokenizer
  */
 internal abstract class TreeConstructionTestBase {
 
-    private val treeBuilder = TreeBuilder()
-    private val tokenizer = Tokenizer { token ->
-        treeBuilder.process(token)
+    private lateinit var tokenizer: Tokenizer
+    private val treeBuilder = TreeBuilder(
+        onSwitchTokenizerState = { stateType ->
+            tokenizer.switchState(stateType)
+        }
+    )
+
+    init {
+        tokenizer = Tokenizer { token ->
+            treeBuilder.process(token)
+        }
     }
-    
+
     /**
      * Parse HTML input and return the resulting tree structure.
      */
@@ -47,7 +55,7 @@ internal abstract class TreeConstructionTestBase {
         treeBuilder.finish()
         return treeBuilder.toTreeString().trim()
     }
-    
+
     /**
      * Assert that HTML input produces the expected tree structure.
      */
@@ -56,9 +64,9 @@ internal abstract class TreeConstructionTestBase {
         if (actualTree != expectedTree.trim()) {
             throw AssertionError(
                 "Tree structure mismatch.\n" +
-                "Input: $input\n" +
-                "Expected:\n${expectedTree.trim()}\n" +
-                "Actual:\n$actualTree"
+                        "Input: $input\n" +
+                        "Expected:\n${expectedTree.trim()}\n" +
+                        "Actual:\n$actualTree"
             )
         }
     }

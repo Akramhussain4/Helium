@@ -27,12 +27,13 @@ package com.theakram.helium
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 
 public class HTMLParser {
 
     private val tokenizer = Tokenizer(onTokenEmitted = ::processToken)
-    private val treeBuilder = TreeBuilder()
+    private val treeBuilder = TreeBuilder(onSwitchTokenizerState = ::switchTokenizerState)
 
     public fun parse(html: String) {
         tokenizer.tokenize(html)
@@ -40,5 +41,9 @@ public class HTMLParser {
 
     private fun processToken(token: Token) {
         treeBuilder.process(token)
+    }
+
+    private fun switchTokenizerState(stateType: TokenizerStateType) {
+        tokenizer.switchState(stateType)
     }
 }

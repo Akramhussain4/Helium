@@ -88,6 +88,6 @@ internal class NumericCharacterReferenceEnd(
         }
 
         returnState.flushCodePoints(tokenizer)
-        return reconsumeCurrentChar { returnState }
+        return reconsumeIn(returnState)
     }
 }

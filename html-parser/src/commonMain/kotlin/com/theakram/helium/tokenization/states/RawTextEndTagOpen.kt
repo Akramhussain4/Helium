@@ -37,13 +37,13 @@ internal data object RawTextEndTagOpen : TokenizationState {
         return when {
             codePoint.isAsciiAlpha() -> {
                 tokenizer.currentToken = Token.EndTag("")
-                reconsumeCurrentChar { RawTextEndTagName }
+                reconsumeIn(RawTextEndTagName)
             }
 
             else -> {
                 tokenizer.emitToken(Token.Character('<'))
                 tokenizer.emitToken(Token.Character('/'))
-                reconsumeCurrentChar { RawText }
+                reconsumeIn(RawText)
             }
         }
     }

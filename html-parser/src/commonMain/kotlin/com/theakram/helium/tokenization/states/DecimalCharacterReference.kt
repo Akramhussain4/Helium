@@ -41,20 +41,16 @@ internal class DecimalCharacterReference(
                 if (tokenizer.characterReferenceCode > 0x10FFFF) {
                     tokenizer.characterReferenceCode = 0x110000L
                 }
-                consumeNextChar { this }
+                switchTo(this)
             }
 
             codePoint.IS(Chars.SemiColon) -> {
-                consumeNextChar {
-                    NumericCharacterReferenceEnd(returnState = returnState)
-                }
+                switchTo(NumericCharacterReferenceEnd(returnState = returnState))
             }
 
             else -> {
                 tokenizer.logParseError("missing-semicolon-after-character-reference")
-                reconsumeCurrentChar {
-                    NumericCharacterReferenceEnd(returnState = returnState)
-                }
+                reconsumeIn(NumericCharacterReferenceEnd(returnState = returnState))
             }
         }
     }

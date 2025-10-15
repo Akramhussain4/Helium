@@ -39,7 +39,7 @@ import com.theakram.helium.treebuilder.modes.InBody
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
  */
 public class TreeBuilder(
-    private val onSwitchTokenizerState: ((TokenizerStateType) -> Unit)? = null
+    private val onSwitchTokenizerState: (TokenizerStateType) -> Unit
 ) {
     private var insertionMode: InsertionMode = Initial
     public val document: TreeNode = TreeNode.createDocument()
@@ -196,7 +196,7 @@ public class TreeBuilder(
         templateInsertionModes.lastOrNull()
 
     internal fun switchTokenizerState(stateType: TokenizerStateType) {
-        onSwitchTokenizerState?.invoke(stateType)
+        onSwitchTokenizerState(stateType)
     }
 
     internal fun createImplicitElement(tagName: String): TreeNode =

@@ -35,32 +35,28 @@ import com.theakram.helium.util.isWhiteSpace
 internal class TagName(private val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.isWhiteSpace() -> consumeNextChar {
-                BeforeAttributeName(currentTagToken)
-            }
+            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName(currentTagToken))
 
-            codePoint.IS(Chars.Solidus) -> consumeNextChar {
-                SelfClosingStartTag(currentTagToken)
-            }
+            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag(currentTagToken))
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint.isAsciiUpperAlpha() -> {
                 val token = updateTagName(codePoint + 0x0020)
-                consumeNextChar { TagName(token) }
+                switchTo(TagName(token))
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                endOfFile { Data }
+                halt()
             }
 
             else -> {
                 val token = updateTagName(codePoint)
-                consumeNextChar { TagName(currentTagToken = token) }
+                switchTo(TagName(currentTagToken = token))
             }
         }
     }

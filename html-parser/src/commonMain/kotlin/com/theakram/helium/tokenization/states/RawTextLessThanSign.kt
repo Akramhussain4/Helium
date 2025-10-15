@@ -38,12 +38,12 @@ internal data object RawTextLessThanSign : TokenizationState {
         return when {
             codePoint.IS(Chars.Solidus) -> {
                 tokenizer.tempBuffer.clear()
-                consumeNextChar { RawTextEndTagOpen }
+                switchTo(RawTextEndTagOpen)
             }
 
             else -> {
                 tokenizer.emitToken(Token.Character('<'))
-                reconsumeCurrentChar { RawText }
+                reconsumeIn(RawText)
             }
         }
     }
