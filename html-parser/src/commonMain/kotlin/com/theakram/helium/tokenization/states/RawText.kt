@@ -36,21 +36,19 @@ import com.theakram.helium.util.Chars
 internal data object RawText : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.LessThan) -> consumeNextChar { RawTextLessThanSign }
+            codePoint.IS(Chars.LessThan) -> switchTo(RawTextLessThanSign)
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
                 tokenizer.emitToken(Token.Character('\uFFFD'))
-                consumeNextChar { this }
+                continueInCurrentState()
             }
 
-            codePoint == -1 -> {
-                endOfFile { Data }
-            }
+            codePoint == -1 -> halt()
 
             else -> {
                 tokenizer.emitToken(Token.Character(codePoint.toChar()))
-                consumeNextChar { this }
+                continueInCurrentState()
             }
         }
     }

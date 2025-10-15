@@ -69,7 +69,7 @@ internal class NamedCharacterReference(
             // No valid named entity was ever matched (e.g., "&foo").
             // This is an "ambiguous ampersand". Flush the ampersand and switch to the return state.
             returnState.flushCodePoints(tokenizer) // Flushes the initial '&' from the temp buffer
-            return reconsumeCurrentChar { returnState }
+            return reconsumeIn(returnState)
         }
 
         val (match, codepoints, matchLength) = lastMatch
@@ -79,11 +79,11 @@ internal class NamedCharacterReference(
         if (returnState.isAttributeState() && !isSemicolonTerminated && nextChar != null && (nextChar.isLetterOrDigit() || nextChar == '=')) {
             // Legacy behavior: The entity is NOT decoded. Treat the ampersand and the
             // matched characters as literal text.
-            returnState.flushCodePoints(tokenizer) // Flushes the initial '&'
+            returnState.flushCodePoints(tokenizer) // Flqushes the initial '&'
             tokenizer.currentAttributeValue.append(match) // Appends the matched text e.g., "not"
 
             tokenizer.currentPosition += matchLength
-            return reconsumeCurrentChar { returnState }
+            return reconsumeIn(returnState)
         } else {
             // Standard behavior for all other cases (in the data state or terminated correctly in the attribute state).
             if (!isSemicolonTerminated) {
@@ -92,7 +92,7 @@ internal class NamedCharacterReference(
 
             tokenizer.currentPosition += matchLength
             emitCodepoints(codepoints, tokenizer)
-            return reconsumeCurrentChar { returnState }
+            return reconsumeIn(returnState)
         }
     }
 
@@ -130,6 +130,5 @@ private object EntityTrie {
 
 private data class TrieNode(
     val children: MutableMap<Char, TrieNode> = mutableMapOf(),
-    // If this node marks the end of a valid entity, 'codepoints' will hold the decoded value.
     var codepoints: IntArray? = null
 )

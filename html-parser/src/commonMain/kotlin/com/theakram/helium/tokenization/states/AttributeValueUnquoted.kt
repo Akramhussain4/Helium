@@ -36,19 +36,15 @@ internal class AttributeValueUnquoted(val currentTagToken: Token) : Tokenization
         return when {
             codePoint.isWhiteSpace() -> {
                 tokenizer.addCurrentAttributeToToken(currentTagToken)
-                consumeNextChar {
-                    BeforeAttributeName(currentTagToken = currentTagToken)
-                }
+                switchTo(BeforeAttributeName(currentTagToken = currentTagToken))
             }
 
-            codePoint.IS(Chars.Ampersand) -> consumeNextChar {
-                CharacterReference(this)
-            }
+            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.addCurrentAttributeToToken(currentTagToken)
                 tokenizer.emitToken(currentTagToken)
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint.IS(
@@ -60,18 +56,18 @@ internal class AttributeValueUnquoted(val currentTagToken: Token) : Tokenization
             ) -> {
                 tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
                 tokenizer.currentAttributeValue.append(codePoint.toChar())
-                consumeNextChar { this }
+                switchTo(this)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
                 tokenizer.addCurrentAttributeToToken(currentTagToken)
-                endOfFile { Data }
+                halt()
             }
 
             else -> {
                 tokenizer.currentAttributeValue.append(codePoint.toChar())
-                consumeNextChar { this }
+                switchTo(this)
             }
         }
     }

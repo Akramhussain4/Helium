@@ -39,16 +39,14 @@ internal data object PlainText : TokenizationState {
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
                 tokenizer.emitToken(Token.Character('\uFFFD'))
-                consumeNextChar { this }
+                continueInCurrentState()
             }
 
-            codePoint == -1 -> {
-                endOfFile { Data }
-            }
+            codePoint == -1 -> halt()
 
             else -> {
                 tokenizer.emitToken(Token.Character(codePoint.toChar()))
-                consumeNextChar { this }
+                continueInCurrentState()
             }
         }
     }

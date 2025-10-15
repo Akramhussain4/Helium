@@ -46,17 +46,17 @@ internal class SelfClosingStartTag(private val currentTagToken: Token) : Tokeniz
 
                     else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
                 }
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                endOfFile { Data }
+                halt()
             }
 
             else -> {
                 tokenizer.logParseError("unexpected-solidus-in-tag")
-                reconsumeCurrentChar { BeforeAttributeName(currentTagToken) }
+                reconsumeIn(BeforeAttributeName(currentTagToken))
             }
         }
     }

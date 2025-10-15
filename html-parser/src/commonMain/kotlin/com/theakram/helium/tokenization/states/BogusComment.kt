@@ -35,23 +35,23 @@ internal class BogusComment(private val commentToken: Comment) : TokenizationSta
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(commentToken)
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.emitToken(commentToken)
-                endOfFile { Data }
+                halt()
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
                 val newToken = Comment(commentToken.data + '\uFFFD')
-                consumeNextChar { BogusComment(newToken) }
+                switchTo(BogusComment(newToken))
             }
 
             else -> {
                 val newToken = Comment(commentToken.data + codePoint.toChar())
-                consumeNextChar { BogusComment(newToken) }
+                switchTo(BogusComment(newToken))
             }
         }
     }

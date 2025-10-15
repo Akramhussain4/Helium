@@ -35,15 +35,13 @@ internal class DecimalCharacterReferenceStart(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiDigit() -> {
-                reconsumeCurrentChar {
-                    DecimalCharacterReference(returnState = returnState)
-                }
+                reconsumeIn(DecimalCharacterReference(returnState = returnState))
             }
 
             else -> {
                 tokenizer.logParseError("absence-of-digits-in-numeric-character-reference")
                 returnState.flushCodePoints(tokenizer)
-                reconsumeCurrentChar { returnState }
+                reconsumeIn(returnState)
             }
         }
     }

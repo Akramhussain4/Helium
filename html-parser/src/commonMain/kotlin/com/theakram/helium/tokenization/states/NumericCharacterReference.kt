@@ -41,14 +41,10 @@ internal class NumericCharacterReference(
                 Chars.UpperX
             ) -> {
                 tokenizer.tempBuffer.append(codePoint.toChar())
-                consumeNextChar {
-                    HexadecimalCharacterReferenceStart(returnState = returnState)
-                }
+                switchTo(HexadecimalCharacterReferenceStart(returnState = returnState))
             }
 
-            else -> reconsumeCurrentChar {
-                DecimalCharacterReferenceStart(returnState = returnState)
-            }
+            else -> reconsumeIn(DecimalCharacterReferenceStart(returnState = returnState))
         }
     }
 }

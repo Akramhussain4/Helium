@@ -35,15 +35,13 @@ internal class HexadecimalCharacterReferenceStart(
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiHexDigit() -> {
-                reconsumeCurrentChar {
-                    HexadecimalCharacterReference(returnState = returnState)
-                }
+                reconsumeIn(HexadecimalCharacterReference(returnState = returnState))
             }
 
             else -> {
                 tokenizer.logParseError("absence-of-digits-in-numeric-character-reference")
                 returnState.flushCodePoints(tokenizer)
-                reconsumeCurrentChar { returnState }
+                reconsumeIn(returnState)
             }
         }
     }

@@ -34,32 +34,32 @@ import com.theakram.helium.util.isAsciiAlpha
 internal data object TagOpen : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.ExclamationMark) -> consumeNextChar { MarkupDeclarationOpen }
+            codePoint.IS(Chars.ExclamationMark) -> switchTo(MarkupDeclarationOpen)
 
-            codePoint.IS(Chars.Solidus) -> consumeNextChar { EndTagOpen }
+            codePoint.IS(Chars.Solidus) -> switchTo(EndTagOpen)
 
             codePoint.isAsciiAlpha() -> {
                 val startTagToken = Token.StartTag(name = "")
-                reconsumeCurrentChar { TagName(startTagToken) }
+                reconsumeIn(TagName(startTagToken))
             }
 
             codePoint.IS(Chars.QuestionMark) -> {
                 tokenizer.logParseError("unexpected-question-mark-instead-of-tag-name")
                 val commentToken = Token.Comment(data = "")
-                reconsumeCurrentChar { BogusComment(commentToken) }
+                reconsumeIn(BogusComment(commentToken))
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
                 tokenizer.emitToken(Token.Character(data = '<'))
-                endOfFile { this }
+                halt()
             }
 
             else -> {
                 tokenizer.logParseError("invalid-first-character-of-tag-name")
                 val charToken = Token.Character(data = '<')
                 tokenizer.emitToken(charToken)
-                reconsumeCurrentChar { Data }
+                reconsumeIn(Data)
             }
         }
     }
