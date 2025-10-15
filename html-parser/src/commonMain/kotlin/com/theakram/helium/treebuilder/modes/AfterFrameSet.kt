@@ -27,10 +27,30 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
 internal object AfterFrameSet : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement AfterFrameSet insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+
+            is Token.EndTag if token.name.equals("html", ignoreCase = true) -> switchTo(AfterAfterFrameSet)
+
+            is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            else -> continueInCurrentMode()
+        }
     }
 }
