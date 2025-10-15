@@ -26,14 +26,66 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intemplate
+ */
 internal object InTemplate : InsertionMode {
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // TODO: Implement InTemplate insertion mode
-        return continueInCurrentMode()
+        return when (token) {
+            is Token.Character,
+            is Token.Comment,
+            is Token.DocType -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
+            ) -> InHead.process(token, treeBuilder)
+
+            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "caption", "colgroup", "tbody", "tfoot", "thead"
+            ) -> {
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.pushTemplateInsertionMode(InTable)
+                reprocessIn(InTable)
+            }
+
+            is Token.StartTag if token.name.equals("col", ignoreCase = true) -> {
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.pushTemplateInsertionMode(InColumnGroup)
+                reprocessIn(InColumnGroup)
+            }
+
+            is Token.StartTag if token.name.equals("tr", ignoreCase = true) -> {
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.pushTemplateInsertionMode(InTableBody)
+                reprocessIn(InTableBody)
+            }
+
+            is Token.StartTag if token.name.lowercase() in setOf("td", "th") -> {
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.pushTemplateInsertionMode(InRow)
+                reprocessIn(InRow)
+            }
+
+            is Token.StartTag -> {
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.pushTemplateInsertionMode(InBody)
+                reprocessIn(InBody)
+            }
+
+            is Token.EndTag -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+        }
     }
 }
