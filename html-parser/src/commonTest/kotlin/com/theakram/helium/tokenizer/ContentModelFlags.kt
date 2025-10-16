@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.treebuilder.TokenizerStateType
 import kotlin.test.Test
 
 internal class ContentModelFlags : TokenizerTestBase() {
@@ -34,7 +35,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "<head>&body;",
         expectedTokens = listOf(
             *chars("<head>&body;").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.PLAINTEXT,
+        lastStartTag = "plaintext"
     )
 
     @Test
@@ -42,7 +45,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "</plaintext>&body;",
         expectedTokens = listOf(
             *chars("</plaintext>&body;").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.PLAINTEXT,
+        lastStartTag = "plaintext"
     )
 
     @Test
@@ -51,7 +56,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("foo").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -60,7 +67,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("foo").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -68,7 +77,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "foo</xmp ",
         expectedTokens = listOf(
             *chars("foo").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -76,7 +87,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "foo</xmp",
         expectedTokens = listOf(
             *chars("foo</xmp").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -84,7 +97,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "foo</xmp/",
         expectedTokens = listOf(
             *chars("foo").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -92,7 +107,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "foo</xmp<",
         expectedTokens = listOf(
             *chars("foo</xmp<").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -101,7 +118,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("</foo>bar").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -110,7 +129,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("</xmp</xmp").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -118,7 +139,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "</foo>bar</xmpaar>",
         expectedTokens = listOf(
             *chars("</foo>bar</xmpaar>").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -128,7 +151,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
             *chars("foo").toTypedArray(),
             endTag("xmp"),
             endTag("baz")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -136,7 +161,9 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "&foo;",
         expectedTokens = listOf(
             *chars("&foo;").toTypedArray()
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -144,6 +171,8 @@ internal class ContentModelFlags : TokenizerTestBase() {
         input = "&lt;",
         expectedTokens = listOf(
             char('<')
-        )
+        ),
+        initialState = TokenizerStateType.RCDATA,
+        lastStartTag = "textarea"
     )
 }

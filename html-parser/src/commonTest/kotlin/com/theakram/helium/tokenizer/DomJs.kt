@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.treebuilder.TokenizerStateType
 import kotlin.test.Test
 
 internal class DomJs : TokenizerTestBase() {
@@ -269,7 +270,9 @@ internal class DomJs : TokenizerTestBase() {
             input = "</XMP>",
             expectedTokens = listOf(
                 endTag("xmp")
-            )
+            ),
+            initialState = TokenizerStateType.RAWTEXT,
+            lastStartTag = "xmp"
         )
 
         @Test
@@ -277,7 +280,9 @@ internal class DomJs : TokenizerTestBase() {
             input = "</ XMP>",
             expectedTokens = listOf(
                 *chars("</ XMP>").toTypedArray()
-            )
+            ),
+            initialState = TokenizerStateType.RAWTEXT,
+            lastStartTag = "xmp"
         )
 
         @Test
@@ -285,7 +290,9 @@ internal class DomJs : TokenizerTestBase() {
             input = "</xm>",
             expectedTokens = listOf(
                 *chars("</xm>").toTypedArray()
-            )
+            ),
+            initialState = TokenizerStateType.RAWTEXT,
+            lastStartTag = "xmp"
         )
 
         @Test
@@ -293,7 +300,9 @@ internal class DomJs : TokenizerTestBase() {
             input = "</xm ",
             expectedTokens = listOf(
                 *chars("</xm ").toTypedArray()
-            )
+            ),
+            initialState = TokenizerStateType.RAWTEXT,
+            lastStartTag = "xmp"
         )
 
         @Test
@@ -301,7 +310,9 @@ internal class DomJs : TokenizerTestBase() {
             input = "</xm/",
             expectedTokens = listOf(
                 *chars("</xm/").toTypedArray()
-            )
+            ),
+            initialState = TokenizerStateType.RAWTEXT,
+            lastStartTag = "xmp"
         )
 
         @Test

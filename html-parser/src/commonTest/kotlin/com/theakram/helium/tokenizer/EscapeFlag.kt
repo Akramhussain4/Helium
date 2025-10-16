@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.treebuilder.TokenizerStateType
 import kotlin.test.Test
 
 internal class EscapeFlag : TokenizerTestBase() {
@@ -37,7 +38,9 @@ internal class EscapeFlag : TokenizerTestBase() {
             endTag("xmp"),
             *chars("-->").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -46,7 +49,9 @@ internal class EscapeFlag : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("foo<!-->baz").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -58,7 +63,9 @@ internal class EscapeFlag : TokenizerTestBase() {
             comment(""),
             *chars("baz").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -67,7 +74,9 @@ internal class EscapeFlag : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars(" & <!-- & --> & ").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RCDATA,
+        lastStartTag = "xmp"
     )
 
     @Test
@@ -76,6 +85,8 @@ internal class EscapeFlag : TokenizerTestBase() {
         expectedTokens = listOf(
             *chars("foo<!-- x --x>x-- >x--!>x--<>").toTypedArray(),
             endTag("xmp")
-        )
+        ),
+        initialState = TokenizerStateType.RAWTEXT,
+        lastStartTag = "xmp"
     )
 }

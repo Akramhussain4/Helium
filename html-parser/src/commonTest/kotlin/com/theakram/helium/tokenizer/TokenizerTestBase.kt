@@ -27,18 +27,37 @@ package com.theakram.helium.tokenizer
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.treebuilder.TokenizerStateType
 
 internal abstract class TokenizerTestBase {
 
-    protected fun tokenize(input: String): List<Token> {
+    protected fun tokenize(
+        input: String,
+        initialState: TokenizerStateType = TokenizerStateType.DATA,
+        lastStartTag: String? = null
+    ): List<Token> {
         val emittedTokens = mutableListOf<Token>()
         val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+
+        // Set the initial state
+        tokenizer.switchState(initialState)
+
+        // Set the lastStartTagName if provided
+        if (lastStartTag != null) {
+            tokenizer.lastStartTagName = lastStartTag
+        }
+
         tokenizer.tokenize(html = input)
         return emittedTokens.filterNot { it is Token.EOF }
     }
 
-    protected fun assertTokenization(input: String, expectedTokens: List<Token>) {
-        val actualTokens = tokenize(input)
+    protected fun assertTokenization(
+        input: String,
+        expectedTokens: List<Token>,
+        initialState: TokenizerStateType = TokenizerStateType.DATA,
+        lastStartTag: String? = null
+    ) {
+        val actualTokens = tokenize(input, initialState, lastStartTag)
         if (actualTokens.size != expectedTokens.size) {
             throw AssertionError(
                 "Token count mismatch. Expected ${expectedTokens.size}," +
