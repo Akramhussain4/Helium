@@ -29,7 +29,6 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.states.StateTransition.ContinueInCurrentState
 import com.theakram.helium.tokenization.states.StateTransition.SwitchTo
 import com.theakram.helium.tokenization.states.StateTransition.ReconsumeIn
-import com.theakram.helium.tokenization.states.StateTransition.Halt
 
 internal interface TokenizationState {
     fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition
@@ -39,13 +38,11 @@ internal sealed interface StateTransition {
     data object ContinueInCurrentState : StateTransition
     data class SwitchTo(val newState: TokenizationState) : StateTransition
     data class ReconsumeIn(val newState: TokenizationState) : StateTransition
-    data object Halt : StateTransition
 }
 
 internal fun continueInCurrentState() = ContinueInCurrentState
 internal fun switchTo(state: TokenizationState) = SwitchTo(state)
 internal fun reconsumeIn(state: TokenizationState) = ReconsumeIn(state)
-internal fun halt() = Halt
 
 //internal data object ScriptData : TokenizationState()
 //internal data object ScriptDataLessThanSign : TokenizationState()

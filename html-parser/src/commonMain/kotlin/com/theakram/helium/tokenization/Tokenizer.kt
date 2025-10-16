@@ -28,7 +28,6 @@ package com.theakram.helium.tokenization
 import com.theakram.helium.tokenization.states.StateTransition.ContinueInCurrentState
 import com.theakram.helium.tokenization.states.StateTransition.SwitchTo
 import com.theakram.helium.tokenization.states.StateTransition.ReconsumeIn
-import com.theakram.helium.tokenization.states.StateTransition.Halt
 import com.theakram.helium.tokenization.states.Data
 import com.theakram.helium.tokenization.states.PlainText
 import com.theakram.helium.tokenization.states.RCData
@@ -68,7 +67,6 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
                     currentPosition++
                 }
                 is ReconsumeIn -> currentState = transition.newState
-                Halt -> return
             }
         }
     }

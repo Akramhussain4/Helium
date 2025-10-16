@@ -42,7 +42,10 @@ internal data object Data : TokenizationState {
 
             codePoint.IS(Chars.LessThan) -> switchTo(TagOpen)
 
-            codePoint == -1 -> halt()
+            codePoint == -1 -> {
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
+            }
 
             else -> {
                 tokenizer.emitToken(Token.Character(data = codePoint.toChar()))

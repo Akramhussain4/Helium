@@ -44,7 +44,10 @@ internal data object RawText : TokenizationState {
                 continueInCurrentState()
             }
 
-            codePoint == -1 -> halt()
+            codePoint == -1 -> {
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
+            }
 
             else -> {
                 tokenizer.emitToken(Token.Character(codePoint.toChar()))

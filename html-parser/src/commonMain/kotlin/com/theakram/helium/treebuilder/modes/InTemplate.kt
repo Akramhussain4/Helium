@@ -32,6 +32,7 @@ import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.stopParsing
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intemplate
@@ -85,6 +86,22 @@ internal object InTemplate : InsertionMode {
             is Token.EndTag -> {
                 // Parse error. Ignore the token.
                 continueInCurrentMode()
+            }
+
+            is Token.EOF -> {
+                val hasTemplate = treeBuilder.elementStack.any {
+                    it.localName == "template" && it.namespace == Namespaces.HTML
+                }
+                if (!hasTemplate) {
+                    // Stop parsing
+                    return stopParsing()
+                }
+                // Parse error
+                treeBuilder.popUntil("template")
+                treeBuilder.activeFormattingElements.clearToLastMarker()
+                treeBuilder.popTemplateInsertionMode()
+                treeBuilder.resetInsertionModeAppropriately()
+                reprocessIn(treeBuilder.currentMode)
             }
         }
     }

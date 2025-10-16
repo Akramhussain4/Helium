@@ -52,7 +52,8 @@ internal data object TagOpen : TokenizationState {
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
                 tokenizer.emitToken(Token.Character(data = '<'))
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {

@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Token.Comment
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -40,7 +41,8 @@ internal class BogusComment(private val commentToken: Comment) : TokenizationSta
 
             codePoint == -1 -> {
                 tokenizer.emitToken(commentToken)
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             codePoint.IS(Chars.Null) -> {

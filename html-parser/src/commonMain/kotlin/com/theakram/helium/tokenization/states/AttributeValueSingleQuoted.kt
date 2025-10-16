@@ -42,7 +42,8 @@ internal class AttributeValueSingleQuoted(val currentTagToken: Token) : Tokeniza
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {

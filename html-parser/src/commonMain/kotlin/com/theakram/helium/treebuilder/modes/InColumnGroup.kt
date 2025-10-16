@@ -91,6 +91,8 @@ internal object InColumnGroup : InsertionMode {
 
             is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
 
+            is Token.EOF -> InBody.process(token, treeBuilder)
+
             else -> {
                 if (treeBuilder.currentNode.localName != "colgroup" ||
                     treeBuilder.currentNode.namespace != Namespaces.HTML
