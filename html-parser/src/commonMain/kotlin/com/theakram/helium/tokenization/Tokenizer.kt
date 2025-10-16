@@ -35,6 +35,8 @@ import com.theakram.helium.tokenization.states.RawText
 import com.theakram.helium.tokenization.states.TokenizationState
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.util.Chars
+import com.theakram.helium.util.isNonCharacter
+import com.theakram.helium.util.isSurrogate
 
 internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     var currentPosition = 0
@@ -73,7 +75,15 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
 
     private fun preprocess(input: String): String {
         val step1 = input.replace("\r\n", "\n")
-        return step1.replace('\r', '\n')
+        val step2 = step1.replace('\r', '\n')
+        step2.forEach { char ->
+            val codePoint = char.code
+            when {
+                codePoint.isSurrogate() -> logParseError("surrogate-in-input-stream")
+                codePoint.isNonCharacter() -> logParseError("noncharacter-in-input-stream")
+            }
+        }
+        return step2
     }
 
     fun addCurrentAttributeToToken(currentToken: Token) {
