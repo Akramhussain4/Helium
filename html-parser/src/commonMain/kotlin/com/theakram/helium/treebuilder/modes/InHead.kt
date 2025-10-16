@@ -168,9 +168,8 @@ internal object InHead : InsertionMode {
                 // Step 5:
                 treeBuilder.popTemplateInsertionMode()
                 // Step 6:
-                // TODO: Implement resetInsertionModeAppropriately()
-                // For now, we just continue in current mode
-                continueInCurrentMode()
+                treeBuilder.resetInsertionModeAppropriately()
+                switchTo(treeBuilder.currentMode)
             }
 
             is Token.StartTag if token.name.equals("head", ignoreCase = true) -> {

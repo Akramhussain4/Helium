@@ -106,9 +106,8 @@ internal object InTable : InsertionMode {
                         } else {
                             treeBuilder.popUntil("table")
                             // Reset the insertion mode appropriately
-                            // TODO: Implement resetInsertionModeAppropriately()
-                            // For now, reprocess in InBody mode
-                            reprocessIn(InBody)
+                            treeBuilder.resetInsertionModeAppropriately()
+                            switchTo(treeBuilder.currentMode)
                         }
                     }
 
@@ -158,9 +157,8 @@ internal object InTable : InsertionMode {
                         } else {
                             treeBuilder.popUntil("table")
                             // Reset the insertion mode appropriately
-                            // TODO: Implement resetInsertionModeAppropriately()
-                            // For now, switch to InBody mode
-                            switchTo(InBody)
+                            treeBuilder.resetInsertionModeAppropriately()
+                            switchTo(treeBuilder.currentMode)
                         }
                     }
 

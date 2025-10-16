@@ -56,12 +56,15 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
 
         while (currentPosition <= htmlBuffer.length) {
             val codePoint = htmlBuffer.getOrNull(currentPosition)?.code ?: -1
+            val stateBeforeConsume = currentState
             val transition = currentState.consume(codePoint, this)
 
             when (transition) {
                 ContinueInCurrentState -> currentPosition++
                 is SwitchTo -> {
-                    currentState = transition.newState
+                    if (currentState == stateBeforeConsume) {
+                        currentState = transition.newState
+                    }
                     currentPosition++
                 }
                 is ReconsumeIn -> currentState = transition.newState

@@ -65,6 +65,11 @@ public class TreeBuilder(
         scopeChecker = scopeChecker,
         activeFormattingElements = activeFormattingElements,
     )
+    private val insertionModeResetter = InsertionModeResetter(
+        stack = stack,
+        getHeadElement = { headElement },
+        getCurrentTemplateInsertionMode = { currentTemplateInsertionMode() }
+    )
 
     public var headElement: TreeNode? = null
     public var formElement: TreeNode? = null
@@ -197,6 +202,10 @@ public class TreeBuilder(
 
     internal fun switchTokenizerState(stateType: TokenizerStateType) {
         onSwitchTokenizerState(stateType)
+    }
+
+    internal fun resetInsertionModeAppropriately() {
+        insertionMode = insertionModeResetter.reset()
     }
 
     internal fun createImplicitElement(tagName: String): TreeNode =
