@@ -229,15 +229,7 @@ public class TreeNode(
             NodeType.DOCUMENT_TYPE -> "<!DOCTYPE $localName" +
                 (if (!publicId.isNullOrEmpty()) " \"$publicId\"" else "") +
                 (if (!systemId.isNullOrEmpty()) " \"$systemId\"" else "") + ">"
-            NodeType.ELEMENT -> {
-                if (attributes.isNotEmpty()) {
-                    val sortedAttrs = attributes.sortedBy { it.name }
-                    val attrString = sortedAttrs.joinToString(" ") { "${it.name}=\"${it.value}\"" }
-                    "<$name $attrString>"
-                } else {
-                    "<$name>"
-                }
-            }
+            NodeType.ELEMENT -> "<$name>"
             NodeType.TEXT -> "\"$data\""
             NodeType.COMMENT -> "<!-- $data -->"
             NodeType.PROCESSING_INSTRUCTION -> "<?$name $data?>"
@@ -247,6 +239,15 @@ public class TreeNode(
 
         val result = StringBuilder()
         result.append(indent + nodeRepr)
+
+        if (type == NodeType.ELEMENT && attributes.isNotEmpty()) {
+            val sortedAttrs = attributes.sortedBy { it.name }
+            for (attr in sortedAttrs) {
+                result.append("\n")
+                val attrIndent = "| " + "  ".repeat(depth + 1)
+                result.append("$attrIndent${attr.name}=\"${attr.value}\"")
+            }
+        }
 
         // Add children
         for (child in children) {
