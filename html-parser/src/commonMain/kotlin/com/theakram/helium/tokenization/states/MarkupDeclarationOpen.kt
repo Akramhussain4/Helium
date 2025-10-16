@@ -25,11 +25,44 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
+ */
 internal data object MarkupDeclarationOpen : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        TODO("Not yet implemented")
+        val next2 = tokenizer.peekNextChars(2)
+        val next7 = tokenizer.peekNextChars(7)
+
+        return when {
+            next2 == "--" -> {
+                tokenizer.currentPosition += 1
+                tokenizer.currentToken = Token.Comment("")
+                switchTo(CommentStart(Token.Comment("")))
+            }
+
+            next7.equals("DOCTYPE", ignoreCase = true) -> {
+                tokenizer.currentPosition += 6
+                TODO("Switch to DOCTYPE state - not yet implemented")
+            }
+
+            next7 == "[CDATA[" -> {
+                tokenizer.currentPosition += 6
+                // TODO: Check if there is an adjusted current node and it is not an element in the HTML namespace
+                // For now, treat as CDATA in HTML content (parse error)
+                tokenizer.logParseError("cdata-in-html-content")
+                val commentToken = Token.Comment("[CDATA[")
+                switchTo(BogusComment(commentToken))
+            }
+
+            else -> {
+                tokenizer.logParseError("incorrectly-opened-comment")
+                val commentToken = Token.Comment("")
+                reconsumeIn(BogusComment(commentToken))
+            }
+        }
     }
 }

@@ -106,6 +106,11 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
 
     fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + 1) ?: Chars.EOF.char
 
+    fun peekNextChars(count: Int): String {
+        val endIndex = (currentPosition + 1 + count).coerceAtMost(htmlBuffer.length)
+        return htmlBuffer.substring(currentPosition + 1, endIndex)
+    }
+
     fun logParseError(error: String) = System.err.println("Parse error: $error at position: $currentPosition")
 
     fun switchState(stateType: TokenizerStateType) {
