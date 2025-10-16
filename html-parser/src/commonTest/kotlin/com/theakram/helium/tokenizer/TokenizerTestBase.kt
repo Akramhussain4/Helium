@@ -30,13 +30,11 @@ import com.theakram.helium.tokenization.Tokenizer
 
 internal abstract class TokenizerTestBase {
 
-    private val emittedTokens = mutableListOf<Token>()
-    private val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
-
     protected fun tokenize(input: String): List<Token> {
-        emittedTokens.clear()
+        val emittedTokens = mutableListOf<Token>()
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
         tokenizer.tokenize(html = input)
-        return emittedTokens.toList()
+        return emittedTokens.filterNot { it is Token.EOF }
     }
 
     protected fun assertTokenization(input: String, expectedTokens: List<Token>) {

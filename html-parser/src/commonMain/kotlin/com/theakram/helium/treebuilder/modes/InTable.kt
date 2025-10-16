@@ -173,6 +173,8 @@ internal object InTable : InsertionMode {
                 }
             }
 
+            is Token.EOF -> InBody.process(token, treeBuilder)
+
             else -> handleAnythingElse(token, treeBuilder)
         }
     }

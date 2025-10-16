@@ -51,7 +51,8 @@ internal class AfterAttributeName(private val currentTagToken: Token) : Tokeniza
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {

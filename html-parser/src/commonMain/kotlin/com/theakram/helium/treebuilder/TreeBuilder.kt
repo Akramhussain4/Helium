@@ -28,12 +28,8 @@ package com.theakram.helium.treebuilder
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
-import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.modes.Initial
-import com.theakram.helium.treebuilder.modes.BeforeHTML
-import com.theakram.helium.treebuilder.modes.BeforeHead
-import com.theakram.helium.treebuilder.modes.InBody
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
@@ -98,6 +94,13 @@ public class TreeBuilder(
 
                 is InsertionModeTransition.Reprocess -> {
                     insertionMode = transition.newMode
+                }
+
+                is InsertionModeTransition.StopParsing -> {
+                    while (stack.size > 0) {
+                        popCurrentElement()
+                    }
+                    break
                 }
             }
         }
@@ -200,35 +203,6 @@ public class TreeBuilder(
     internal fun insertCharacter(char: Char) {
         val data = char.toString()
         insertionLocation.insertCharacter(data)
-    }
-
-    internal fun finish() {
-        val htmlElement = document.findChildElement("html") ?: return
-
-        if (htmlElement.findChildElement("head") == null) {
-            if (currentMode != InBody) {
-                when (currentMode) {
-                    Initial, BeforeHTML -> {}
-                    BeforeHead -> {
-                        val head = TreeNode.createElement("head")
-                        htmlElement.appendChild(head)
-                        headElement = head
-                    }
-
-                    else -> {
-                        if (headElement == null) {
-                            val head = TreeNode.createElement("head")
-                            htmlElement.insertBefore(head, htmlElement.firstChild)
-                            headElement = head
-                        }
-                    }
-                }
-            }
-        }
-
-        if (htmlElement.findChildElement("body") == null) {
-            htmlElement.appendChild(TreeNode.createElement("body"))
-        }
     }
 
     public fun reset() {

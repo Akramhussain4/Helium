@@ -35,6 +35,8 @@ internal sealed interface InsertionModeTransition {
     data class SwitchMode(val newMode: InsertionMode) : InsertionModeTransition
 
     data class Reprocess(val newMode: InsertionMode) : InsertionModeTransition
+
+    data object StopParsing : InsertionModeTransition
 }
 
 internal fun continueInCurrentMode() = Continue
@@ -42,3 +44,5 @@ internal fun continueInCurrentMode() = Continue
 internal fun switchTo(mode: InsertionMode) = SwitchMode(mode)
 
 internal fun reprocessIn(mode: InsertionMode) = Reprocess(mode)
+
+internal fun stopParsing() = InsertionModeTransition.StopParsing

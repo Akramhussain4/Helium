@@ -33,26 +33,18 @@ import com.theakram.helium.tokenization.Tokenizer
  */
 internal abstract class TreeConstructionTestBase {
 
-    private lateinit var tokenizer: Tokenizer
-    private val treeBuilder = TreeBuilder(
-        onSwitchTokenizerState = { stateType ->
-            tokenizer.switchState(stateType)
-        }
-    )
-
-    init {
+    protected fun parseTree(input: String): String {
+        lateinit var tokenizer: Tokenizer
+        val treeBuilder = TreeBuilder(
+            onSwitchTokenizerState = { stateType ->
+                tokenizer.switchState(stateType)
+            }
+        )
         tokenizer = Tokenizer { token ->
             treeBuilder.process(token)
         }
-    }
 
-    /**
-     * Parse HTML input and return the resulting tree structure.
-     */
-    protected fun parseTree(input: String): String {
-        treeBuilder.reset()
         tokenizer.tokenize(input)
-        treeBuilder.finish()
         return treeBuilder.toTreeString().trim()
     }
 

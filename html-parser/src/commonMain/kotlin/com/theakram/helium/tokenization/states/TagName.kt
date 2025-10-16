@@ -51,7 +51,8 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState {
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {

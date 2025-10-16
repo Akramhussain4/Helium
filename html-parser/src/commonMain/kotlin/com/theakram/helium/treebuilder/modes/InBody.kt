@@ -35,6 +35,7 @@ import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
 import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.modes.inbody.*
+import com.theakram.helium.treebuilder.stopParsing
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
 
@@ -79,6 +80,14 @@ internal object InBody : InsertionMode {
 
             is Token.StartTag -> processStartTag(token, treeBuilder)
             is Token.EndTag -> processEndTag(token, treeBuilder)
+
+            is Token.EOF -> {
+                if (treeBuilder.currentTemplateInsertionMode() != null) {
+                    return InTemplate.process(token, treeBuilder)
+                }
+                // Otherwise, stop parsing.
+                stopParsing()
+            }
         }
     }
 

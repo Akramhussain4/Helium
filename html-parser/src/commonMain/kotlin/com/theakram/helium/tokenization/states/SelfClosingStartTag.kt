@@ -51,7 +51,8 @@ internal class SelfClosingStartTag(private val currentTagToken: Token) : Tokeniz
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                halt()
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {
