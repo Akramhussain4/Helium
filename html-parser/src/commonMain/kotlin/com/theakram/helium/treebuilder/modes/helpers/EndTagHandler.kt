@@ -5,7 +5,7 @@
  * Website: https://theakram.com
  */
 
-package com.theakram.helium.treebuilder.modes.inbody
+package com.theakram.helium.treebuilder.modes.helpers
 
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionModeTransition

@@ -31,7 +31,7 @@ import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
-import com.theakram.helium.treebuilder.modes.inhead.InHeadHelpers
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace

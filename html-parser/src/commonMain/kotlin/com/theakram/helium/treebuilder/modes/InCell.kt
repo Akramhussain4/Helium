@@ -31,7 +31,7 @@ import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
-import com.theakram.helium.treebuilder.modes.inbody.InBodyHelpers
+import com.theakram.helium.treebuilder.modes.helpers.InBodyHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 
