@@ -65,6 +65,17 @@ internal object Text : InsertionMode {
                 switchTo(originalMode)
             }
 
+            is Token.EOF -> {
+                // Parse error.
+                val currentNode = treeBuilder.currentNode
+                if (currentNode.namespace == Namespaces.HTML && currentNode.localName == "script") {
+                    // TODO: Set script element's already started to true
+                }
+                treeBuilder.popCurrentElement()
+                val originalMode = treeBuilder.getOriginalInsertionMode() ?: InBody
+                reprocessIn(originalMode)
+            }
+
             else -> {
                 // Parse error
                 val currentNode = treeBuilder.currentNode

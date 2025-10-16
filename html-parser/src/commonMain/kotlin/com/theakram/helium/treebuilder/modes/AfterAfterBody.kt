@@ -49,7 +49,12 @@ internal object AfterAfterBody : InsertionMode {
                 treeBuilder = treeBuilder
             )
 
-            else -> reprocessIn(InBody)
+            is Token.EOF -> stopParsing()
+
+            else -> {
+                // Parse error.
+                reprocessIn(InBody)
+            }
         }
     }
 }

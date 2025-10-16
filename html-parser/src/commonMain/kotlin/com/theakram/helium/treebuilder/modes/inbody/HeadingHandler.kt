@@ -52,7 +52,7 @@ internal object HeadingHandler {
             currentNode.localName !in TreeConstructionConstants.HEADING_ELEMENTS) {
             // Parse error
         }
-        while (true) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
             val popped = treeBuilder.popCurrentElement()
             if (popped?.namespace == Namespaces.HTML &&
                 popped.localName in TreeConstructionConstants.HEADING_ELEMENTS) {

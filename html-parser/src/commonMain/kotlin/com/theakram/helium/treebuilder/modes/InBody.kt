@@ -363,7 +363,7 @@ internal object InBody : InsertionMode {
             return continueInCurrentMode()
         }
         secondElement.parent?.removeChild(secondElement)
-        while (stack.size > 1) {
+        while (treeBuilder.elementStack.size > 1) {
             treeBuilder.popCurrentElement()
         }
 

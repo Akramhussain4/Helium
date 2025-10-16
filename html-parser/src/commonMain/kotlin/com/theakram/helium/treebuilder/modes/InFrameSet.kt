@@ -96,6 +96,16 @@ internal object InFrameSet : InsertionMode {
 
             is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
 
+            is Token.EOF -> {
+                if (treeBuilder.currentNode.localName != "html" ||
+                    treeBuilder.currentNode.namespace != Namespaces.HTML ||
+                    treeBuilder.elementStack.size != 1
+                ) {
+                    // Parse error
+                }
+                stopParsing()
+            }
+
             else -> {
                 // Parse error. Ignore the token.
                 continueInCurrentMode()

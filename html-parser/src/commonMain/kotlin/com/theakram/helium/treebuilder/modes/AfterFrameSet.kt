@@ -45,7 +45,10 @@ internal object AfterFrameSet : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
 
             is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
 
@@ -53,7 +56,12 @@ internal object AfterFrameSet : InsertionMode {
 
             is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
 
-            else -> continueInCurrentMode()
+            is Token.EOF -> stopParsing()
+
+            else -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
         }
     }
 }

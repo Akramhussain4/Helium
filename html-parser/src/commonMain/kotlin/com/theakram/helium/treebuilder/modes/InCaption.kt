@@ -90,7 +90,7 @@ internal object InCaption : InsertionMode {
     }
 
     private fun generateImpliedEndTags(treeBuilder: TreeBuilder) {
-        while (true) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
             val currentNode = treeBuilder.currentNode
             if (currentNode.namespace == Namespaces.HTML &&
                 currentNode.localName in setOf(

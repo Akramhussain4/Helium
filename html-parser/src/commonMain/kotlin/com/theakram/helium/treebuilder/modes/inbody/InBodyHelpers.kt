@@ -25,7 +25,7 @@ internal object InBodyHelpers {
     }
 
     fun generateImpliedEndTags(treeBuilder: TreeBuilder, except: String? = null) {
-        while (true) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
             val currentNode = treeBuilder.currentNode
             if (currentNode.namespace == Namespaces.HTML &&
                 currentNode.localName in TreeConstructionConstants.IMPLIED_END_TAG_ELEMENTS &&

@@ -49,6 +49,8 @@ internal object AfterAfterFrameSet : InsertionMode {
 
             is Token.StartTag if token.name.equals("noframes", true) -> InHead.process(token, treeBuilder)
 
+            is Token.EOF -> stopParsing()
+
             else -> continueInCurrentMode()
         }
     }

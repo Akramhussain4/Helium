@@ -57,7 +57,12 @@ internal object AfterBody : InsertionMode {
                 switchTo(AfterAfterBody)
             }
 
-            else -> reprocessIn(InBody)
+            is Token.EOF -> stopParsing()
+
+            else -> {
+                // Parse error.
+                reprocessIn(InBody)
+            }
         }
     }
 }
