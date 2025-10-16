@@ -26,6 +26,7 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
 
 /**
@@ -38,19 +39,63 @@ internal class InsertionLocation(
     private val getDocument: () -> TreeNode
 ) {
 
-    fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
-        // Step 1:
-        val target = overrideTarget ?: getCurrentNode()
-
-        // Step 2:
-        if (fosterParenting.isEnabled && TreeConstructionConstants.requiresFosterParenting(target)) {
-            insertWithFosterParenting(node)
+    /**
+     * Insert a character while processing a token.
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-character
+     */
+    fun insertCharacter(data: String, overrideTarget: TreeNode? = null) {
+        // Step 1, 2:
+        val location = getAdjustedInsertionLocation(overrideTarget)
+        // Step 3:
+        if (location.parent.type == NodeType.DOCUMENT) {
             return
         }
+        // Step 4:
+        val previousSibling = if (location.beforeNode != null) {
+            location.beforeNode.previousSibling
+        } else {
+            location.parent.lastChild
+        }
+        if (previousSibling?.type == NodeType.TEXT) {
+            previousSibling.data = (previousSibling.data ?: "") + data
+        } else {
+            // Step 5:
+            val textNode = TreeNode.createText(data)
+            if (location.beforeNode != null) {
+                location.parent.insertBefore(textNode, location.beforeNode)
+            } else {
+                location.parent.appendChild(textNode)
+            }
+        }
+    }
 
+    fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
+        val location = getAdjustedInsertionLocation(overrideTarget)
+        if (location.beforeNode != null) {
+            location.parent.insertBefore(node, location.beforeNode)
+        } else {
+            location.parent.appendChild(node)
+        }
+    }
+
+    private data class AdjustedLocation(
+        val parent: TreeNode,
+        val beforeNode: TreeNode? = null
+    )
+
+    /**
+     * Find the appropriate place for inserting a node.
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#appropriate-place-for-inserting-a-node
+     */
+    private fun getAdjustedInsertionLocation(overrideTarget: TreeNode? = null): AdjustedLocation {
+        // Step 1:
+        val target = overrideTarget ?: getCurrentNode()
+        // Step 2:
+        if (fosterParenting.isEnabled && TreeConstructionConstants.requiresFosterParenting(target)) {
+            return getFosterParentingLocation()
+        }
         // Otherwise:
-        var adjustedInsertionParent = target
-
+        val adjustedInsertionParent = target
         // Step 3:
         if (adjustedInsertionParent.namespace == Namespaces.HTML &&
             adjustedInsertionParent.localName == "template"
@@ -58,12 +103,14 @@ internal class InsertionLocation(
             // TODO: When template content is implemented, use template content
             // For now, insert into the template element itself
         }
-
         // Step 4:
-        adjustedInsertionParent.appendChild(node)
+        return AdjustedLocation(adjustedInsertionParent, null)
     }
 
-    private fun insertWithFosterParenting(node: TreeNode) {
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#appropriate-place-for-inserting-a-node
+     */
+    private fun getFosterParentingLocation(): AdjustedLocation {
         // Step 1:
         val lastTemplateIndex = stack.indexOfLastTagName("template")
         val lastTemplate = if (lastTemplateIndex >= 0) stack[lastTemplateIndex] else null
@@ -78,32 +125,28 @@ internal class InsertionLocation(
             // after its last child (if any)
             // TODO: When template content is implemented, insert into template content
             // For now, insert into the template element itself
-            lastTemplate.appendChild(node)
-            return
+            return AdjustedLocation(lastTemplate, null)
         }
 
         // Step 4:
         if (lastTable == null) {
             val firstElement = if (stack.size > 0) stack[0] else getDocument()
-            firstElement.appendChild(node)
-            return
+            return AdjustedLocation(firstElement, null)
         }
 
         // Step 5:
         val tableParent = lastTable.parent
         if (tableParent != null) {
-            tableParent.insertBefore(node, lastTable)
-            return
+            return AdjustedLocation(tableParent, lastTable)
         }
 
         // Step 6-7:
         if (lastTableIndex > 0) {
             val previousElement = stack[lastTableIndex - 1]
-            previousElement.appendChild(node)
-            return
+            return AdjustedLocation(previousElement, null)
         }
 
         // Fallback (shouldn't happen in practice)
-        lastTable.appendChild(node)
+        return AdjustedLocation(lastTable, null)
     }
 }

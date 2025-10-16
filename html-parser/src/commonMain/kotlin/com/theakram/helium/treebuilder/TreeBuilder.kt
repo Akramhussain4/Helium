@@ -119,20 +119,6 @@ public class TreeBuilder(
         return element
     }
 
-    public fun insertText(data: String) {
-        if (fosterParenting.isEnabled) {
-            fosterParenting.fosterParentText(data)
-            return
-        }
-
-        val lastChild = currentNode.lastChild
-        if (lastChild?.type == NodeType.TEXT) {
-            lastChild.data = (lastChild.data ?: "") + data
-        } else {
-            currentNode.appendChild(TreeNode.createText(data))
-        }
-    }
-
     public fun insertComment(data: String) {
         currentNode.appendChild(TreeNode.createComment(data))
     }
@@ -212,7 +198,8 @@ public class TreeBuilder(
         insertElement(tagName = tagName, namespace = Namespaces.HTML, attributes = emptyList())
 
     internal fun insertCharacter(char: Char) {
-        insertText(char.toString())
+        val data = char.toString()
+        insertionLocation.insertCharacter(data)
     }
 
     internal fun finish() {
