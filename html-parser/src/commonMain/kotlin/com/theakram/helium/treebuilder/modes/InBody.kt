@@ -34,7 +34,7 @@ import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
 import com.theakram.helium.treebuilder.continueInCurrentMode
-import com.theakram.helium.treebuilder.modes.inbody.*
+import com.theakram.helium.treebuilder.modes.helpers.*
 import com.theakram.helium.treebuilder.stopParsing
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace

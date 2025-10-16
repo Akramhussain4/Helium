@@ -80,10 +80,8 @@ public class TreeBuilder(
     internal val currentMode: InsertionMode get() = insertionMode
 
     internal fun process(token: Token) {
-        var currentToken = token
-
         while (true) {
-            val transition = insertionMode.process(currentToken, this)
+            val transition = insertionMode.process(token, this)
 
             when (transition) {
                 is InsertionModeTransition.Continue -> break
