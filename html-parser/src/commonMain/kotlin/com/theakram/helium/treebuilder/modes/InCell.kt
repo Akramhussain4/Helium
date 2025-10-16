@@ -103,7 +103,7 @@ internal object InCell : InsertionMode {
         ) {
             // Parse error
         }
-        while (true) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
             val node = treeBuilder.currentNode
             treeBuilder.popCurrentElement()
             if (node.namespace == Namespaces.HTML && node.localName in setOf("td", "th")) {

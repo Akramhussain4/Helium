@@ -70,10 +70,12 @@ internal object EndTagHandler {
                 if (treeBuilder.currentNode !== node) {
                     // Parse error
                 }
-                while (treeBuilder.currentNode !== node) {
+                while (treeBuilder.currentNode !== node && treeBuilder.elementStack.isNotEmpty()) {
                     treeBuilder.popCurrentElement()
                 }
-                treeBuilder.popCurrentElement()
+                if (treeBuilder.elementStack.isNotEmpty()) {
+                    treeBuilder.popCurrentElement()
+                }
                 return continueInCurrentMode()
             }
 

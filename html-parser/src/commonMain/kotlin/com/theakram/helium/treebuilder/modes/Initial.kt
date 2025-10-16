@@ -57,6 +57,16 @@ internal object Initial : InsertionMode {
                 switchTo(BeforeHTML)
             }
 
+            is Token.EOF -> {
+                // Parse error
+                if (!treeBuilder.document.isIframeSrcdoc) {
+                    if (!treeBuilder.document.parserCannotChangeMode) {
+                        treeBuilder.document.quirksMode = QuirksMode.QUIRKS
+                    }
+                }
+                reprocessIn(BeforeHTML)
+            }
+
             else -> {
                 if (!treeBuilder.document.isIframeSrcdoc) {
                     // Parse error (not tracked yet)

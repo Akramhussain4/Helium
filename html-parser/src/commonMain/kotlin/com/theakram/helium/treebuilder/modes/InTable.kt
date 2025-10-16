@@ -188,7 +188,7 @@ internal object InTable : InsertionMode {
     }
 
     private fun clearStackBackToTableContext(treeBuilder: TreeBuilder) {
-        while (true) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
             val currentNode = treeBuilder.currentNode
             if (currentNode.namespace == Namespaces.HTML &&
                 currentNode.localName in setOf("table", "template", "html")
