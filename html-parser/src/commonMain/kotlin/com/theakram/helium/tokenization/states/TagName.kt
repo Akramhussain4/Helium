@@ -49,6 +49,12 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState {
                 switchTo(TagName(token))
             }
 
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                val token = updateTagName(0xFFFD)
+                switchTo(TagName(token))
+            }
+
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
                 tokenizer.emitToken(Token.EOF)

@@ -41,6 +41,12 @@ internal class AttributeValueDoubleQuoted(val currentTagToken: Token) : Tokeniza
                 )
             )
 
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.currentAttributeValue.append('\uFFFD')
+                switchTo(this)
+            }
+
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
                 tokenizer.emitToken(Token.EOF)
