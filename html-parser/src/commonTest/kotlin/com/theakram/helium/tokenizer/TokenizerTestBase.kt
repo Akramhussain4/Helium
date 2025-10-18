@@ -113,6 +113,18 @@ internal abstract class TokenizerTestBase {
 
         fun comment(data: String) = Token.Comment(data)
 
+        fun doctype(
+            name: String? = null,
+            publicId: String? = null,
+            systemId: String? = null,
+            forceQuirks: Boolean = false
+        ) = Token.DocType(
+            name = name,
+            publicId = publicId,
+            systemId = systemId,
+            forceQuirks = forceQuirks
+        )
+
         fun chars(text: String) = text.map { char(it) }
     }
 }

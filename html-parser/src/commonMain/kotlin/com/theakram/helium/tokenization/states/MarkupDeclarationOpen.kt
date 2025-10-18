@@ -34,8 +34,12 @@ import com.theakram.helium.tokenization.Tokenizer
 internal data object MarkupDeclarationOpen : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val next2 = tokenizer.peekNextChars(2)
-        val next7 = tokenizer.peekNextChars(7)
+        val currentChar = codePoint.toChar().toString()
+        val next1 = tokenizer.peekNextChar().toString()
+        val next2 = currentChar + next1
+
+        val next6 = tokenizer.peekNextChars(6)
+        val next7 = currentChar + next6
 
         return when {
             next2 == "--" -> {
@@ -46,7 +50,7 @@ internal data object MarkupDeclarationOpen : TokenizationState {
 
             next7.equals("DOCTYPE", ignoreCase = true) -> {
                 tokenizer.currentPosition += 6
-                TODO("Switch to DOCTYPE state - not yet implemented")
+                switchTo(DOCTYPE)
             }
 
             next7 == "[CDATA[" -> {
