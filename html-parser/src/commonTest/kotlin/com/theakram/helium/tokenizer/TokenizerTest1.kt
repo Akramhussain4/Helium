@@ -25,63 +25,64 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.tokenization.Token
+import com.theakram.helium.treebuilder.TokenizerStateType
 import kotlin.test.Test
 
 /**
  * Contains all 69 tests from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test1.test
  *
- * The commented (35) test cases are for Tokenization states that haven't been implemented yet.
  */
 internal class TokenizerTest1 : TokenizerTestBase() {
 
-//    @Test
-//    fun `Correct Doctype lowercase`() = assertTokenization(
-//        input = "<!DOCTYPE html>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `Correct Doctype lowercase`() = assertTokenization(
+        input = "<!DOCTYPE html>",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Correct Doctype uppercase`() = assertTokenization(
-//        input = "<!DOCTYPE HTML>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `Correct Doctype uppercase`() = assertTokenization(
+        input = "<!DOCTYPE HTML>",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Correct Doctype mixed case`() = assertTokenization(
-//        input = "<!DOCTYPE HtMl>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `Correct Doctype mixed case`() = assertTokenization(
+        input = "<!DOCTYPE HtMl>",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Correct Doctype case with EOF`() = assertTokenization(
-//        input = "<!DOCTYPE HtMl",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `Correct Doctype case with EOF`() = assertTokenization(
+        input = "<!DOCTYPE HtMl",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `Truncated doctype start`() = assertTokenization(
-//        input = "<!DOC>",
-//        expectedTokens = listOf(
-//            Token.Comment(data = "DOC")
-//        )
-//    )
+    @Test
+    fun `Truncated doctype start`() = assertTokenization(
+        input = "<!DOC>",
+        expectedTokens = listOf(
+            Token.Comment(data = "DOC")
+        )
+    )
 
-//    @Test
-//    fun `Doctype in error`() = assertTokenization(
-//        input = "<!DOCTYPE foo>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "foo", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `Doctype in error`() = assertTokenization(
+        input = "<!DOCTYPE foo>",
+        expectedTokens = listOf(
+            Token.DocType(name = "foo", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
     @Test
     fun `Single Start Tag`() = assertTokenization(
@@ -172,211 +173,224 @@ internal class TokenizerTest1 : TokenizerTestBase() {
         )
     )
 
-//    @Test
-//    fun `Simple comment`() = assertTokenization(
-//        input = "<!--comment-->",
-//        expectedTokens = listOf(
-//            comment("comment")
-//        )
-//    )
+    @Test
+    fun `Simple comment`() = assertTokenization(
+        input = "<!--comment-->",
+        expectedTokens = listOf(
+            comment("comment")
+        )
+    )
 
-//    @Test
-//    fun `Comment Central dash no space`() = assertTokenization(
-//        input = "<!----->",
-//        expectedTokens = listOf(
-//            comment("-")
-//        )
-//    )
+    @Test
+    fun `Comment Central dash no space`() = assertTokenization(
+        input = "<!----->",
+        expectedTokens = listOf(
+            comment("-")
+        )
+    )
 
-//    @Test
-//    fun `Comment two central dashes`() = assertTokenization(
-//        input = "<!-- --comment -->",
-//        expectedTokens = listOf(
-//            comment(" --comment ")
-//        )
-//    )
+    @Test
+    fun `Comment two central dashes`() = assertTokenization(
+        input = "<!-- --comment -->",
+        expectedTokens = listOf(
+            comment(" --comment ")
+        )
+    )
 
-//    @Test
-//    fun `Comment central less-than bang`() = assertTokenization(
-//        input = "<!--<!-->",
-//        expectedTokens = listOf(
-//            comment("<!")
-//        )
-//    )
+    @Test
+    fun `Comment central less-than bang`() = assertTokenization(
+        input = "<!--<!-->",
+        expectedTokens = listOf(
+            comment("<!")
+        )
+    )
 
-//    @Test
-//    fun `Unfinished comment`() = assertTokenization(
-//        input = "<!--comment",
-//        expectedTokens = listOf(
-//            comment("comment")
-//        )
-//    )
+    @Test
+    fun `Unfinished comment`() = assertTokenization(
+        input = "<!--comment",
+        expectedTokens = listOf(
+            comment("comment")
+        )
+    )
 
-//    @Test
-//    fun `Unfinished comment after start of nested comment`() = assertTokenization(
-//        input = "<!-- <!--",
-//        expectedTokens = listOf(
-//            comment(" <!")
-//        )
-//    )
+    @Test
+    fun `Unfinished comment after start of nested comment`() = assertTokenization(
+        input = "<!-- <!--",
+        expectedTokens = listOf(
+            comment(" <!")
+        )
+    )
 
-//    @Test
-//    fun `Start of a comment`() = assertTokenization(
-//        input = "<!-",
-//        expectedTokens = listOf(
-//            comment("-")
-//        )
-//    )
+    @Test
+    fun `Start of a comment`() = assertTokenization(
+        input = "<!-",
+        expectedTokens = listOf(
+            comment("-")
+        )
+    )
 
-//    @Test
-//    fun `Short comment`() = assertTokenization(
-//        input = "<!-->",
-//        expectedTokens = listOf(
-//            comment("")
-//        )
-//    )
+    @Test
+    fun `Short comment`() = assertTokenization(
+        input = "<!-->",
+        expectedTokens = listOf(
+            comment("")
+        )
+    )
 
-//    @Test
-//    fun `Short comment two`() = assertTokenization(
-//        input = "<!--->",
-//        expectedTokens = listOf(
-//            comment("")
-//        )
-//    )
+    @Test
+    fun `Short comment two`() = assertTokenization(
+        input = "<!--->",
+        expectedTokens = listOf(
+            comment("")
+        )
+    )
 
-//    @Test
-//    fun `Short comment three`() = assertTokenization(
-//        input = "<!---->",
-//        expectedTokens = listOf(
-//            comment("")
-//        )
-//    )
+    @Test
+    fun `Short comment three`() = assertTokenization(
+        input = "<!---->",
+        expectedTokens = listOf(
+            comment("")
+        )
+    )
 
-//    @Test
-//    fun `less than in comment`() = assertTokenization(
-//        input = "<!-- <test-->",
-//        expectedTokens = listOf(
-//            comment(" <test")
-//        )
-//    )
+    @Test
+    fun `less than in comment`() = assertTokenization(
+        input = "<!-- <test-->",
+        expectedTokens = listOf(
+            comment(" <test")
+        )
+    )
 
-//    @Test
-//    fun `less than x2 in comment`() = assertTokenization(
-//        input = "<!--<<-->",
-//        expectedTokens = listOf(
-//            comment("<<")
-//        )
-//    )
+    @Test
+    fun `less than x2 in comment`() = assertTokenization(
+        input = "<!--<<-->",
+        expectedTokens = listOf(
+            comment("<<")
+        )
+    )
 
-//    @Test
-//    fun `less than ! in comment`() = assertTokenization(
-//        input = "<!-- <!test-->",
-//        expectedTokens = listOf(
-//            comment(" <!test")
-//        )
-//    )
+    @Test
+    fun `less than ! in comment`() = assertTokenization(
+        input = "<!-- <!test-->",
+        expectedTokens = listOf(
+            comment(" <!test")
+        )
+    )
 
-//    @Test
-//    fun `less than !- in comment`() = assertTokenization(
-//        input = "<!-- <!-test-->",
-//        expectedTokens = listOf(
-//            comment(" <!-test")
-//        )
-//    )
+    @Test
+    fun `less than !- in comment`() = assertTokenization(
+        input = "<!-- <!-test-->",
+        expectedTokens = listOf(
+            comment(" <!-test")
+        )
+    )
 
-//    @Test
-//    fun `Nested comment`() = assertTokenization(
-//        input = "<!-- <!--test-->",
-//        expectedTokens = listOf(
-//            comment(" <!--test")
-//        )
-//    )
+    @Test
+    fun `Nested comment`() = assertTokenization(
+        input = "<!-- <!--test-->",
+        expectedTokens = listOf(
+            comment(" <!--test")
+        )
+    )
 
-//    @Test
-//    fun `Nested comment with extra less than`() = assertTokenization(
-//        input = "<!-- <<!--test-->",
-//        expectedTokens = listOf(
-//            comment(" <<!--test")
-//        )
-//    )
+    @Test
+    fun `Nested comment with extra less than`() = assertTokenization(
+        input = "<!-- <<!--test-->",
+        expectedTokens = listOf(
+            comment(" <<!--test")
+        )
+    )
 
-//    @Test
-//    fun `less than in script data`() = assertTokenization(
-//        input = "<test-->",
-//        expectedTokens = chars("<test-->")
-//    )
+    @Test
+    fun `less than in script data`() = assertTokenization(
+        input = "<test-->",
+        expectedTokens = chars("<test-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `less than! in script data`() = assertTokenization(
-//        input = "<!test-->",
-//        expectedTokens = chars("<!test-->")
-//    )
+    @Test
+    fun `less than! in script data`() = assertTokenization(
+        input = "<!test-->",
+        expectedTokens = chars("<!test-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `less than!- in script data`() = assertTokenization(
-//        input = "<!-test-->",
-//        expectedTokens = chars("<!-test-->")
-//    )
+    @Test
+    fun `less than!- in script data`() = assertTokenization(
+        input = "<!-test-->",
+        expectedTokens = chars("<!-test-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `Escaped script data`() = assertTokenization(
-//        input = "<!--test-->",
-//        expectedTokens = chars("<!--test-->")
-//    )
+    @Test
+    fun `Escaped script data`() = assertTokenization(
+        input = "<!--test-->",
+        expectedTokens = chars("<!--test-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `less than in script HTML comment`() = assertTokenization(
-//        input = "<!-- < test -->",
-//        expectedTokens = chars("<!-- < test -->")
-//    )
+    @Test
+    fun `less than in script HTML comment`() = assertTokenization(
+        input = "<!-- < test -->",
+        expectedTokens = chars("<!-- < test -->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `less than- in script HTML comment`() = assertTokenization(
-//        input = "<!-- </ test -->",
-//        expectedTokens = chars("<!-- </ test -->")
-//    )
+    @Test
+    fun `less than- in script HTML comment`() = assertTokenization(
+        input = "<!-- </ test -->",
+        expectedTokens = chars("<!-- </ test -->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `Start tag in script HTML comment`() = assertTokenization(
-//        input = "<!-- <test> -->",
-//        expectedTokens = chars("<!-- <test> -->")
-//    )
+    @Test
+    fun `Start tag in script HTML comment`() = assertTokenization(
+        input = "<!-- <test> -->",
+        expectedTokens = chars("<!-- <test> -->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `End tag in script HTML comment`() = assertTokenization(
-//        input = "<!-- </test> -->",
-//        expectedTokens = chars("<!-- </test> -->")
-//    )
+    @Test
+    fun `End tag in script HTML comment`() = assertTokenization(
+        input = "<!-- </test> -->",
+        expectedTokens = chars("<!-- </test> -->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `- in script HTML comment double escaped`() = assertTokenization(
-//        input = "<!--<script>-</script>-->",
-//        expectedTokens = chars("<!--<script>-</script>-->")
-//    )
+    @Test
+    fun `- in script HTML comment double escaped`() = assertTokenization(
+        input = "<!--<script>-</script>-->",
+        expectedTokens = chars("<!--<script>-</script>-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `-- in script HTML comment double escaped`() = assertTokenization(
-//        input = "<!--<script>--</script>-->",
-//        expectedTokens = chars("<!--<script>--</script>-->")
-//    )
+    @Test
+    fun `-- in script HTML comment double escaped`() = assertTokenization(
+        input = "<!--<script>--</script>-->",
+        expectedTokens = chars("<!--<script>--</script>-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `--- in script HTML comment double escaped`() = assertTokenization(
-//        input = "<!--<script>---</script>-->",
-//        expectedTokens = chars("<!--<script>---</script>-->")
-//    )
+    @Test
+    fun `--- in script HTML comment double escaped`() = assertTokenization(
+        input = "<!--<script>---</script>-->",
+        expectedTokens = chars("<!--<script>---</script>-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `- spaced in script HTML comment double escaped`() = assertTokenization(
-//        input = "<!--<script> - </script>-->",
-//        expectedTokens = chars("<!--<script> - </script>-->")
-//    )
+    @Test
+    fun `- spaced in script HTML comment double escaped`() = assertTokenization(
+        input = "<!--<script> - </script>-->",
+        expectedTokens = chars("<!--<script> - </script>-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
-//    @Test
-//    fun `-- spaced in script HTML comment double escaped`() = assertTokenization(
-//        input = "<!--<script> -- </script>-->",
-//        expectedTokens = chars("<!--<script> -- </script>-->")
-//    )
+    @Test
+    fun `-- spaced in script HTML comment double escaped`() = assertTokenization(
+        input = "<!--<script> -- </script>-->",
+        expectedTokens = chars("<!--<script> -- </script>-->"),
+        initialState = TokenizerStateType.SCRIPT_DATA
+    )
 
     @Test
     fun `Ampersand EOF`() = assertTokenization(

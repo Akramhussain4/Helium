@@ -47,6 +47,12 @@ internal class AttributeValueUnquoted(val currentTagToken: Token) : Tokenization
                 switchTo(Data)
             }
 
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.currentAttributeValue.append('\uFFFD')
+                switchTo(this)
+            }
+
             codePoint.IS(
                 Chars.QuotationMark,
                 Chars.Apostrophe,

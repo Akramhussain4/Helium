@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.tokenization.Token
 import kotlin.test.Test
 
 /**
@@ -35,149 +36,149 @@ import kotlin.test.Test
  */
 internal class TokenizerTest2 : TokenizerTestBase() {
 
-//    @Test
-//    fun `DOCTYPE without name`() = assertTokenization(
-//        input = "<!DOCTYPE>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = null, publicId = null, systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `DOCTYPE without name`() = assertTokenization(
+        input = "<!DOCTYPE>",
+        expectedTokens = listOf(
+            Token.DocType(name = null, publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE without space before name`() = assertTokenization(
-//        input = "<!DOCTYPEhtml>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `DOCTYPE without space before name`() = assertTokenization(
+        input = "<!DOCTYPEhtml>",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Incorrect DOCTYPE without a space before name`() = assertTokenization(
-//        input = "<!DOCTYPEfoo>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "foo", publicId = null, systemId = null, forceQuirks = true)
-//        )
-//    )
+    @Test
+    fun `Incorrect DOCTYPE without a space before name`() = assertTokenization(
+        input = "<!DOCTYPEfoo>",
+        expectedTokens = listOf(
+            Token.DocType(name = "foo", publicId = null, systemId = null, forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with publicId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\">",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(
-//                name = "html",
-//                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
-//                systemId = null,
-//                forceQuirks = true
-//            )
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with publicId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+        expectedTokens = listOf(
+            Token.DocType(
+                name = "html",
+                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
+                systemId = null,
+                forceQuirks = false
+            )
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with EOF after PUBLIC`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with EOF after PUBLIC`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with EOF after PUBLIC '`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC '",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with EOF after PUBLIC '`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC '",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "", systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with EOF after PUBLIC 'x`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC 'x",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "x", systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with EOF after PUBLIC 'x`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC 'x",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "x", systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with systemId`() = assertTokenization(
-//        input = "<!DOCTYPE html SYSTEM \"-//W3C//DTD HTML Transitional 4.01//EN\">",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(
-//                name = "html",
-//                publicId = null,
-//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
-//                forceQuirks = true
-//            )
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with systemId`() = assertTokenization(
+        input = "<!DOCTYPE html SYSTEM \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+        expectedTokens = listOf(
+            Token.DocType(
+                name = "html",
+                publicId = null,
+                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+                forceQuirks = false
+            )
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with single-quoted systemId`() = assertTokenization(
-//        input = "<!DOCTYPE html SYSTEM '-//W3C//DTD HTML Transitional 4.01//EN'>",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(
-//                name = "html",
-//                publicId = null,
-//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
-//                forceQuirks = true
-//            )
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with single-quoted systemId`() = assertTokenization(
+        input = "<!DOCTYPE html SYSTEM '-//W3C//DTD HTML Transitional 4.01//EN'>",
+        expectedTokens = listOf(
+            Token.DocType(
+                name = "html",
+                publicId = null,
+                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+                forceQuirks = false
+            )
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with publicId and systemId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\" \"-//W3C//DTD HTML Transitional 4.01//EN\">",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(
-//                name = "html",
-//                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
-//                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
-//                forceQuirks = true
-//            )
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with publicId and systemId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML Transitional 4.01//EN\" \"-//W3C//DTD HTML Transitional 4.01//EN\">",
+        expectedTokens = listOf(
+            Token.DocType(
+                name = "html",
+                publicId = "-//W3C//DTD HTML Transitional 4.01//EN",
+                systemId = "-//W3C//DTD HTML Transitional 4.01//EN",
+                forceQuirks = false
+            )
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with greater than in double-quoted publicId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC \">x",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false),
-//            char('x')
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with greater than in double-quoted publicId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC \">x",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "", systemId = null, forceQuirks = true),
+            char('x')
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with greater than in single-quoted publicId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC '>x",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "", systemId = null, forceQuirks = false),
-//            char('x')
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with greater than in single-quoted publicId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC '>x",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "", systemId = null, forceQuirks = true),
+            char('x')
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with greater than in double-quoted systemId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC \"foo\" \">x",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "foo", systemId = "", forceQuirks = false),
-//            char('x')
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with greater than in double-quoted systemId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC \"foo\" \">x",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "foo", systemId = "", forceQuirks = true),
+            char('x')
+        )
+    )
 
-//    @Test
-//    fun `DOCTYPE with greater than in single-quoted systemId`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIC 'foo' '>x",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = "foo", systemId = "", forceQuirks = false),
-//            char('x')
-//        )
-//    )
+    @Test
+    fun `DOCTYPE with greater than in single-quoted systemId`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIC 'foo' '>x",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "foo", systemId = "", forceQuirks = true),
+            char('x')
+        )
+    )
 
-//    @Test
-//    fun `Incomplete doctype`() = assertTokenization(
-//        input = "<!DOCTYPE html ",
-//        expectedTokens = listOf(
-//            Token.DOCTYPE(name = "html", publicId = null, systemId = null, forceQuirks = false)
-//        )
-//    )
+    @Test
+    fun `Incomplete doctype`() = assertTokenization(
+        input = "<!DOCTYPE html ",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
     @Test
     fun `Numeric entity representing the NUL character`() = assertTokenization(
@@ -333,11 +334,11 @@ internal class TokenizerTest2 : TokenizerTestBase() {
         expectedTokens = chars("\u0000")
     )
 
-//    @Test
-//    fun `Comment with dash`() = assertTokenization(
-//        input = "<!---x",
-//        expectedTokens = listOf(comment("-x"))
-//    )
+    @Test
+    fun `Comment with dash`() = assertTokenization(
+        input = "<!---x",
+        expectedTokens = listOf(comment("-x"))
+    )
 
     @Test
     fun `Entity + newline`() = assertTokenization(
@@ -400,15 +401,15 @@ internal class TokenizerTest2 : TokenizerTestBase() {
         )
     )
 
-//    @Test
-//    fun `Empty end tag with following comment`() = assertTokenization(
-//        input = "a</><!--b-->c",
-//        expectedTokens = listOf(
-//            *chars("a").toTypedArray(),
-//            comment("b"),
-//            *chars("c").toTypedArray()
-//        )
-//    )
+    @Test
+    fun `Empty end tag with following comment`() = assertTokenization(
+        input = "a</><!--b-->c",
+        expectedTokens = listOf(
+            *chars("a").toTypedArray(),
+            comment("b"),
+            *chars("c").toTypedArray()
+        )
+    )
 
     @Test
     fun `Empty end tag with following end tag`() = assertTokenization(

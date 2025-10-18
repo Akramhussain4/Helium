@@ -34,6 +34,10 @@ import com.theakram.helium.tokenization.Tokenizer
 internal data object MarkupDeclarationOpen : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
+        if (codePoint == -1) {
+            return handleAnythingElse(tokenizer)
+        }
+
         val currentChar = codePoint.toChar().toString()
         val next1 = tokenizer.peekNextChar().toString()
         val next2 = currentChar + next1
@@ -62,11 +66,13 @@ internal data object MarkupDeclarationOpen : TokenizationState {
                 switchTo(BogusComment(commentToken))
             }
 
-            else -> {
-                tokenizer.logParseError("incorrectly-opened-comment")
-                val commentToken = Token.Comment("")
-                reconsumeIn(BogusComment(commentToken))
-            }
+            else -> handleAnythingElse(tokenizer)
         }
+    }
+
+    private fun handleAnythingElse(tokenizer: Tokenizer): StateTransition {
+        tokenizer.logParseError("incorrectly-opened-comment")
+        val commentToken = Token.Comment("")
+        return reconsumeIn(BogusComment(commentToken))
     }
 }
