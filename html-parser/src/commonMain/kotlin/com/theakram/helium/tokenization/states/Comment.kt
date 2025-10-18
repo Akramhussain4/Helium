@@ -38,7 +38,7 @@ internal class Comment(private val commentToken: Token.Comment) : TokenizationSt
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.LessThan) -> {
-                val newToken = Token.Comment(commentToken.data + codePoint)
+                val newToken = Token.Comment(commentToken.data + codePoint.toChar())
                 switchTo(CommentLessThanSign(newToken))
             }
 
