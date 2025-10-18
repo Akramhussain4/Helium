@@ -48,6 +48,12 @@ internal class AttributeName(private val currentTagToken: Token) : TokenizationS
                 switchTo(this)
             }
 
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.currentAttributeName.append('\uFFFD')
+                switchTo(this)
+            }
+
             codePoint.IS(
                 Chars.QuotationMark,
                 Chars.Apostrophe,
