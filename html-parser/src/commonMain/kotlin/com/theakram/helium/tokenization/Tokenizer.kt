@@ -113,6 +113,10 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
 
     fun logParseError(error: String) = System.err.println("Parse error: $error at position: $currentPosition")
 
+    fun setState(state: TokenizationState) {
+        currentState = state
+    }
+
     fun switchState(stateType: TokenizerStateType) {
         currentState = when (stateType) {
             TokenizerStateType.DATA -> Data

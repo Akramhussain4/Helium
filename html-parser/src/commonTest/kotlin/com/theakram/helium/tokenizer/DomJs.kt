@@ -25,381 +25,758 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.tokenization.states.CDATASection
 import com.theakram.helium.treebuilder.TokenizerStateType
 import kotlin.test.Test
 
 internal class DomJs : TokenizerTestBase() {
 
     @Test
-    fun `CR in bogus comment state`() = assertTokenization(
-        input = "<?\r",
-        expectedTokens = listOf(
-            comment(
-                "?\u000a"
+    fun `CR in bogus comment state 0`() {
+        assertTokenization(
+            input = "<?\r",
+            expectedTokens = listOf(
+                comment("?\n")
             )
         )
-    )
+    }
 
     @Test
-    fun `CRLF in bogus comment state`() = assertTokenization(
-        input = "<?\r\n",
-        expectedTokens = listOf(
-            comment(
-                "?\u000a"
+    fun `CRLF in bogus comment state 1`() {
+        assertTokenization(
+            input = "<?\r\n",
+            expectedTokens = listOf(
+                comment("?\n")
             )
         )
-    )
+    }
 
     @Test
-    fun `CRLFLF in bogus comment state`() = assertTokenization(
-        input = "?\u000d\u000a\u000a",
-        expectedTokens = listOf(
-            comment(
-                "?\u000a\u000a")
-            )
-        )
-
-        @Test
-        fun `Raw NUL replacement`() = assertTokenization(
-            input = "\\u0000",
+    fun `CRLFLF in bogus comment state 2`() {
+        assertTokenization(
+            input = "<?\r\n\n",
             expectedTokens = listOf(
-                *chars("\\uFFFD").toTypedArray()
+                comment("?\n\n")
             )
         )
+    }
 
-        @Test
-        fun `NUL in CDATA section`() = assertTokenization(
-            input = "\\u0000]]>",
+    @Test
+    fun `Raw NUL replacement RCDATA 3`() {
+        assertTokenization(
+            input = "\u0000",
             expectedTokens = listOf(
-                *chars("\\u0000").toTypedArray()
+                char('\uFFFD')
             )
+            ,initialState = TokenizerStateType.RCDATA
         )
+    }
 
-        @Test
-        fun `NUL in script HTML comment`() = assertTokenization(
-            input = "<!--test\\u0000--><!--test-\\u0000--><!--test--\\u0000-->",
+    @Test
+    fun `Raw NUL replacement RAWTEXT 3`() {
+        assertTokenization(
+            input = "\u0000",
             expectedTokens = listOf(
-                *chars("<!--test\\uFFFD--><!--test-\\uFFFD--><!--test--\\uFFFD-->").toTypedArray()
+                char('\uFFFD')
             )
+            ,initialState = TokenizerStateType.RAWTEXT
         )
+    }
 
-        @Test
-        fun `NUL in script HTML comment double escaped`() = assertTokenization(
-            input = "<!--<script>\\u0000--><!--<script>-\\u0000--><!--<script>--\\u0000-->",
+    @Test
+    fun `Raw NUL replacement PLAINTEXT 3`() {
+        assertTokenization(
+            input = "\u0000",
             expectedTokens = listOf(
-                *chars("<!--<script>\\uFFFD--><!--<script>-\\uFFFD--><!--<script>--\\uFFFD-->").toTypedArray()
+                char('\uFFFD')
             )
+            ,initialState = TokenizerStateType.PLAINTEXT
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment`() = assertTokenization(
+    @Test
+    fun `Raw NUL replacement Scriptdata 3`() {
+        assertTokenization(
+            input = "\u0000",
+            expectedTokens = listOf(
+                char('\uFFFD')
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+        )
+    }
+
+    @Test
+    fun `NUL in CDATA section CDATAsection 4`() {
+        val actualTokens = tokenizeWithDirectState(
+            input = "\u0000]]>",
+            initialState = CDATASection
+        )
+        val expectedTokens = listOf(
+            char('\u0000')
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
+
+    @Test
+    fun `NUL in script HTML comment Scriptdata 5`() {
+        assertTokenization(
+            input = "<!--test\u0000--><!--test-\u0000--><!--test--\u0000-->",
+            expectedTokens = listOf(
+                *chars("<!--test\uFFFD--><!--test-\uFFFD--><!--test--\uFFFD-->").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+        )
+    }
+
+    @Test
+    fun `NUL in script HTML comment double escaped Scriptdata 6`() {
+        assertTokenization(
+            input = "<!--<script>\u0000--><!--<script>-\u0000--><!--<script>--\u0000-->",
+            expectedTokens = listOf(
+                *chars("<!--<script>\uFFFD--><!--<script>-\uFFFD--><!--<script>--\uFFFD-->").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+        )
+    }
+
+    @Test
+    fun `EOF in script HTML comment Scriptdata 7`() {
+        assertTokenization(
             input = "<!--test",
             expectedTokens = listOf(
                 *chars("<!--test").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment after dash`() = assertTokenization(
+    @Test
+    fun `EOF in script HTML comment after dash Scriptdata 8`() {
+        assertTokenization(
             input = "<!--test-",
             expectedTokens = listOf(
                 *chars("<!--test-").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment after dash dash`() = assertTokenization(
+    @Test
+    fun `EOF in script HTML comment after dash dash Scriptdata 9`() {
+        assertTokenization(
             input = "<!--test--",
             expectedTokens = listOf(
                 *chars("<!--test--").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment double escaped after dash`() = assertTokenization(
+    @Test
+    fun `EOF in script HTML comment double escaped after dash Scriptdata 10`() {
+        assertTokenization(
             input = "<!--<script>-",
             expectedTokens = listOf(
                 *chars("<!--<script>-").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment double escaped after dash dash`() = assertTokenization(
+    @Test
+    fun `EOF in script HTML comment double escaped after dash dash Scriptdata 11`() {
+        assertTokenization(
             input = "<!--<script>--",
             expectedTokens = listOf(
                 *chars("<!--<script>--").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `EOF in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `EOF in script HTML comment double escaped Scriptdata 12`() {
+        assertTokenization(
             input = "<!--<script>",
             expectedTokens = listOf(
                 *chars("<!--<script>").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `Dash in script HTML comment`() = assertTokenization(
+    @Test
+    fun `Dash in script HTML comment Scriptdata 13`() {
+        assertTokenization(
             input = "<!-- - -->",
             expectedTokens = listOf(
                 *chars("<!-- - -->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `Dash lessthan in script HTML comment`() = assertTokenization(
+    @Test
+    fun `Dash lessthan in script HTML comment Scriptdata 14`() {
+        assertTokenization(
             input = "<!-- -< -->",
             expectedTokens = listOf(
                 *chars("<!-- -< -->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `Dash at end of script HTML comment`() = assertTokenization(
+    @Test
+    fun `Dash at end of script HTML comment Scriptdata 15`() {
+        assertTokenization(
             input = "<!--test--->",
             expectedTokens = listOf(
                 *chars("<!--test--->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 
-        @Test
-        fun `script in script HTML comment`() = assertTokenization(
+    @Test
+    fun `script in script HTML comment Scriptdata 16`() {
+        assertTokenization(
             input = "<!-- </script> --></script>",
             expectedTokens = listOf(
                 *chars("<!-- ").toTypedArray(),
-                endTag("script"),
-                *chars(" -->").toTypedArray(),
-                endTag("script")
+            endTag("script"),
+            *chars(" -->").toTypedArray(),
+            endTag("script")
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `script in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `script in script HTML comment double escaped Scriptdata 17`() {
+        assertTokenization(
             input = "<!-- <script></script> --></script>",
             expectedTokens = listOf(
                 *chars("<!-- <script></script> -->").toTypedArray(),
-                endTag("script")
+            endTag("script")
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `script in script HTML comment double escaped with nested script`() = assertTokenization(
+    @Test
+    fun `script in script HTML comment double escaped with nested script Scriptdata 18`() {
+        assertTokenization(
             input = "<!-- <script><script></script></script> --></script>",
             expectedTokens = listOf(
                 *chars("<!-- <script><script></script>").toTypedArray(),
-                endTag("script"),
-                *chars(" -->").toTypedArray(),
-                endTag("script")
+            endTag("script"),
+            *chars(" -->").toTypedArray(),
+            endTag("script")
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `script in script HTML comment double escaped with abrupt end`() = assertTokenization(
+    @Test
+    fun `script in script HTML comment double escaped with abrupt end Scriptdata 19`() {
+        assertTokenization(
             input = "<!-- <script>--></script> --></script>",
             expectedTokens = listOf(
                 *chars("<!-- <script>-->").toTypedArray(),
-                endTag("script"),
-                *chars(" -->").toTypedArray(),
-                endTag("script")
+            endTag("script"),
+            *chars(" -->").toTypedArray(),
+            endTag("script")
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `Incomplete start tag in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `Incomplete start tag in script HTML comment double escaped Scriptdata 20`() {
+        assertTokenization(
             input = "<!--<scrip></script>-->",
             expectedTokens = listOf(
                 *chars("<!--<scrip>").toTypedArray(),
-                endTag("script"),
-                *chars("-->").toTypedArray()
+            endTag("script"),
+            *chars("-->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `Unclosed start tag in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `Unclosed start tag in script HTML comment double escaped Scriptdata 21`() {
+        assertTokenization(
             input = "<!--<script</script>-->",
             expectedTokens = listOf(
                 *chars("<!--<script").toTypedArray(),
-                endTag("script"),
-                *chars("-->").toTypedArray()
+            endTag("script"),
+            *chars("-->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `Incomplete end tag in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `Incomplete end tag in script HTML comment double escaped Scriptdata 22`() {
+        assertTokenization(
             input = "<!--<script></scrip>-->",
             expectedTokens = listOf(
                 *chars("<!--<script></scrip>-->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `Unclosed end tag in script HTML comment double escaped`() = assertTokenization(
+    @Test
+    fun `Unclosed end tag in script HTML comment double escaped Scriptdata 23`() {
+        assertTokenization(
             input = "<!--<script></script-->",
             expectedTokens = listOf(
                 *chars("<!--<script></script-->").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "script"
         )
+    }
 
-        @Test
-        fun `leading UFEFF must pass through`() = assertTokenization(
-            input = "\\uFEFFfoo\\uFEFFbar",
+    @Test
+    fun `leading UFEFF must pass through Data 24`() {
+        assertTokenization(
+            input = "\uFEFFfoo\uFEFFbar",
             expectedTokens = listOf(
-                *chars("\\uFEFFfoo\\uFEFFbar").toTypedArray()
+                *chars("\uFEFFfoo\uFEFFbar").toTypedArray()
             )
+            ,initialState = TokenizerStateType.DATA
         )
+    }
 
-        @Test
-        fun `Non BMPcharref in RCDATA`() = assertTokenization(
+    @Test
+    fun `leading UFEFF must pass through RCDATA 24`() {
+        assertTokenization(
+            input = "\uFEFFfoo\uFEFFbar",
+            expectedTokens = listOf(
+                *chars("\uFEFFfoo\uFEFFbar").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RCDATA
+        )
+    }
+
+    @Test
+    fun `leading UFEFF must pass through RAWTEXT 24`() {
+        assertTokenization(
+            input = "\uFEFFfoo\uFEFFbar",
+            expectedTokens = listOf(
+                *chars("\uFEFFfoo\uFEFFbar").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+        )
+    }
+
+    @Test
+    fun `leading UFEFF must pass through Scriptdata 24`() {
+        assertTokenization(
+            input = "\uFEFFfoo\uFEFFbar",
+            expectedTokens = listOf(
+                *chars("\uFEFFfoo\uFEFFbar").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+        )
+    }
+
+    @Test
+    fun `Non BMPcharref in RCDATA RCDATA 25`() {
+        assertTokenization(
             input = "&NotEqualTilde;",
             expectedTokens = listOf(
-                *chars("≂̸").toTypedArray()
+                *chars("\u2242\u0338").toTypedArray()
             )
+            ,initialState = TokenizerStateType.RCDATA
         )
+    }
 
-        @Test
-        fun `Bad charref in RCDATA`() = assertTokenization(
+    @Test
+    fun `Bad charref in RCDATA RCDATA 26`() {
+        assertTokenization(
             input = "&NotEqualTild;",
             expectedTokens = listOf(
                 *chars("&NotEqualTild;").toTypedArray()
             )
+            ,initialState = TokenizerStateType.RCDATA
         )
+    }
 
-        @Test
-        fun `lowercase endtags`() = assertTokenization(
+    @Test
+    fun `lowercase endtags RCDATA 27`() {
+        assertTokenization(
             input = "</XMP>",
             expectedTokens = listOf(
                 endTag("xmp")
-            ),
-            initialState = TokenizerStateType.RAWTEXT,
-            lastStartTag = "xmp"
+            )
+            ,initialState = TokenizerStateType.RCDATA
+            ,lastStartTag = "xmp"
         )
+    }
 
-        @Test
-        fun `bad endtag space before name`() = assertTokenization(
+    @Test
+    fun `lowercase endtags RAWTEXT 27`() {
+        assertTokenization(
+            input = "</XMP>",
+            expectedTokens = listOf(
+                endTag("xmp")
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `lowercase endtags Scriptdata 27`() {
+        assertTokenization(
+            input = "</XMP>",
+            expectedTokens = listOf(
+                endTag("xmp")
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag space before name RCDATA 28`() {
+        assertTokenization(
             input = "</ XMP>",
             expectedTokens = listOf(
                 *chars("</ XMP>").toTypedArray()
-            ),
-            initialState = TokenizerStateType.RAWTEXT,
-            lastStartTag = "xmp"
+            )
+            ,initialState = TokenizerStateType.RCDATA
+            ,lastStartTag = "xmp"
         )
+    }
 
-        @Test
-        fun `bad endtag not matching last start tag`() = assertTokenization(
+    @Test
+    fun `bad endtag space before name RAWTEXT 28`() {
+        assertTokenization(
+            input = "</ XMP>",
+            expectedTokens = listOf(
+                *chars("</ XMP>").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag space before name Scriptdata 28`() {
+        assertTokenization(
+            input = "</ XMP>",
+            expectedTokens = listOf(
+                *chars("</ XMP>").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag not matching last start tag RCDATA 29`() {
+        assertTokenization(
             input = "</xm>",
             expectedTokens = listOf(
                 *chars("</xm>").toTypedArray()
-            ),
-            initialState = TokenizerStateType.RAWTEXT,
-            lastStartTag = "xmp"
+            )
+            ,initialState = TokenizerStateType.RCDATA
+            ,lastStartTag = "xmp"
         )
+    }
 
-        @Test
-        fun `bad endtag without close bracket`() = assertTokenization(
+    @Test
+    fun `bad endtag not matching last start tag RAWTEXT 29`() {
+        assertTokenization(
+            input = "</xm>",
+            expectedTokens = listOf(
+                *chars("</xm>").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag not matching last start tag Scriptdata 29`() {
+        assertTokenization(
+            input = "</xm>",
+            expectedTokens = listOf(
+                *chars("</xm>").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag without close bracket RCDATA 30`() {
+        assertTokenization(
             input = "</xm ",
             expectedTokens = listOf(
                 *chars("</xm ").toTypedArray()
-            ),
-            initialState = TokenizerStateType.RAWTEXT,
-            lastStartTag = "xmp"
+            )
+            ,initialState = TokenizerStateType.RCDATA
+            ,lastStartTag = "xmp"
         )
+    }
 
-        @Test
-        fun `bad endtag trailing solidus`() = assertTokenization(
+    @Test
+    fun `bad endtag without close bracket RAWTEXT 30`() {
+        assertTokenization(
+            input = "</xm ",
+            expectedTokens = listOf(
+                *chars("</xm ").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag without close bracket Scriptdata 30`() {
+        assertTokenization(
+            input = "</xm ",
+            expectedTokens = listOf(
+                *chars("</xm ").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag trailing solidus RCDATA 31`() {
+        assertTokenization(
             input = "</xm/",
             expectedTokens = listOf(
                 *chars("</xm/").toTypedArray()
-            ),
-            initialState = TokenizerStateType.RAWTEXT,
-            lastStartTag = "xmp"
+            )
+            ,initialState = TokenizerStateType.RCDATA
+            ,lastStartTag = "xmp"
         )
+    }
 
-        @Test
-        fun `Non BMPcharref in attribute`() = assertTokenization(
+    @Test
+    fun `bad endtag trailing solidus RAWTEXT 31`() {
+        assertTokenization(
+            input = "</xm/",
+            expectedTokens = listOf(
+                *chars("</xm/").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.RAWTEXT
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `bad endtag trailing solidus Scriptdata 31`() {
+        assertTokenization(
+            input = "</xm/",
+            expectedTokens = listOf(
+                *chars("</xm/").toTypedArray()
+            )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
+            ,lastStartTag = "xmp"
+        )
+    }
+
+    @Test
+    fun `Non BMPcharref in attribute 32`() {
+        assertTokenization(
             input = "<p id=\"&NotEqualTilde;\">",
             expectedTokens = listOf(
-                startTag(name = "p", attributes = mapOf("id" to "≂̸"))
+                startTag(name = "p", attributes = mapOf("id" to "\u2242\u0338"))
             )
         )
+    }
 
-        @Test
-        fun `NUL in comment`() = assertTokenization(
-            input = "<!----!\\u0000-->",
+    @Test
+    fun `NUL in comment 33`() {
+        assertTokenization(
+            input = "<!----!\u0000-->",
             expectedTokens = listOf(
                 comment("--!\uFFFD")
             )
         )
+    }
 
-        @Test
-        fun `space EOF after doctype`() = assertTokenization(
+    @Test
+    fun `space EOF after doctype 34`() {
+        assertTokenization(
             input = "<!DOCTYPE html ",
             expectedTokens = listOf(
-
+                doctype(name = "html", forceQuirks = true)
             )
         )
+    }
 
-        @Test
-        fun `CDATA in HTML content`() = assertTokenization(
+    @Test
+    fun `CDATA in HTML content 35`() {
+        assertTokenization(
             input = "<![CDATA[foo]]>",
             expectedTokens = listOf(
                 comment("[CDATA[foo]]")
             )
         )
+    }
 
-        @Test
-        fun `CDATA content`() = assertTokenization(
+    @Test
+    fun `CDATA content CDATAsection 36`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo&#32;]]>",
-            expectedTokens = listOf(
-                *chars("foo&#32;").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo&#32;").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `CDATA followed by HTML content`() = assertTokenization(
+    @Test
+    fun `CDATA followed by HTML content CDATAsection 37`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo&#32;]]>&#32;",
-            expectedTokens = listOf(
-                *chars("foo&#32; ").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo&#32; ").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `CDATA with extra bracket`() = assertTokenization(
+    @Test
+    fun `CDATA with extra bracket CDATAsection 38`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo]]]>",
-            expectedTokens = listOf(
-                *chars("foo]").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo]").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `CDATA without end marker`() = assertTokenization(
+    @Test
+    fun `CDATA without end marker CDATAsection 39`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo",
-            expectedTokens = listOf(
-                *chars("foo").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `CDATA with single bracket ending`() = assertTokenization(
+    @Test
+    fun `CDATA with single bracket ending CDATAsection 40`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo]",
-            expectedTokens = listOf(
-                *chars("foo]").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo]").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `CDATA with two brackets ending`() = assertTokenization(
+    @Test
+    fun `CDATA with two brackets ending CDATAsection 41`() {
+        val actualTokens = tokenizeWithDirectState(
             input = "foo]]",
-            expectedTokens = listOf(
-                *chars("foo]]").toTypedArray()
-            )
+            initialState = CDATASection
         )
+        val expectedTokens = listOf(
+            *chars("foo]]").toTypedArray()
+        )
+        if (actualTokens.size != expectedTokens.size) {
+            throw AssertionError(
+                "Token count mismatch. Expected ${expectedTokens.size}, but got ${actualTokens.size}\nExpected: $expectedTokens\nActual: $actualTokens"
+            )
+        }
+        expectedTokens.forEachIndexed { i, token ->
+            if (token != actualTokens[i]) {
+                throw AssertionError("Token mismatch at index $i.\nExpected: $token\nActual: ${actualTokens[i]}")
+            }
+        }
+    }
 
-        @Test
-        fun `HTML tag in script data`() = assertTokenization(
+    @Test
+    fun `HTML tag in script data Scriptdata 42`() {
+        assertTokenization(
             input = "<b>hello world</b>",
             expectedTokens = listOf(
                 *chars("<b>hello world</b>").toTypedArray()
             )
+            ,initialState = TokenizerStateType.SCRIPT_DATA
         )
+    }
 }
