@@ -27,6 +27,7 @@ package com.theakram.helium.tokenizer
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.states.TokenizationState
 import com.theakram.helium.treebuilder.TokenizerStateType
 
 internal abstract class TokenizerTestBase {
@@ -41,6 +42,26 @@ internal abstract class TokenizerTestBase {
 
         // Set the initial state
         tokenizer.switchState(initialState)
+
+        // Set the lastStartTagName if provided
+        if (lastStartTag != null) {
+            tokenizer.lastStartTagName = lastStartTag
+        }
+
+        tokenizer.tokenize(html = input)
+        return emittedTokens.filterNot { it is Token.EOF }
+    }
+
+    protected fun tokenizeWithDirectState(
+        input: String,
+        initialState: TokenizationState,
+        lastStartTag: String? = null
+    ): List<Token> {
+        val emittedTokens = mutableListOf<Token>()
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+
+        // Set the initial state using
+        tokenizer.setState(initialState)
 
         // Set the lastStartTagName if provided
         if (lastStartTag != null) {

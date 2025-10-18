@@ -36,22 +36,16 @@ import kotlin.test.Test
 internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
-    fun `empty`() = assertTokenization(
+    fun `empty 0`() = assertTokenization(
         input = "",
-        expectedTokens = listOf()
-    )
-
-    @Test
-    fun `empty 2`() = assertTokenization(
-        input = "",
-        expectedTokens = listOf()
-    )
-
-    @Test
-    fun `u0009`() = assertTokenization(
-        input = "\t",
         expectedTokens = listOf(
-            char('\t')
+        )
+    )
+
+    @Test
+    fun `empty 1`() = assertTokenization(
+        input = "",
+        expectedTokens = listOf(
         )
     )
 
@@ -64,7 +58,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun u000A() = assertTokenization(
+    fun `u0009 3`() = assertTokenization(
+        input = "\t",
+        expectedTokens = listOf(
+            char('\t')
+        )
+    )
+
+    @Test
+    fun `u000A 4`() = assertTokenization(
         input = "\n",
         expectedTokens = listOf(
             char('\n')
@@ -72,7 +74,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000A 2`() = assertTokenization(
+    fun `u000A 5`() = assertTokenization(
         input = "\n",
         expectedTokens = listOf(
             char('\n')
@@ -80,39 +82,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun u000B() = assertTokenization(
-        input = "",
+    fun `u000B 6`() = assertTokenization(
+        input = "\u000b",
         expectedTokens = listOf(
-            char('')
+            char('\u000b')
         )
     )
 
     @Test
-    fun `u000B 2`() = assertTokenization(
-        input = "",
+    fun `u000B 7`() = assertTokenization(
+        input = "\u000b",
         expectedTokens = listOf(
-            char('')
+            char('\u000b')
         )
     )
 
     @Test
-    fun `u000C`() = assertTokenization(
-        input = "",
+    fun `u000C 8`() = assertTokenization(
+        input = "\u000c",
         expectedTokens = listOf(
-            char('')
+            char('\u000c')
         )
     )
 
     @Test
-    fun `u000C 2`() = assertTokenization(
-        input = "",
+    fun `u000C 9`() = assertTokenization(
+        input = "\u000c",
         expectedTokens = listOf(
-            char('')
+            char('\u000c')
         )
     )
 
     @Test
-    fun `whitespace`() = assertTokenization(
+    fun `test 10`() = assertTokenization(
         input = " ",
         expectedTokens = listOf(
             char(' ')
@@ -120,7 +122,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 2`() = assertTokenization(
+    fun `test 11`() = assertTokenization(
         input = " ",
         expectedTokens = listOf(
             char(' ')
@@ -128,7 +130,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 3`() = assertTokenization(
+    fun `test 12`() = assertTokenization(
         input = "!",
         expectedTokens = listOf(
             char('!')
@@ -136,7 +138,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 4`() = assertTokenization(
+    fun `test 13`() = assertTokenization(
         input = "!",
         expectedTokens = listOf(
             char('!')
@@ -144,23 +146,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 5`() = assertTokenization(
+    fun `test 14`() = assertTokenization(
         input = "\"",
         expectedTokens = listOf(
-            char('\"')
+            char('"')
         )
     )
 
     @Test
-    fun ` 6`() = assertTokenization(
+    fun `test 15`() = assertTokenization(
         input = "\"",
         expectedTokens = listOf(
-            char('\"')
+            char('"')
         )
     )
 
     @Test
-    fun ` 7`() = assertTokenization(
+    fun `test 16`() = assertTokenization(
         input = "%",
         expectedTokens = listOf(
             char('%')
@@ -168,7 +170,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 8`() = assertTokenization(
+    fun `test 17`() = assertTokenization(
         input = "%",
         expectedTokens = listOf(
             char('%')
@@ -176,7 +178,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 9`() = assertTokenization(
+    fun `test 18`() = assertTokenization(
         input = "&",
         expectedTokens = listOf(
             char('&')
@@ -184,7 +186,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 10`() = assertTokenization(
+    fun `test 19`() = assertTokenization(
         input = "&",
         expectedTokens = listOf(
             char('&')
@@ -192,31 +194,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 11`() = assertTokenization(
+    fun `test 20`() = assertTokenization(
         input = "'",
-        expectedTokens = listOf(char('\''))
+        expectedTokens = listOf(
+            char('\'')
+        )
     )
 
     @Test
-    fun ` 12`() = assertTokenization(
+    fun `test 21`() = assertTokenization(
         input = "'",
-        expectedTokens = listOf(char('\''))
+        expectedTokens = listOf(
+            char('\'')
+        )
     )
 
     @Test
-    fun ` 13`() = assertTokenization(
+    fun `test 22`() = assertTokenization(
         input = ",",
-        expectedTokens = listOf(char(','))
+        expectedTokens = listOf(
+            char(',')
+        )
     )
 
     @Test
-    fun ` 14`() = assertTokenization(
+    fun `test 23`() = assertTokenization(
         input = ",",
-        expectedTokens = listOf(char(','))
+        expectedTokens = listOf(
+            char(',')
+        )
     )
 
     @Test
-    fun ` 15`() = assertTokenization(
+    fun `test 24`() = assertTokenization(
         input = "-",
         expectedTokens = listOf(
             char('-')
@@ -224,7 +234,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 16`() = assertTokenization(
+    fun `test 25`() = assertTokenization(
         input = "-",
         expectedTokens = listOf(
             char('-')
@@ -232,7 +242,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 17`() = assertTokenization(
+    fun `test 26`() = assertTokenization(
         input = ".",
         expectedTokens = listOf(
             char('.')
@@ -240,7 +250,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 18`() = assertTokenization(
+    fun `test 27`() = assertTokenization(
         input = ".",
         expectedTokens = listOf(
             char('.')
@@ -248,7 +258,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 19`() = assertTokenization(
+    fun `test 28`() = assertTokenization(
         input = "/",
         expectedTokens = listOf(
             char('/')
@@ -256,7 +266,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 20`() = assertTokenization(
+    fun `test 29`() = assertTokenization(
         input = "/",
         expectedTokens = listOf(
             char('/')
@@ -264,7 +274,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0`() = assertTokenization(
+    fun `test 0 30`() = assertTokenization(
         input = "0",
         expectedTokens = listOf(
             char('0')
@@ -272,7 +282,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 2`() = assertTokenization(
+    fun `test 0 31`() = assertTokenization(
         input = "0",
         expectedTokens = listOf(
             char('0')
@@ -280,7 +290,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1`() = assertTokenization(
+    fun `test 1 32`() = assertTokenization(
         input = "1",
         expectedTokens = listOf(
             char('1')
@@ -288,7 +298,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 2`() = assertTokenization(
+    fun `test 1 33`() = assertTokenization(
         input = "1",
         expectedTokens = listOf(
             char('1')
@@ -296,7 +306,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9`() = assertTokenization(
+    fun `test 9 34`() = assertTokenization(
         input = "9",
         expectedTokens = listOf(
             char('9')
@@ -304,7 +314,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 2`() = assertTokenization(
+    fun `test 9 35`() = assertTokenization(
         input = "9",
         expectedTokens = listOf(
             char('9')
@@ -312,7 +322,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 21`() = assertTokenization(
+    fun `test 36`() = assertTokenization(
         input = ";",
         expectedTokens = listOf(
             char(';')
@@ -320,7 +330,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 22`() = assertTokenization(
+    fun `test 37`() = assertTokenization(
         input = ";",
         expectedTokens = listOf(
             char(';')
@@ -328,7 +338,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 23`() = assertTokenization(
+    fun `test 38`() = assertTokenization(
         input = ";=",
         expectedTokens = listOf(
             *chars(";=").toTypedArray()
@@ -336,7 +346,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 24`() = assertTokenization(
+    fun `test 39`() = assertTokenization(
         input = ";=",
         expectedTokens = listOf(
             *chars(";=").toTypedArray()
@@ -344,7 +354,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 25`() = assertTokenization(
+    fun `test 40`() = assertTokenization(
         input = ";>",
         expectedTokens = listOf(
             *chars(";>").toTypedArray()
@@ -352,7 +362,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 26`() = assertTokenization(
+    fun `test 41`() = assertTokenization(
         input = ";>",
         expectedTokens = listOf(
             *chars(";>").toTypedArray()
@@ -360,7 +370,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 27`() = assertTokenization(
+    fun `test 42`() = assertTokenization(
         input = ";?",
         expectedTokens = listOf(
             *chars(";?").toTypedArray()
@@ -368,7 +378,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 28`() = assertTokenization(
+    fun `test 43`() = assertTokenization(
         input = ";?",
         expectedTokens = listOf(
             *chars(";?").toTypedArray()
@@ -376,7 +386,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 29`() = assertTokenization(
+    fun `test 44`() = assertTokenization(
         input = ";@",
         expectedTokens = listOf(
             *chars(";@").toTypedArray()
@@ -384,7 +394,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 30`() = assertTokenization(
+    fun `test 45`() = assertTokenization(
         input = ";@",
         expectedTokens = listOf(
             *chars(";@").toTypedArray()
@@ -392,7 +402,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A`() = assertTokenization(
+    fun `A 46`() = assertTokenization(
         input = ";A",
         expectedTokens = listOf(
             *chars(";A").toTypedArray()
@@ -400,7 +410,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 2`() = assertTokenization(
+    fun `A 47`() = assertTokenization(
         input = ";A",
         expectedTokens = listOf(
             *chars(";A").toTypedArray()
@@ -408,7 +418,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun B() = assertTokenization(
+    fun `B 48`() = assertTokenization(
         input = ";B",
         expectedTokens = listOf(
             *chars(";B").toTypedArray()
@@ -416,7 +426,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 2`() = assertTokenization(
+    fun `B 49`() = assertTokenization(
         input = ";B",
         expectedTokens = listOf(
             *chars(";B").toTypedArray()
@@ -424,7 +434,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y`() = assertTokenization(
+    fun `Y 50`() = assertTokenization(
         input = ";Y",
         expectedTokens = listOf(
             *chars(";Y").toTypedArray()
@@ -432,7 +442,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 2`() = assertTokenization(
+    fun `Y 51`() = assertTokenization(
         input = ";Y",
         expectedTokens = listOf(
             *chars(";Y").toTypedArray()
@@ -440,7 +450,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z`() = assertTokenization(
+    fun `Z 52`() = assertTokenization(
         input = ";Z",
         expectedTokens = listOf(
             *chars(";Z").toTypedArray()
@@ -448,7 +458,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 2`() = assertTokenization(
+    fun `Z 53`() = assertTokenization(
         input = ";Z",
         expectedTokens = listOf(
             *chars(";Z").toTypedArray()
@@ -456,7 +466,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 31`() = assertTokenization(
+    fun `test 54`() = assertTokenization(
         input = ";`",
         expectedTokens = listOf(
             *chars(";`").toTypedArray()
@@ -464,7 +474,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 32`() = assertTokenization(
+    fun `test 55`() = assertTokenization(
         input = ";`",
         expectedTokens = listOf(
             *chars(";`").toTypedArray()
@@ -472,7 +482,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun a() = assertTokenization(
+    fun `a 56`() = assertTokenization(
         input = ";a",
         expectedTokens = listOf(
             *chars(";a").toTypedArray()
@@ -480,7 +490,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 2`() = assertTokenization(
+    fun `a 57`() = assertTokenization(
         input = ";a",
         expectedTokens = listOf(
             *chars(";a").toTypedArray()
@@ -488,7 +498,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun b() = assertTokenization(
+    fun `b 58`() = assertTokenization(
         input = ";b",
         expectedTokens = listOf(
             *chars(";b").toTypedArray()
@@ -496,7 +506,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 2`() = assertTokenization(
+    fun `b 59`() = assertTokenization(
         input = ";b",
         expectedTokens = listOf(
             *chars(";b").toTypedArray()
@@ -504,7 +514,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun y() = assertTokenization(
+    fun `y 60`() = assertTokenization(
         input = ";y",
         expectedTokens = listOf(
             *chars(";y").toTypedArray()
@@ -512,7 +522,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 2`() = assertTokenization(
+    fun `y 61`() = assertTokenization(
         input = ";y",
         expectedTokens = listOf(
             *chars(";y").toTypedArray()
@@ -520,7 +530,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun z() = assertTokenization(
+    fun `z 62`() = assertTokenization(
         input = ";z",
         expectedTokens = listOf(
             *chars(";z").toTypedArray()
@@ -528,7 +538,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 2`() = assertTokenization(
+    fun `z 63`() = assertTokenization(
         input = ";z",
         expectedTokens = listOf(
             *chars(";z").toTypedArray()
@@ -536,7 +546,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 33`() = assertTokenization(
+    fun `test 64`() = assertTokenization(
         input = ";{",
         expectedTokens = listOf(
             *chars(";{").toTypedArray()
@@ -544,7 +554,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 34`() = assertTokenization(
+    fun `test 65`() = assertTokenization(
         input = ";{",
         expectedTokens = listOf(
             *chars(";{").toTypedArray()
@@ -552,7 +562,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun uDBC0uDC00() = assertTokenization(
+    fun `uDBC0uDC00 66`() = assertTokenization(
         input = ";􀀀",
         expectedTokens = listOf(
             *chars(";􀀀").toTypedArray()
@@ -560,7 +570,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 2`() = assertTokenization(
+    fun `uDBC0uDC00 67`() = assertTokenization(
         input = ";􀀀",
         expectedTokens = listOf(
             *chars(";􀀀").toTypedArray()
@@ -568,7 +578,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 35`() = assertTokenization(
+    fun `test 68`() = assertTokenization(
         input = "<",
         expectedTokens = listOf(
             char('<')
@@ -576,7 +586,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000`() = assertTokenization(
+    fun `u0000 69`() = assertTokenization(
         input = "<\u0000",
         expectedTokens = listOf(
             *chars("<\u0000").toTypedArray()
@@ -584,7 +594,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 3`() = assertTokenization(
+    fun `u0009 70`() = assertTokenization(
         input = "<\t",
         expectedTokens = listOf(
             *chars("<\t").toTypedArray()
@@ -592,7 +602,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000A 3`() = assertTokenization(
+    fun `u000A 71`() = assertTokenization(
         input = "<\n",
         expectedTokens = listOf(
             *chars("<\n").toTypedArray()
@@ -600,23 +610,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000B 3`() = assertTokenization(
-        input = "<",
+    fun `u000B 72`() = assertTokenization(
+        input = "<\u000b",
         expectedTokens = listOf(
-            *chars("<").toTypedArray()
+            *chars("<\u000b").toTypedArray()
         )
     )
 
     @Test
-    fun `u000C 3`() = assertTokenization(
-        input = "<",
+    fun `u000C 73`() = assertTokenization(
+        input = "<\u000c",
         expectedTokens = listOf(
-            *chars("<").toTypedArray()
+            *chars("<\u000c").toTypedArray()
         )
     )
 
     @Test
-    fun ` 36`() = assertTokenization(
+    fun `test 74`() = assertTokenization(
         input = "< ",
         expectedTokens = listOf(
             *chars("< ").toTypedArray()
@@ -624,7 +634,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 37`() = assertTokenization(
+    fun `test 75`() = assertTokenization(
         input = "<!",
         expectedTokens = listOf(
             comment("")
@@ -632,7 +642,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 2`() = assertTokenization(
+    fun `u0000 76`() = assertTokenization(
         input = "<!\u0000",
         expectedTokens = listOf(
             comment("�")
@@ -640,37 +650,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 4`() = assertTokenization(
+    fun `u0009 77`() = assertTokenization(
         input = "<!\t",
         expectedTokens = listOf(
-            comment("	")
+            comment("\t")
         )
     )
 
     @Test
-    fun `u000A 4`() = assertTokenization(
+    fun `u000A 78`() = assertTokenization(
         input = "<!\n",
-        expectedTokens = listOf(comment("\n"))
-    )
-
-    @Test
-    fun `u000B 4`() = assertTokenization(
-        input = "<!",
         expectedTokens = listOf(
-            comment("")
+            comment("\n")
         )
     )
 
     @Test
-    fun `u000C 4`() = assertTokenization(
-        input = "<!",
+    fun `u000B 79`() = assertTokenization(
+        input = "<!\u000b",
         expectedTokens = listOf(
-            comment("")
+            comment("\u000b")
         )
     )
 
     @Test
-    fun ` 38`() = assertTokenization(
+    fun `u000C 80`() = assertTokenization(
+        input = "<!\u000c",
+        expectedTokens = listOf(
+            comment("\u000c")
+        )
+    )
+
+    @Test
+    fun `test 81`() = assertTokenization(
         input = "<! ",
         expectedTokens = listOf(
             comment(" ")
@@ -678,7 +690,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 3`() = assertTokenization(
+    fun `u0000 82`() = assertTokenization(
         input = "<! \u0000",
         expectedTokens = listOf(
             comment(" �")
@@ -686,7 +698,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 39`() = assertTokenization(
+    fun `test 83`() = assertTokenization(
         input = "<!!",
         expectedTokens = listOf(
             comment("!")
@@ -694,13 +706,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 40`() = assertTokenization(
+    fun `test 84`() = assertTokenization(
         input = "<!\"",
-        expectedTokens = listOf(comment("\""))
+        expectedTokens = listOf(
+            comment("\"")
+        )
     )
 
     @Test
-    fun ` 41`() = assertTokenization(
+    fun `test 85`() = assertTokenization(
         input = "<!&",
         expectedTokens = listOf(
             comment("&")
@@ -708,7 +722,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 42`() = assertTokenization(
+    fun `test 86`() = assertTokenization(
         input = "<!'",
         expectedTokens = listOf(
             comment("'")
@@ -716,7 +730,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 43`() = assertTokenization(
+    fun `test 87`() = assertTokenization(
         input = "<!-",
         expectedTokens = listOf(
             comment("-")
@@ -724,7 +738,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 44`() = assertTokenization(
+    fun `test 88`() = assertTokenization(
         input = "<!--",
         expectedTokens = listOf(
             comment("")
@@ -732,7 +746,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 4`() = assertTokenization(
+    fun `u0000 89`() = assertTokenization(
         input = "<!--\u0000",
         expectedTokens = listOf(
             comment("�")
@@ -740,37 +754,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 5`() = assertTokenization(
+    fun `u0009 90`() = assertTokenization(
         input = "<!--\t",
         expectedTokens = listOf(
-            comment("	")
+            comment("\t")
         )
     )
 
     @Test
-    fun `u000A 5`() = assertTokenization(
+    fun `u000A 91`() = assertTokenization(
         input = "<!--\n",
-        expectedTokens = listOf(comment("\n"))
-    )
-
-    @Test
-    fun `u000B 5`() = assertTokenization(
-        input = "<!--",
         expectedTokens = listOf(
-            comment("")
+            comment("\n")
         )
     )
 
     @Test
-    fun `u000C 5`() = assertTokenization(
-        input = "<!--",
+    fun `u000B 92`() = assertTokenization(
+        input = "<!--\u000b",
         expectedTokens = listOf(
-            comment("")
+            comment("\u000b")
         )
     )
 
     @Test
-    fun ` 45`() = assertTokenization(
+    fun `u000C 93`() = assertTokenization(
+        input = "<!--\u000c",
+        expectedTokens = listOf(
+            comment("\u000c")
+        )
+    )
+
+    @Test
+    fun `test 94`() = assertTokenization(
         input = "<!-- ",
         expectedTokens = listOf(
             comment(" ")
@@ -778,7 +794,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 5`() = assertTokenization(
+    fun `u0000 95`() = assertTokenization(
         input = "<!-- \u0000",
         expectedTokens = listOf(
             comment(" �")
@@ -786,37 +802,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 6`() = assertTokenization(
+    fun `u0009 96`() = assertTokenization(
         input = "<!-- \t",
         expectedTokens = listOf(
-            comment(" 	")
+            comment(" \t")
         )
     )
 
     @Test
-    fun `u000A 6`() = assertTokenization(
+    fun `u000A 97`() = assertTokenization(
         input = "<!-- \n",
-        expectedTokens = listOf(comment(" \n"))
-    )
-
-    @Test
-    fun `u000B 6`() = assertTokenization(
-        input = "<!-- ",
         expectedTokens = listOf(
-            comment(" ")
+            comment(" \n")
         )
     )
 
     @Test
-    fun `u000C 6`() = assertTokenization(
-        input = "<!-- ",
+    fun `u000B 98`() = assertTokenization(
+        input = "<!-- \u000b",
         expectedTokens = listOf(
-            comment(" ")
+            comment(" \u000b")
         )
     )
 
     @Test
-    fun ` 46`() = assertTokenization(
+    fun `u000C 99`() = assertTokenization(
+        input = "<!-- \u000c",
+        expectedTokens = listOf(
+            comment(" \u000c")
+        )
+    )
+
+    @Test
+    fun `test 100`() = assertTokenization(
         input = "<!--  ",
         expectedTokens = listOf(
             comment("  ")
@@ -824,7 +842,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 47`() = assertTokenization(
+    fun `test 101`() = assertTokenization(
         input = "<!-- !",
         expectedTokens = listOf(
             comment(" !")
@@ -832,13 +850,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 48`() = assertTokenization(
+    fun `test 102`() = assertTokenization(
         input = "<!-- \"",
-        expectedTokens = listOf(comment(" \""))
+        expectedTokens = listOf(
+            comment(" \"")
+        )
     )
 
     @Test
-    fun ` 49`() = assertTokenization(
+    fun `test 103`() = assertTokenization(
         input = "<!-- &",
         expectedTokens = listOf(
             comment(" &")
@@ -846,7 +866,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 50`() = assertTokenization(
+    fun `test 104`() = assertTokenization(
         input = "<!-- '",
         expectedTokens = listOf(
             comment(" '")
@@ -854,7 +874,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 51`() = assertTokenization(
+    fun `test 105`() = assertTokenization(
         input = "<!-- ,",
         expectedTokens = listOf(
             comment(" ,")
@@ -862,7 +882,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 52`() = assertTokenization(
+    fun `test 106`() = assertTokenization(
         input = "<!-- -",
         expectedTokens = listOf(
             comment(" ")
@@ -870,7 +890,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 6`() = assertTokenization(
+    fun `u0000 107`() = assertTokenization(
         input = "<!-- -\u0000",
         expectedTokens = listOf(
             comment(" -�")
@@ -878,37 +898,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 7`() = assertTokenization(
+    fun `u0009 108`() = assertTokenization(
         input = "<!-- -\t",
         expectedTokens = listOf(
-            comment(" -	")
+            comment(" -\t")
         )
     )
 
     @Test
-    fun `u000A 7`() = assertTokenization(
+    fun `u000A 109`() = assertTokenization(
         input = "<!-- -\n",
-        expectedTokens = listOf(comment(" -\n"))
-    )
-
-    @Test
-    fun `u000B 7`() = assertTokenization(
-        input = "<!-- -",
         expectedTokens = listOf(
-            comment(" -")
+            comment(" -\n")
         )
     )
 
     @Test
-    fun `u000C 7`() = assertTokenization(
-        input = "<!-- -",
+    fun `u000B 110`() = assertTokenization(
+        input = "<!-- -\u000b",
         expectedTokens = listOf(
-            comment(" -")
+            comment(" -\u000b")
         )
     )
 
     @Test
-    fun ` 53`() = assertTokenization(
+    fun `u000C 111`() = assertTokenization(
+        input = "<!-- -\u000c",
+        expectedTokens = listOf(
+            comment(" -\u000c")
+        )
+    )
+
+    @Test
+    fun `test 112`() = assertTokenization(
         input = "<!-- - ",
         expectedTokens = listOf(
             comment(" - ")
@@ -916,7 +938,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 54`() = assertTokenization(
+    fun `test 113`() = assertTokenization(
         input = "<!-- -!",
         expectedTokens = listOf(
             comment(" -!")
@@ -924,13 +946,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 55`() = assertTokenization(
+    fun `test 114`() = assertTokenization(
         input = "<!-- -\"",
-        expectedTokens = listOf(comment(" -\""))
+        expectedTokens = listOf(
+            comment(" -\"")
+        )
     )
 
     @Test
-    fun ` 56`() = assertTokenization(
+    fun `test 115`() = assertTokenization(
         input = "<!-- -&",
         expectedTokens = listOf(
             comment(" -&")
@@ -938,7 +962,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 57`() = assertTokenization(
+    fun `test 116`() = assertTokenization(
         input = "<!-- -'",
         expectedTokens = listOf(
             comment(" -'")
@@ -946,7 +970,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 58`() = assertTokenization(
+    fun `test 117`() = assertTokenization(
         input = "<!-- -,",
         expectedTokens = listOf(
             comment(" -,")
@@ -954,7 +978,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 59`() = assertTokenization(
+    fun `test 118`() = assertTokenization(
         input = "<!-- --",
         expectedTokens = listOf(
             comment(" ")
@@ -962,7 +986,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 60`() = assertTokenization(
+    fun `test 119`() = assertTokenization(
         input = "<!-- -.",
         expectedTokens = listOf(
             comment(" -.")
@@ -970,7 +994,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 61`() = assertTokenization(
+    fun `test 120`() = assertTokenization(
         input = "<!-- -/",
         expectedTokens = listOf(
             comment(" -/")
@@ -978,7 +1002,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 3`() = assertTokenization(
+    fun `test 0 121`() = assertTokenization(
         input = "<!-- -0",
         expectedTokens = listOf(
             comment(" -0")
@@ -986,7 +1010,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 3`() = assertTokenization(
+    fun `test 1 122`() = assertTokenization(
         input = "<!-- -1",
         expectedTokens = listOf(
             comment(" -1")
@@ -994,7 +1018,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 3`() = assertTokenization(
+    fun `test 9 123`() = assertTokenization(
         input = "<!-- -9",
         expectedTokens = listOf(
             comment(" -9")
@@ -1002,7 +1026,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 62`() = assertTokenization(
+    fun `test 124`() = assertTokenization(
         input = "<!-- -<",
         expectedTokens = listOf(
             comment(" -<")
@@ -1010,7 +1034,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 63`() = assertTokenization(
+    fun `test 125`() = assertTokenization(
         input = "<!-- -=",
         expectedTokens = listOf(
             comment(" -=")
@@ -1018,7 +1042,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 64`() = assertTokenization(
+    fun `test 126`() = assertTokenization(
         input = "<!-- ->",
         expectedTokens = listOf(
             comment(" ->")
@@ -1026,7 +1050,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 65`() = assertTokenization(
+    fun `test 127`() = assertTokenization(
         input = "<!-- -?",
         expectedTokens = listOf(
             comment(" -?")
@@ -1034,7 +1058,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 66`() = assertTokenization(
+    fun `test 128`() = assertTokenization(
         input = "<!-- -@",
         expectedTokens = listOf(
             comment(" -@")
@@ -1042,7 +1066,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 3`() = assertTokenization(
+    fun `A 129`() = assertTokenization(
         input = "<!-- -A",
         expectedTokens = listOf(
             comment(" -A")
@@ -1050,7 +1074,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 3`() = assertTokenization(
+    fun `B 130`() = assertTokenization(
         input = "<!-- -B",
         expectedTokens = listOf(
             comment(" -B")
@@ -1058,7 +1082,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 3`() = assertTokenization(
+    fun `Y 131`() = assertTokenization(
         input = "<!-- -Y",
         expectedTokens = listOf(
             comment(" -Y")
@@ -1066,7 +1090,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 3`() = assertTokenization(
+    fun `Z 132`() = assertTokenization(
         input = "<!-- -Z",
         expectedTokens = listOf(
             comment(" -Z")
@@ -1074,7 +1098,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 67`() = assertTokenization(
+    fun `test 133`() = assertTokenization(
         input = "<!-- -`",
         expectedTokens = listOf(
             comment(" -`")
@@ -1082,7 +1106,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 3`() = assertTokenization(
+    fun `a 134`() = assertTokenization(
         input = "<!-- -a",
         expectedTokens = listOf(
             comment(" -a")
@@ -1090,7 +1114,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 3`() = assertTokenization(
+    fun `b 135`() = assertTokenization(
         input = "<!-- -b",
         expectedTokens = listOf(
             comment(" -b")
@@ -1098,7 +1122,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 3`() = assertTokenization(
+    fun `y 136`() = assertTokenization(
         input = "<!-- -y",
         expectedTokens = listOf(
             comment(" -y")
@@ -1106,7 +1130,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 3`() = assertTokenization(
+    fun `z 137`() = assertTokenization(
         input = "<!-- -z",
         expectedTokens = listOf(
             comment(" -z")
@@ -1114,7 +1138,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 68`() = assertTokenization(
+    fun `test 138`() = assertTokenization(
         input = "<!-- -{",
         expectedTokens = listOf(
             comment(" -{")
@@ -1122,7 +1146,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 3`() = assertTokenization(
+    fun `uDBC0uDC00 139`() = assertTokenization(
         input = "<!-- -􀀀",
         expectedTokens = listOf(
             comment(" -􀀀")
@@ -1130,7 +1154,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 69`() = assertTokenization(
+    fun `test 140`() = assertTokenization(
         input = "<!-- .",
         expectedTokens = listOf(
             comment(" .")
@@ -1138,7 +1162,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 70`() = assertTokenization(
+    fun `test 141`() = assertTokenization(
         input = "<!-- /",
         expectedTokens = listOf(
             comment(" /")
@@ -1146,7 +1170,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 4`() = assertTokenization(
+    fun `test 0 142`() = assertTokenization(
         input = "<!-- 0",
         expectedTokens = listOf(
             comment(" 0")
@@ -1154,7 +1178,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 4`() = assertTokenization(
+    fun `test 1 143`() = assertTokenization(
         input = "<!-- 1",
         expectedTokens = listOf(
             comment(" 1")
@@ -1162,7 +1186,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 4`() = assertTokenization(
+    fun `test 9 144`() = assertTokenization(
         input = "<!-- 9",
         expectedTokens = listOf(
             comment(" 9")
@@ -1170,7 +1194,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 71`() = assertTokenization(
+    fun `test 145`() = assertTokenization(
         input = "<!-- <",
         expectedTokens = listOf(
             comment(" <")
@@ -1178,7 +1202,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 72`() = assertTokenization(
+    fun `test 146`() = assertTokenization(
         input = "<!-- =",
         expectedTokens = listOf(
             comment(" =")
@@ -1186,7 +1210,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 73`() = assertTokenization(
+    fun `test 147`() = assertTokenization(
         input = "<!-- >",
         expectedTokens = listOf(
             comment(" >")
@@ -1194,7 +1218,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 74`() = assertTokenization(
+    fun `test 148`() = assertTokenization(
         input = "<!-- ?",
         expectedTokens = listOf(
             comment(" ?")
@@ -1202,7 +1226,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 75`() = assertTokenization(
+    fun `test 149`() = assertTokenization(
         input = "<!-- @",
         expectedTokens = listOf(
             comment(" @")
@@ -1210,7 +1234,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 4`() = assertTokenization(
+    fun `A 150`() = assertTokenization(
         input = "<!-- A",
         expectedTokens = listOf(
             comment(" A")
@@ -1218,7 +1242,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 4`() = assertTokenization(
+    fun `B 151`() = assertTokenization(
         input = "<!-- B",
         expectedTokens = listOf(
             comment(" B")
@@ -1226,7 +1250,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 4`() = assertTokenization(
+    fun `Y 152`() = assertTokenization(
         input = "<!-- Y",
         expectedTokens = listOf(
             comment(" Y")
@@ -1234,7 +1258,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 4`() = assertTokenization(
+    fun `Z 153`() = assertTokenization(
         input = "<!-- Z",
         expectedTokens = listOf(
             comment(" Z")
@@ -1242,7 +1266,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 76`() = assertTokenization(
+    fun `test 154`() = assertTokenization(
         input = "<!-- `",
         expectedTokens = listOf(
             comment(" `")
@@ -1250,7 +1274,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 4`() = assertTokenization(
+    fun `a 155`() = assertTokenization(
         input = "<!-- a",
         expectedTokens = listOf(
             comment(" a")
@@ -1258,7 +1282,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 4`() = assertTokenization(
+    fun `b 156`() = assertTokenization(
         input = "<!-- b",
         expectedTokens = listOf(
             comment(" b")
@@ -1266,7 +1290,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 4`() = assertTokenization(
+    fun `y 157`() = assertTokenization(
         input = "<!-- y",
         expectedTokens = listOf(
             comment(" y")
@@ -1274,7 +1298,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 4`() = assertTokenization(
+    fun `z 158`() = assertTokenization(
         input = "<!-- z",
         expectedTokens = listOf(
             comment(" z")
@@ -1282,7 +1306,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 77`() = assertTokenization(
+    fun `test 159`() = assertTokenization(
         input = "<!-- {",
         expectedTokens = listOf(
             comment(" {")
@@ -1290,7 +1314,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 4`() = assertTokenization(
+    fun `uDBC0uDC00 160`() = assertTokenization(
         input = "<!-- 􀀀",
         expectedTokens = listOf(
             comment(" 􀀀")
@@ -1298,7 +1322,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 78`() = assertTokenization(
+    fun `test 161`() = assertTokenization(
         input = "<!--!",
         expectedTokens = listOf(
             comment("!")
@@ -1306,13 +1330,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 79`() = assertTokenization(
+    fun `test 162`() = assertTokenization(
         input = "<!--\"",
-        expectedTokens = listOf(comment("\""))
+        expectedTokens = listOf(
+            comment("\"")
+        )
     )
 
     @Test
-    fun ` 80`() = assertTokenization(
+    fun `test 163`() = assertTokenization(
         input = "<!--&",
         expectedTokens = listOf(
             comment("&")
@@ -1320,7 +1346,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 81`() = assertTokenization(
+    fun `test 164`() = assertTokenization(
         input = "<!--'",
         expectedTokens = listOf(
             comment("'")
@@ -1328,7 +1354,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 82`() = assertTokenization(
+    fun `test 165`() = assertTokenization(
         input = "<!--,",
         expectedTokens = listOf(
             comment(",")
@@ -1336,7 +1362,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 83`() = assertTokenization(
+    fun `test 166`() = assertTokenization(
         input = "<!---",
         expectedTokens = listOf(
             comment("")
@@ -1344,7 +1370,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 7`() = assertTokenization(
+    fun `u0000 167`() = assertTokenization(
         input = "<!---\u0000",
         expectedTokens = listOf(
             comment("-�")
@@ -1352,37 +1378,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 8`() = assertTokenization(
+    fun `u0009 168`() = assertTokenization(
         input = "<!---\t",
         expectedTokens = listOf(
-            comment("-	")
+            comment("-\t")
         )
     )
 
     @Test
-    fun `u000A 8`() = assertTokenization(
+    fun `u000A 169`() = assertTokenization(
         input = "<!---\n",
-        expectedTokens = listOf(comment("-\n"))
-    )
-
-    @Test
-    fun `u000B 8`() = assertTokenization(
-        input = "<!---",
         expectedTokens = listOf(
-            comment("-")
+            comment("-\n")
         )
     )
 
     @Test
-    fun `u000C 8`() = assertTokenization(
-        input = "<!---",
+    fun `u000B 170`() = assertTokenization(
+        input = "<!---\u000b",
         expectedTokens = listOf(
-            comment("-")
+            comment("-\u000b")
         )
     )
 
     @Test
-    fun ` 84`() = assertTokenization(
+    fun `u000C 171`() = assertTokenization(
+        input = "<!---\u000c",
+        expectedTokens = listOf(
+            comment("-\u000c")
+        )
+    )
+
+    @Test
+    fun `test 172`() = assertTokenization(
         input = "<!--- ",
         expectedTokens = listOf(
             comment("- ")
@@ -1390,7 +1418,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 85`() = assertTokenization(
+    fun `test 173`() = assertTokenization(
         input = "<!---!",
         expectedTokens = listOf(
             comment("-!")
@@ -1398,13 +1426,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 86`() = assertTokenization(
+    fun `test 174`() = assertTokenization(
         input = "<!---\"",
-        expectedTokens = listOf(comment("-\""))
+        expectedTokens = listOf(
+            comment("-\"")
+        )
     )
 
     @Test
-    fun ` 87`() = assertTokenization(
+    fun `test 175`() = assertTokenization(
         input = "<!---&",
         expectedTokens = listOf(
             comment("-&")
@@ -1412,7 +1442,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 88`() = assertTokenization(
+    fun `test 176`() = assertTokenization(
         input = "<!---'",
         expectedTokens = listOf(
             comment("-'")
@@ -1420,7 +1450,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 89`() = assertTokenization(
+    fun `test 177`() = assertTokenization(
         input = "<!---,",
         expectedTokens = listOf(
             comment("-,")
@@ -1428,7 +1458,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 90`() = assertTokenization(
+    fun `test 178`() = assertTokenization(
         input = "<!----",
         expectedTokens = listOf(
             comment("")
@@ -1436,7 +1466,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 8`() = assertTokenization(
+    fun `u0000 179`() = assertTokenization(
         input = "<!----\u0000",
         expectedTokens = listOf(
             comment("--�")
@@ -1444,37 +1474,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 9`() = assertTokenization(
+    fun `u0009 180`() = assertTokenization(
         input = "<!----\t",
         expectedTokens = listOf(
-            comment("--	")
+            comment("--\t")
         )
     )
 
     @Test
-    fun `u000A 9`() = assertTokenization(
+    fun `u000A 181`() = assertTokenization(
         input = "<!----\n",
-        expectedTokens = listOf(comment("--\n"))
-    )
-
-    @Test
-    fun `u000B 9`() = assertTokenization(
-        input = "<!----",
         expectedTokens = listOf(
-            comment("--")
+            comment("--\n")
         )
     )
 
     @Test
-    fun `u000C 9`() = assertTokenization(
-        input = "<!----",
+    fun `u000B 182`() = assertTokenization(
+        input = "<!----\u000b",
         expectedTokens = listOf(
-            comment("--")
+            comment("--\u000b")
         )
     )
 
     @Test
-    fun ` 91`() = assertTokenization(
+    fun `u000C 183`() = assertTokenization(
+        input = "<!----\u000c",
+        expectedTokens = listOf(
+            comment("--\u000c")
+        )
+    )
+
+    @Test
+    fun `test 184`() = assertTokenization(
         input = "<!---- ",
         expectedTokens = listOf(
             comment("-- ")
@@ -1482,7 +1514,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 92`() = assertTokenization(
+    fun `test 185`() = assertTokenization(
         input = "<!---- -",
         expectedTokens = listOf(
             comment("-- ")
@@ -1490,7 +1522,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 93`() = assertTokenization(
+    fun `test 186`() = assertTokenization(
         input = "<!---- --",
         expectedTokens = listOf(
             comment("-- ")
@@ -1498,7 +1530,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 94`() = assertTokenization(
+    fun `test 187`() = assertTokenization(
         input = "<!---- -->",
         expectedTokens = listOf(
             comment("-- ")
@@ -1506,7 +1538,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 95`() = assertTokenization(
+    fun `test 188`() = assertTokenization(
         input = "<!----  -->",
         expectedTokens = listOf(
             comment("--  ")
@@ -1514,7 +1546,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 5`() = assertTokenization(
+    fun `a 189`() = assertTokenization(
         input = "<!---- a-->",
         expectedTokens = listOf(
             comment("-- a")
@@ -1522,7 +1554,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 96`() = assertTokenization(
+    fun `test 190`() = assertTokenization(
         input = "<!----!",
         expectedTokens = listOf(
             comment("")
@@ -1530,7 +1562,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 97`() = assertTokenization(
+    fun `test 191`() = assertTokenization(
         input = "<!----!>",
         expectedTokens = listOf(
             comment("")
@@ -1538,7 +1570,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 98`() = assertTokenization(
+    fun `test 192`() = assertTokenization(
         input = "<!----! >",
         expectedTokens = listOf(
             comment("--! >")
@@ -1546,27 +1578,31 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `LF`() = assertTokenization(
+    fun `LF 193`() = assertTokenization(
         input = "<!----!\n>",
-        expectedTokens = listOf(comment("--! \n> "))
-    )
-
-    @Test
-    fun `CR`() = assertTokenization(
-        input = "<!----!\r>",
         expectedTokens = listOf(
-            comment("--! \n> ")
+            comment("--!\n>")
         )
     )
 
     @Test
-    fun `CRLF`() = assertTokenization(
-        input = "<!----!\r\n>",
-        expectedTokens = listOf(comment("--! \n> "))
+    fun `CR 194`() = assertTokenization(
+        input = "<!----!\r>",
+        expectedTokens = listOf(
+            comment("--!\n>")
+        )
     )
 
     @Test
-    fun `a 6`() = assertTokenization(
+    fun `CRLF 195`() = assertTokenization(
+        input = "<!----!\r\n>",
+        expectedTokens = listOf(
+            comment("--!\n>")
+        )
+    )
+
+    @Test
+    fun `a 196`() = assertTokenization(
         input = "<!----!a",
         expectedTokens = listOf(
             comment("--!a")
@@ -1574,7 +1610,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 7`() = assertTokenization(
+    fun `a 197`() = assertTokenization(
         input = "<!----!a-",
         expectedTokens = listOf(
             comment("--!a")
@@ -1582,7 +1618,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 8`() = assertTokenization(
+    fun `a 198`() = assertTokenization(
         input = "<!----!a--",
         expectedTokens = listOf(
             comment("--!a")
@@ -1590,7 +1626,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 9`() = assertTokenization(
+    fun `a 199`() = assertTokenization(
         input = "<!----!a-->",
         expectedTokens = listOf(
             comment("--!a")
@@ -1598,7 +1634,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 99`() = assertTokenization(
+    fun `test 200`() = assertTokenization(
         input = "<!----!-",
         expectedTokens = listOf(
             comment("--!")
@@ -1606,7 +1642,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 100`() = assertTokenization(
+    fun `test 201`() = assertTokenization(
         input = "<!----!--",
         expectedTokens = listOf(
             comment("--!")
@@ -1614,7 +1650,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 101`() = assertTokenization(
+    fun `test 202`() = assertTokenization(
         input = "<!----!-->",
         expectedTokens = listOf(
             comment("--!")
@@ -1622,13 +1658,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 102`() = assertTokenization(
+    fun `test 203`() = assertTokenization(
         input = "<!----\"",
-        expectedTokens = listOf(comment("--\""))
+        expectedTokens = listOf(
+            comment("--\"")
+        )
     )
 
     @Test
-    fun ` 103`() = assertTokenization(
+    fun `test 204`() = assertTokenization(
         input = "<!----&",
         expectedTokens = listOf(
             comment("--&")
@@ -1636,7 +1674,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 104`() = assertTokenization(
+    fun `test 205`() = assertTokenization(
         input = "<!----'",
         expectedTokens = listOf(
             comment("--'")
@@ -1644,7 +1682,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 105`() = assertTokenization(
+    fun `test 206`() = assertTokenization(
         input = "<!----,",
         expectedTokens = listOf(
             comment("--,")
@@ -1652,7 +1690,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 106`() = assertTokenization(
+    fun `test 207`() = assertTokenization(
         input = "<!-----",
         expectedTokens = listOf(
             comment("-")
@@ -1660,7 +1698,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 107`() = assertTokenization(
+    fun `test 208`() = assertTokenization(
         input = "<!----.",
         expectedTokens = listOf(
             comment("--.")
@@ -1668,7 +1706,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 108`() = assertTokenization(
+    fun `test 209`() = assertTokenization(
         input = "<!----/",
         expectedTokens = listOf(
             comment("--/")
@@ -1676,7 +1714,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 5`() = assertTokenization(
+    fun `test 0 210`() = assertTokenization(
         input = "<!----0",
         expectedTokens = listOf(
             comment("--0")
@@ -1684,7 +1722,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 5`() = assertTokenization(
+    fun `test 1 211`() = assertTokenization(
         input = "<!----1",
         expectedTokens = listOf(
             comment("--1")
@@ -1692,7 +1730,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 5`() = assertTokenization(
+    fun `test 9 212`() = assertTokenization(
         input = "<!----9",
         expectedTokens = listOf(
             comment("--9")
@@ -1700,7 +1738,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 109`() = assertTokenization(
+    fun `test 213`() = assertTokenization(
         input = "<!----<",
         expectedTokens = listOf(
             comment("--<")
@@ -1708,7 +1746,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 110`() = assertTokenization(
+    fun `test 214`() = assertTokenization(
         input = "<!----=",
         expectedTokens = listOf(
             comment("--=")
@@ -1716,7 +1754,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 111`() = assertTokenization(
+    fun `test 215`() = assertTokenization(
         input = "<!---->",
         expectedTokens = listOf(
             comment("")
@@ -1724,7 +1762,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 112`() = assertTokenization(
+    fun `test 216`() = assertTokenization(
         input = "<!----?",
         expectedTokens = listOf(
             comment("--?")
@@ -1732,7 +1770,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 113`() = assertTokenization(
+    fun `test 217`() = assertTokenization(
         input = "<!----@",
         expectedTokens = listOf(
             comment("--@")
@@ -1740,7 +1778,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 5`() = assertTokenization(
+    fun `A 218`() = assertTokenization(
         input = "<!----A",
         expectedTokens = listOf(
             comment("--A")
@@ -1748,7 +1786,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 5`() = assertTokenization(
+    fun `B 219`() = assertTokenization(
         input = "<!----B",
         expectedTokens = listOf(
             comment("--B")
@@ -1756,7 +1794,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 5`() = assertTokenization(
+    fun `Y 220`() = assertTokenization(
         input = "<!----Y",
         expectedTokens = listOf(
             comment("--Y")
@@ -1764,7 +1802,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 5`() = assertTokenization(
+    fun `Z 221`() = assertTokenization(
         input = "<!----Z",
         expectedTokens = listOf(
             comment("--Z")
@@ -1772,7 +1810,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 114`() = assertTokenization(
+    fun `test 222`() = assertTokenization(
         input = "<!----`",
         expectedTokens = listOf(
             comment("--`")
@@ -1780,7 +1818,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 10`() = assertTokenization(
+    fun `a 223`() = assertTokenization(
         input = "<!----a",
         expectedTokens = listOf(
             comment("--a")
@@ -1788,7 +1826,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 5`() = assertTokenization(
+    fun `b 224`() = assertTokenization(
         input = "<!----b",
         expectedTokens = listOf(
             comment("--b")
@@ -1796,7 +1834,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 5`() = assertTokenization(
+    fun `y 225`() = assertTokenization(
         input = "<!----y",
         expectedTokens = listOf(
             comment("--y")
@@ -1804,7 +1842,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 5`() = assertTokenization(
+    fun `z 226`() = assertTokenization(
         input = "<!----z",
         expectedTokens = listOf(
             comment("--z")
@@ -1812,7 +1850,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 115`() = assertTokenization(
+    fun `test 227`() = assertTokenization(
         input = "<!----{",
         expectedTokens = listOf(
             comment("--{")
@@ -1820,7 +1858,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 5`() = assertTokenization(
+    fun `uDBC0uDC00 228`() = assertTokenization(
         input = "<!----􀀀",
         expectedTokens = listOf(
             comment("--􀀀")
@@ -1828,7 +1866,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 116`() = assertTokenization(
+    fun `test 229`() = assertTokenization(
         input = "<!---.",
         expectedTokens = listOf(
             comment("-.")
@@ -1836,7 +1874,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 117`() = assertTokenization(
+    fun `test 230`() = assertTokenization(
         input = "<!---/",
         expectedTokens = listOf(
             comment("-/")
@@ -1844,7 +1882,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 6`() = assertTokenization(
+    fun `test 0 231`() = assertTokenization(
         input = "<!---0",
         expectedTokens = listOf(
             comment("-0")
@@ -1852,7 +1890,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 6`() = assertTokenization(
+    fun `test 1 232`() = assertTokenization(
         input = "<!---1",
         expectedTokens = listOf(
             comment("-1")
@@ -1860,7 +1898,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 6`() = assertTokenization(
+    fun `test 9 233`() = assertTokenization(
         input = "<!---9",
         expectedTokens = listOf(
             comment("-9")
@@ -1868,7 +1906,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 118`() = assertTokenization(
+    fun `test 234`() = assertTokenization(
         input = "<!---<",
         expectedTokens = listOf(
             comment("-<")
@@ -1876,7 +1914,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 119`() = assertTokenization(
+    fun `test 235`() = assertTokenization(
         input = "<!---=",
         expectedTokens = listOf(
             comment("-=")
@@ -1884,7 +1922,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 120`() = assertTokenization(
+    fun `test 236`() = assertTokenization(
         input = "<!---?",
         expectedTokens = listOf(
             comment("-?")
@@ -1892,7 +1930,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 121`() = assertTokenization(
+    fun `test 237`() = assertTokenization(
         input = "<!---@",
         expectedTokens = listOf(
             comment("-@")
@@ -1900,7 +1938,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 6`() = assertTokenization(
+    fun `A 238`() = assertTokenization(
         input = "<!---A",
         expectedTokens = listOf(
             comment("-A")
@@ -1908,7 +1946,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 6`() = assertTokenization(
+    fun `B 239`() = assertTokenization(
         input = "<!---B",
         expectedTokens = listOf(
             comment("-B")
@@ -1916,7 +1954,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 6`() = assertTokenization(
+    fun `Y 240`() = assertTokenization(
         input = "<!---Y",
         expectedTokens = listOf(
             comment("-Y")
@@ -1924,7 +1962,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 6`() = assertTokenization(
+    fun `Z 241`() = assertTokenization(
         input = "<!---Z",
         expectedTokens = listOf(
             comment("-Z")
@@ -1932,7 +1970,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 122`() = assertTokenization(
+    fun `test 242`() = assertTokenization(
         input = "<!---`",
         expectedTokens = listOf(
             comment("-`")
@@ -1940,7 +1978,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 11`() = assertTokenization(
+    fun `a 243`() = assertTokenization(
         input = "<!---a",
         expectedTokens = listOf(
             comment("-a")
@@ -1948,7 +1986,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 6`() = assertTokenization(
+    fun `b 244`() = assertTokenization(
         input = "<!---b",
         expectedTokens = listOf(
             comment("-b")
@@ -1956,7 +1994,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 6`() = assertTokenization(
+    fun `y 245`() = assertTokenization(
         input = "<!---y",
         expectedTokens = listOf(
             comment("-y")
@@ -1964,7 +2002,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 6`() = assertTokenization(
+    fun `z 246`() = assertTokenization(
         input = "<!---z",
         expectedTokens = listOf(
             comment("-z")
@@ -1972,7 +2010,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 123`() = assertTokenization(
+    fun `test 247`() = assertTokenization(
         input = "<!---{",
         expectedTokens = listOf(
             comment("-{")
@@ -1980,7 +2018,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 6`() = assertTokenization(
+    fun `uDBC0uDC00 248`() = assertTokenization(
         input = "<!---􀀀",
         expectedTokens = listOf(
             comment("-􀀀")
@@ -1988,7 +2026,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 124`() = assertTokenization(
+    fun `test 249`() = assertTokenization(
         input = "<!--.",
         expectedTokens = listOf(
             comment(".")
@@ -1996,7 +2034,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 125`() = assertTokenization(
+    fun `test 250`() = assertTokenization(
         input = "<!--/",
         expectedTokens = listOf(
             comment("/")
@@ -2004,7 +2042,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 7`() = assertTokenization(
+    fun `test 0 251`() = assertTokenization(
         input = "<!--0",
         expectedTokens = listOf(
             comment("0")
@@ -2012,7 +2050,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 7`() = assertTokenization(
+    fun `test 1 252`() = assertTokenization(
         input = "<!--1",
         expectedTokens = listOf(
             comment("1")
@@ -2020,7 +2058,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 7`() = assertTokenization(
+    fun `test 9 253`() = assertTokenization(
         input = "<!--9",
         expectedTokens = listOf(
             comment("9")
@@ -2028,7 +2066,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 126`() = assertTokenization(
+    fun `test 254`() = assertTokenization(
         input = "<!--<",
         expectedTokens = listOf(
             comment("<")
@@ -2036,7 +2074,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 127`() = assertTokenization(
+    fun `test 255`() = assertTokenization(
         input = "<!--=",
         expectedTokens = listOf(
             comment("=")
@@ -2044,7 +2082,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 128`() = assertTokenization(
+    fun `test 256`() = assertTokenization(
         input = "<!--?",
         expectedTokens = listOf(
             comment("?")
@@ -2052,7 +2090,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 129`() = assertTokenization(
+    fun `test 257`() = assertTokenization(
         input = "<!--@",
         expectedTokens = listOf(
             comment("@")
@@ -2060,7 +2098,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 7`() = assertTokenization(
+    fun `A 258`() = assertTokenization(
         input = "<!--A",
         expectedTokens = listOf(
             comment("A")
@@ -2068,7 +2106,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 7`() = assertTokenization(
+    fun `B 259`() = assertTokenization(
         input = "<!--B",
         expectedTokens = listOf(
             comment("B")
@@ -2076,7 +2114,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 7`() = assertTokenization(
+    fun `Y 260`() = assertTokenization(
         input = "<!--Y",
         expectedTokens = listOf(
             comment("Y")
@@ -2084,7 +2122,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 7`() = assertTokenization(
+    fun `Z 261`() = assertTokenization(
         input = "<!--Z",
         expectedTokens = listOf(
             comment("Z")
@@ -2092,7 +2130,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 130`() = assertTokenization(
+    fun `test 262`() = assertTokenization(
         input = "<!--`",
         expectedTokens = listOf(
             comment("`")
@@ -2100,7 +2138,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 12`() = assertTokenization(
+    fun `a 263`() = assertTokenization(
         input = "<!--a",
         expectedTokens = listOf(
             comment("a")
@@ -2108,7 +2146,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 7`() = assertTokenization(
+    fun `b 264`() = assertTokenization(
         input = "<!--b",
         expectedTokens = listOf(
             comment("b")
@@ -2116,7 +2154,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 7`() = assertTokenization(
+    fun `y 265`() = assertTokenization(
         input = "<!--y",
         expectedTokens = listOf(
             comment("y")
@@ -2124,7 +2162,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 7`() = assertTokenization(
+    fun `z 266`() = assertTokenization(
         input = "<!--z",
         expectedTokens = listOf(
             comment("z")
@@ -2132,7 +2170,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 131`() = assertTokenization(
+    fun `test 267`() = assertTokenization(
         input = "<!--{",
         expectedTokens = listOf(
             comment("{")
@@ -2140,7 +2178,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 7`() = assertTokenization(
+    fun `uDBC0uDC00 268`() = assertTokenization(
         input = "<!--􀀀",
         expectedTokens = listOf(
             comment("􀀀")
@@ -2148,7 +2186,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 132`() = assertTokenization(
+    fun `test 269`() = assertTokenization(
         input = "<!/",
         expectedTokens = listOf(
             comment("/")
@@ -2156,7 +2194,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 8`() = assertTokenization(
+    fun `test 0 270`() = assertTokenization(
         input = "<!0",
         expectedTokens = listOf(
             comment("0")
@@ -2164,7 +2202,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 8`() = assertTokenization(
+    fun `test 1 271`() = assertTokenization(
         input = "<!1",
         expectedTokens = listOf(
             comment("1")
@@ -2172,7 +2210,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 8`() = assertTokenization(
+    fun `test 9 272`() = assertTokenization(
         input = "<!9",
         expectedTokens = listOf(
             comment("9")
@@ -2180,7 +2218,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 133`() = assertTokenization(
+    fun `test 273`() = assertTokenization(
         input = "<!<",
         expectedTokens = listOf(
             comment("<")
@@ -2188,7 +2226,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 134`() = assertTokenization(
+    fun `test 274`() = assertTokenization(
         input = "<!=",
         expectedTokens = listOf(
             comment("=")
@@ -2196,7 +2234,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 135`() = assertTokenization(
+    fun `test 275`() = assertTokenization(
         input = "<!>",
         expectedTokens = listOf(
             comment("")
@@ -2204,7 +2242,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 136`() = assertTokenization(
+    fun `test 276`() = assertTokenization(
         input = "<!?",
         expectedTokens = listOf(
             comment("?")
@@ -2212,7 +2250,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 137`() = assertTokenization(
+    fun `test 277`() = assertTokenization(
         input = "<!@",
         expectedTokens = listOf(
             comment("@")
@@ -2220,7 +2258,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 8`() = assertTokenization(
+    fun `A 278`() = assertTokenization(
         input = "<!A",
         expectedTokens = listOf(
             comment("A")
@@ -2228,7 +2266,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 8`() = assertTokenization(
+    fun `B 279`() = assertTokenization(
         input = "<!B",
         expectedTokens = listOf(
             comment("B")
@@ -2236,4951 +2274,6599 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `DOCTYPE`() = assertTokenization(
+    fun `DOCTYPE 280`() = assertTokenization(
         input = "<!DOCTYPE",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu0000`() = assertTokenization(
+    fun `DOCTYPEu0000 281`() = assertTokenization(
         input = "<!DOCTYPE\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu0008`() = assertTokenization(
-        input = "<!DOCTYPE",
-        expectedTokens = listOf()
+    fun `DOCTYPEu0008 282`() = assertTokenization(
+        input = "<!DOCTYPE\u0008",
+        expectedTokens = listOf(
+            doctype(name = "\u0008", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu0009`() = assertTokenization(
+    fun `DOCTYPEu0009 283`() = assertTokenization(
         input = "<!DOCTYPE\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu000A`() = assertTokenization(
+    fun `DOCTYPEu000A 284`() = assertTokenization(
         input = "<!DOCTYPE\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu000B`() = assertTokenization(
-        input = "<!DOCTYPE",
-        expectedTokens = listOf()
+    fun `DOCTYPEu000B 285`() = assertTokenization(
+        input = "<!DOCTYPE\u000b",
+        expectedTokens = listOf(
+            doctype(name = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu000C`() = assertTokenization(
-        input = "<!DOCTYPE",
-        expectedTokens = listOf()
+    fun `DOCTYPEu000C 286`() = assertTokenization(
+        input = "<!DOCTYPE\u000c",
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu000D`() = assertTokenization(
+    fun `DOCTYPEu000D 287`() = assertTokenization(
         input = "<!DOCTYPE\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEu001F`() = assertTokenization(
-        input = "<!DOCTYPE",
-        expectedTokens = listOf()
+    fun `DOCTYPEu001F 288`() = assertTokenization(
+        input = "<!DOCTYPE\u001f",
+        expectedTokens = listOf(
+            doctype(name = "\u001f", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 2`() = assertTokenization(
+    fun `DOCTYPE 289`() = assertTokenization(
         input = "<!DOCTYPE ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u0000`() = assertTokenization(
+    fun `DOCTYPE u0000 290`() = assertTokenization(
         input = "<!DOCTYPE \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u0008`() = assertTokenization(
-        input = "<!DOCTYPE ",
-        expectedTokens = listOf()
+    fun `DOCTYPE u0008 291`() = assertTokenization(
+        input = "<!DOCTYPE \u0008",
+        expectedTokens = listOf(
+            doctype(name = "\u0008", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u0009`() = assertTokenization(
+    fun `DOCTYPE u0009 292`() = assertTokenization(
         input = "<!DOCTYPE \t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u000A`() = assertTokenization(
+    fun `DOCTYPE u000A 293`() = assertTokenization(
         input = "<!DOCTYPE \n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u000B`() = assertTokenization(
-        input = "<!DOCTYPE ",
-        expectedTokens = listOf()
+    fun `DOCTYPE u000B 294`() = assertTokenization(
+        input = "<!DOCTYPE \u000b",
+        expectedTokens = listOf(
+            doctype(name = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u000C`() = assertTokenization(
-        input = "<!DOCTYPE ",
-        expectedTokens = listOf()
+    fun `DOCTYPE u000C 295`() = assertTokenization(
+        input = "<!DOCTYPE \u000c",
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u000D`() = assertTokenization(
+    fun `DOCTYPE u000D 296`() = assertTokenization(
         input = "<!DOCTYPE \r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE u001F`() = assertTokenization(
-        input = "<!DOCTYPE ",
-        expectedTokens = listOf()
+    fun `DOCTYPE u001F 297`() = assertTokenization(
+        input = "<!DOCTYPE \u001f",
+        expectedTokens = listOf(
+            doctype(name = "\u001f", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 3`() = assertTokenization(
+    fun `DOCTYPE 298`() = assertTokenization(
         input = "<!DOCTYPE  ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 4`() = assertTokenization(
+    fun `DOCTYPE 299`() = assertTokenization(
         input = "<!DOCTYPE !",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 5`() = assertTokenization(
+    fun `DOCTYPE 300`() = assertTokenization(
         input = "<!DOCTYPE \"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 6`() = assertTokenization(
+    fun `DOCTYPE 301`() = assertTokenization(
         input = "<!DOCTYPE &",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 7`() = assertTokenization(
+    fun `DOCTYPE 302`() = assertTokenization(
         input = "<!DOCTYPE '",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 8`() = assertTokenization(
+    fun `DOCTYPE 303`() = assertTokenization(
         input = "<!DOCTYPE -",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 9-1`() = assertTokenization(
+    fun `DOCTYPE 304`() = assertTokenization(
         input = "<!DOCTYPE /",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 0`() = assertTokenization(
+    fun `DOCTYPE 0 305`() = assertTokenization(
         input = "<!DOCTYPE 0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 1`() = assertTokenization(
+    fun `DOCTYPE 1 306`() = assertTokenization(
         input = "<!DOCTYPE 1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 9`() = assertTokenization(
+    fun `DOCTYPE 9 307`() = assertTokenization(
         input = "<!DOCTYPE 9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 10`() = assertTokenization(
+    fun `DOCTYPE 308`() = assertTokenization(
         input = "<!DOCTYPE <",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 11`() = assertTokenization(
+    fun `DOCTYPE 309`() = assertTokenization(
         input = "<!DOCTYPE =",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 12`() = assertTokenization(
+    fun `DOCTYPE 310`() = assertTokenization(
         input = "<!DOCTYPE >",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 13`() = assertTokenization(
+    fun `DOCTYPE 311`() = assertTokenization(
         input = "<!DOCTYPE ?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 14`() = assertTokenization(
+    fun `DOCTYPE 312`() = assertTokenization(
         input = "<!DOCTYPE @",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE A`() = assertTokenization(
+    fun `DOCTYPE A 313`() = assertTokenization(
         input = "<!DOCTYPE A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE B`() = assertTokenization(
+    fun `DOCTYPE B 314`() = assertTokenization(
         input = "<!DOCTYPE B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE Y`() = assertTokenization(
+    fun `DOCTYPE Y 315`() = assertTokenization(
         input = "<!DOCTYPE Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE Z`() = assertTokenization(
+    fun `DOCTYPE Z 316`() = assertTokenization(
         input = "<!DOCTYPE Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 15`() = assertTokenization(
+    fun `DOCTYPE 317`() = assertTokenization(
         input = "<!DOCTYPE [",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "[", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 16`() = assertTokenization(
+    fun `DOCTYPE 318`() = assertTokenization(
         input = "<!DOCTYPE `",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a`() = assertTokenization(
+    fun `DOCTYPE a 319`() = assertTokenization(
         input = "<!DOCTYPE a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au0000`() = assertTokenization(
+    fun `DOCTYPE au0000 320`() = assertTokenization(
         input = "<!DOCTYPE a\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au0008`() = assertTokenization(
-        input = "<!DOCTYPE a",
-        expectedTokens = listOf()
+    fun `DOCTYPE au0008 321`() = assertTokenization(
+        input = "<!DOCTYPE a\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a\u0008", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au0009`() = assertTokenization(
+    fun `DOCTYPE au0009 322`() = assertTokenization(
         input = "<!DOCTYPE a\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au000A`() = assertTokenization(
+    fun `DOCTYPE au000A 323`() = assertTokenization(
         input = "<!DOCTYPE a\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au000B`() = assertTokenization(
-        input = "<!DOCTYPE a",
-        expectedTokens = listOf()
+    fun `DOCTYPE au000B 324`() = assertTokenization(
+        input = "<!DOCTYPE a\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au000C`() = assertTokenization(
-        input = "<!DOCTYPE a",
-        expectedTokens = listOf()
+    fun `DOCTYPE au000C 325`() = assertTokenization(
+        input = "<!DOCTYPE a\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au000D`() = assertTokenization(
+    fun `DOCTYPE au000D 326`() = assertTokenization(
         input = "<!DOCTYPE a\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE au001F`() = assertTokenization(
-        input = "<!DOCTYPE a",
-        expectedTokens = listOf()
+    fun `DOCTYPE au001F 327`() = assertTokenization(
+        input = "<!DOCTYPE a\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a\u001f", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 2`() = assertTokenization(
+    fun `DOCTYPE a 328`() = assertTokenization(
         input = "<!DOCTYPE a ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u0000`() = assertTokenization(
+    fun `DOCTYPE a u0000 329`() = assertTokenization(
         input = "<!DOCTYPE a \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u0008`() = assertTokenization(
-        input = "<!DOCTYPE a ",
-        expectedTokens = listOf()
+    fun `DOCTYPE a u0008 330`() = assertTokenization(
+        input = "<!DOCTYPE a \u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u0009`() = assertTokenization(
+    fun `DOCTYPE a u0009 331`() = assertTokenization(
         input = "<!DOCTYPE a \t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u000A`() = assertTokenization(
+    fun `DOCTYPE a u000A 332`() = assertTokenization(
         input = "<!DOCTYPE a \n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u000B`() = assertTokenization(
-        input = "<!DOCTYPE a ",
-        expectedTokens = listOf()
+    fun `DOCTYPE a u000B 333`() = assertTokenization(
+        input = "<!DOCTYPE a \u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u000C`() = assertTokenization(
-        input = "<!DOCTYPE a ",
-        expectedTokens = listOf()
+    fun `DOCTYPE a u000C 334`() = assertTokenization(
+        input = "<!DOCTYPE a \u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u000D`() = assertTokenization(
+    fun `DOCTYPE a u000D 335`() = assertTokenization(
         input = "<!DOCTYPE a \r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a u001F`() = assertTokenization(
-        input = "<!DOCTYPE a ",
-        expectedTokens = listOf()
+    fun `DOCTYPE a u001F 336`() = assertTokenization(
+        input = "<!DOCTYPE a \u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 3`() = assertTokenization(
+    fun `DOCTYPE a 337`() = assertTokenization(
         input = "<!DOCTYPE a  ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 4`() = assertTokenization(
+    fun `DOCTYPE a 338`() = assertTokenization(
         input = "<!DOCTYPE a !",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 5`() = assertTokenization(
+    fun `DOCTYPE a 339`() = assertTokenization(
         input = "<!DOCTYPE a \"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 6`() = assertTokenization(
+    fun `DOCTYPE a 340`() = assertTokenization(
         input = "<!DOCTYPE a &",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 7`() = assertTokenization(
+    fun `DOCTYPE a 341`() = assertTokenization(
         input = "<!DOCTYPE a '",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 8`() = assertTokenization(
+    fun `DOCTYPE a 342`() = assertTokenization(
         input = "<!DOCTYPE a -",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 9-1`() = assertTokenization(
+    fun `DOCTYPE a 343`() = assertTokenization(
         input = "<!DOCTYPE a /",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 0`() = assertTokenization(
+    fun `DOCTYPE a 0 344`() = assertTokenization(
         input = "<!DOCTYPE a 0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 1`() = assertTokenization(
+    fun `DOCTYPE a 1 345`() = assertTokenization(
         input = "<!DOCTYPE a 1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 9`() = assertTokenization(
+    fun `DOCTYPE a 9 346`() = assertTokenization(
         input = "<!DOCTYPE a 9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 10`() = assertTokenization(
+    fun `DOCTYPE a 347`() = assertTokenization(
         input = "<!DOCTYPE a <",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 11`() = assertTokenization(
+    fun `DOCTYPE a 348`() = assertTokenization(
         input = "<!DOCTYPE a =",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 12`() = assertTokenization(
+    fun `DOCTYPE a 349`() = assertTokenization(
         input = "<!DOCTYPE a >",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a")
+        )
     )
 
     @Test
-    fun `DOCTYPE a 13`() = assertTokenization(
+    fun `DOCTYPE a 350`() = assertTokenization(
         input = "<!DOCTYPE a ?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 14`() = assertTokenization(
+    fun `DOCTYPE a 351`() = assertTokenization(
         input = "<!DOCTYPE a @",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a A`() = assertTokenization(
+    fun `DOCTYPE a A 352`() = assertTokenization(
         input = "<!DOCTYPE a A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a B`() = assertTokenization(
+    fun `DOCTYPE a B 353`() = assertTokenization(
         input = "<!DOCTYPE a B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 354`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 355`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0008`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu0008 356`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0009`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0009 357`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000A`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000A 358`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000B`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000B 359`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000C`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000C 360`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000D`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000D 361`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu001F`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu001F 362`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 363`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 364`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 365`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 366`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0009 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0009 367`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000A 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000A 368`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000B 2`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC\"",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000B 369`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\"\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000C 2`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC\"",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000C 370`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC\"\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 5`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 371`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\" ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 6`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 372`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 7`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 373`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 374`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\"\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC u0000`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC u0000 375`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"\" \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 8`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 376`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "#", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 9`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 377`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 10`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 378`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 11`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 379`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 12`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 380`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC0`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC0 381`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC1`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC1 382`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC9`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC9 383`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 13`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 384`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 14`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 385`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 15`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 386`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\">",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 16`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 387`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 17`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 388`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICA`() = assertTokenization(
+    fun `DOCTYPE a PUBLICA 389`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICB`() = assertTokenization(
+    fun `DOCTYPE a PUBLICB 390`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICY`() = assertTokenization(
+    fun `DOCTYPE a PUBLICY 391`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICZ`() = assertTokenization(
+    fun `DOCTYPE a PUBLICZ 392`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 18`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 393`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICa`() = assertTokenization(
+    fun `DOCTYPE a PUBLICa 394`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICb`() = assertTokenization(
+    fun `DOCTYPE a PUBLICb 395`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICy`() = assertTokenization(
+    fun `DOCTYPE a PUBLICy 396`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICz`() = assertTokenization(
+    fun `DOCTYPE a PUBLICz 397`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 19`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 398`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICuDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE a PUBLICuDBC0uDC00 399`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC\"􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 20`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 400`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 21`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 401`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 22`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 402`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 403`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0009 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0009 404`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000A 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000A 405`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000B 3`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC'",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000B 406`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC'\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000C 3`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC'",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000C 407`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC'\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 23`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 408`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 24`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 409`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 25`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 410`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 26`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 411`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 27`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 412`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000 5`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 413`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0008 2`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu0008 414`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC''\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0009 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0009 415`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000A 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000A 416`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000B 4`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000B 417`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC''\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000C 4`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu000C 418`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC''\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu000D 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu000D 419`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu001F 2`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a PUBLICu001F 420`() = assertTokenization(
+        input = "<!DOCTYPE a PUBLIC''\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 28`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 421`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 29`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 422`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 30`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 423`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 31`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 424`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 32`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 425`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 33`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 426`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICu0000 6`() = assertTokenization(
+    fun `DOCTYPE a PUBLICu0000 427`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''''\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICxu0000`() = assertTokenization(
+    fun `DOCTYPE a PUBLICxu0000 428`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''''x\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC u0000 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC u0000 429`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'''' \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC xu0000`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC xu0000 430`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'''' x\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 34`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 431`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 35`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 432`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 36`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 433`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC0 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC0 434`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC1 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC1 435`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC9 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC9 436`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 37`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 437`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 38`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 438`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 39`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 439`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 40`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 440`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 41`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 441`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICA 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICA 442`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICB 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICB 443`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICY 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICY 444`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICZ 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICZ 445`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 42`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 446`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICa 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICa 447`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICb 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICb 448`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICy 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICy 449`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICz 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICz 450`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 43`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 451`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICuDBC0uDC00 2`() = assertTokenization(
+    fun `DOCTYPE a PUBLICuDBC0uDC00 452`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC''􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 44`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 453`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "(", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 45`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 454`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 46`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 455`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC0 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC0 456`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC1 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC1 457`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC9 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC9 458`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 47`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 459`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 48`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 460`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 49`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 461`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 50`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 462`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 51`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 463`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICA 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICA 464`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICB 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICB 465`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICY 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICY 466`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICZ 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICZ 467`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 52`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 468`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICa 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICa 469`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICb 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICb 470`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICy 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICy 471`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICz 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICz 472`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 53`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 473`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICuDBC0uDC00 3`() = assertTokenization(
+    fun `DOCTYPE a PUBLICuDBC0uDC00 474`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC'􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 54`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 475`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 55`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 476`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 56`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 477`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC0 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC0 478`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC1 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC1 479`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC9 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC9 480`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 57`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 481`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 58`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 482`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 59`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 483`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 60`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 484`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 61`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 485`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICA 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICA 486`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICB 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICB 487`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICY 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICY 488`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICZ 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICZ 489`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 62`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 490`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICa 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICa 491`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICb 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICb 492`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICb",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICy 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICy 493`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICy",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICz 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICz 494`() = assertTokenization(
         input = "<!DOCTYPE a PUBLICz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLIC 63`() = assertTokenization(
+    fun `DOCTYPE a PUBLIC 495`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a PUBLICuDBC0uDC00 4`() = assertTokenization(
+    fun `DOCTYPE a PUBLICuDBC0uDC00 496`() = assertTokenization(
         input = "<!DOCTYPE a PUBLIC􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 497`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0000`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0000 498`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM u0000`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM u0000 499`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM xu0000`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM xu0000 500`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0008`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu0008 501`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0009`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0009 502`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000A`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000A 503`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000B`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000B 504`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000C`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000C 505`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000D`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000D 506`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu001F`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu001F 507`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 508`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 509`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 510`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0000 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0000 511`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0009 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0009 512`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000A 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000A 513`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000B 2`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM\"",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000B 514`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\"\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000C 2`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM\"",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000C 515`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM\"\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 5`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 516`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\" ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 6`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 517`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 7`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 518`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 8`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 519`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "#", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 9`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 520`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 10`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 521`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 11`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 522`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 12`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 523`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM0`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM0 524`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM1`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM1 525`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM9`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM9 526`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 13`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 527`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 14`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 528`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 15`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 529`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\">",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 16`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 530`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 17`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 531`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMA`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMA 532`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMB`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMB 533`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMY`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMY 534`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMZ`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMZ 535`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 18`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 536`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMa`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMa 537`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMb`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMb 538`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMy`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMy 539`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMz`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMz 540`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 19`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 541`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMuDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMuDBC0uDC00 542`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM\"􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 20`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 543`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 21`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 544`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 22`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 545`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0000 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0000 546`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0009 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0009 547`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000A 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000A 548`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000B 3`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM'",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000B 549`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM'\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000C 3`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM'",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000C 550`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM'\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 23`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 551`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 24`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 552`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 25`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 553`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 26`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 554`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 27`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 555`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0000 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0000 556`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0008 2`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu0008 557`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM''\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu0009 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu0009 558`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000A 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000A 559`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000B 4`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000B 560`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM''\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000C 4`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu000C 561`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM''\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu000D 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMu000D 562`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMu001F 2`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPE a SYSTEMu001F 563`() = assertTokenization(
+        input = "<!DOCTYPE a SYSTEM''\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 28`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 564`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM u0000 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM u0000 565`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'' \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM xu0000 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM xu0000 566`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'' x\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 29`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 567`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 30`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 568`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 31`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 569`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 32`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 570`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 33`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 571`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 34`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 572`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM0 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM0 573`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM1 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM1 574`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM9 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM9 575`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 35`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 576`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 36`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 577`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 37`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 578`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 38`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 579`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 39`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 580`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMA 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMA 581`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMB 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMB 582`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMY 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMY 583`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMZ 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMZ 584`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 40`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 585`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMa 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMa 586`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMb 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMb 587`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMy 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMy 588`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMz 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMz 589`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 41`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 590`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMuDBC0uDC00 2`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMuDBC0uDC00 591`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM''􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 42`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 592`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "(", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 43`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 593`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 44`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 594`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM0 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM0 595`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM1 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM1 596`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM9 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM9 597`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 45`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 598`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 46`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 599`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 47`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 600`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 48`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 601`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 49`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 602`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMA 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMA 603`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMB 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMB 604`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMY 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMY 605`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMZ 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMZ 606`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 50`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 607`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMa 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMa 608`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMb 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMb 609`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMy 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMy 610`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMz 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMz 611`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 51`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 612`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMuDBC0uDC00 3`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMuDBC0uDC00 613`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM'􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 52`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 614`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 53`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 615`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 54`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 616`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM0 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM0 617`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM1 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM1 618`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM9 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM9 619`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 55`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 620`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 56`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 621`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 57`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 622`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 58`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 623`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 59`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 624`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMA 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMA 625`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMB 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMB 626`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMY 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMY 627`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMZ 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMZ 628`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 60`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 629`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMa 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMa 630`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMb 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMb 631`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMb",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMy 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMy 632`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMy",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMz 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMz 633`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEMz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEM 61`() = assertTokenization(
+    fun `DOCTYPE a SYSTEM 634`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a SYSTEMuDBC0uDC00 4`() = assertTokenization(
+    fun `DOCTYPE a SYSTEMuDBC0uDC00 635`() = assertTokenization(
         input = "<!DOCTYPE a SYSTEM􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a Y`() = assertTokenization(
+    fun `DOCTYPE a Y 636`() = assertTokenization(
         input = "<!DOCTYPE a Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a Z`() = assertTokenization(
+    fun `DOCTYPE a Z 637`() = assertTokenization(
         input = "<!DOCTYPE a Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 15`() = assertTokenization(
+    fun `DOCTYPE a 638`() = assertTokenization(
         input = "<!DOCTYPE a `",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a`() = assertTokenization(
+    fun `DOCTYPE a a 639`() = assertTokenization(
         input = "<!DOCTYPE a a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a au0000`() = assertTokenization(
+    fun `DOCTYPE a au0000 640`() = assertTokenization(
         input = "<!DOCTYPE a a\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a au0009`() = assertTokenization(
+    fun `DOCTYPE a au0009 641`() = assertTokenization(
         input = "<!DOCTYPE a a\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a au000A`() = assertTokenization(
+    fun `DOCTYPE a au000A 642`() = assertTokenization(
         input = "<!DOCTYPE a a\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a au000B`() = assertTokenization(
-        input = "<!DOCTYPE a a",
-        expectedTokens = listOf()
+    fun `DOCTYPE a au000B 643`() = assertTokenization(
+        input = "<!DOCTYPE a a\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a au000C`() = assertTokenization(
-        input = "<!DOCTYPE a a",
-        expectedTokens = listOf()
+    fun `DOCTYPE a au000C 644`() = assertTokenization(
+        input = "<!DOCTYPE a a\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 2`() = assertTokenization(
+    fun `DOCTYPE a a 645`() = assertTokenization(
         input = "<!DOCTYPE a a ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 3`() = assertTokenization(
+    fun `DOCTYPE a a 646`() = assertTokenization(
         input = "<!DOCTYPE a a!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 4`() = assertTokenization(
+    fun `DOCTYPE a a 647`() = assertTokenization(
         input = "<!DOCTYPE a a\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 5`() = assertTokenization(
+    fun `DOCTYPE a a 648`() = assertTokenization(
         input = "<!DOCTYPE a a&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 6`() = assertTokenization(
+    fun `DOCTYPE a a 649`() = assertTokenization(
         input = "<!DOCTYPE a a'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 7`() = assertTokenization(
+    fun `DOCTYPE a a 650`() = assertTokenization(
         input = "<!DOCTYPE a a-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 8`() = assertTokenization(
+    fun `DOCTYPE a a 651`() = assertTokenization(
         input = "<!DOCTYPE a a/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a0`() = assertTokenization(
+    fun `DOCTYPE a a0 652`() = assertTokenization(
         input = "<!DOCTYPE a a0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a1`() = assertTokenization(
+    fun `DOCTYPE a a1 653`() = assertTokenization(
         input = "<!DOCTYPE a a1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a9`() = assertTokenization(
+    fun `DOCTYPE a a9 654`() = assertTokenization(
         input = "<!DOCTYPE a a9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 9`() = assertTokenization(
+    fun `DOCTYPE a a 655`() = assertTokenization(
         input = "<!DOCTYPE a a<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 10`() = assertTokenization(
+    fun `DOCTYPE a a 656`() = assertTokenization(
         input = "<!DOCTYPE a a=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 11`() = assertTokenization(
+    fun `DOCTYPE a a 657`() = assertTokenization(
         input = "<!DOCTYPE a a>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 12`() = assertTokenization(
+    fun `DOCTYPE a a 658`() = assertTokenization(
         input = "<!DOCTYPE a a?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 13`() = assertTokenization(
+    fun `DOCTYPE a a 659`() = assertTokenization(
         input = "<!DOCTYPE a a@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a aA`() = assertTokenization(
+    fun `DOCTYPE a aA 660`() = assertTokenization(
         input = "<!DOCTYPE a aA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a aB`() = assertTokenization(
+    fun `DOCTYPE a aB 661`() = assertTokenization(
         input = "<!DOCTYPE a aB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a aY`() = assertTokenization(
+    fun `DOCTYPE a aY 662`() = assertTokenization(
         input = "<!DOCTYPE a aY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a aZ`() = assertTokenization(
+    fun `DOCTYPE a aZ 663`() = assertTokenization(
         input = "<!DOCTYPE a aZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 14`() = assertTokenization(
+    fun `DOCTYPE a a 664`() = assertTokenization(
         input = "<!DOCTYPE a a`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a aa`() = assertTokenization(
+    fun `DOCTYPE a aa 665`() = assertTokenization(
         input = "<!DOCTYPE a aa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a ab`() = assertTokenization(
+    fun `DOCTYPE a ab 666`() = assertTokenization(
         input = "<!DOCTYPE a ab",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a ay`() = assertTokenization(
+    fun `DOCTYPE a ay 667`() = assertTokenization(
         input = "<!DOCTYPE a ay",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a az`() = assertTokenization(
+    fun `DOCTYPE a az 668`() = assertTokenization(
         input = "<!DOCTYPE a az",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a a 15`() = assertTokenization(
+    fun `DOCTYPE a a 669`() = assertTokenization(
         input = "<!DOCTYPE a a{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a auDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE a auDBC0uDC00 670`() = assertTokenization(
         input = "<!DOCTYPE a a􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a b`() = assertTokenization(
+    fun `DOCTYPE a b 671`() = assertTokenization(
         input = "<!DOCTYPE a b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a y`() = assertTokenization(
+    fun `DOCTYPE a y 672`() = assertTokenization(
         input = "<!DOCTYPE a y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a z`() = assertTokenization(
+    fun `DOCTYPE a z 673`() = assertTokenization(
         input = "<!DOCTYPE a z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 16`() = assertTokenization(
+    fun `DOCTYPE a 674`() = assertTokenization(
         input = "<!DOCTYPE a {",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a uDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE a uDBC0uDC00 675`() = assertTokenization(
         input = "<!DOCTYPE a 􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 17`() = assertTokenization(
+    fun `DOCTYPE a 676`() = assertTokenization(
         input = "<!DOCTYPE a!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 18`() = assertTokenization(
+    fun `DOCTYPE a 677`() = assertTokenization(
         input = "<!DOCTYPE a\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 19`() = assertTokenization(
+    fun `DOCTYPE a 678`() = assertTokenization(
         input = "<!DOCTYPE a&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 20`() = assertTokenization(
+    fun `DOCTYPE a 679`() = assertTokenization(
         input = "<!DOCTYPE a'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 21`() = assertTokenization(
+    fun `DOCTYPE a 680`() = assertTokenization(
         input = "<!DOCTYPE a-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 22`() = assertTokenization(
+    fun `DOCTYPE a 681`() = assertTokenization(
         input = "<!DOCTYPE a/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a0`() = assertTokenization(
+    fun `DOCTYPE a0 682`() = assertTokenization(
         input = "<!DOCTYPE a0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a1`() = assertTokenization(
+    fun `DOCTYPE a1 683`() = assertTokenization(
         input = "<!DOCTYPE a1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a9`() = assertTokenization(
+    fun `DOCTYPE a9 684`() = assertTokenization(
         input = "<!DOCTYPE a9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 23`() = assertTokenization(
+    fun `DOCTYPE a 685`() = assertTokenization(
         input = "<!DOCTYPE a<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 24`() = assertTokenization(
+    fun `DOCTYPE a 686`() = assertTokenization(
         input = "<!DOCTYPE a=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 25`() = assertTokenization(
+    fun `DOCTYPE a 687`() = assertTokenization(
         input = "<!DOCTYPE a>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a")
+        )
     )
 
     @Test
-    fun `DOCTYPE a 26`() = assertTokenization(
+    fun `DOCTYPE a 688`() = assertTokenization(
         input = "<!DOCTYPE a?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 27`() = assertTokenization(
+    fun `DOCTYPE a 689`() = assertTokenization(
         input = "<!DOCTYPE a@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE aA`() = assertTokenization(
+    fun `DOCTYPE aA 690`() = assertTokenization(
         input = "<!DOCTYPE aA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "aa", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE aB`() = assertTokenization(
+    fun `DOCTYPE aB 691`() = assertTokenization(
         input = "<!DOCTYPE aB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ab", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE aY`() = assertTokenization(
+    fun `DOCTYPE aY 692`() = assertTokenization(
         input = "<!DOCTYPE aY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ay", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE aZ`() = assertTokenization(
+    fun `DOCTYPE aZ 693`() = assertTokenization(
         input = "<!DOCTYPE aZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "az", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 28`() = assertTokenization(
+    fun `DOCTYPE a 694`() = assertTokenization(
         input = "<!DOCTYPE a[",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a[", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 29`() = assertTokenization(
+    fun `DOCTYPE a 695`() = assertTokenization(
         input = "<!DOCTYPE a`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE aa`() = assertTokenization(
+    fun `DOCTYPE aa 696`() = assertTokenization(
         input = "<!DOCTYPE aa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "aa", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE ab`() = assertTokenization(
+    fun `DOCTYPE ab 697`() = assertTokenization(
         input = "<!DOCTYPE ab",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ab", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE ay`() = assertTokenization(
+    fun `DOCTYPE ay 698`() = assertTokenization(
         input = "<!DOCTYPE ay",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ay", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE az`() = assertTokenization(
+    fun `DOCTYPE az 699`() = assertTokenization(
         input = "<!DOCTYPE az",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "az", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE a 30`() = assertTokenization(
+    fun `DOCTYPE a 700`() = assertTokenization(
         input = "<!DOCTYPE a{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE auDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE auDBC0uDC00 701`() = assertTokenization(
         input = "<!DOCTYPE a􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE b`() = assertTokenization(
+    fun `DOCTYPE b 702`() = assertTokenization(
         input = "<!DOCTYPE b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE y`() = assertTokenization(
+    fun `DOCTYPE y 703`() = assertTokenization(
         input = "<!DOCTYPE y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE z`() = assertTokenization(
+    fun `DOCTYPE z 704`() = assertTokenization(
         input = "<!DOCTYPE z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 17`() = assertTokenization(
+    fun `DOCTYPE 705`() = assertTokenization(
         input = "<!DOCTYPE {",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE uDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPE uDBC0uDC00 706`() = assertTokenization(
         input = "<!DOCTYPE 􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 18`() = assertTokenization(
+    fun `DOCTYPE 707`() = assertTokenization(
         input = "<!DOCTYPE!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 19`() = assertTokenization(
+    fun `DOCTYPE 708`() = assertTokenization(
         input = "<!DOCTYPE\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 20`() = assertTokenization(
+    fun `DOCTYPE 709`() = assertTokenization(
         input = "<!DOCTYPE&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 21`() = assertTokenization(
+    fun `DOCTYPE 710`() = assertTokenization(
         input = "<!DOCTYPE'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 22`() = assertTokenization(
+    fun `DOCTYPE 711`() = assertTokenization(
         input = "<!DOCTYPE-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 23`() = assertTokenization(
+    fun `DOCTYPE 712`() = assertTokenization(
         input = "<!DOCTYPE/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE0`() = assertTokenization(
+    fun `DOCTYPE0 713`() = assertTokenization(
         input = "<!DOCTYPE0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE1`() = assertTokenization(
+    fun `DOCTYPE1 714`() = assertTokenization(
         input = "<!DOCTYPE1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE9`() = assertTokenization(
+    fun `DOCTYPE9 715`() = assertTokenization(
         input = "<!DOCTYPE9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 24`() = assertTokenization(
+    fun `DOCTYPE 716`() = assertTokenization(
         input = "<!DOCTYPE<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 25`() = assertTokenization(
+    fun `DOCTYPE 717`() = assertTokenization(
         input = "<!DOCTYPE=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 26`() = assertTokenization(
+    fun `DOCTYPE 718`() = assertTokenization(
         input = "<!DOCTYPE>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = null, forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 27`() = assertTokenization(
+    fun `DOCTYPE 719`() = assertTokenization(
         input = "<!DOCTYPE?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 28`() = assertTokenization(
+    fun `DOCTYPE 720`() = assertTokenization(
         input = "<!DOCTYPE@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEA`() = assertTokenization(
+    fun `DOCTYPEA 721`() = assertTokenization(
         input = "<!DOCTYPEA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEB`() = assertTokenization(
+    fun `DOCTYPEB 722`() = assertTokenization(
         input = "<!DOCTYPEB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEY`() = assertTokenization(
+    fun `DOCTYPEY 723`() = assertTokenization(
         input = "<!DOCTYPEY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEZ`() = assertTokenization(
+    fun `DOCTYPEZ 724`() = assertTokenization(
         input = "<!DOCTYPEZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 29`() = assertTokenization(
+    fun `DOCTYPE 725`() = assertTokenization(
         input = "<!DOCTYPE`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa`() = assertTokenization(
+    fun `DOCTYPEa 726`() = assertTokenization(
         input = "<!DOCTYPEa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau0000`() = assertTokenization(
+    fun `DOCTYPEau0000 727`() = assertTokenization(
         input = "<!DOCTYPEa\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau0008`() = assertTokenization(
-        input = "<!DOCTYPEa",
-        expectedTokens = listOf()
+    fun `DOCTYPEau0008 728`() = assertTokenization(
+        input = "<!DOCTYPEa\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a\u0008", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau0009`() = assertTokenization(
+    fun `DOCTYPEau0009 729`() = assertTokenization(
         input = "<!DOCTYPEa\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau000A`() = assertTokenization(
+    fun `DOCTYPEau000A 730`() = assertTokenization(
         input = "<!DOCTYPEa\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau000B`() = assertTokenization(
-        input = "<!DOCTYPEa",
-        expectedTokens = listOf()
+    fun `DOCTYPEau000B 731`() = assertTokenization(
+        input = "<!DOCTYPEa\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau000C`() = assertTokenization(
-        input = "<!DOCTYPEa",
-        expectedTokens = listOf()
+    fun `DOCTYPEau000C 732`() = assertTokenization(
+        input = "<!DOCTYPEa\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau000D`() = assertTokenization(
+    fun `DOCTYPEau000D 733`() = assertTokenization(
         input = "<!DOCTYPEa\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEau001F`() = assertTokenization(
-        input = "<!DOCTYPEa",
-        expectedTokens = listOf()
+    fun `DOCTYPEau001F 734`() = assertTokenization(
+        input = "<!DOCTYPEa\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a\u001f", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 2`() = assertTokenization(
+    fun `DOCTYPEa 735`() = assertTokenization(
         input = "<!DOCTYPEa ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u0000`() = assertTokenization(
+    fun `DOCTYPEa u0000 736`() = assertTokenization(
         input = "<!DOCTYPEa \u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u0008`() = assertTokenization(
-        input = "<!DOCTYPEa ",
-        expectedTokens = listOf()
+    fun `DOCTYPEa u0008 737`() = assertTokenization(
+        input = "<!DOCTYPEa \u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u0009`() = assertTokenization(
+    fun `DOCTYPEa u0009 738`() = assertTokenization(
         input = "<!DOCTYPEa \t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u000A`() = assertTokenization(
+    fun `DOCTYPEa u000A 739`() = assertTokenization(
         input = "<!DOCTYPEa \n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u000B`() = assertTokenization(
-        input = "<!DOCTYPEa ",
-        expectedTokens = listOf()
+    fun `DOCTYPEa u000B 740`() = assertTokenization(
+        input = "<!DOCTYPEa \u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u000C`() = assertTokenization(
-        input = "<!DOCTYPEa ",
-        expectedTokens = listOf()
+    fun `DOCTYPEa u000C 741`() = assertTokenization(
+        input = "<!DOCTYPEa \u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u000D`() = assertTokenization(
+    fun `DOCTYPEa u000D 742`() = assertTokenization(
         input = "<!DOCTYPEa \r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa u001F`() = assertTokenization(
-        input = "<!DOCTYPEa ",
-        expectedTokens = listOf()
+    fun `DOCTYPEa u001F 743`() = assertTokenization(
+        input = "<!DOCTYPEa \u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 3`() = assertTokenization(
+    fun `DOCTYPEa 744`() = assertTokenization(
         input = "<!DOCTYPEa  ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 4`() = assertTokenization(
+    fun `DOCTYPEa 745`() = assertTokenization(
         input = "<!DOCTYPEa !",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 5`() = assertTokenization(
+    fun `DOCTYPEa 746`() = assertTokenization(
         input = "<!DOCTYPEa \"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 6`() = assertTokenization(
+    fun `DOCTYPEa 747`() = assertTokenization(
         input = "<!DOCTYPEa &",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 7`() = assertTokenization(
+    fun `DOCTYPEa 748`() = assertTokenization(
         input = "<!DOCTYPEa '",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 8`() = assertTokenization(
+    fun `DOCTYPEa 749`() = assertTokenization(
         input = "<!DOCTYPEa -",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 9`() = assertTokenization(
+    fun `DOCTYPEa 750`() = assertTokenization(
         input = "<!DOCTYPEa /",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 0`() = assertTokenization(
+    fun `DOCTYPEa 0 751`() = assertTokenization(
         input = "<!DOCTYPEa 0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 1`() = assertTokenization(
+    fun `DOCTYPEa 1 752`() = assertTokenization(
         input = "<!DOCTYPEa 1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 9 - 1`() = assertTokenization(
+    fun `DOCTYPEa 9 753`() = assertTokenization(
         input = "<!DOCTYPEa 9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 10`() = assertTokenization(
+    fun `DOCTYPEa 754`() = assertTokenization(
         input = "<!DOCTYPEa <",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 11`() = assertTokenization(
+    fun `DOCTYPEa 755`() = assertTokenization(
         input = "<!DOCTYPEa =",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 12`() = assertTokenization(
+    fun `DOCTYPEa 756`() = assertTokenization(
         input = "<!DOCTYPEa >",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a")
+        )
     )
 
     @Test
-    fun `DOCTYPEa 13`() = assertTokenization(
+    fun `DOCTYPEa 757`() = assertTokenization(
         input = "<!DOCTYPEa ?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 14`() = assertTokenization(
+    fun `DOCTYPEa 758`() = assertTokenization(
         input = "<!DOCTYPEa @",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa A`() = assertTokenization(
+    fun `DOCTYPEa A 759`() = assertTokenization(
         input = "<!DOCTYPEa A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa B`() = assertTokenization(
+    fun `DOCTYPEa B 760`() = assertTokenization(
         input = "<!DOCTYPEa B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 761`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0000`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0000 762`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0008`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu0008 763`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0009`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0009 764`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000A`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000A 765`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000B`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000B 766`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000C`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000C 767`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000D`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000D 768`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu001F`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu001F 769`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 770`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 771`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 772`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0000 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0000 773`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0009 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0009 774`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000A 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000A 775`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000B 2`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC\"",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000B 776`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\"\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000C 2`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC\"",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000C 777`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC\"\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 5`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 778`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\" ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 6`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 779`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 7`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 780`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 8`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 781`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "#", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 9`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 782`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 10`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 783`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 11`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 784`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 12`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 785`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC0`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC0 786`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC1`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC1 787`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC9`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC9 788`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 13`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 789`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 14`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 790`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 15`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 791`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\">",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 16`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 792`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 17`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 793`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICA`() = assertTokenization(
+    fun `DOCTYPEa PUBLICA 794`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICB`() = assertTokenization(
+    fun `DOCTYPEa PUBLICB 795`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICY`() = assertTokenization(
+    fun `DOCTYPEa PUBLICY 796`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICZ`() = assertTokenization(
+    fun `DOCTYPEa PUBLICZ 797`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 18`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 798`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICa`() = assertTokenization(
+    fun `DOCTYPEa PUBLICa 799`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICb`() = assertTokenization(
+    fun `DOCTYPEa PUBLICb 800`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICy`() = assertTokenization(
+    fun `DOCTYPEa PUBLICy 801`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICz`() = assertTokenization(
+    fun `DOCTYPEa PUBLICz 802`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 19`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 803`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICuDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEa PUBLICuDBC0uDC00 804`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC\"􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 20`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 805`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 21`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 806`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 22`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 807`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0000 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0000 808`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0009 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0009 809`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000A 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000A 810`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000B 3`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC'",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000B 811`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC'\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000C 3`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC'",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000C 812`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC'\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 23`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 813`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 24`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 814`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 25`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 815`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 26`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 816`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 27`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 817`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0000 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0000 818`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0008 2`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu0008 819`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC''\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu0009 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu0009 820`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000A 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000A 821`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000B 4`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000B 822`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC''\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000C 4`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu000C 823`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC''\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu000D 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICu000D 824`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICu001F 2`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa PUBLICu001F 825`() = assertTokenization(
+        input = "<!DOCTYPEa PUBLIC''\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 28`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 826`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 29`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 827`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 30`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 828`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 31`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 829`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 32`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 830`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 33`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 831`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 34`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 832`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 35`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 833`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 36`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 834`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC0 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC0 835`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC1 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC1 836`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC9 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC9 837`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 37`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 838`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 38`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 839`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 39`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 840`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 40`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 841`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 41`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 842`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICA 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICA 843`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICB 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICB 844`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICY 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICY 845`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICZ 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICZ 846`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 42`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 847`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICa 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICa 848`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICb 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICb 849`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICy 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICy 850`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICz 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICz 851`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 43`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 852`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICuDBC0uDC00 2`() = assertTokenization(
+    fun `DOCTYPEa PUBLICuDBC0uDC00 853`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC''􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 44`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 854`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "(", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 45`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 855`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 46`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 856`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC0 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC0 857`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC1 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC1 858`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC9 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC9 859`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 47`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 860`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 48`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 861`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 49`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 862`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 50`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 863`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 51`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 864`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICA 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICA 865`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICB 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICB 866`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICY 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICY 867`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICZ 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICZ 868`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 52`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 869`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICa 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICa 870`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICb 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICb 871`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICy 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICy 872`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICz 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICz 873`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 53`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 874`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICuDBC0uDC00 3`() = assertTokenization(
+    fun `DOCTYPEa PUBLICuDBC0uDC00 875`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC'􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 54`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 876`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 55`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 877`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 56`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 878`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC0 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC0 879`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC1 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC1 880`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC9 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC9 881`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 57`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 882`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 58`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 883`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 59`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 884`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 60`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 885`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 61`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 886`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICA 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICA 887`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICB 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICB 888`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICY 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICY 889`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICZ 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICZ 890`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 62`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 891`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICa 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICa 892`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICb 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICb 893`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICb",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICy 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICy 894`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICy",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICz 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICz 895`() = assertTokenization(
         input = "<!DOCTYPEa PUBLICz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLIC 63`() = assertTokenization(
+    fun `DOCTYPEa PUBLIC 896`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa PUBLICuDBC0uDC00 4`() = assertTokenization(
+    fun `DOCTYPEa PUBLICuDBC0uDC00 897`() = assertTokenization(
         input = "<!DOCTYPEa PUBLIC􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 898`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0000`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0000 899`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0008`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu0008 900`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0009`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0009 901`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000A`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000A 902`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000B`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000B 903`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000C`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000C 904`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000D`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000D 905`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu001F`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu001F 906`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 907`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 908`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 909`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0000 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0000 910`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0009 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0009 911`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000A 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000A 912`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000B 2`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM\"",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000B 913`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\"\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000C 2`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM\"",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000C 914`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM\"\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 5`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 915`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\" ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 6`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 916`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 7`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 917`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 8`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 918`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "#", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 9`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 919`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 10`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 920`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 11`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 921`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 12`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 922`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM0`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM0 923`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM1`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM1 924`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM9`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM9 925`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 13`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 926`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 14`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 927`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 15`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 928`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\">",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 16`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 929`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 17`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 930`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMA`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMA 931`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMB`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMB 932`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMY`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMY 933`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMZ`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMZ 934`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 18`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 935`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMa`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMa 936`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMb`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMb 937`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMy`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMy 938`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMz`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMz 939`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 19`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 940`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMuDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMuDBC0uDC00 941`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM\"􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 20`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 942`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM#",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 21`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 943`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 22`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 944`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0000 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0000 945`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "�", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0009 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0009 946`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\t", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000A 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000A 947`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\n", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000B 3`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM'",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000B 948`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM'\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000C 3`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM'",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000C 949`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM'\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\u000c", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 23`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 950`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = " ", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 24`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 951`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 25`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 952`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 26`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 953`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 27`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 954`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0000 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0000 955`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0008 2`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu0008 956`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM''\u0008",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu0009 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu0009 957`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000A 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000A 958`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000B 4`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000B 959`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM''\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000C 4`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu000C 960`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM''\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu000D 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMu000D 961`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''\r",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMu001F 2`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM''",
-        expectedTokens = listOf()
+    fun `DOCTYPEa SYSTEMu001F 962`() = assertTokenization(
+        input = "<!DOCTYPEa SYSTEM''\u001f",
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 28`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 963`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'' ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 29`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 964`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 30`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 965`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 31`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 966`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 32`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 967`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'''",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 33`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 968`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 34`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 969`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM0 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM0 970`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM1 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM1 971`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM9 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM9 972`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 35`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 973`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 36`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 974`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 37`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 975`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 38`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 976`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 39`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 977`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMA 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMA 978`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMB 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMB 979`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMY 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMY 980`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMZ 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMZ 981`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 40`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 982`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMa 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMa 983`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMb 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMb 984`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMy 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMy 985`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMz 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMz 986`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 41`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 987`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMuDBC0uDC00 2`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMuDBC0uDC00 988`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM''􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "")
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 42`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 989`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "(", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 43`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 990`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 44`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 991`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM0 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM0 992`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM1 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM1 993`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM9 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM9 994`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 45`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 995`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 46`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 996`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 47`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 997`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 48`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 998`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 49`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 999`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMA 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMA 1000`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'A",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "A", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMB 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMB 1001`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'B",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "B", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMY 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMY 1002`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMZ 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMZ 1003`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "Z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 50`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1004`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMa 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMa 1005`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMb 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMb 1006`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMy 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMy 1007`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMz 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMz 1008`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 51`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1009`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMuDBC0uDC00 3`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMuDBC0uDC00 1010`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM'􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 52`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1011`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM(",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 53`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1012`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 54`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1013`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM0 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM0 1014`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM1 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM1 1015`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM9 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM9 1016`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 55`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1017`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 56`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1018`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 57`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1019`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 58`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1020`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 59`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1021`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMA 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMA 1022`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMB 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMB 1023`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMY 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMY 1024`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMZ 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMZ 1025`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 60`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1026`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMa 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMa 1027`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMb 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMb 1028`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMb",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMy 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMy 1029`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMy",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMz 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMz 1030`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEMz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEM 61`() = assertTokenization(
+    fun `DOCTYPEa SYSTEM 1031`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa SYSTEMuDBC0uDC00 4`() = assertTokenization(
+    fun `DOCTYPEa SYSTEMuDBC0uDC00 1032`() = assertTokenization(
         input = "<!DOCTYPEa SYSTEM􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa Y`() = assertTokenization(
+    fun `DOCTYPEa Y 1033`() = assertTokenization(
         input = "<!DOCTYPEa Y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa Z`() = assertTokenization(
+    fun `DOCTYPEa Z 1034`() = assertTokenization(
         input = "<!DOCTYPEa Z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 15`() = assertTokenization(
+    fun `DOCTYPEa 1035`() = assertTokenization(
         input = "<!DOCTYPEa `",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a`() = assertTokenization(
+    fun `DOCTYPEa a 1036`() = assertTokenization(
         input = "<!DOCTYPEa a",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa au0000`() = assertTokenization(
+    fun `DOCTYPEa au0000 1037`() = assertTokenization(
         input = "<!DOCTYPEa a\u0000",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa au0009`() = assertTokenization(
+    fun `DOCTYPEa au0009 1038`() = assertTokenization(
         input = "<!DOCTYPEa a\t",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa au000A`() = assertTokenization(
+    fun `DOCTYPEa au000A 1039`() = assertTokenization(
         input = "<!DOCTYPEa a\n",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa au000B`() = assertTokenization(
-        input = "<!DOCTYPEa a",
-        expectedTokens = listOf()
+    fun `DOCTYPEa au000B 1040`() = assertTokenization(
+        input = "<!DOCTYPEa a\u000b",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa au000C`() = assertTokenization(
-        input = "<!DOCTYPEa a",
-        expectedTokens = listOf()
+    fun `DOCTYPEa au000C 1041`() = assertTokenization(
+        input = "<!DOCTYPEa a\u000c",
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 2`() = assertTokenization(
+    fun `DOCTYPEa a 1042`() = assertTokenization(
         input = "<!DOCTYPEa a ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 3`() = assertTokenization(
+    fun `DOCTYPEa a 1043`() = assertTokenization(
         input = "<!DOCTYPEa a!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 4`() = assertTokenization(
+    fun `DOCTYPEa a 1044`() = assertTokenization(
         input = "<!DOCTYPEa a\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 5`() = assertTokenization(
+    fun `DOCTYPEa a 1045`() = assertTokenization(
         input = "<!DOCTYPEa a&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 6`() = assertTokenization(
+    fun `DOCTYPEa a 1046`() = assertTokenization(
         input = "<!DOCTYPEa a'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 7`() = assertTokenization(
+    fun `DOCTYPEa a 1047`() = assertTokenization(
         input = "<!DOCTYPEa a-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 8`() = assertTokenization(
+    fun `DOCTYPEa a 1048`() = assertTokenization(
         input = "<!DOCTYPEa a/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a0`() = assertTokenization(
+    fun `DOCTYPEa a0 1049`() = assertTokenization(
         input = "<!DOCTYPEa a0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a1`() = assertTokenization(
+    fun `DOCTYPEa a1 1050`() = assertTokenization(
         input = "<!DOCTYPEa a1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a9`() = assertTokenization(
+    fun `DOCTYPEa a9 1051`() = assertTokenization(
         input = "<!DOCTYPEa a9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 9`() = assertTokenization(
+    fun `DOCTYPEa a 1052`() = assertTokenization(
         input = "<!DOCTYPEa a<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 10`() = assertTokenization(
+    fun `DOCTYPEa a 1053`() = assertTokenization(
         input = "<!DOCTYPEa a=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 11`() = assertTokenization(
+    fun `DOCTYPEa a 1054`() = assertTokenization(
         input = "<!DOCTYPEa a>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 12`() = assertTokenization(
+    fun `DOCTYPEa a 1055`() = assertTokenization(
         input = "<!DOCTYPEa a?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 13`() = assertTokenization(
+    fun `DOCTYPEa a 1056`() = assertTokenization(
         input = "<!DOCTYPEa a@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa aA`() = assertTokenization(
+    fun `DOCTYPEa aA 1057`() = assertTokenization(
         input = "<!DOCTYPEa aA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa aB`() = assertTokenization(
+    fun `DOCTYPEa aB 1058`() = assertTokenization(
         input = "<!DOCTYPEa aB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa aY`() = assertTokenization(
+    fun `DOCTYPEa aY 1059`() = assertTokenization(
         input = "<!DOCTYPEa aY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa aZ`() = assertTokenization(
+    fun `DOCTYPEa aZ 1060`() = assertTokenization(
         input = "<!DOCTYPEa aZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 14`() = assertTokenization(
+    fun `DOCTYPEa a 1061`() = assertTokenization(
         input = "<!DOCTYPEa a`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa aa`() = assertTokenization(
+    fun `DOCTYPEa aa 1062`() = assertTokenization(
         input = "<!DOCTYPEa aa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa ab`() = assertTokenization(
+    fun `DOCTYPEa ab 1063`() = assertTokenization(
         input = "<!DOCTYPEa ab",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa ay`() = assertTokenization(
+    fun `DOCTYPEa ay 1064`() = assertTokenization(
         input = "<!DOCTYPEa ay",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa az`() = assertTokenization(
+    fun `DOCTYPEa az 1065`() = assertTokenization(
         input = "<!DOCTYPEa az",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa a 15`() = assertTokenization(
+    fun `DOCTYPEa a 1066`() = assertTokenization(
         input = "<!DOCTYPEa a{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa auDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEa auDBC0uDC00 1067`() = assertTokenization(
         input = "<!DOCTYPEa a􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa b`() = assertTokenization(
+    fun `DOCTYPEa b 1068`() = assertTokenization(
         input = "<!DOCTYPEa b",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa y`() = assertTokenization(
+    fun `DOCTYPEa y 1069`() = assertTokenization(
         input = "<!DOCTYPEa y",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa z`() = assertTokenization(
+    fun `DOCTYPEa z 1070`() = assertTokenization(
         input = "<!DOCTYPEa z",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 16`() = assertTokenization(
+    fun `DOCTYPEa 1071`() = assertTokenization(
         input = "<!DOCTYPEa {",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa uDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEa uDBC0uDC00 1072`() = assertTokenization(
         input = "<!DOCTYPEa 􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 17`() = assertTokenization(
+    fun `DOCTYPEa 1073`() = assertTokenization(
         input = "<!DOCTYPEa!",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a!", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 18`() = assertTokenization(
+    fun `DOCTYPEa 1074`() = assertTokenization(
         input = "<!DOCTYPEa\"",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a\"", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 19`() = assertTokenization(
+    fun `DOCTYPEa 1075`() = assertTokenization(
         input = "<!DOCTYPEa&",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a&", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 20`() = assertTokenization(
+    fun `DOCTYPEa 1076`() = assertTokenization(
         input = "<!DOCTYPEa'",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a'", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 21`() = assertTokenization(
+    fun `DOCTYPEa 1077`() = assertTokenization(
         input = "<!DOCTYPEa-",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a-", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 22`() = assertTokenization(
+    fun `DOCTYPEa 1078`() = assertTokenization(
         input = "<!DOCTYPEa/",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a/", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa0`() = assertTokenization(
+    fun `DOCTYPEa0 1079`() = assertTokenization(
         input = "<!DOCTYPEa0",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a0", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa1`() = assertTokenization(
+    fun `DOCTYPEa1 1080`() = assertTokenization(
         input = "<!DOCTYPEa1",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a1", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa9`() = assertTokenization(
+    fun `DOCTYPEa9 1081`() = assertTokenization(
         input = "<!DOCTYPEa9",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a9", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 23`() = assertTokenization(
+    fun `DOCTYPEa 1082`() = assertTokenization(
         input = "<!DOCTYPEa<",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a<", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 24`() = assertTokenization(
+    fun `DOCTYPEa 1083`() = assertTokenization(
         input = "<!DOCTYPEa=",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a=", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 25`() = assertTokenization(
+    fun `DOCTYPEa 1084`() = assertTokenization(
         input = "<!DOCTYPEa>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a")
+        )
     )
 
     @Test
-    fun `DOCTYPEa 26`() = assertTokenization(
+    fun `DOCTYPEa 1085`() = assertTokenization(
         input = "<!DOCTYPEa?",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a?", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 27`() = assertTokenization(
+    fun `DOCTYPEa 1086`() = assertTokenization(
         input = "<!DOCTYPEa@",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a@", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaA`() = assertTokenization(
+    fun `DOCTYPEaA 1087`() = assertTokenization(
         input = "<!DOCTYPEaA",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "aa", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaB`() = assertTokenization(
+    fun `DOCTYPEaB 1088`() = assertTokenization(
         input = "<!DOCTYPEaB",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ab", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaY`() = assertTokenization(
+    fun `DOCTYPEaY 1089`() = assertTokenization(
         input = "<!DOCTYPEaY",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ay", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaZ`() = assertTokenization(
+    fun `DOCTYPEaZ 1090`() = assertTokenization(
         input = "<!DOCTYPEaZ",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "az", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 28`() = assertTokenization(
+    fun `DOCTYPEa 1091`() = assertTokenization(
         input = "<!DOCTYPEa[",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a[", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 29`() = assertTokenization(
+    fun `DOCTYPEa 1092`() = assertTokenization(
         input = "<!DOCTYPEa`",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a`", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaa`() = assertTokenization(
+    fun `DOCTYPEaa 1093`() = assertTokenization(
         input = "<!DOCTYPEaa",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "aa", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEab`() = assertTokenization(
+    fun `DOCTYPEab 1094`() = assertTokenization(
         input = "<!DOCTYPEab",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ab", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEay`() = assertTokenization(
+    fun `DOCTYPEay 1095`() = assertTokenization(
         input = "<!DOCTYPEay",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "ay", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEaz`() = assertTokenization(
+    fun `DOCTYPEaz 1096`() = assertTokenization(
         input = "<!DOCTYPEaz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "az", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEa 30`() = assertTokenization(
+    fun `DOCTYPEa 1097`() = assertTokenization(
         input = "<!DOCTYPEa{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEauDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEauDBC0uDC00 1098`() = assertTokenization(
         input = "<!DOCTYPEa􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "a􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEb`() = assertTokenization(
+    fun `DOCTYPEb 1099`() = assertTokenization(
         input = "<!DOCTYPEb",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "b", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEy`() = assertTokenization(
+    fun `DOCTYPEy 1100`() = assertTokenization(
         input = "<!DOCTYPEy",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "y", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEz`() = assertTokenization(
+    fun `DOCTYPEz 1101`() = assertTokenization(
         input = "<!DOCTYPEz",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "z", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPE 30`() = assertTokenization(
+    fun `DOCTYPE 1102`() = assertTokenization(
         input = "<!DOCTYPE{",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "{", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `DOCTYPEuDBC0uDC00`() = assertTokenization(
+    fun `DOCTYPEuDBC0uDC00 1103`() = assertTokenization(
         input = "<!DOCTYPE􀀀",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+            doctype(name = "􀀀", forceQuirks = true)
+        )
     )
 
     @Test
-    fun `Y 8`() = assertTokenization(
+    fun `Y 1104`() = assertTokenization(
         input = "<!Y",
         expectedTokens = listOf(
             comment("Y")
@@ -7188,7 +8874,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 8`() = assertTokenization(
+    fun `Z 1105`() = assertTokenization(
         input = "<!Z",
         expectedTokens = listOf(
             comment("Z")
@@ -7196,7 +8882,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 138`() = assertTokenization(
+    fun `test 1106`() = assertTokenization(
         input = "<!`",
         expectedTokens = listOf(
             comment("`")
@@ -7204,7 +8890,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 13`() = assertTokenization(
+    fun `a 1107`() = assertTokenization(
         input = "<!a",
         expectedTokens = listOf(
             comment("a")
@@ -7212,7 +8898,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 8`() = assertTokenization(
+    fun `b 1108`() = assertTokenization(
         input = "<!b",
         expectedTokens = listOf(
             comment("b")
@@ -7220,7 +8906,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 8`() = assertTokenization(
+    fun `y 1109`() = assertTokenization(
         input = "<!y",
         expectedTokens = listOf(
             comment("y")
@@ -7228,7 +8914,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 8`() = assertTokenization(
+    fun `z 1110`() = assertTokenization(
         input = "<!z",
         expectedTokens = listOf(
             comment("z")
@@ -7236,7 +8922,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 139`() = assertTokenization(
+    fun `test 1111`() = assertTokenization(
         input = "<!{",
         expectedTokens = listOf(
             comment("{")
@@ -7244,7 +8930,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 8`() = assertTokenization(
+    fun `uDBC0uDC00 1112`() = assertTokenization(
         input = "<!􀀀",
         expectedTokens = listOf(
             comment("􀀀")
@@ -7252,7 +8938,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 140`() = assertTokenization(
+    fun `test 1113`() = assertTokenization(
         input = "<\"",
         expectedTokens = listOf(
             *chars("<\"").toTypedArray()
@@ -7260,7 +8946,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 141`() = assertTokenization(
+    fun `test 1114`() = assertTokenization(
         input = "<&",
         expectedTokens = listOf(
             *chars("<&").toTypedArray()
@@ -7268,7 +8954,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 142`() = assertTokenization(
+    fun `test 1115`() = assertTokenization(
         input = "<'",
         expectedTokens = listOf(
             *chars("<'").toTypedArray()
@@ -7276,7 +8962,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 143`() = assertTokenization(
+    fun `test 1116`() = assertTokenization(
         input = "<-",
         expectedTokens = listOf(
             *chars("<-").toTypedArray()
@@ -7284,7 +8970,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 144`() = assertTokenization(
+    fun `test 1117`() = assertTokenization(
         input = "<.",
         expectedTokens = listOf(
             *chars("<.").toTypedArray()
@@ -7292,7 +8978,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 145`() = assertTokenization(
+    fun `test 1118`() = assertTokenization(
         input = "</",
         expectedTokens = listOf(
             *chars("</").toTypedArray()
@@ -7300,7 +8986,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 9`() = assertTokenization(
+    fun `u0000 1119`() = assertTokenization(
         input = "</\u0000",
         expectedTokens = listOf(
             comment("�")
@@ -7308,37 +8994,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 10`() = assertTokenization(
+    fun `u0009 1120`() = assertTokenization(
         input = "</\t",
         expectedTokens = listOf(
-            comment("	")
+            comment("\t")
         )
     )
 
     @Test
-    fun `u000A 10`() = assertTokenization(
+    fun `u000A 1121`() = assertTokenization(
         input = "</\n",
-        expectedTokens = listOf(comment("\n"))
-    )
-
-    @Test
-    fun `u000B 10`() = assertTokenization(
-        input = "</",
         expectedTokens = listOf(
-            comment("")
+            comment("\n")
         )
     )
 
     @Test
-    fun `u000C 10`() = assertTokenization(
-        input = "</",
+    fun `u000B 1122`() = assertTokenization(
+        input = "</\u000b",
         expectedTokens = listOf(
-            comment("")
+            comment("\u000b")
         )
     )
 
     @Test
-    fun ` 146`() = assertTokenization(
+    fun `u000C 1123`() = assertTokenization(
+        input = "</\u000c",
+        expectedTokens = listOf(
+            comment("\u000c")
+        )
+    )
+
+    @Test
+    fun `test 1124`() = assertTokenization(
         input = "</ ",
         expectedTokens = listOf(
             comment(" ")
@@ -7346,7 +9034,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 10`() = assertTokenization(
+    fun `u0000 1125`() = assertTokenization(
         input = "</ \u0000",
         expectedTokens = listOf(
             comment(" �")
@@ -7354,7 +9042,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 147`() = assertTokenization(
+    fun `test 1126`() = assertTokenization(
         input = "</!",
         expectedTokens = listOf(
             comment("!")
@@ -7362,13 +9050,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 148`() = assertTokenization(
+    fun `test 1127`() = assertTokenization(
         input = "</\"",
-        expectedTokens = listOf(comment("\""))
+        expectedTokens = listOf(
+            comment("\"")
+        )
     )
 
     @Test
-    fun ` 149`() = assertTokenization(
+    fun `test 1128`() = assertTokenization(
         input = "</&",
         expectedTokens = listOf(
             comment("&")
@@ -7376,7 +9066,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 150`() = assertTokenization(
+    fun `test 1129`() = assertTokenization(
         input = "</'",
         expectedTokens = listOf(
             comment("'")
@@ -7384,7 +9074,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 151`() = assertTokenization(
+    fun `test 1130`() = assertTokenization(
         input = "</-",
         expectedTokens = listOf(
             comment("-")
@@ -7392,7 +9082,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 152`() = assertTokenization(
+    fun `test 1131`() = assertTokenization(
         input = "<//",
         expectedTokens = listOf(
             comment("/")
@@ -7400,7 +9090,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 9`() = assertTokenization(
+    fun `test 0 1132`() = assertTokenization(
         input = "</0",
         expectedTokens = listOf(
             comment("0")
@@ -7408,7 +9098,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 9`() = assertTokenization(
+    fun `test 1 1133`() = assertTokenization(
         input = "</1",
         expectedTokens = listOf(
             comment("1")
@@ -7416,7 +9106,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 9`() = assertTokenization(
+    fun `test 9 1134`() = assertTokenization(
         input = "</9",
         expectedTokens = listOf(
             comment("9")
@@ -7424,7 +9114,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 153`() = assertTokenization(
+    fun `test 1135`() = assertTokenization(
         input = "</<",
         expectedTokens = listOf(
             comment("<")
@@ -7432,7 +9122,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 154`() = assertTokenization(
+    fun `test 1136`() = assertTokenization(
         input = "</=",
         expectedTokens = listOf(
             comment("=")
@@ -7440,13 +9130,14 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 155`() = assertTokenization(
+    fun `test 1137`() = assertTokenization(
         input = "</>",
-        expectedTokens = listOf()
+        expectedTokens = listOf(
+        )
     )
 
     @Test
-    fun ` 156`() = assertTokenization(
+    fun `test 1138`() = assertTokenization(
         input = "</?",
         expectedTokens = listOf(
             comment("?")
@@ -7454,7 +9145,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 157`() = assertTokenization(
+    fun `test 1139`() = assertTokenization(
         input = "</@",
         expectedTokens = listOf(
             comment("@")
@@ -7462,7 +9153,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 9`() = assertTokenization(
+    fun `A 1140`() = assertTokenization(
         input = "</A>",
         expectedTokens = listOf(
             endTag("a")
@@ -7470,7 +9161,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 9`() = assertTokenization(
+    fun `B 1141`() = assertTokenization(
         input = "</B>",
         expectedTokens = listOf(
             endTag("b")
@@ -7478,7 +9169,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 9`() = assertTokenization(
+    fun `Y 1142`() = assertTokenization(
         input = "</Y>",
         expectedTokens = listOf(
             endTag("y")
@@ -7486,7 +9177,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 9`() = assertTokenization(
+    fun `Z 1143`() = assertTokenization(
         input = "</Z>",
         expectedTokens = listOf(
             endTag("z")
@@ -7494,7 +9185,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 158`() = assertTokenization(
+    fun `test 1144`() = assertTokenization(
         input = "</[",
         expectedTokens = listOf(
             comment("[")
@@ -7502,7 +9193,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 159`() = assertTokenization(
+    fun `test 1145`() = assertTokenization(
         input = "</`",
         expectedTokens = listOf(
             comment("`")
@@ -7510,7 +9201,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 14`() = assertTokenization(
+    fun `a 1146`() = assertTokenization(
         input = "</a>",
         expectedTokens = listOf(
             endTag("a")
@@ -7518,7 +9209,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 9`() = assertTokenization(
+    fun `b 1147`() = assertTokenization(
         input = "</b>",
         expectedTokens = listOf(
             endTag("b")
@@ -7526,7 +9217,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 9`() = assertTokenization(
+    fun `y 1148`() = assertTokenization(
         input = "</y>",
         expectedTokens = listOf(
             endTag("y")
@@ -7534,7 +9225,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 9`() = assertTokenization(
+    fun `z 1149`() = assertTokenization(
         input = "</z>",
         expectedTokens = listOf(
             endTag("z")
@@ -7542,7 +9233,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 160`() = assertTokenization(
+    fun `test 1150`() = assertTokenization(
         input = "</{",
         expectedTokens = listOf(
             comment("{")
@@ -7550,7 +9241,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 9`() = assertTokenization(
+    fun `uDBC0uDC00 1151`() = assertTokenization(
         input = "</􀀀",
         expectedTokens = listOf(
             comment("􀀀")
@@ -7558,7 +9249,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 10`() = assertTokenization(
+    fun `test 0 1152`() = assertTokenization(
         input = "<0",
         expectedTokens = listOf(
             *chars("<0").toTypedArray()
@@ -7566,7 +9257,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 10`() = assertTokenization(
+    fun `test 1 1153`() = assertTokenization(
         input = "<1",
         expectedTokens = listOf(
             *chars("<1").toTypedArray()
@@ -7574,7 +9265,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 10`() = assertTokenization(
+    fun `test 9 1154`() = assertTokenization(
         input = "<9",
         expectedTokens = listOf(
             *chars("<9").toTypedArray()
@@ -7582,7 +9273,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 161`() = assertTokenization(
+    fun `test 1155`() = assertTokenization(
         input = "<<",
         expectedTokens = listOf(
             *chars("<<").toTypedArray()
@@ -7590,7 +9281,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 162`() = assertTokenization(
+    fun `test 1156`() = assertTokenization(
         input = "<=",
         expectedTokens = listOf(
             *chars("<=").toTypedArray()
@@ -7598,7 +9289,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 163`() = assertTokenization(
+    fun `test 1157`() = assertTokenization(
         input = "<>",
         expectedTokens = listOf(
             *chars("<>").toTypedArray()
@@ -7606,7 +9297,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 164`() = assertTokenization(
+    fun `test 1158`() = assertTokenization(
         input = "<?",
         expectedTokens = listOf(
             comment("?")
@@ -7614,7 +9305,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 11`() = assertTokenization(
+    fun `u0000 1159`() = assertTokenization(
         input = "<?\u0000",
         expectedTokens = listOf(
             comment("?�")
@@ -7622,37 +9313,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 11`() = assertTokenization(
+    fun `u0009 1160`() = assertTokenization(
         input = "<?\t",
         expectedTokens = listOf(
-            comment("?	")
+            comment("?\t")
         )
     )
 
     @Test
-    fun `u000A 11`() = assertTokenization(
+    fun `u000A 1161`() = assertTokenization(
         input = "<?\n",
-        expectedTokens = listOf(comment("?\n"))
-    )
-
-    @Test
-    fun `u000B 11`() = assertTokenization(
-        input = "<?",
         expectedTokens = listOf(
-            comment("?")
+            comment("?\n")
         )
     )
 
     @Test
-    fun `u000C 11`() = assertTokenization(
-        input = "<?",
+    fun `u000B 1162`() = assertTokenization(
+        input = "<?\u000b",
         expectedTokens = listOf(
-            comment("?")
+            comment("?\u000b")
         )
     )
 
     @Test
-    fun ` 165`() = assertTokenization(
+    fun `u000C 1163`() = assertTokenization(
+        input = "<?\u000c",
+        expectedTokens = listOf(
+            comment("?\u000c")
+        )
+    )
+
+    @Test
+    fun `test 1164`() = assertTokenization(
         input = "<? ",
         expectedTokens = listOf(
             comment("? ")
@@ -7660,7 +9353,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 12`() = assertTokenization(
+    fun `u0000 1165`() = assertTokenization(
         input = "<? \u0000",
         expectedTokens = listOf(
             comment("? �")
@@ -7668,7 +9361,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 166`() = assertTokenization(
+    fun `test 1166`() = assertTokenization(
         input = "<?!",
         expectedTokens = listOf(
             comment("?!")
@@ -7676,13 +9369,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 167`() = assertTokenization(
+    fun `test 1167`() = assertTokenization(
         input = "<?\"",
-        expectedTokens = listOf(comment("?\""))
+        expectedTokens = listOf(
+            comment("?\"")
+        )
     )
 
     @Test
-    fun ` 168`() = assertTokenization(
+    fun `test 1168`() = assertTokenization(
         input = "<?&",
         expectedTokens = listOf(
             comment("?&")
@@ -7690,7 +9385,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 169`() = assertTokenization(
+    fun `test 1169`() = assertTokenization(
         input = "<?'",
         expectedTokens = listOf(
             comment("?'")
@@ -7698,7 +9393,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 170`() = assertTokenization(
+    fun `test 1170`() = assertTokenization(
         input = "<?-",
         expectedTokens = listOf(
             comment("?-")
@@ -7706,7 +9401,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 171`() = assertTokenization(
+    fun `test 1171`() = assertTokenization(
         input = "<?/",
         expectedTokens = listOf(
             comment("?/")
@@ -7714,7 +9409,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `0 11`() = assertTokenization(
+    fun `test 0 1172`() = assertTokenization(
         input = "<?0",
         expectedTokens = listOf(
             comment("?0")
@@ -7722,7 +9417,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `1 11`() = assertTokenization(
+    fun `test 1 1173`() = assertTokenization(
         input = "<?1",
         expectedTokens = listOf(
             comment("?1")
@@ -7730,7 +9425,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `9 11`() = assertTokenization(
+    fun `test 9 1174`() = assertTokenization(
         input = "<?9",
         expectedTokens = listOf(
             comment("?9")
@@ -7738,7 +9433,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 172`() = assertTokenization(
+    fun `test 1175`() = assertTokenization(
         input = "<?<",
         expectedTokens = listOf(
             comment("?<")
@@ -7746,7 +9441,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 173`() = assertTokenization(
+    fun `test 1176`() = assertTokenization(
         input = "<?=",
         expectedTokens = listOf(
             comment("?=")
@@ -7754,7 +9449,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 174`() = assertTokenization(
+    fun `test 1177`() = assertTokenization(
         input = "<?>",
         expectedTokens = listOf(
             comment("?")
@@ -7762,7 +9457,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 175`() = assertTokenization(
+    fun `test 1178`() = assertTokenization(
         input = "<??",
         expectedTokens = listOf(
             comment("??")
@@ -7770,7 +9465,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 176`() = assertTokenization(
+    fun `test 1179`() = assertTokenization(
         input = "<?@",
         expectedTokens = listOf(
             comment("?@")
@@ -7778,7 +9473,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 10`() = assertTokenization(
+    fun `A 1180`() = assertTokenization(
         input = "<?A",
         expectedTokens = listOf(
             comment("?A")
@@ -7786,7 +9481,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 10`() = assertTokenization(
+    fun `B 1181`() = assertTokenization(
         input = "<?B",
         expectedTokens = listOf(
             comment("?B")
@@ -7794,7 +9489,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 10`() = assertTokenization(
+    fun `Y 1182`() = assertTokenization(
         input = "<?Y",
         expectedTokens = listOf(
             comment("?Y")
@@ -7802,7 +9497,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 10`() = assertTokenization(
+    fun `Z 1183`() = assertTokenization(
         input = "<?Z",
         expectedTokens = listOf(
             comment("?Z")
@@ -7810,7 +9505,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 177`() = assertTokenization(
+    fun `test 1184`() = assertTokenization(
         input = "<?`",
         expectedTokens = listOf(
             comment("?`")
@@ -7818,7 +9513,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 15`() = assertTokenization(
+    fun `a 1185`() = assertTokenization(
         input = "<?a",
         expectedTokens = listOf(
             comment("?a")
@@ -7826,7 +9521,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 10`() = assertTokenization(
+    fun `b 1186`() = assertTokenization(
         input = "<?b",
         expectedTokens = listOf(
             comment("?b")
@@ -7834,7 +9529,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 10`() = assertTokenization(
+    fun `y 1187`() = assertTokenization(
         input = "<?y",
         expectedTokens = listOf(
             comment("?y")
@@ -7842,7 +9537,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 10`() = assertTokenization(
+    fun `z 1188`() = assertTokenization(
         input = "<?z",
         expectedTokens = listOf(
             comment("?z")
@@ -7850,7 +9545,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 178`() = assertTokenization(
+    fun `test 1189`() = assertTokenization(
         input = "<?{",
         expectedTokens = listOf(
             comment("?{")
@@ -7858,7 +9553,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 10`() = assertTokenization(
+    fun `uDBC0uDC00 1190`() = assertTokenization(
         input = "<?􀀀",
         expectedTokens = listOf(
             comment("?􀀀")
@@ -7866,7 +9561,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 179`() = assertTokenization(
+    fun `test 1191`() = assertTokenization(
         input = "<@",
         expectedTokens = listOf(
             *chars("<@").toTypedArray()
@@ -7874,7 +9569,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 11`() = assertTokenization(
+    fun `A 1192`() = assertTokenization(
         input = "<A>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -7882,7 +9577,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 11`() = assertTokenization(
+    fun `B 1193`() = assertTokenization(
         input = "<B>",
         expectedTokens = listOf(
             startTag(name = "b")
@@ -7890,7 +9585,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 11`() = assertTokenization(
+    fun `Y 1194`() = assertTokenization(
         input = "<Y>",
         expectedTokens = listOf(
             startTag(name = "y")
@@ -7898,7 +9593,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 11`() = assertTokenization(
+    fun `Z 1195`() = assertTokenization(
         input = "<Z>",
         expectedTokens = listOf(
             startTag(name = "z")
@@ -7906,7 +9601,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 180`() = assertTokenization(
+    fun `test 1196`() = assertTokenization(
         input = "<[",
         expectedTokens = listOf(
             *chars("<[").toTypedArray()
@@ -7914,7 +9609,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 181`() = assertTokenization(
+    fun `test 1197`() = assertTokenization(
         input = "<`",
         expectedTokens = listOf(
             *chars("<`").toTypedArray()
@@ -7922,7 +9617,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 16`() = assertTokenization(
+    fun `a 1198`() = assertTokenization(
         input = "<a>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -7930,7 +9625,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0000`() = assertTokenization(
+    fun `au0000 1199`() = assertTokenization(
         input = "<a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a�")
@@ -7938,15 +9633,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0008`() = assertTokenization(
-        input = "<a>",
+    fun `au0008 1200`() = assertTokenization(
+        input = "<a\u0008>",
         expectedTokens = listOf(
-            startTag(name = "a")
+            startTag(name = "a\u0008")
         )
     )
 
     @Test
-    fun `au0009`() = assertTokenization(
+    fun `au0009 1201`() = assertTokenization(
         input = "<a\t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -7954,7 +9649,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000A`() = assertTokenization(
+    fun `au000A 1202`() = assertTokenization(
         input = "<a\n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -7962,23 +9657,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000B`() = assertTokenization(
-        input = "<a>",
+    fun `au000B 1203`() = assertTokenization(
+        input = "<a\u000b>",
         expectedTokens = listOf(
-            startTag(name = "a")
+            startTag(name = "a\u000b")
         )
     )
 
     @Test
-    fun `au000C`() = assertTokenization(
-        input = "<a>",
+    fun `au000C 1204`() = assertTokenization(
+        input = "<a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
         )
     )
 
     @Test
-    fun `au000D`() = assertTokenization(
+    fun `au000D 1205`() = assertTokenization(
         input = "<a\r>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -7986,15 +9681,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au001F`() = assertTokenization(
-        input = "<a>",
+    fun `au001F 1206`() = assertTokenization(
+        input = "<a\u001f>",
         expectedTokens = listOf(
-            startTag(name = "a")
+            startTag(name = "a\u001f")
         )
     )
 
     @Test
-    fun `a 17`() = assertTokenization(
+    fun `a 1207`() = assertTokenization(
         input = "<a >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8002,7 +9697,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u0000`() = assertTokenization(
+    fun `a u0000 1208`() = assertTokenization(
         input = "<a \u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("�" to ""))
@@ -8010,15 +9705,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u0008`() = assertTokenization(
-        input = "<a >",
+    fun `a u0008 1209`() = assertTokenization(
+        input = "<a \u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("" to ""))
+            startTag(name = "a", attributes = mapOf("\u0008" to ""))
         )
     )
 
     @Test
-    fun `a u0009`() = assertTokenization(
+    fun `a u0009 1210`() = assertTokenization(
         input = "<a \t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8026,7 +9721,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000A`() = assertTokenization(
+    fun `a u000A 1211`() = assertTokenization(
         input = "<a \n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8034,23 +9729,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000B`() = assertTokenization(
-        input = "<a >",
+    fun `a u000B 1212`() = assertTokenization(
+        input = "<a \u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("" to ""))
+            startTag(name = "a", attributes = mapOf("\u000b" to ""))
         )
     )
 
     @Test
-    fun `a u000C`() = assertTokenization(
-        input = "<a >",
+    fun `a u000C 1213`() = assertTokenization(
+        input = "<a \u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
         )
     )
 
     @Test
-    fun `a u000D`() = assertTokenization(
+    fun `a u000D 1214`() = assertTokenization(
         input = "<a \r>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8058,15 +9753,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u001F`() = assertTokenization(
-        input = "<a >",
+    fun `a u001F 1215`() = assertTokenization(
+        input = "<a \u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("" to ""))
+            startTag(name = "a", attributes = mapOf("\u001f" to ""))
         )
     )
 
     @Test
-    fun `a 18`() = assertTokenization(
+    fun `a 1216`() = assertTokenization(
         input = "<a  >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8074,7 +9769,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 19`() = assertTokenization(
+    fun `a 1217`() = assertTokenization(
         input = "<a !>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("!" to ""))
@@ -8082,18 +9777,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 20`() = assertTokenization(
+    fun `a 1218`() = assertTokenization(
         input = "<a \">",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("\"" to "")
-            )
+            startTag(name = "a", attributes = mapOf("\"" to ""))
         )
     )
 
     @Test
-    fun `a 21`() = assertTokenization(
+    fun `a 1219`() = assertTokenization(
         input = "<a #>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("#" to ""))
@@ -8101,7 +9793,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 22`() = assertTokenization(
+    fun `a 1220`() = assertTokenization(
         input = "<a &>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("&" to ""))
@@ -8109,7 +9801,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 23`() = assertTokenization(
+    fun `a 1221`() = assertTokenization(
         input = "<a '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("'" to ""))
@@ -8117,7 +9809,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 24`() = assertTokenization(
+    fun `a 1222`() = assertTokenization(
         input = "<a (>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("(" to ""))
@@ -8125,7 +9817,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 25`() = assertTokenization(
+    fun `a 1223`() = assertTokenization(
         input = "<a ->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("-" to ""))
@@ -8133,7 +9825,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 26`() = assertTokenization(
+    fun `a 1224`() = assertTokenization(
         input = "<a .>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("." to ""))
@@ -8141,7 +9833,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 27`() = assertTokenization(
+    fun `a 1225`() = assertTokenization(
         input = "<a />",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -8149,7 +9841,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 0`() = assertTokenization(
+    fun `a 0 1226`() = assertTokenization(
         input = "<a 0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("0" to ""))
@@ -8157,7 +9849,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1`() = assertTokenization(
+    fun `a 1 1227`() = assertTokenization(
         input = "<a 1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("1" to ""))
@@ -8165,7 +9857,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 9-1`() = assertTokenization(
+    fun `a 9 1228`() = assertTokenization(
         input = "<a 9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("9" to ""))
@@ -8173,7 +9865,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 28`() = assertTokenization(
+    fun `a 1229`() = assertTokenization(
         input = "<a <>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("<" to ""))
@@ -8181,7 +9873,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 29`() = assertTokenization(
+    fun `a 1230`() = assertTokenization(
         input = "<a =>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("=" to ""))
@@ -8189,7 +9881,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 30`() = assertTokenization(
+    fun `a 1231`() = assertTokenization(
         input = "<a >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -8197,7 +9889,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 31`() = assertTokenization(
+    fun `a 1232`() = assertTokenization(
         input = "<a ?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("?" to ""))
@@ -8205,7 +9897,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 32`() = assertTokenization(
+    fun `a 1233`() = assertTokenization(
         input = "<a @>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("@" to ""))
@@ -8213,7 +9905,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a A`() = assertTokenization(
+    fun `a A 1234`() = assertTokenization(
         input = "<a A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8221,7 +9913,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a B`() = assertTokenization(
+    fun `a B 1235`() = assertTokenization(
         input = "<a B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -8229,7 +9921,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a Y`() = assertTokenization(
+    fun `a Y 1236`() = assertTokenization(
         input = "<a Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -8237,7 +9929,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a Z`() = assertTokenization(
+    fun `a Z 1237`() = assertTokenization(
         input = "<a Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -8245,7 +9937,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 33`() = assertTokenization(
+    fun `a 1238`() = assertTokenization(
         input = "<a [>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("[" to ""))
@@ -8253,7 +9945,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 34`() = assertTokenization(
+    fun `a 1239`() = assertTokenization(
         input = "<a `>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("`" to ""))
@@ -8261,7 +9953,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a`() = assertTokenization(
+    fun `a a 1240`() = assertTokenization(
         input = "<a a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8269,7 +9961,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000`() = assertTokenization(
+    fun `a au0000 1241`() = assertTokenization(
         input = "<a a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a�" to ""))
@@ -8277,15 +9969,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008`() = assertTokenization(
-        input = "<a a>",
+    fun `a au0008 1242`() = assertTokenization(
+        input = "<a a\u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a\u0008" to ""))
         )
     )
 
     @Test
-    fun `a au0009`() = assertTokenization(
+    fun `a au0009 1243`() = assertTokenization(
         input = "<a a\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8293,7 +9985,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A`() = assertTokenization(
+    fun `a au000A 1244`() = assertTokenization(
         input = "<a a\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8301,23 +9993,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B`() = assertTokenization(
-        input = "<a a>",
+    fun `a au000B 1245`() = assertTokenization(
+        input = "<a a\u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a\u000b" to ""))
         )
     )
 
     @Test
-    fun `a au000C`() = assertTokenization(
-        input = "<a a>",
+    fun `a au000C 1246`() = assertTokenization(
+        input = "<a a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
         )
     )
 
     @Test
-    fun `a au000D`() = assertTokenization(
+    fun `a au000D 1247`() = assertTokenization(
         input = "<a a\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8325,15 +10017,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F`() = assertTokenization(
-        input = "<a a>",
+    fun `a au001F 1248`() = assertTokenization(
+        input = "<a a\u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a\u001f" to ""))
         )
     )
 
     @Test
-    fun `a a 2`() = assertTokenization(
+    fun `a a 1249`() = assertTokenization(
         input = "<a a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8341,7 +10033,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u0000`() = assertTokenization(
+    fun `a a u0000 1250`() = assertTokenization(
         input = "<a a \u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "�" to ""))
@@ -8349,15 +10041,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u0008`() = assertTokenization(
-        input = "<a a >",
+    fun `a a u0008 1251`() = assertTokenization(
+        input = "<a a \u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u0008" to ""))
         )
     )
 
     @Test
-    fun `a a u0009`() = assertTokenization(
+    fun `a a u0009 1252`() = assertTokenization(
         input = "<a a \t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8365,7 +10057,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000A`() = assertTokenization(
+    fun `a a u000A 1253`() = assertTokenization(
         input = "<a a \n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8373,23 +10065,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000B`() = assertTokenization(
-        input = "<a a >",
+    fun `a a u000B 1254`() = assertTokenization(
+        input = "<a a \u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u000b" to ""))
         )
     )
 
     @Test
-    fun `a a u000C`() = assertTokenization(
-        input = "<a a >",
+    fun `a a u000C 1255`() = assertTokenization(
+        input = "<a a \u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
         )
     )
 
     @Test
-    fun `a a u000D`() = assertTokenization(
+    fun `a a u000D 1256`() = assertTokenization(
         input = "<a a \r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8397,15 +10089,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u001F`() = assertTokenization(
-        input = "<a a >",
+    fun `a a u001F 1257`() = assertTokenization(
+        input = "<a a \u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u001f" to ""))
         )
     )
 
     @Test
-    fun `a a 3`() = assertTokenization(
+    fun `a a 1258`() = assertTokenization(
         input = "<a a  >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8413,7 +10105,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 4`() = assertTokenization(
+    fun `a a 1259`() = assertTokenization(
         input = "<a a !>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "!" to ""))
@@ -8421,17 +10113,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 5`() = assertTokenization(
+    fun `a a 1260`() = assertTokenization(
         input = "<a a \">",
         expectedTokens = listOf(
-            startTag(
-                name = "a", attributes = mapOf("a" to "", "\"" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "\"" to ""))
         )
     )
 
     @Test
-    fun `a a 6`() = assertTokenization(
+    fun `a a 1261`() = assertTokenization(
         input = "<a a #>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "#" to ""))
@@ -8439,7 +10129,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 7`() = assertTokenization(
+    fun `a a 1262`() = assertTokenization(
         input = "<a a &>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "&" to ""))
@@ -8447,7 +10137,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 8`() = assertTokenization(
+    fun `a a 1263`() = assertTokenization(
         input = "<a a '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "'" to ""))
@@ -8455,7 +10145,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 9-1`() = assertTokenization(
+    fun `a a 1264`() = assertTokenization(
         input = "<a a (>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "(" to ""))
@@ -8463,7 +10153,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 10`() = assertTokenization(
+    fun `a a 1265`() = assertTokenization(
         input = "<a a ->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "-" to ""))
@@ -8471,7 +10161,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 11`() = assertTokenization(
+    fun `a a 1266`() = assertTokenization(
         input = "<a a .>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "." to ""))
@@ -8479,7 +10169,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 12`() = assertTokenization(
+    fun `a a 1267`() = assertTokenization(
         input = "<a a />",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
@@ -8487,7 +10177,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 0`() = assertTokenization(
+    fun `a a 0 1268`() = assertTokenization(
         input = "<a a 0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "0" to ""))
@@ -8495,7 +10185,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1`() = assertTokenization(
+    fun `a a 1 1269`() = assertTokenization(
         input = "<a a 1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "1" to ""))
@@ -8503,7 +10193,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 9`() = assertTokenization(
+    fun `a a 9 1270`() = assertTokenization(
         input = "<a a 9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "9" to ""))
@@ -8511,7 +10201,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 13`() = assertTokenization(
+    fun `a a 1271`() = assertTokenization(
         input = "<a a <>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "<" to ""))
@@ -8519,7 +10209,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 14`() = assertTokenization(
+    fun `a a 1272`() = assertTokenization(
         input = "<a a =>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8527,7 +10217,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 15`() = assertTokenization(
+    fun `a a 1273`() = assertTokenization(
         input = "<a a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8535,7 +10225,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 16`() = assertTokenization(
+    fun `a a 1274`() = assertTokenization(
         input = "<a a ?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "?" to ""))
@@ -8543,7 +10233,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 17`() = assertTokenization(
+    fun `a a 1275`() = assertTokenization(
         input = "<a a @>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "@" to ""))
@@ -8551,7 +10241,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a A`() = assertTokenization(
+    fun `a a A 1276`() = assertTokenization(
         input = "<a a A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8559,7 +10249,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a B`() = assertTokenization(
+    fun `a a B 1277`() = assertTokenization(
         input = "<a a B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -8567,7 +10257,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a Y`() = assertTokenization(
+    fun `a a Y 1278`() = assertTokenization(
         input = "<a a Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -8575,7 +10265,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a Z`() = assertTokenization(
+    fun `a a Z 1279`() = assertTokenization(
         input = "<a a Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -8583,7 +10273,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 18`() = assertTokenization(
+    fun `a a 1280`() = assertTokenization(
         input = "<a a [>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "[" to ""))
@@ -8591,7 +10281,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 19`() = assertTokenization(
+    fun `a a 1281`() = assertTokenization(
         input = "<a a `>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "`" to ""))
@@ -8599,7 +10289,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a a`() = assertTokenization(
+    fun `a a a 1282`() = assertTokenization(
         input = "<a a a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8607,7 +10297,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a b`() = assertTokenization(
+    fun `a a b 1283`() = assertTokenization(
         input = "<a a b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -8615,7 +10305,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a y`() = assertTokenization(
+    fun `a a y 1284`() = assertTokenization(
         input = "<a a y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -8623,7 +10313,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a z`() = assertTokenization(
+    fun `a a z 1285`() = assertTokenization(
         input = "<a a z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -8631,7 +10321,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 20`() = assertTokenization(
+    fun `a a 1286`() = assertTokenization(
         input = "<a a {>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "{" to ""))
@@ -8639,7 +10329,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a uDBC0uDC00`() = assertTokenization(
+    fun `a a uDBC0uDC00 1287`() = assertTokenization(
         input = "<a a 􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
@@ -8647,7 +10337,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 21`() = assertTokenization(
+    fun `a a 1288`() = assertTokenization(
         input = "<a a!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a!" to ""))
@@ -8655,7 +10345,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 22`() = assertTokenization(
+    fun `a a 1289`() = assertTokenization(
         input = "<a a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a\"" to ""))
@@ -8663,7 +10353,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 23`() = assertTokenization(
+    fun `a a 1290`() = assertTokenization(
         input = "<a a#>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a#" to ""))
@@ -8671,7 +10361,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 24`() = assertTokenization(
+    fun `a a 1291`() = assertTokenization(
         input = "<a a&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a&" to ""))
@@ -8679,7 +10369,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 25`() = assertTokenization(
+    fun `a a 1292`() = assertTokenization(
         input = "<a a'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a'" to ""))
@@ -8687,7 +10377,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 26`() = assertTokenization(
+    fun `a a 1293`() = assertTokenization(
         input = "<a a(>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a(" to ""))
@@ -8695,7 +10385,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 27`() = assertTokenization(
+    fun `a a 1294`() = assertTokenization(
         input = "<a a->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a-" to ""))
@@ -8703,7 +10393,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 28`() = assertTokenization(
+    fun `a a 1295`() = assertTokenization(
         input = "<a a.>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a." to ""))
@@ -8711,7 +10401,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 29`() = assertTokenization(
+    fun `a a 1296`() = assertTokenization(
         input = "<a a/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
@@ -8719,7 +10409,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0`() = assertTokenization(
+    fun `a a0 1297`() = assertTokenization(
         input = "<a a0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a0" to ""))
@@ -8727,7 +10417,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1`() = assertTokenization(
+    fun `a a1 1298`() = assertTokenization(
         input = "<a a1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a1" to ""))
@@ -8735,7 +10425,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9`() = assertTokenization(
+    fun `a a9 1299`() = assertTokenization(
         input = "<a a9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a9" to ""))
@@ -8743,7 +10433,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 30`() = assertTokenization(
+    fun `a a 1300`() = assertTokenization(
         input = "<a a<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a<" to ""))
@@ -8751,7 +10441,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 31`() = assertTokenization(
+    fun `a a 1301`() = assertTokenization(
         input = "<a a=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8759,7 +10449,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 2`() = assertTokenization(
+    fun `a au0000 1302`() = assertTokenization(
         input = "<a a=\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -8767,15 +10457,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008 2`() = assertTokenization(
-        input = "<a a=>",
+    fun `a au0008 1303`() = assertTokenization(
+        input = "<a a=\u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u0008"))
         )
     )
 
     @Test
-    fun `a au0009 2`() = assertTokenization(
+    fun `a au0009 1304`() = assertTokenization(
         input = "<a a=\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8783,7 +10473,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 2`() = assertTokenization(
+    fun `a au000A 1305`() = assertTokenization(
         input = "<a a=\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8791,23 +10481,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 2`() = assertTokenization(
-        input = "<a a=>",
+    fun `a au000B 1306`() = assertTokenization(
+        input = "<a a=\u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u000b"))
         )
     )
 
     @Test
-    fun `a au000C 2`() = assertTokenization(
-        input = "<a a=>",
+    fun `a au000C 1307`() = assertTokenization(
+        input = "<a a=\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
         )
     )
 
     @Test
-    fun `a au000D 2`() = assertTokenization(
+    fun `a au000D 1308`() = assertTokenization(
         input = "<a a=\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8815,15 +10505,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F 2`() = assertTokenization(
-        input = "<a a=>",
+    fun `a au001F 1309`() = assertTokenization(
+        input = "<a a=\u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u001f"))
         )
     )
 
     @Test
-    fun `a a 32`() = assertTokenization(
+    fun `a a 1310`() = assertTokenization(
         input = "<a a= >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8831,7 +10521,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 33`() = assertTokenization(
+    fun `a a 1311`() = assertTokenization(
         input = "<a a=!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -8839,7 +10529,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 34`() = assertTokenization(
+    fun `a a 1312`() = assertTokenization(
         input = "<a a=\"\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8847,7 +10537,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 3`() = assertTokenization(
+    fun `a au0000 1313`() = assertTokenization(
         input = "<a a=\"\u0000\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -8855,41 +10545,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 3`() = assertTokenization(
+    fun `a au0009 1314`() = assertTokenization(
         input = "<a a=\"\t\">",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "	"))
+            startTag(name = "a", attributes = mapOf("a" to "\t"))
         )
     )
 
     @Test
-    fun `a au000A 3`() = assertTokenization(
+    fun `a au000A 1315`() = assertTokenization(
         input = "<a a=\"\n\">",
         expectedTokens = listOf(
-            startTag(
-                name = "a", attributes = mapOf("a" to "\n")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "\n"))
         )
     )
 
     @Test
-    fun `a au000B 3`() = assertTokenization(
-        input = "<a a=\"\">",
+    fun `a au000B 1316`() = assertTokenization(
+        input = "<a a=\"\u000b\">",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u000b"))
         )
     )
 
     @Test
-    fun `a au000C 3`() = assertTokenization(
-        input = "<a a=\"\">",
+    fun `a au000C 1317`() = assertTokenization(
+        input = "<a a=\"\u000c\">",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u000c"))
         )
     )
 
     @Test
-    fun `a a 35`() = assertTokenization(
+    fun `a a 1318`() = assertTokenization(
         input = "<a a=\" \">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to " "))
@@ -8897,7 +10585,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 36`() = assertTokenization(
+    fun `a a 1319`() = assertTokenization(
         input = "<a a=\"!\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -8905,7 +10593,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 37`() = assertTokenization(
+    fun `a a 1320`() = assertTokenization(
         input = "<a a=\"\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -8913,7 +10601,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 38`() = assertTokenization(
+    fun `a a 1321`() = assertTokenization(
         input = "<a a=\"#\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "#"))
@@ -8921,7 +10609,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 39`() = assertTokenization(
+    fun `a a 1322`() = assertTokenization(
         input = "<a a=\"%\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -8929,7 +10617,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 40`() = assertTokenization(
+    fun `a a 1323`() = assertTokenization(
         input = "<a a=\"&\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -8937,7 +10625,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 41`() = assertTokenization(
+    fun `a a 1324`() = assertTokenization(
         input = "<a a=\"'\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "'"))
@@ -8945,7 +10633,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 42`() = assertTokenization(
+    fun `a a 1325`() = assertTokenization(
         input = "<a a=\"-\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -8953,7 +10641,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 43`() = assertTokenization(
+    fun `a a 1326`() = assertTokenization(
         input = "<a a=\"/\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -8961,7 +10649,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 2`() = assertTokenization(
+    fun `a a0 1327`() = assertTokenization(
         input = "<a a=\"0\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -8969,7 +10657,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 2`() = assertTokenization(
+    fun `a a1 1328`() = assertTokenization(
         input = "<a a=\"1\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -8977,7 +10665,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 2`() = assertTokenization(
+    fun `a a9 1329`() = assertTokenization(
         input = "<a a=\"9\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -8985,7 +10673,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 44`() = assertTokenization(
+    fun `a a 1330`() = assertTokenization(
         input = "<a a=\"<\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -8993,7 +10681,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 45`() = assertTokenization(
+    fun `a a 1331`() = assertTokenization(
         input = "<a a=\"=\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -9001,7 +10689,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 46`() = assertTokenization(
+    fun `a a 1332`() = assertTokenization(
         input = "<a a=\">\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ">"))
@@ -9009,7 +10697,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 47`() = assertTokenization(
+    fun `a a 1333`() = assertTokenization(
         input = "<a a=\"?\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -9017,7 +10705,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 48`() = assertTokenization(
+    fun `a a 1334`() = assertTokenization(
         input = "<a a=\"@\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -9025,7 +10713,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA`() = assertTokenization(
+    fun `a aA 1335`() = assertTokenization(
         input = "<a a=\"A\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -9033,7 +10721,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB`() = assertTokenization(
+    fun `a aB 1336`() = assertTokenization(
         input = "<a a=\"B\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -9041,7 +10729,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY`() = assertTokenization(
+    fun `a aY 1337`() = assertTokenization(
         input = "<a a=\"Y\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -9049,7 +10737,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ`() = assertTokenization(
+    fun `a aZ 1338`() = assertTokenization(
         input = "<a a=\"Z\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -9057,7 +10745,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 49`() = assertTokenization(
+    fun `a a 1339`() = assertTokenization(
         input = "<a a=\"`\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -9065,7 +10753,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa`() = assertTokenization(
+    fun `a aa 1340`() = assertTokenization(
         input = "<a a=\"a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9073,7 +10761,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab`() = assertTokenization(
+    fun `a ab 1341`() = assertTokenization(
         input = "<a a=\"b\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "b"))
@@ -9081,7 +10769,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay`() = assertTokenization(
+    fun `a ay 1342`() = assertTokenization(
         input = "<a a=\"y\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "y"))
@@ -9089,7 +10777,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az`() = assertTokenization(
+    fun `a az 1343`() = assertTokenization(
         input = "<a a=\"z\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "z"))
@@ -9097,7 +10785,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 50`() = assertTokenization(
+    fun `a a 1344`() = assertTokenization(
         input = "<a a=\"{\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "{"))
@@ -9105,7 +10793,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00`() = assertTokenization(
+    fun `a auDBC0uDC00 1345`() = assertTokenization(
         input = "<a a=\"􀀀\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "􀀀"))
@@ -9113,7 +10801,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 51`() = assertTokenization(
+    fun `a a 1346`() = assertTokenization(
         input = "<a a=#>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "#"))
@@ -9121,7 +10809,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 52`() = assertTokenization(
+    fun `a a 1347`() = assertTokenization(
         input = "<a a=%>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -9129,7 +10817,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 53`() = assertTokenization(
+    fun `a a 1348`() = assertTokenization(
         input = "<a a=&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -9137,7 +10825,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 54`() = assertTokenization(
+    fun `a a 1349`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9145,7 +10833,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 4`() = assertTokenization(
+    fun `a au0000 1350`() = assertTokenization(
         input = "<a a='\u0000'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -9153,41 +10841,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 4`() = assertTokenization(
+    fun `a au0009 1351`() = assertTokenization(
         input = "<a a='\t'>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "	"))
+            startTag(name = "a", attributes = mapOf("a" to "\t"))
         )
     )
 
     @Test
-    fun `a au000A 4`() = assertTokenization(
+    fun `a au000A 1352`() = assertTokenization(
         input = "<a a='\n'>",
         expectedTokens = listOf(
-            startTag(
-                name = "a", attributes = mapOf("a" to "\n")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "\n"))
         )
     )
 
     @Test
-    fun `a au000B 4`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au000B 1353`() = assertTokenization(
+        input = "<a a='\u000b'>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u000b"))
         )
     )
 
     @Test
-    fun `a au000C 4`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au000C 1354`() = assertTokenization(
+        input = "<a a='\u000c'>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "\u000c"))
         )
     )
 
     @Test
-    fun `a a 55`() = assertTokenization(
+    fun `a a 1355`() = assertTokenization(
         input = "<a a=' '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to " "))
@@ -9195,7 +10881,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 56`() = assertTokenization(
+    fun `a a 1356`() = assertTokenization(
         input = "<a a='!'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -9203,7 +10889,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 57`() = assertTokenization(
+    fun `a a 1357`() = assertTokenization(
         input = "<a a='\"'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\""))
@@ -9211,7 +10897,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 58`() = assertTokenization(
+    fun `a a 1358`() = assertTokenization(
         input = "<a a='%'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -9219,7 +10905,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 59`() = assertTokenization(
+    fun `a a 1359`() = assertTokenization(
         input = "<a a='&'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -9227,7 +10913,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 60`() = assertTokenization(
+    fun `a a 1360`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9235,7 +10921,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 5`() = assertTokenization(
+    fun `a au0000 1361`() = assertTokenization(
         input = "<a a=''\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "�" to ""))
@@ -9243,15 +10929,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008 3`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au0008 1362`() = assertTokenization(
+        input = "<a a=''\u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u0008" to ""))
         )
     )
 
     @Test
-    fun `a au0009 5`() = assertTokenization(
+    fun `a au0009 1363`() = assertTokenization(
         input = "<a a=''\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9259,7 +10945,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 5`() = assertTokenization(
+    fun `a au000A 1364`() = assertTokenization(
         input = "<a a=''\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9267,23 +10953,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 5`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au000B 1365`() = assertTokenization(
+        input = "<a a=''\u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u000b" to ""))
         )
     )
 
     @Test
-    fun `a au000C 5`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au000C 1366`() = assertTokenization(
+        input = "<a a=''\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
         )
     )
 
     @Test
-    fun `a au000D 3`() = assertTokenization(
+    fun `a au000D 1367`() = assertTokenization(
         input = "<a a=''\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9291,15 +10977,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F 3`() = assertTokenization(
-        input = "<a a=''>",
+    fun `a au001F 1368`() = assertTokenization(
+        input = "<a a=''\u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\u001f" to ""))
         )
     )
 
     @Test
-    fun `a a 61`() = assertTokenization(
+    fun `a a 1369`() = assertTokenization(
         input = "<a a='' >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9307,7 +10993,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 62`() = assertTokenization(
+    fun `a a 1370`() = assertTokenization(
         input = "<a a=''!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "!" to ""))
@@ -9315,7 +11001,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 63`() = assertTokenization(
+    fun `a a 1371`() = assertTokenization(
         input = "<a a=''\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\"" to ""))
@@ -9323,118 +11009,87 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 64`() = assertTokenization(
+    fun `a a 1372`() = assertTokenization(
         input = "<a a=''&>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "&" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "&" to ""))
         )
     )
 
     @Test
-    fun `a a 65`() = assertTokenization(
+    fun `a a 1373`() = assertTokenization(
         input = "<a a='''>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "'" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "'" to ""))
         )
     )
 
     @Test
-    fun `a a 66`() = assertTokenization(
+    fun `a a 1374`() = assertTokenization(
         input = "<a a=''->",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "-" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "-" to ""))
         )
     )
 
     @Test
-    fun `a a 67`() = assertTokenization(
+    fun `a a 1375`() = assertTokenization(
         input = "<a a=''.>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "." to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "." to ""))
         )
     )
 
     @Test
-    fun `a a 68`() = assertTokenization(
+    fun `a a 1376`() = assertTokenization(
         input = "<a a=''/>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to ""),
-                selfClosing = true
-            )
+            startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
         )
     )
 
     @Test
-    fun `a a0 3`() = assertTokenization(
+    fun `a a0 1377`() = assertTokenization(
         input = "<a a=''0>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "0" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "0" to ""))
         )
     )
 
     @Test
-    fun `a a1 3`() = assertTokenization(
+    fun `a a1 1378`() = assertTokenization(
         input = "<a a=''1>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "1" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "1" to ""))
         )
     )
 
     @Test
-    fun `a a9 3`() = assertTokenization(
+    fun `a a9 1379`() = assertTokenization(
         input = "<a a=''9>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "9" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "9" to ""))
         )
     )
 
     @Test
-    fun `a a 69`() = assertTokenization(
+    fun `a a 1380`() = assertTokenization(
         input = "<a a=''<>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "<" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "<" to ""))
         )
     )
 
     @Test
-    fun `a a 70`() = assertTokenization(
+    fun `a a 1381`() = assertTokenization(
         input = "<a a=''=>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "=" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "=" to ""))
         )
     )
 
     @Test
-    fun `a a 71`() = assertTokenization(
+    fun `a a 1382`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9442,29 +11097,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 72`() = assertTokenization(
+    fun `a a 1383`() = assertTokenization(
         input = "<a a=''?>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "?" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "?" to ""))
         )
     )
 
     @Test
-    fun `a a 73`() = assertTokenization(
+    fun `a a 1384`() = assertTokenization(
         input = "<a a=''@>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "@" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "@" to ""))
         )
     )
 
     @Test
-    fun `a aA 2`() = assertTokenization(
+    fun `a aA 1385`() = assertTokenization(
         input = "<a a=''A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9472,51 +11121,39 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 2`() = assertTokenization(
+    fun `a aB 1386`() = assertTokenization(
         input = "<a a=''B>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "b" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
         )
     )
 
     @Test
-    fun `a aY 2`() = assertTokenization(
+    fun `a aY 1387`() = assertTokenization(
         input = "<a a=''Y>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "y" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
         )
     )
 
     @Test
-    fun `a aZ 2`() = assertTokenization(
+    fun `a aZ 1388`() = assertTokenization(
         input = "<a a=''Z>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "z" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
         )
     )
 
     @Test
-    fun `a a 74`() = assertTokenization(
+    fun `a a 1389`() = assertTokenization(
         input = "<a a=''`>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "`" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "`" to ""))
         )
     )
 
     @Test
-    fun `a aa 2`() = assertTokenization(
+    fun `a aa 1390`() = assertTokenization(
         input = "<a a=''a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9524,62 +11161,47 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 2`() = assertTokenization(
+    fun `a ab 1391`() = assertTokenization(
         input = "<a a=''b>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "b" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
         )
     )
 
     @Test
-    fun `a ay 2`() = assertTokenization(
+    fun `a ay 1392`() = assertTokenization(
         input = "<a a=''y>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "y" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
         )
     )
 
     @Test
-    fun `a az 2`() = assertTokenization(
+    fun `a az 1393`() = assertTokenization(
         input = "<a a=''z>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "z" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
         )
     )
 
     @Test
-    fun `a a 75`() = assertTokenization(
+    fun `a a 1394`() = assertTokenization(
         input = "<a a=''{>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "{" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "{" to ""))
         )
     )
 
     @Test
-    fun `a auDBC0uDC00 2`() = assertTokenization(
+    fun `a auDBC0uDC00 1395`() = assertTokenization(
         input = "<a a=''􀀀>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "", "􀀀" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
         )
     )
 
     @Test
-    fun `a a 76`() = assertTokenization(
+    fun `a a 1396`() = assertTokenization(
         input = "<a a='('>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "("))
@@ -9587,7 +11209,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 77`() = assertTokenization(
+    fun `a a 1397`() = assertTokenization(
         input = "<a a='-'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -9595,7 +11217,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 78`() = assertTokenization(
+    fun `a a 1398`() = assertTokenization(
         input = "<a a='/'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -9603,7 +11225,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 4`() = assertTokenization(
+    fun `a a0 1399`() = assertTokenization(
         input = "<a a='0'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -9611,7 +11233,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 4`() = assertTokenization(
+    fun `a a1 1400`() = assertTokenization(
         input = "<a a='1'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -9619,7 +11241,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 4`() = assertTokenization(
+    fun `a a9 1401`() = assertTokenization(
         input = "<a a='9'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -9627,7 +11249,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 79`() = assertTokenization(
+    fun `a a 1402`() = assertTokenization(
         input = "<a a='<'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -9635,7 +11257,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 80`() = assertTokenization(
+    fun `a a 1403`() = assertTokenization(
         input = "<a a='='>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -9643,7 +11265,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 81`() = assertTokenization(
+    fun `a a 1404`() = assertTokenization(
         input = "<a a='>'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ">"))
@@ -9651,7 +11273,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 82`() = assertTokenization(
+    fun `a a 1405`() = assertTokenization(
         input = "<a a='?'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -9659,7 +11281,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 83`() = assertTokenization(
+    fun `a a 1406`() = assertTokenization(
         input = "<a a='@'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -9667,7 +11289,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 3`() = assertTokenization(
+    fun `a aA 1407`() = assertTokenization(
         input = "<a a='A'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -9675,7 +11297,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 3`() = assertTokenization(
+    fun `a aB 1408`() = assertTokenization(
         input = "<a a='B'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -9683,7 +11305,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 3`() = assertTokenization(
+    fun `a aY 1409`() = assertTokenization(
         input = "<a a='Y'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -9691,7 +11313,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 3`() = assertTokenization(
+    fun `a aZ 1410`() = assertTokenization(
         input = "<a a='Z'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -9699,7 +11321,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 84`() = assertTokenization(
+    fun `a a 1411`() = assertTokenization(
         input = "<a a='`'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -9707,7 +11329,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 3`() = assertTokenization(
+    fun `a aa 1412`() = assertTokenization(
         input = "<a a='a'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9715,7 +11337,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 3`() = assertTokenization(
+    fun `a ab 1413`() = assertTokenization(
         input = "<a a='b'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "b"))
@@ -9723,7 +11345,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 3`() = assertTokenization(
+    fun `a ay 1414`() = assertTokenization(
         input = "<a a='y'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "y"))
@@ -9731,7 +11353,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 3`() = assertTokenization(
+    fun `a az 1415`() = assertTokenization(
         input = "<a a='z'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "z"))
@@ -9739,7 +11361,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 85`() = assertTokenization(
+    fun `a a 1416`() = assertTokenization(
         input = "<a a='{'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "{"))
@@ -9747,7 +11369,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 3`() = assertTokenization(
+    fun `a auDBC0uDC00 1417`() = assertTokenization(
         input = "<a a='􀀀'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "􀀀"))
@@ -9755,7 +11377,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 86`() = assertTokenization(
+    fun `a a 1418`() = assertTokenization(
         input = "<a a=(>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "("))
@@ -9763,7 +11385,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 87`() = assertTokenization(
+    fun `a a 1419`() = assertTokenization(
         input = "<a a=->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -9771,7 +11393,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 88`() = assertTokenization(
+    fun `a a 1420`() = assertTokenization(
         input = "<a a=/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -9779,7 +11401,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 5`() = assertTokenization(
+    fun `a a0 1421`() = assertTokenization(
         input = "<a a=0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -9787,7 +11409,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 5`() = assertTokenization(
+    fun `a a1 1422`() = assertTokenization(
         input = "<a a=1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -9795,7 +11417,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 5`() = assertTokenization(
+    fun `a a9 1423`() = assertTokenization(
         input = "<a a=9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -9803,7 +11425,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 89`() = assertTokenization(
+    fun `a a 1424`() = assertTokenization(
         input = "<a a=<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -9811,7 +11433,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 90`() = assertTokenization(
+    fun `a a 1425`() = assertTokenization(
         input = "<a a==>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -9819,7 +11441,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 91`() = assertTokenization(
+    fun `a a 1426`() = assertTokenization(
         input = "<a a=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9827,7 +11449,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 92`() = assertTokenization(
+    fun `a a 1427`() = assertTokenization(
         input = "<a a=?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -9835,7 +11457,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 93`() = assertTokenization(
+    fun `a a 1428`() = assertTokenization(
         input = "<a a=@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -9843,7 +11465,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 4`() = assertTokenization(
+    fun `a aA 1429`() = assertTokenization(
         input = "<a a=A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -9851,7 +11473,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 4`() = assertTokenization(
+    fun `a aB 1430`() = assertTokenization(
         input = "<a a=B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -9859,7 +11481,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 4`() = assertTokenization(
+    fun `a aY 1431`() = assertTokenization(
         input = "<a a=Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -9867,7 +11489,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 4`() = assertTokenization(
+    fun `a aZ 1432`() = assertTokenization(
         input = "<a a=Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -9875,7 +11497,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 94`() = assertTokenization(
+    fun `a a 1433`() = assertTokenization(
         input = "<a a=`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -9883,7 +11505,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 4`() = assertTokenization(
+    fun `a aa 1434`() = assertTokenization(
         input = "<a a=a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9891,7 +11513,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau0000`() = assertTokenization(
+    fun `a aau0000 1435`() = assertTokenization(
         input = "<a a=a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a�"))
@@ -9899,15 +11521,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau0008`() = assertTokenization(
-        input = "<a a=a>",
+    fun `a aau0008 1436`() = assertTokenization(
+        input = "<a a=a\u0008>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "a"))
+            startTag(name = "a", attributes = mapOf("a" to "a\u0008"))
         )
     )
 
     @Test
-    fun `a aau0009`() = assertTokenization(
+    fun `a aau0009 1437`() = assertTokenization(
         input = "<a a=a\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9915,7 +11537,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000A`() = assertTokenization(
+    fun `a aau000A 1438`() = assertTokenization(
         input = "<a a=a\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9923,23 +11545,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000B`() = assertTokenization(
-        input = "<a a=a>",
+    fun `a aau000B 1439`() = assertTokenization(
+        input = "<a a=a\u000b>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "a"))
+            startTag(name = "a", attributes = mapOf("a" to "a\u000b"))
         )
     )
 
     @Test
-    fun `a aau000C`() = assertTokenization(
-        input = "<a a=a>",
+    fun `a aau000C 1440`() = assertTokenization(
+        input = "<a a=a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
         )
     )
 
     @Test
-    fun `a aau000D`() = assertTokenization(
+    fun `a aau000D 1441`() = assertTokenization(
         input = "<a a=a\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9947,15 +11569,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau001F`() = assertTokenization(
-        input = "<a a=a>",
+    fun `a aau001F 1442`() = assertTokenization(
+        input = "<a a=a\u001f>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "a"))
+            startTag(name = "a", attributes = mapOf("a" to "a\u001f"))
         )
     )
 
     @Test
-    fun `a aa 5`() = assertTokenization(
+    fun `a aa 1443`() = assertTokenization(
         input = "<a a=a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -9963,7 +11585,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 6`() = assertTokenization(
+    fun `a aa 1444`() = assertTokenization(
         input = "<a a=a!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a!"))
@@ -9971,7 +11593,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 7`() = assertTokenization(
+    fun `a aa 1445`() = assertTokenization(
         input = "<a a=a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a\""))
@@ -9979,568 +11601,415 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 8`() = assertTokenization(
+    fun `a aa 1446`() = assertTokenization(
         input = "<a a=a#>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a#")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a#"))
         )
     )
 
     @Test
-    fun `a aa 9`() = assertTokenization(
+    fun `a aa 1447`() = assertTokenization(
         input = "<a a=a%>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a%")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a%"))
         )
     )
 
     @Test
-    fun `a aa 10`() = assertTokenization(
+    fun `a aa 1448`() = assertTokenization(
         input = "<a a=a&>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a&")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a&"))
         )
     )
 
     @Test
-    fun `a aa 11`() = assertTokenization(
+    fun `a aa 1449`() = assertTokenization(
         input = "<a a=a'>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a'")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a'"))
         )
     )
 
     @Test
-    fun `a aa 12`() = assertTokenization(
+    fun `a aa 1450`() = assertTokenization(
         input = "<a a=a(>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a(")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a("))
         )
     )
 
     @Test
-    fun `a aa 13`() = assertTokenization(
+    fun `a aa 1451`() = assertTokenization(
         input = "<a a=a->",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a-")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a-"))
         )
     )
 
     @Test
-    fun `a aa 14`() = assertTokenization(
+    fun `a aa 1452`() = assertTokenization(
         input = "<a a=a/>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a/")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a/"))
         )
     )
 
     @Test
-    fun `a aa0`() = assertTokenization(
+    fun `a aa0 1453`() = assertTokenization(
         input = "<a a=a0>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a0")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a0"))
         )
     )
 
     @Test
-    fun `a aa1`() = assertTokenization(
+    fun `a aa1 1454`() = assertTokenization(
         input = "<a a=a1>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a1")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a1"))
         )
     )
 
     @Test
-    fun `a aa9`() = assertTokenization(
+    fun `a aa9 1455`() = assertTokenization(
         input = "<a a=a9>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a9")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a9"))
         )
     )
 
     @Test
-    fun `a aa 15`() = assertTokenization(
+    fun `a aa 1456`() = assertTokenization(
         input = "<a a=a<>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a<")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a<"))
         )
     )
 
     @Test
-    fun `a aa 16`() = assertTokenization(
+    fun `a aa 1457`() = assertTokenization(
         input = "<a a=a=>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a=")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a="))
         )
     )
 
     @Test
-    fun `a aa 17`() = assertTokenization(
+    fun `a aa 1458`() = assertTokenization(
         input = "<a a=a>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a"))
         )
     )
 
     @Test
-    fun `a aa 18`() = assertTokenization(
+    fun `a aa 1459`() = assertTokenization(
         input = "<a a=a?>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a?")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a?"))
         )
     )
 
     @Test
-    fun `a aa 19`() = assertTokenization(
+    fun `a aa 1460`() = assertTokenization(
         input = "<a a=a@>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a@")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a@"))
         )
     )
 
     @Test
-    fun `a aaA`() = assertTokenization(
+    fun `a aaA 1461`() = assertTokenization(
         input = "<a a=aA>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "aA")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "aA"))
         )
     )
 
     @Test
-    fun `a aaB`() = assertTokenization(
+    fun `a aaB 1462`() = assertTokenization(
         input = "<a a=aB>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "aB")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "aB"))
         )
     )
 
     @Test
-    fun `a aaY`() = assertTokenization(
+    fun `a aaY 1463`() = assertTokenization(
         input = "<a a=aY>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "aY")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "aY"))
         )
     )
 
     @Test
-    fun `a aaZ`() = assertTokenization(
+    fun `a aaZ 1464`() = assertTokenization(
         input = "<a a=aZ>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "aZ")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "aZ"))
         )
     )
 
     @Test
-    fun `a aa 20`() = assertTokenization(
+    fun `a aa 1465`() = assertTokenization(
         input = "<a a=a`>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a`")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a`"))
         )
     )
 
     @Test
-    fun `a aaa`() = assertTokenization(
+    fun `a aaa 1466`() = assertTokenization(
         input = "<a a=aa>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "aa")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "aa"))
         )
     )
 
     @Test
-    fun `a aab`() = assertTokenization(
+    fun `a aab 1467`() = assertTokenization(
         input = "<a a=ab>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "ab")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "ab"))
         )
     )
 
     @Test
-    fun `a aay`() = assertTokenization(
+    fun `a aay 1468`() = assertTokenization(
         input = "<a a=ay>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "ay")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "ay"))
         )
     )
 
     @Test
-    fun `a aaz`() = assertTokenization(
+    fun `a aaz 1469`() = assertTokenization(
         input = "<a a=az>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "az")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "az"))
         )
     )
 
     @Test
-    fun `a aa 21`() = assertTokenization(
+    fun `a aa 1470`() = assertTokenization(
         input = "<a a=a{>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a{")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a{"))
         )
     )
 
     @Test
-    fun `a aauDBC0uDC00`() = assertTokenization(
+    fun `a aauDBC0uDC00 1471`() = assertTokenization(
         input = "<a a=a􀀀>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "a􀀀")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "a􀀀"))
         )
     )
 
     @Test
-    fun `a ab 4`() = assertTokenization(
+    fun `a ab 1472`() = assertTokenization(
         input = "<a a=b>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "b")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "b"))
         )
     )
 
     @Test
-    fun `a ay 4`() = assertTokenization(
+    fun `a ay 1473`() = assertTokenization(
         input = "<a a=y>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "y")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "y"))
         )
     )
 
     @Test
-    fun `a az 4`() = assertTokenization(
+    fun `a az 1474`() = assertTokenization(
         input = "<a a=z>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "z")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "z"))
         )
     )
 
     @Test
-    fun `a a 95`() = assertTokenization(
+    fun `a a 1475`() = assertTokenization(
         input = "<a a={>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "{")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "{"))
         )
     )
 
     @Test
-    fun `a auDBC0uDC00 4`() = assertTokenization(
+    fun `a auDBC0uDC00 1476`() = assertTokenization(
         input = "<a a=􀀀>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "􀀀")
-            )
+            startTag(name = "a", attributes = mapOf("a" to "􀀀"))
         )
     )
 
     @Test
-    fun `a a 96`() = assertTokenization(
+    fun `a a 1477`() = assertTokenization(
         input = "<a a>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a" to ""))
         )
     )
 
     @Test
-    fun `a a 97`() = assertTokenization(
+    fun `a a 1478`() = assertTokenization(
         input = "<a a?>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a?" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a?" to ""))
         )
     )
 
     @Test
-    fun `a a 98`() = assertTokenization(
+    fun `a a 1479`() = assertTokenization(
         input = "<a a@>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a@" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a@" to ""))
         )
     )
 
     @Test
-    fun `a aA 5`() = assertTokenization(
+    fun `a aA 1480`() = assertTokenization(
         input = "<a aA>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("aa" to "")
-            )
+            startTag(name = "a", attributes = mapOf("aa" to ""))
         )
     )
 
     @Test
-    fun `a aB 5`() = assertTokenization(
+    fun `a aB 1481`() = assertTokenization(
         input = "<a aB>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("ab" to "")
-            )
+            startTag(name = "a", attributes = mapOf("ab" to ""))
         )
     )
 
     @Test
-    fun `a aY 5`() = assertTokenization(
+    fun `a aY 1482`() = assertTokenization(
         input = "<a aY>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("ay" to "")
-            )
+            startTag(name = "a", attributes = mapOf("ay" to ""))
         )
     )
 
     @Test
-    fun `a aZ 5`() = assertTokenization(
+    fun `a aZ 1483`() = assertTokenization(
         input = "<a aZ>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("az" to "")
-            )
+            startTag(name = "a", attributes = mapOf("az" to ""))
         )
     )
 
     @Test
-    fun `a a 99`() = assertTokenization(
+    fun `a a 1484`() = assertTokenization(
         input = "<a a[>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a[" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a[" to ""))
         )
     )
 
     @Test
-    fun `a a 100`() = assertTokenization(
+    fun `a a 1485`() = assertTokenization(
         input = "<a a`>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a`" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a`" to ""))
         )
     )
 
     @Test
-    fun `a aa 22`() = assertTokenization(
+    fun `a aa 1486`() = assertTokenization(
         input = "<a aa>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("aa" to "")
-            )
+            startTag(name = "a", attributes = mapOf("aa" to ""))
         )
     )
 
     @Test
-    fun `a ab 5`() = assertTokenization(
+    fun `a ab 1487`() = assertTokenization(
         input = "<a ab>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("ab" to "")
-            )
+            startTag(name = "a", attributes = mapOf("ab" to ""))
         )
     )
 
     @Test
-    fun `a ay 5`() = assertTokenization(
+    fun `a ay 1488`() = assertTokenization(
         input = "<a ay>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("ay" to "")
-            )
+            startTag(name = "a", attributes = mapOf("ay" to ""))
         )
     )
 
     @Test
-    fun `a az 5`() = assertTokenization(
+    fun `a az 1489`() = assertTokenization(
         input = "<a az>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("az" to "")
-            )
+            startTag(name = "a", attributes = mapOf("az" to ""))
         )
     )
 
     @Test
-    fun `a a 101`() = assertTokenization(
+    fun `a a 1490`() = assertTokenization(
         input = "<a a{>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a{" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a{" to ""))
         )
     )
 
     @Test
-    fun `a auDBC0uDC00 5`() = assertTokenization(
+    fun `a auDBC0uDC00 1491`() = assertTokenization(
         input = "<a a􀀀>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("a􀀀" to "")
-            )
+            startTag(name = "a", attributes = mapOf("a􀀀" to ""))
         )
     )
 
     @Test
-    fun `a b`() = assertTokenization(
+    fun `a b 1492`() = assertTokenization(
         input = "<a b>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("b" to "")
-            )
+            startTag(name = "a", attributes = mapOf("b" to ""))
         )
     )
 
     @Test
-    fun `a y`() = assertTokenization(
+    fun `a y 1493`() = assertTokenization(
         input = "<a y>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("y" to "")
-            )
+            startTag(name = "a", attributes = mapOf("y" to ""))
         )
     )
 
     @Test
-    fun `a z`() = assertTokenization(
+    fun `a z 1494`() = assertTokenization(
         input = "<a z>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("z" to "")
-            )
+            startTag(name = "a", attributes = mapOf("z" to ""))
         )
     )
 
     @Test
-    fun `a 35`() = assertTokenization(
+    fun `a 1495`() = assertTokenization(
         input = "<a {>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("{" to "")
-            )
+            startTag(name = "a", attributes = mapOf("{" to ""))
         )
     )
 
     @Test
-    fun `a uDBC0uDC00`() = assertTokenization(
+    fun `a uDBC0uDC00 1496`() = assertTokenization(
         input = "<a 􀀀>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("􀀀" to "")
-            )
+            startTag(name = "a", attributes = mapOf("􀀀" to ""))
         )
     )
 
     @Test
-    fun `a 36`() = assertTokenization(
+    fun `a 1497`() = assertTokenization(
         input = "<a!>",
         expectedTokens = listOf(
             startTag(name = "a!")
@@ -10548,7 +12017,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 37`() = assertTokenization(
+    fun `a 1498`() = assertTokenization(
         input = "<a\">",
         expectedTokens = listOf(
             startTag(name = "a\"")
@@ -10556,7 +12025,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 38`() = assertTokenization(
+    fun `a 1499`() = assertTokenization(
         input = "<a&>",
         expectedTokens = listOf(
             startTag(name = "a&")
@@ -10564,7 +12033,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 39`() = assertTokenization(
+    fun `a 1500`() = assertTokenization(
         input = "<a'>",
         expectedTokens = listOf(
             startTag(name = "a'")
@@ -10572,7 +12041,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 40`() = assertTokenization(
+    fun `a 1501`() = assertTokenization(
         input = "<a->",
         expectedTokens = listOf(
             startTag(name = "a-")
@@ -10580,7 +12049,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 41`() = assertTokenization(
+    fun `a 1502`() = assertTokenization(
         input = "<a.>",
         expectedTokens = listOf(
             startTag(name = "a.")
@@ -10588,7 +12057,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 42`() = assertTokenization(
+    fun `a 1503`() = assertTokenization(
         input = "<a/>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -10596,18 +12065,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0000 2`() = assertTokenization(
+    fun `au0000 1504`() = assertTokenization(
         input = "<a/\u0000>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("�" to "")
-            )
+            startTag(name = "a", attributes = mapOf("�" to ""))
         )
     )
 
     @Test
-    fun `au0009 2`() = assertTokenization(
+    fun `au0009 1505`() = assertTokenization(
         input = "<a/\t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -10615,7 +12081,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000A 2`() = assertTokenization(
+    fun `au000A 1506`() = assertTokenization(
         input = "<a/\n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -10623,26 +12089,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000B 2`() = assertTokenization(
-        input = "<a/>",
+    fun `au000B 1507`() = assertTokenization(
+        input = "<a/\u000b>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("" to "")
-            )
+            startTag(name = "a", attributes = mapOf("\u000b" to ""))
         )
     )
 
     @Test
-    fun `au000C 2`() = assertTokenization(
-        input = "<a/>",
+    fun `au000C 1508`() = assertTokenization(
+        input = "<a/\u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
         )
     )
 
     @Test
-    fun `a 43`() = assertTokenization(
+    fun `a 1509`() = assertTokenization(
         input = "<a/ >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -10650,31 +12113,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 44`() = assertTokenization(
+    fun `a 1510`() = assertTokenization(
         input = "<a/!>",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf("!" to "")
-            )
+            startTag(name = "a", attributes = mapOf("!" to ""))
         )
     )
 
     @Test
-    fun `a 45`() = assertTokenization(
+    fun `a 1511`() = assertTokenization(
         input = "<a/\">",
         expectedTokens = listOf(
-            startTag(
-                name = "a",
-                attributes = mapOf(
-                    "\"" to ""
-                )
-            )
+            startTag(name = "a", attributes = mapOf("\"" to ""))
         )
     )
 
     @Test
-    fun `a 46`() = assertTokenization(
+    fun `a 1512`() = assertTokenization(
         input = "<a/&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("&" to ""))
@@ -10682,7 +12137,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 47`() = assertTokenization(
+    fun `a 1513`() = assertTokenization(
         input = "<a/'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("'" to ""))
@@ -10690,7 +12145,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 48`() = assertTokenization(
+    fun `a 1514`() = assertTokenization(
         input = "<a/->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("-" to ""))
@@ -10698,7 +12153,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 49`() = assertTokenization(
+    fun `a 1515`() = assertTokenization(
         input = "<a//>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -10706,7 +12161,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a0`() = assertTokenization(
+    fun `a0 1516`() = assertTokenization(
         input = "<a/0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("0" to ""))
@@ -10714,7 +12169,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a1`() = assertTokenization(
+    fun `a1 1517`() = assertTokenization(
         input = "<a/1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("1" to ""))
@@ -10722,7 +12177,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a9`() = assertTokenization(
+    fun `a9 1518`() = assertTokenization(
         input = "<a/9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("9" to ""))
@@ -10730,7 +12185,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 50`() = assertTokenization(
+    fun `a 1519`() = assertTokenization(
         input = "<a/<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("<" to ""))
@@ -10738,7 +12193,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 51`() = assertTokenization(
+    fun `a 1520`() = assertTokenization(
         input = "<a/=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("=" to ""))
@@ -10746,7 +12201,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 52`() = assertTokenization(
+    fun `a 1521`() = assertTokenization(
         input = "<a/>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -10754,7 +12209,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 53`() = assertTokenization(
+    fun `a 1522`() = assertTokenization(
         input = "<a/?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("?" to ""))
@@ -10762,7 +12217,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 54`() = assertTokenization(
+    fun `a 1523`() = assertTokenization(
         input = "<a/@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("@" to ""))
@@ -10770,7 +12225,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aA`() = assertTokenization(
+    fun `aA 1524`() = assertTokenization(
         input = "<a/A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10778,7 +12233,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aB`() = assertTokenization(
+    fun `aB 1525`() = assertTokenization(
         input = "<a/B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -10786,7 +12241,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aY`() = assertTokenization(
+    fun `aY 1526`() = assertTokenization(
         input = "<a/Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -10794,7 +12249,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aZ`() = assertTokenization(
+    fun `aZ 1527`() = assertTokenization(
         input = "<a/Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -10802,7 +12257,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 55`() = assertTokenization(
+    fun `a 1528`() = assertTokenization(
         input = "<a/`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("`" to ""))
@@ -10810,7 +12265,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aa`() = assertTokenization(
+    fun `aa 1529`() = assertTokenization(
         input = "<a/a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10818,7 +12273,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ab`() = assertTokenization(
+    fun `ab 1530`() = assertTokenization(
         input = "<a/b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -10826,7 +12281,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ay`() = assertTokenization(
+    fun `ay 1531`() = assertTokenization(
         input = "<a/y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -10834,7 +12289,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `az`() = assertTokenization(
+    fun `az 1532`() = assertTokenization(
         input = "<a/z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -10842,7 +12297,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 56`() = assertTokenization(
+    fun `a 1533`() = assertTokenization(
         input = "<a/{>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("{" to ""))
@@ -10850,7 +12305,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `auDBC0uDC00`() = assertTokenization(
+    fun `auDBC0uDC00 1534`() = assertTokenization(
         input = "<a/􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("􀀀" to ""))
@@ -10858,7 +12313,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a0 2`() = assertTokenization(
+    fun `a0 1535`() = assertTokenization(
         input = "<a0>",
         expectedTokens = listOf(
             startTag(name = "a0")
@@ -10866,7 +12321,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a1 2`() = assertTokenization(
+    fun `a1 1536`() = assertTokenization(
         input = "<a1>",
         expectedTokens = listOf(
             startTag(name = "a1")
@@ -10874,7 +12329,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a9 2`() = assertTokenization(
+    fun `a9 1537`() = assertTokenization(
         input = "<a9>",
         expectedTokens = listOf(
             startTag(name = "a9")
@@ -10882,7 +12337,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 57`() = assertTokenization(
+    fun `a 1538`() = assertTokenization(
         input = "<a<>",
         expectedTokens = listOf(
             startTag(name = "a<")
@@ -10890,7 +12345,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 58`() = assertTokenization(
+    fun `a 1539`() = assertTokenization(
         input = "<a=>",
         expectedTokens = listOf(
             startTag(name = "a=")
@@ -10898,7 +12353,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 59`() = assertTokenization(
+    fun `a 1540`() = assertTokenization(
         input = "<a>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -10906,7 +12361,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 60`() = assertTokenization(
+    fun `a 1541`() = assertTokenization(
         input = "<a?>",
         expectedTokens = listOf(
             startTag(name = "a?")
@@ -10914,7 +12369,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 61`() = assertTokenization(
+    fun `a 1542`() = assertTokenization(
         input = "<a@>",
         expectedTokens = listOf(
             startTag(name = "a@")
@@ -10922,7 +12377,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aA 2`() = assertTokenization(
+    fun `aA 1543`() = assertTokenization(
         input = "<aA>",
         expectedTokens = listOf(
             startTag(name = "aa")
@@ -10930,7 +12385,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aB 2`() = assertTokenization(
+    fun `aB 1544`() = assertTokenization(
         input = "<aB>",
         expectedTokens = listOf(
             startTag(name = "ab")
@@ -10938,7 +12393,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aY 2`() = assertTokenization(
+    fun `aY 1545`() = assertTokenization(
         input = "<aY>",
         expectedTokens = listOf(
             startTag(name = "ay")
@@ -10946,7 +12401,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aZ 2`() = assertTokenization(
+    fun `aZ 1546`() = assertTokenization(
         input = "<aZ>",
         expectedTokens = listOf(
             startTag(name = "az")
@@ -10954,7 +12409,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 62`() = assertTokenization(
+    fun `a 1547`() = assertTokenization(
         input = "<a[>",
         expectedTokens = listOf(
             startTag(name = "a[")
@@ -10962,7 +12417,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 63`() = assertTokenization(
+    fun `a 1548`() = assertTokenization(
         input = "<a`>",
         expectedTokens = listOf(
             startTag(name = "a`")
@@ -10970,7 +12425,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aa 2`() = assertTokenization(
+    fun `aa 1549`() = assertTokenization(
         input = "<aa>",
         expectedTokens = listOf(
             startTag(name = "aa")
@@ -10978,7 +12433,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ab 2`() = assertTokenization(
+    fun `ab 1550`() = assertTokenization(
         input = "<ab>",
         expectedTokens = listOf(
             startTag(name = "ab")
@@ -10986,7 +12441,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ay 2`() = assertTokenization(
+    fun `ay 1551`() = assertTokenization(
         input = "<ay>",
         expectedTokens = listOf(
             startTag(name = "ay")
@@ -10994,7 +12449,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `az 2`() = assertTokenization(
+    fun `az 1552`() = assertTokenization(
         input = "<az>",
         expectedTokens = listOf(
             startTag(name = "az")
@@ -11002,7 +12457,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 64`() = assertTokenization(
+    fun `a 1553`() = assertTokenization(
         input = "<a{>",
         expectedTokens = listOf(
             startTag(name = "a{")
@@ -11010,7 +12465,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `auDBC0uDC00 2`() = assertTokenization(
+    fun `auDBC0uDC00 1554`() = assertTokenization(
         input = "<a􀀀>",
         expectedTokens = listOf(
             startTag(name = "a􀀀")
@@ -11018,7 +12473,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 11`() = assertTokenization(
+    fun `b 1555`() = assertTokenization(
         input = "<b>",
         expectedTokens = listOf(
             startTag(name = "b")
@@ -11026,7 +12481,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 11`() = assertTokenization(
+    fun `y 1556`() = assertTokenization(
         input = "<y>",
         expectedTokens = listOf(
             startTag(name = "y")
@@ -11034,7 +12489,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 11`() = assertTokenization(
+    fun `z 1557`() = assertTokenization(
         input = "<z>",
         expectedTokens = listOf(
             startTag(name = "z")
@@ -11042,7 +12497,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 182`() = assertTokenization(
+    fun `test 1558`() = assertTokenization(
         input = "<{",
         expectedTokens = listOf(
             *chars("<{").toTypedArray()
@@ -11050,7 +12505,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 11`() = assertTokenization(
+    fun `uDBC0uDC00 1559`() = assertTokenization(
         input = "<􀀀",
         expectedTokens = listOf(
             *chars("<􀀀").toTypedArray()
@@ -11058,7 +12513,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 183`() = assertTokenization(
+    fun `test 1560`() = assertTokenization(
         input = "=",
         expectedTokens = listOf(
             char('=')
@@ -11066,7 +12521,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 184`() = assertTokenization(
+    fun `test 1561`() = assertTokenization(
         input = "=",
         expectedTokens = listOf(
             char('=')
@@ -11074,7 +12529,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 185`() = assertTokenization(
+    fun `test 1562`() = assertTokenization(
         input = ">",
         expectedTokens = listOf(
             char('>')
@@ -11082,7 +12537,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 186`() = assertTokenization(
+    fun `test 1563`() = assertTokenization(
         input = ">",
         expectedTokens = listOf(
             char('>')
@@ -11090,7 +12545,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 187`() = assertTokenization(
+    fun `test 1564`() = assertTokenization(
         input = "?",
         expectedTokens = listOf(
             char('?')
@@ -11098,7 +12553,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 188`() = assertTokenization(
+    fun `test 1565`() = assertTokenization(
         input = "?",
         expectedTokens = listOf(
             char('?')
@@ -11106,7 +12561,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 189`() = assertTokenization(
+    fun `test 1566`() = assertTokenization(
         input = "@",
         expectedTokens = listOf(
             char('@')
@@ -11114,7 +12569,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 190`() = assertTokenization(
+    fun `test 1567`() = assertTokenization(
         input = "@",
         expectedTokens = listOf(
             char('@')
@@ -11122,7 +12577,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 12`() = assertTokenization(
+    fun `A 1568`() = assertTokenization(
         input = "A",
         expectedTokens = listOf(
             char('A')
@@ -11130,7 +12585,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 13`() = assertTokenization(
+    fun `A 1569`() = assertTokenization(
         input = "A",
         expectedTokens = listOf(
             char('A')
@@ -11138,7 +12593,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 12`() = assertTokenization(
+    fun `B 1570`() = assertTokenization(
         input = "B",
         expectedTokens = listOf(
             char('B')
@@ -11146,7 +12601,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 13`() = assertTokenization(
+    fun `B 1571`() = assertTokenization(
         input = "B",
         expectedTokens = listOf(
             char('B')
@@ -11154,7 +12609,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 12`() = assertTokenization(
+    fun `Y 1572`() = assertTokenization(
         input = "Y",
         expectedTokens = listOf(
             char('Y')
@@ -11162,7 +12617,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 13`() = assertTokenization(
+    fun `Y 1573`() = assertTokenization(
         input = "Y",
         expectedTokens = listOf(
             char('Y')
@@ -11170,7 +12625,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 12`() = assertTokenization(
+    fun `Z 1574`() = assertTokenization(
         input = "Z",
         expectedTokens = listOf(
             char('Z')
@@ -11178,7 +12633,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 13`() = assertTokenization(
+    fun `Z 1575`() = assertTokenization(
         input = "Z",
         expectedTokens = listOf(
             char('Z')
@@ -11186,23 +12641,23 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 191`() = assertTokenization(
+    fun `test 1576`() = assertTokenization(
         input = "`",
         expectedTokens = listOf(
-            char('`')
+            char('\u0060')
         )
     )
 
     @Test
-    fun ` 192`() = assertTokenization(
+    fun `test 1577`() = assertTokenization(
         input = "`",
         expectedTokens = listOf(
-            char('`')
+            char('\u0060')
         )
     )
 
     @Test
-    fun `a 65`() = assertTokenization(
+    fun `a 1578`() = assertTokenization(
         input = "a",
         expectedTokens = listOf(
             char('a')
@@ -11210,7 +12665,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 66`() = assertTokenization(
+    fun `a 1579`() = assertTokenization(
         input = "a",
         expectedTokens = listOf(
             char('a')
@@ -11218,7 +12673,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 12`() = assertTokenization(
+    fun `b 1580`() = assertTokenization(
         input = "b",
         expectedTokens = listOf(
             char('b')
@@ -11226,7 +12681,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 13`() = assertTokenization(
+    fun `b 1581`() = assertTokenization(
         input = "b",
         expectedTokens = listOf(
             char('b')
@@ -11234,7 +12689,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 12`() = assertTokenization(
+    fun `y 1582`() = assertTokenization(
         input = "y",
         expectedTokens = listOf(
             char('y')
@@ -11242,7 +12697,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 13`() = assertTokenization(
+    fun `y 1583`() = assertTokenization(
         input = "y",
         expectedTokens = listOf(
             char('y')
@@ -11250,7 +12705,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 12`() = assertTokenization(
+    fun `z 1584`() = assertTokenization(
         input = "z",
         expectedTokens = listOf(
             char('z')
@@ -11258,7 +12713,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 13`() = assertTokenization(
+    fun `z 1585`() = assertTokenization(
         input = "z",
         expectedTokens = listOf(
             char('z')
@@ -11266,7 +12721,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 193`() = assertTokenization(
+    fun `test 1586`() = assertTokenization(
         input = "{",
         expectedTokens = listOf(
             char('{')
@@ -11274,7 +12729,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun ` 194`() = assertTokenization(
+    fun `test 1587`() = assertTokenization(
         input = "{",
         expectedTokens = listOf(
             char('{')
@@ -11282,7 +12737,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 12`() = assertTokenization(
+    fun `uDBC0uDC00 1588`() = assertTokenization(
         input = "􀀀",
         expectedTokens = listOf(
             *chars("􀀀").toTypedArray()
@@ -11290,7 +12745,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 13`() = assertTokenization(
+    fun `uDBC0uDC00 1589`() = assertTokenization(
         input = "􀀀",
         expectedTokens = listOf(
             *chars("􀀀").toTypedArray()
