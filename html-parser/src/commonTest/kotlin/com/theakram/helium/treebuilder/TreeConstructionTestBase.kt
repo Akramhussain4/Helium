@@ -54,12 +54,73 @@ internal abstract class TreeConstructionTestBase {
     protected fun assertTreeConstruction(input: String, expectedTree: String) {
         val actualTree = parseTree(input)
         if (actualTree != expectedTree.trim()) {
-            throw AssertionError(
-                "Tree structure mismatch.\n" +
-                        "Input: $input\n" +
-                        "Expected:\n${expectedTree.trim()}\n" +
-                        "Actual:\n$actualTree"
-            )
+            throw AssertionError(formatTreeMismatchError(input, expectedTree.trim(), actualTree))
+        }
+    }
+
+    private fun formatTreeMismatchError(input: String, expected: String, actual: String): String {
+        val expectedLines = expected.lines()
+        val actualLines = actual.lines()
+
+        // Find first differing line
+        var firstDiffLine = -1
+        val maxLines = maxOf(expectedLines.size, actualLines.size)
+        for (i in 0 until maxLines) {
+            val expLine = expectedLines.getOrNull(i) ?: ""
+            val actLine = actualLines.getOrNull(i) ?: ""
+            if (expLine != actLine) {
+                firstDiffLine = i
+                break
+            }
+        }
+
+        return buildString {
+            appendLine("Tree structure mismatch")
+            appendLine()
+
+            // Input (truncated if too long)
+            append("Input: ")
+            if (input.length <= 60) {
+                appendLine(input.replace("\n", "\\n"))
+            } else {
+                appendLine(input.take(60).replace("\n", "\\n") + "...")
+            }
+            appendLine()
+
+            // Show difference location
+            if (firstDiffLine >= 0) {
+                appendLine("First difference at line ${firstDiffLine + 1}:")
+                appendLine()
+
+                // Show context (2 lines before)
+                val contextStart = maxOf(0, firstDiffLine - 2)
+                for (i in contextStart until firstDiffLine) {
+                    appendLine("  ${expectedLines[i]}")
+                }
+
+                // Show the differing line
+                appendLine("- ${expectedLines.getOrNull(firstDiffLine) ?: "(missing)"}")
+                appendLine("+ ${actualLines.getOrNull(firstDiffLine) ?: "(missing)"}")
+
+                // Show context (2 lines after)
+                val contextEnd = minOf(expectedLines.size, firstDiffLine + 3)
+                for (i in (firstDiffLine + 1) until contextEnd) {
+                    appendLine("  ${expectedLines[i]}")
+                }
+                appendLine()
+            }
+
+            // Full diff for small trees (< 10 lines)
+            if (expectedLines.size <= 10 || actualLines.size <= 10) {
+                appendLine("Expected tree:")
+                expectedLines.forEach { appendLine("  $it") }
+                appendLine()
+                appendLine("Actual tree:")
+                actualLines.forEach { appendLine("  $it") }
+            } else {
+                appendLine("Expected ${expectedLines.size} lines, got ${actualLines.size} lines")
+                appendLine("(Use -v for full tree output)")
+            }
         }
     }
 }
