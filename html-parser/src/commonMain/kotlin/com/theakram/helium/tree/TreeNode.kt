@@ -163,10 +163,27 @@ public class TreeNode(
         val indent = "| " + "  ".repeat(depth)
         val nodeRepr = when (type) {
             NodeType.DOCUMENT -> "#document"
-            NodeType.DOCUMENT_TYPE -> "<!DOCTYPE $localName" +
-                (if (!publicId.isNullOrEmpty()) " \"$publicId\"" else "") +
-                (if (!systemId.isNullOrEmpty()) " \"$systemId\"" else "") + ">"
-            NodeType.ELEMENT -> "<$name>"
+            NodeType.DOCUMENT_TYPE -> {
+                val hasPublic = !publicId.isNullOrEmpty()
+                val hasSystem = !systemId.isNullOrEmpty()
+
+                when {
+                    !hasPublic && !hasSystem -> "<!DOCTYPE $localName>"
+                    else -> {
+                        val pub = publicId ?: ""
+                        val sys = systemId ?: ""
+                        "<!DOCTYPE $localName \"$pub\" \"$sys\">"
+                    }
+                }
+            }
+            NodeType.ELEMENT -> {
+                val namespacePrefix = when (namespace) {
+                    Namespaces.SVG -> "svg "
+                    Namespaces.MATHML -> "math "
+                    else -> ""
+                }
+                "<$namespacePrefix$name>"
+            }
             NodeType.TEXT -> "\"$data\""
             NodeType.COMMENT -> "<!-- $data -->"
             NodeType.PROCESSING_INSTRUCTION -> "<?$name $data?>"
@@ -182,7 +199,12 @@ public class TreeNode(
             for (attr in sortedAttrs) {
                 result.append("\n")
                 val attrIndent = "| " + "  ".repeat(depth + 1)
-                result.append("$attrIndent${attr.name}=\"${attr.value}\"")
+                val attrName = if (attr.prefix != null) {
+                    "${attr.prefix} ${attr.localName}"
+                } else {
+                    attr.localName
+                }
+                result.append("$attrIndent$attrName=\"${attr.value}\"")
             }
         }
 

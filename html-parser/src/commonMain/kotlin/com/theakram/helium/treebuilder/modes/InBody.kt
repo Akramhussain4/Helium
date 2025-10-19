@@ -376,7 +376,13 @@ internal object InBody : InsertionMode {
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
         treeBuilder.reconstructActiveFormattingElements()
-        treeBuilder.insertElement(tagName, attributes = attributes)
+        val namespace = if (treeBuilder.currentNode.namespace in setOf(Namespaces.SVG, Namespaces.MATHML)) {
+            treeBuilder.currentNode.namespace!!
+        } else {
+            Namespaces.HTML
+        }
+
+        treeBuilder.insertElement(tagName, namespace, attributes)
         return continueInCurrentMode()
     }
 }

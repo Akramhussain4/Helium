@@ -107,7 +107,7 @@ internal object InTable : InsertionMode {
                             treeBuilder.popUntil("table")
                             // Reset the insertion mode appropriately
                             treeBuilder.resetInsertionModeAppropriately()
-                            switchTo(treeBuilder.currentMode)
+                            reprocessIn(treeBuilder.currentMode)
                         }
                     }
 
