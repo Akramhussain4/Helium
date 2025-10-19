@@ -50,10 +50,17 @@ internal object Initial : InsertionMode {
             }
 
             is Token.DocType -> {
-                // Full DOCTYPE handling requires tokenizer to emit name, publicId, systemId, forceQuirks
-                // For now, insert a basic DOCTYPE and assume no-quirks mode
-                treeBuilder.insertDoctype(name = "html", publicId = null, systemId = null)
-                treeBuilder.document.quirksMode = QuirksMode.NO_QUIRKS
+                treeBuilder.insertDoctype(
+                    name = token.name ?: "",
+                    publicId = token.publicId,
+                    systemId = token.systemId
+                )
+
+                if (!treeBuilder.document.isIframeSrcdoc && !treeBuilder.document.parserCannotChangeMode) {
+                    val quirksMode = determineQuirksMode(token)
+                    treeBuilder.document.quirksMode = quirksMode
+                }
+
                 switchTo(BeforeHTML)
             }
 
@@ -78,4 +85,114 @@ internal object Initial : InsertionMode {
             }
         }
     }
+
+    private fun determineQuirksMode(token: Token.DocType): QuirksMode = when {
+        shouldUseQuirksMode(token) -> QuirksMode.QUIRKS
+        shouldUseLimitedQuirksMode(token) -> QuirksMode.LIMITED_QUIRKS
+        else -> QuirksMode.NO_QUIRKS
+    }
+
+    private fun shouldUseQuirksMode(token: Token.DocType): Boolean {
+        val name = token.name.orEmpty()
+        val publicId = token.publicId.orEmpty()
+        val systemId = token.systemId.orEmpty()
+
+        return token.forceQuirks || !name.equals(other = "html", ignoreCase = true)
+                || publicId in QUIRKS_MODE_EXACT_PUBLIC_IDS || systemId.equals(
+            other = "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd",
+            ignoreCase = true
+        ) || QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWith(it, ignoreCase = true) } ||
+                systemId.isEmpty() && QUIRKS_MODE_SYSTEM_ID_MISSING_PREFIXES.any {
+            publicId.startsWith(it, ignoreCase = true)
+        }
+    }
+
+    private fun shouldUseLimitedQuirksMode(token: Token.DocType): Boolean {
+        val publicId = token.publicId.orEmpty()
+        val systemId = token.systemId.orEmpty()
+
+        return LIMITED_QUIRKS_MODE_PREFIXES.any { publicId.startsWith(prefix = it, ignoreCase = true) }
+                || systemId.isNotEmpty() && LIMITED_QUIRKS_SYSTEM_ID_NOT_MISSING_PREFIXES.any {
+            publicId.startsWith(it, ignoreCase = true)
+        }
+    }
+
+    private val QUIRKS_MODE_EXACT_PUBLIC_IDS = setOf(
+        "-//W3O//DTD W3 HTML Strict 3.0//EN//",
+        "-/W3C/DTD HTML 4.0 Transitional/EN",
+        "HTML"
+    )
+
+    private val QUIRKS_MODE_PUBLIC_ID_PREFIXES = listOf(
+        "+//Silmaril//dtd html Pro v0r11 19970101//",
+        "-//AS//DTD HTML 3.0 asWedit + extensions//",
+        "-//AdvaSoft Ltd//DTD HTML 3.0 asWedit + extensions//",
+        "-//IETF//DTD HTML 2.0 Level 1//",
+        "-//IETF//DTD HTML 2.0 Level 2//",
+        "-//IETF//DTD HTML 2.0 Strict Level 1//",
+        "-//IETF//DTD HTML 2.0 Strict Level 2//",
+        "-//IETF//DTD HTML 2.0 Strict//",
+        "-//IETF//DTD HTML 2.0//",
+        "-//IETF//DTD HTML 2.1E//",
+        "-//IETF//DTD HTML 3.0//",
+        "-//IETF//DTD HTML 3.2 Final//",
+        "-//IETF//DTD HTML 3.2//",
+        "-//IETF//DTD HTML 3//",
+        "-//IETF//DTD HTML Level 0//",
+        "-//IETF//DTD HTML Level 1//",
+        "-//IETF//DTD HTML Level 2//",
+        "-//IETF//DTD HTML Level 3//",
+        "-//IETF//DTD HTML Strict Level 0//",
+        "-//IETF//DTD HTML Strict Level 1//",
+        "-//IETF//DTD HTML Strict Level 2//",
+        "-//IETF//DTD HTML Strict Level 3//",
+        "-//IETF//DTD HTML Strict//",
+        "-//IETF//DTD HTML//",
+        "-//Metrius//DTD Metrius Presentational//",
+        "-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//",
+        "-//Microsoft//DTD Internet Explorer 2.0 HTML//",
+        "-//Microsoft//DTD Internet Explorer 2.0 Tables//",
+        "-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//",
+        "-//Microsoft//DTD Internet Explorer 3.0 HTML//",
+        "-//Microsoft//DTD Internet Explorer 3.0 Tables//",
+        "-//Netscape Comm. Corp.//DTD HTML//",
+        "-//Netscape Comm. Corp.//DTD Strict HTML//",
+        "-//O'Reilly and Associates//DTD HTML 2.0//",
+        "-//O'Reilly and Associates//DTD HTML Extended 1.0//",
+        "-//O'Reilly and Associates//DTD HTML Extended Relaxed 1.0//",
+        "-//SQ//DTD HTML 2.0 HoTMetaL + extensions//",
+        "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//",
+        "-//SoftQuad//DTD HoTMetaL PRO 4.0::19971010::extensions to HTML 4.0//",
+        "-//Spyglass//DTD HTML 2.0 Extended//",
+        "-//Sun Microsystems Corp.//DTD HotJava HTML//",
+        "-//Sun Microsystems Corp.//DTD HotJava Strict HTML//",
+        "-//W3C//DTD HTML 3 1995-03-24//",
+        "-//W3C//DTD HTML 3.2 Draft//",
+        "-//W3C//DTD HTML 3.2 Final//",
+        "-//W3C//DTD HTML 3.2//",
+        "-//W3C//DTD HTML 3.2S Draft//",
+        "-//W3C//DTD HTML 4.0 Frameset//",
+        "-//W3C//DTD HTML 4.0 Transitional//",
+        "-//W3C//DTD HTML Experimental 19960712//",
+        "-//W3C//DTD HTML Experimental 970421//",
+        "-//W3C//DTD W3 HTML//",
+        "-//W3O//DTD W3 HTML 3.0//",
+        "-//WebTechs//DTD Mozilla HTML 2.0//",
+        "-//WebTechs//DTD Mozilla HTML//"
+    )
+
+    private val QUIRKS_MODE_SYSTEM_ID_MISSING_PREFIXES = listOf(
+        "-//W3C//DTD HTML 4.01 Frameset//",
+        "-//W3C//DTD HTML 4.01 Transitional//"
+    )
+
+    private val LIMITED_QUIRKS_MODE_PREFIXES = listOf(
+        "-//W3C//DTD XHTML 1.0 Frameset//",
+        "-//W3C//DTD XHTML 1.0 Transitional//"
+    )
+
+    private val LIMITED_QUIRKS_SYSTEM_ID_NOT_MISSING_PREFIXES = listOf(
+        "-//W3C//DTD HTML 4.01 Frameset//",
+        "-//W3C//DTD HTML 4.01 Transitional//"
+    )
 }
