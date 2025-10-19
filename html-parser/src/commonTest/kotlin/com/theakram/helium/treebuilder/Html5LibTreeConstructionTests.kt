@@ -36,7 +36,7 @@ import kotlin.test.Test
  * Source: https://github.com/html5lib/html5lib-tests
  * Total available: 59 files, 1,782 tests
  */
-    internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
+internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
 
     @Test
     fun runAllTreeConstructionTests() {
@@ -57,7 +57,6 @@ import kotlin.test.Test
 
     @Test
     fun runTests2() = runFile("tests2.dat")
-
 
     private fun runFile(filename: String) {
         val tests = TestFileLoader.loadTests(filename)
