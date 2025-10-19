@@ -33,7 +33,7 @@ import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
 
 /**
- * https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
  */
 internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
@@ -68,25 +68,7 @@ internal class NumericCharacterReferenceEnd(
             }
         }
         tokenizer.tempBuffer.clear()
-
-        /**
-         * JVM-specific implementation detail:
-         * The HTML spec operates on Unicode code points, but Java/Kotlin Char type is limited to 16 bits (UTF-16).
-         * For code points above U+FFFF (supplementary characters), we need to encode them as UTF-16 surrogate pairs
-         * to properly represent them in JVM strings.
-         *
-         * Example: U+1FFFE is encoded as two chars: U+D83F (high surrogate) and U+DFFE (low surrogate)
-         **/
-        if (tokenizer.characterReferenceCode > 0xFFFF) {
-            val cp = tokenizer.characterReferenceCode - 0x10000
-            val highSurrogate = (0xD800 + (cp shr 10)).toInt().toChar()
-            val lowSurrogate = (0xDC00 + (cp and 0x3FF)).toInt().toChar()
-            tokenizer.tempBuffer.append(highSurrogate)
-            tokenizer.tempBuffer.append(lowSurrogate)
-        } else {
-            tokenizer.tempBuffer.append(tokenizer.characterReferenceCode.toInt().toChar())
-        }
-
+        tokenizer.tempBuffer.appendCodePoint(tokenizer.characterReferenceCode.toInt())
         returnState.flushCodePoints(tokenizer)
         return reconsumeIn(returnState)
     }
