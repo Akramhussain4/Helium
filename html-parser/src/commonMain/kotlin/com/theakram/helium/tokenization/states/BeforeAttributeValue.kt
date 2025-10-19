@@ -34,27 +34,25 @@ import com.theakram.helium.util.isWhiteSpace
 internal class BeforeAttributeValue(private val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.isWhiteSpace() -> consumeNextChar { this }
+            codePoint.isWhiteSpace() -> switchTo(this)
 
-            codePoint.IS(Chars.QuotationMark) -> consumeNextChar {
+            codePoint.IS(Chars.QuotationMark) -> switchTo(
                 AttributeValueDoubleQuoted(currentTagToken = currentTagToken)
-            }
+            )
 
-            codePoint.IS(Chars.Apostrophe) -> consumeNextChar {
+            codePoint.IS(Chars.Apostrophe) -> switchTo(
                 AttributeValueSingleQuoted(currentTagToken = currentTagToken)
-            }
+            )
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-attribute-value")
                 tokenizer.addCurrentAttributeToToken(currentTagToken)
                 tokenizer.emitToken(currentTagToken)
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             else -> {
-                reconsumeCurrentChar {
-                    AttributeValueUnquoted(currentTagToken = currentTagToken)
-                }
+                reconsumeIn(AttributeValueUnquoted(currentTagToken = currentTagToken))
             }
         }
     }

@@ -23,41 +23,28 @@
  * SOFTWARE.
  */
 
-package com.theakram.helium.tokenizer
+package com.theakram.helium.tokenization.states
 
-import kotlin.test.Test
+import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.util.IS
+import com.theakram.helium.util.Chars
 
-internal class XmlViolation : TokenizerTestBase() {
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#rcdata-less-than-sign-state
+ */
+internal data object RCDataLessThanSign : TokenizationState {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
+        return when {
+            codePoint.IS(Chars.Solidus) -> {
+                tokenizer.tempBuffer.clear()
+                switchTo(RCDataEndTagOpen)
+            }
 
-    @Test
-    fun `NonXML character`() = assertTokenization(
-        input = "a￿b",
-        expectedTokens = listOf(
-            *chars("a�b").toTypedArray()
-        )
-    )
-
-    @Test
-    fun `NonXML space`() = assertTokenization(
-        input = "ab",
-        expectedTokens = listOf(
-            *chars("a b").toTypedArray()
-        )
-    )
-
-    @Test
-    fun `Double hyphen in comment`() = assertTokenization(
-        input = "<!-- foo -- bar -->",
-        expectedTokens = listOf(
-            comment(" foo - - bar ")
-        )
-    )
-
-    @Test
-    fun `FF between attributes`() = assertTokenization(
-        input = "<a b=''c=''>",
-        expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("b" to "", "c" to ""))
-        )
-    )
+            else -> {
+                tokenizer.emitToken(Token.Character('<'))
+                reconsumeIn(RCData)
+            }
+        }
+    }
 }

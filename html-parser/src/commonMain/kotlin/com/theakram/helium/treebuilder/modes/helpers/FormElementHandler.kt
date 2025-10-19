@@ -1,0 +1,70 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Mohammed Akram Hussain
+ * Website: https://theakram.com
+ */
+
+package com.theakram.helium.treebuilder.modes.helpers
+
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+
+internal object FormElementHandler {
+
+    fun handleFormStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        val hasTemplateInStack = treeBuilder.elementStack.any {
+            it.localName == "template" && it.namespace == Namespaces.HTML
+        }
+
+        if (treeBuilder.formElement != null && !hasTemplateInStack) {
+            // Parse error
+            return continueInCurrentMode()
+        }
+
+        if (treeBuilder.hasElementInButtonScope("p")) {
+            InBodyHelpers.closePElement(treeBuilder)
+        }
+
+        val formElement = treeBuilder.insertElement("form", attributes = attributes)
+        if (!hasTemplateInStack) {
+            treeBuilder.formElement = formElement
+        }
+        return continueInCurrentMode()
+    }
+
+    fun handleFormEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
+        val hasTemplateInStack = treeBuilder.elementStack.any {
+            it.localName == "template" && it.namespace == Namespaces.HTML
+        }
+
+        if (!hasTemplateInStack) {
+            val node = treeBuilder.formElement
+            treeBuilder.formElement = null
+            if (node == null || !treeBuilder.elementStack.contains(node)) {
+                // Parse error
+                return continueInCurrentMode()
+            }
+            InBodyHelpers.generateImpliedEndTags(treeBuilder)
+            if (treeBuilder.currentNode !== node) {
+                // Parse error
+            }
+            treeBuilder.removeElement(node)
+        } else {
+            if (!treeBuilder.hasElementInScope("form")) {
+                // Parse error
+                return continueInCurrentMode()
+            }
+            InBodyHelpers.generateImpliedEndTags(treeBuilder)
+            if (treeBuilder.currentNode.localName != "form" ||
+                treeBuilder.currentNode.namespace != Namespaces.HTML) {
+                // Parse error
+            }
+            treeBuilder.popUntil("form")
+        }
+        return continueInCurrentMode()
+    }
+}

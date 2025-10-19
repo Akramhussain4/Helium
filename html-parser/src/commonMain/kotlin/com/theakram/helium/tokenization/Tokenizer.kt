@@ -25,10 +25,18 @@
 
 package com.theakram.helium.tokenization
 
-import com.theakram.helium.tokenization.states.Action
+import com.theakram.helium.tokenization.states.StateTransition.ContinueInCurrentState
+import com.theakram.helium.tokenization.states.StateTransition.SwitchTo
+import com.theakram.helium.tokenization.states.StateTransition.ReconsumeIn
 import com.theakram.helium.tokenization.states.Data
+import com.theakram.helium.tokenization.states.PlainText
+import com.theakram.helium.tokenization.states.RCData
+import com.theakram.helium.tokenization.states.RawText
 import com.theakram.helium.tokenization.states.TokenizationState
+import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.util.Chars
+import com.theakram.helium.util.isNonCharacter
+import com.theakram.helium.util.isSurrogate
 
 internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     var currentPosition = 0
@@ -41,37 +49,41 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)
     var currentAttributeValue = StringBuilder(DEFAULT_BUFFER_SIZE)
 
+    var currentToken: Token? = null
+    var lastStartTagName: String = ""
+
     fun tokenize(html: String) {
         htmlBuffer = preprocess(html)
 
         while (currentPosition <= htmlBuffer.length) {
-            if (currentPosition == htmlBuffer.length) {
-                val (nextState, action) = handleEOF()
-                if (action == Action.None) break
-                currentState = nextState
-                continue
-            }
+            val codePoint = htmlBuffer.getOrNull(currentPosition)?.code ?: -1
+            val stateBeforeConsume = currentState
+            val transition = currentState.consume(codePoint, this)
 
-            val (nextState, action) = currentState.consume(
-                codePoint = htmlBuffer[currentPosition].code,
-                tokenizer = this
-            )
-
-            when (action) {
-                Action.ConsumeNext -> {
+            when (transition) {
+                ContinueInCurrentState -> currentPosition++
+                is SwitchTo -> {
+                    if (currentState == stateBeforeConsume) {
+                        currentState = transition.newState
+                    }
                     currentPosition++
-                    currentState = nextState
                 }
-
-                Action.Reconsume -> currentState = nextState
-                Action.None -> break
+                is ReconsumeIn -> currentState = transition.newState
             }
         }
     }
 
     private fun preprocess(input: String): String {
         val step1 = input.replace("\r\n", "\n")
-        return step1.replace('\r', '\n')
+        val step2 = step1.replace('\r', '\n')
+        step2.forEach { char ->
+            val codePoint = char.code
+            when {
+                codePoint.isSurrogate() -> logParseError("surrogate-in-input-stream")
+                codePoint.isNonCharacter() -> logParseError("noncharacter-in-input-stream")
+            }
+        }
+        return step2
     }
 
     fun addCurrentAttributeToToken(currentToken: Token) {
@@ -85,11 +97,33 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
         currentAttributeValue.clear()
     }
 
-    private fun handleEOF() = currentState.consume(-1, this)
-
-    fun emitToken(token: Token) = onTokenEmitted(token)
+    fun emitToken(token: Token) {
+        if (token is Token.StartTag) {
+            lastStartTagName = token.name
+        }
+        onTokenEmitted(token)
+    }
 
     fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + 1) ?: Chars.EOF.char
 
+    fun peekNextChars(count: Int): String {
+        val endIndex = (currentPosition + 1 + count).coerceAtMost(htmlBuffer.length)
+        return htmlBuffer.substring(currentPosition + 1, endIndex)
+    }
+
     fun logParseError(error: String) = System.err.println("Parse error: $error at position: $currentPosition")
+
+    fun setState(state: TokenizationState) {
+        currentState = state
+    }
+
+    fun switchState(stateType: TokenizerStateType) {
+        currentState = when (stateType) {
+            TokenizerStateType.DATA -> Data
+            TokenizerStateType.RCDATA -> RCData
+            TokenizerStateType.RAWTEXT -> RawText
+            TokenizerStateType.SCRIPT_DATA -> RawText  // SCRIPT_DATA not implemented, treating as RAWTEXT
+            TokenizerStateType.PLAINTEXT -> PlainText
+        }
+    }
 }

@@ -23,14 +23,39 @@
  * SOFTWARE.
  */
 
-package com.theakram.helium.treebuilder.modes
+package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.InsertionMode
-import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.util.IS
+import com.theakram.helium.util.Chars
 
-internal object InSelectInTable : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        TODO("Not yet implemented")
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-start-dash-state
+ */
+internal class CommentStartDash(private val commentToken: Token.Comment) : TokenizationState {
+
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
+        return when {
+            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentEnd(commentToken))
+
+            codePoint.IS(Chars.GreaterThan) -> {
+                tokenizer.logParseError("abrupt-closing-of-empty-comment")
+                tokenizer.emitToken(commentToken)
+                switchTo(Data)
+            }
+
+            codePoint == -1 -> {
+                tokenizer.logParseError("eof-in-comment")
+                tokenizer.emitToken(commentToken)
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
+            }
+
+            else -> {
+                val newToken = Token.Comment(commentToken.data + '-')
+                reconsumeIn(Comment(newToken))
+            }
+        }
     }
 }

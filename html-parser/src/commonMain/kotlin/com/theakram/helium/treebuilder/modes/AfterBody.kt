@@ -26,10 +26,43 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-afterbody
+ */
 internal object AfterBody : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
 
+            is Token.Comment -> {
+                val htmlElement = treeBuilder.elementStack.firstOrNull()
+                htmlElement?.appendChild(TreeNode.createComment(token.data))
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals(other = "html", ignoreCase = true) -> InBody.process(
+                token = token,
+                treeBuilder = treeBuilder
+            )
+
+            is Token.EndTag if token.name.equals(other = "html", ignoreCase = true) -> {
+                // TODO: Implement proper fragment case detection
+                // For now, we assume we're not in a fragment case and switch to AfterAfterBody
+                switchTo(AfterAfterBody)
+            }
+
+            is Token.EOF -> stopParsing()
+
+            else -> {
+                // Parse error.
+                reprocessIn(InBody)
+            }
+        }
     }
 }

@@ -25,13 +25,12 @@
 
 package com.theakram.helium.tokenizer
 
+import com.theakram.helium.tokenization.Token
 import kotlin.test.Test
 
 /**
  * Contains all 85 tests from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test4.test
- *
- * The commented (15) test cases are for Tokenization states that haven't been implemented yet.
  */
 internal class TokenizerTest4 : TokenizerTestBase() {
 
@@ -347,12 +346,13 @@ internal class TokenizerTest4 : TokenizerTestBase() {
         )
     )
 
-//    @Test
-//    fun `CR EOF after doctype name`() = assertTokenization(
-//        input = "<!doctype html \r",
-//        emptyList()
-//         "output":[["DOCTYPE", "html", null, null, false]],
-//    )
+    @Test
+    fun `CR EOF after doctype name`() = assertTokenization(
+        input = "<!doctype html \r",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
     @Test
     fun `CR EOF in tag name`() = assertTokenization(
@@ -588,68 +588,78 @@ internal class TokenizerTest4 : TokenizerTestBase() {
         expectedTokens = listOf(endTag(name = "br"))
     )
 
-//    @Test
-//    fun `Doctype public case-sensitivity 1`() = assertTokenization(
-//        input = "<!DoCtYpE HtMl PuBlIc \"AbC\" \"XyZ\">",
-//         "output":[["DOCTYPE", "html", "AbC", "XyZ", true]]
-//        emptyList(),
-//    )
+    @Test
+    fun `Doctype public case-sensitivity 1`() = assertTokenization(
+        input = "<!DoCtYpE HtMl PuBlIc \"AbC\" \"XyZ\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "AbC", systemId = "XyZ", forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Doctype public case-sensitivity 2`() = assertTokenization(
-//        input = "<!dOcTyPe hTmL pUbLiC \"aBc\" \"xYz\">",
-//         "output":[["DOCTYPE", "html", "aBc", "xYz", true]]
-//        emptyList(),
-//    )
+    @Test
+    fun `Doctype public case-sensitivity 2`() = assertTokenization(
+        input = "<!dOcTyPe hTmL pUbLiC \"aBc\" \"xYz\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = "aBc", systemId = "xYz", forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Doctype system case-sensitivity 1`() = assertTokenization(
-//        input = "<!DoCtYpE HtMl SyStEm \"XyZ\">",
-//         "output":[["DOCTYPE", "html", null, "XyZ", true]]
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype system case-sensitivity 1`() = assertTokenization(
+        input = "<!DoCtYpE HtMl SyStEm \"XyZ\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = "XyZ", forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `Doctype system case-sensitivity 2`() = assertTokenization(
-//        input = "<!dOcTyPe hTmL sYsTeM \"xYz\">",
-//         "output":[["DOCTYPE", "html", null, "xYz", true]]
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype system case-sensitivity 2`() = assertTokenization(
+        input = "<!dOcTyPe hTmL sYsTeM \"xYz\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = "xYz", forceQuirks = false)
+        )
+    )
 
-//    @Test
-//    fun `U+0000 in lookahead region after non-matching character`() = assertTokenization(
-//        input = "<!doc>\u0000",
-//         "output":[["Comment", "doc"], ["Character", "\u0000"]],
-//        emptyList()
-//    )
+    @Test
+    fun `U+0000 in lookahead region after non-matching character`() = assertTokenization(
+        input = "<!doc>\u0000",
+        expectedTokens = listOf(
+            comment("doc"),
+            char('\u0000')
+        )
+    )
 
-//    @Test
-//    fun `U+0000 in lookahead region`() = assertTokenization(
-//        input = "<!doc\u0000",
-//         "output":[["Comment", "doc\uFFFD"]],
-//        emptyList()
-//    )
+    @Test
+    fun `U+0000 in lookahead region`() = assertTokenization(
+        input = "<!doc\u0000",
+        expectedTokens = listOf(
+            comment("doc\uFFFD")
+        )
+    )
 
-//    @Test
-//    fun `U+0080 in lookahead region`() = assertTokenization(
-//        input = "<!doc\u0080",
-//        // output":[["Comment", "doc\u0080"]],
-//        emptyList()
-//    )
+    @Test
+    fun `U+0080 in lookahead region`() = assertTokenization(
+        input = "<!doc\u0080",
+        expectedTokens = listOf(
+            comment("doc\u0080")
+        )
+    )
 
-//    @Test
-//    fun `U+FDD1 in lookahead region`() = assertTokenization(
-//        input = "<!doc\uFDD1",
-//         "output":[["Comment", "doc\uFDD1"]],
-//        emptyList()
-//    )
+    @Test
+    fun `U+FDD1 in lookahead region`() = assertTokenization(
+        input = "<!doc\uFDD1",
+        expectedTokens = listOf(
+            comment("doc\uFDD1")
+        )
+    )
 
-//    @Test
-//    fun `U+1FFFF in lookahead region`() = assertTokenization(
-//        input = "<!doc\uD83F\uDFFF",
-//         "output":[["Comment", "doc\uD83F\uDFFF"]],
-//        emptyList()
-//    )
+    @Test
+    fun `U+1FFFF in lookahead region`() = assertTokenization(
+        input = "<!doc\uD83F\uDFFF",
+        expectedTokens = listOf(
+            comment("doc\uD83F\uDFFF")
+        )
+    )
 
     @Test
     fun `CR followed by non-LF`() = assertTokenization(
@@ -725,40 +735,46 @@ internal class TokenizerTest4 : TokenizerTestBase() {
         )
     )
 
-//    @Test
-//    fun `Doctype publik`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLIK \"AbC\" \"XyZ\">",
-//         "output":[["DOCTYPE", "html", null, null, false]],
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype publik`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLIK \"AbC\" \"XyZ\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `Doctype publi`() = assertTokenization(
-//        input = "<!DOCTYPE html PUBLI",
-//         "output":[["DOCTYPE", "html", null, null, false]],
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype publi`() = assertTokenization(
+        input = "<!DOCTYPE html PUBLI",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `Doctype sistem`() = assertTokenization(
-//        input = "<!DOCTYPE html SISTEM \"AbC\">",
-//         "output":[["DOCTYPE", "html", null, null, false]],
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype sistem`() = assertTokenization(
+        input = "<!DOCTYPE html SISTEM \"AbC\">",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `Doctype sys`() = assertTokenization(
-//        input = "<!DOCTYPE html SYS",
-//         "output":[["DOCTYPE", "html", null, null, false]],
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype sys`() = assertTokenization(
+        input = "<!DOCTYPE html SYS",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true)
+        )
+    )
 
-//    @Test
-//    fun `Doctype html xgt text`() = assertTokenization(
-//        input = "<!DOCTYPE html x>text",
-//         "output":[["DOCTYPE", "html", null, null, false], ["Character", "text"]],
-//        emptyList()
-//    )
+    @Test
+    fun `Doctype html xgt text`() = assertTokenization(
+        input = "<!DOCTYPE html x>text",
+        expectedTokens = listOf(
+            Token.DocType(name = "html", publicId = null, systemId = null, forceQuirks = true),
+            *chars("text").toTypedArray()
+        )
+    )
 
     @Test
     fun `Grave accent in unquoted attribute`() = assertTokenization(

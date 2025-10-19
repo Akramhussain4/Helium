@@ -37,25 +37,26 @@ internal data object EndTagOpen : TokenizationState {
         return when {
             codePoint.isAsciiAlpha() -> {
                 val endTagToken = Token.EndTag(name = "")
-                reconsumeCurrentChar { TagName(endTagToken) }
+                reconsumeIn(TagName(endTagToken))
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-end-tag-name")
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
                 tokenizer.emitToken(Token.Character(data = '<'))
                 tokenizer.emitToken(Token.Character(data = '/'))
-                endOfFile { this }
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {
                 tokenizer.logParseError("invalid-first-character-of-tag-name")
                 val commentToken = Token.Comment(data = "")
-                reconsumeCurrentChar { BogusComment(commentToken) }
+                reconsumeIn(BogusComment(commentToken))
             }
         }
     }

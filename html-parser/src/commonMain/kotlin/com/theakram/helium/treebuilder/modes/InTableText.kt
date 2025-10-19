@@ -27,10 +27,49 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.util.isAsciiWhitespace
+import com.theakram.helium.util.isNull
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intabletext
+ */
 internal object InTableText : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        TODO("Not yet implemented")
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Character if token.data.code.isNull() -> continueInCurrentMode()
+
+            is Token.Character -> {
+                treeBuilder.pendingTableCharacterTokens.add(token)
+                continueInCurrentMode()
+            }
+
+            else -> {
+                val hasNonWhitespace = treeBuilder.pendingTableCharacterTokens.any {
+                    !it.data.code.isAsciiWhitespace()
+                }
+
+                if (hasNonWhitespace) {
+                    treeBuilder.enableFosterParenting()
+                    for (characterToken in treeBuilder.pendingTableCharacterTokens) {
+                        InBody.process(characterToken, treeBuilder)
+                    }
+                    treeBuilder.disableFosterParenting()
+                } else {
+                    for (characterToken in treeBuilder.pendingTableCharacterTokens) {
+                        treeBuilder.insertCharacter(characterToken.data)
+                    }
+                }
+
+                treeBuilder.pendingTableCharacterTokens.clear()
+
+                val originalMode = treeBuilder.getOriginalInsertionMode()
+                    ?: error("Original insertion mode should be set when entering InTableText")
+                reprocessIn(originalMode)
+            }
+        }
     }
 }

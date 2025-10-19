@@ -33,23 +33,28 @@ import com.theakram.helium.tokenization.util.IS
 internal class AttributeValueSingleQuoted(val currentTagToken: Token) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.Apostrophe) -> consumeNextChar {
-                AfterAttributeValueQuoted(currentTagToken)
-            }
+            codePoint.IS(Chars.Apostrophe) -> switchTo(AfterAttributeValueQuoted(currentTagToken))
 
             codePoint.IS(Chars.Ampersand) -> {
                 val returnState = AttributeValueSingleQuoted(currentTagToken)
-                consumeNextChar { CharacterReference(returnState) }
+                switchTo(CharacterReference(returnState))
+            }
+
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.currentAttributeValue.append('\uFFFD')
+                switchTo(this)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
-                endOfFile { Data }
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {
                 tokenizer.currentAttributeValue.append(codePoint.toChar())
-                consumeNextChar { this }
+                switchTo(this)
             }
         }
     }

@@ -23,14 +23,44 @@
  * SOFTWARE.
  */
 
-package com.theakram.helium.treebuilder.modes
+package com.theakram.helium.tree
 
-import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.InsertionMode
-import com.theakram.helium.treebuilder.TreeBuilder
+/**
+ * Represents an attribute in the HTML tree.
+ *
+ * Attributes can be namespaced (e.g., xlink:href in SVG) or non-namespaced.
+ * This follows the WHATWG specification for attribute handling.
+ *
+ * Spec references:
+ * - Attributes: https://dom.spec.whatwg.org/#interface-attr
+ */
+public data class Attribute(
+    /**
+     * The namespace URI of the attribute (e.g., "http://www.w3.org/1999/xlink").
+     * Null for non-namespaced attributes.
+     */
+    val namespace: String? = null,
 
-internal object InSelect : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        TODO("Not yet implemented")
-    }
+    /**
+     * The namespace prefix (e.g., "xlink" in "xlink:href").
+     * Null for non-namespaced attributes.
+     */
+    val prefix: String? = null,
+
+    /**
+     * The local name of the attribute (e.g., "href" in "xlink:href", or "class" in "class").
+     */
+    val localName: String,
+
+    /**
+     * The value of the attribute.
+     */
+    val value: String
+) {
+    /**
+     * The qualified name of the attribute.
+     * Returns "prefix:localName" for namespaced attributes, or just "localName" otherwise.
+     */
+    val name: String
+        get() = if (prefix != null) "$prefix:$localName" else localName
 }

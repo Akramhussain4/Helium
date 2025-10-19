@@ -26,10 +26,78 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-after-head-insertion-mode
+ */
 internal object AfterHead : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Character if token.data.code.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.data)
+                continueInCurrentMode()
+            }
 
+            is Token.Comment -> {
+                treeBuilder.insertComment(token.data)
+                continueInCurrentMode()
+            }
+
+            is Token.DocType -> continueInCurrentMode()
+
+            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals("body", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement(token.name, attributes = attributes)
+                treeBuilder.setFramesetNotOk()
+                switchTo(InBody)
+            }
+
+            is Token.StartTag if token.name.equals("frameset", ignoreCase = true) -> {
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement(token.name, attributes = attributes)
+                switchTo(InFrameSet)
+            }
+
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "base", "basefont", "bgsound", "link", "meta",
+                "noframes", "script", "style", "template", "title"
+            ) -> {
+                val headElement = treeBuilder.headElement ?: error("Head element pointer cannot be null at this point")
+                treeBuilder.pushElement(headElement)
+
+                val result = InHead.process(token, treeBuilder)
+                treeBuilder.removeElement(headElement)
+                result
+            }
+
+            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+
+            is Token.EndTag if token.name.lowercase() in setOf("body", "html", "br") -> handleAnythingElse(treeBuilder)
+
+            is Token.StartTag if token.name.equals("head", ignoreCase = true) -> continueInCurrentMode()
+
+            is Token.EndTag -> continueInCurrentMode()
+
+            else -> handleAnythingElse(treeBuilder)
+        }
+    }
+
+    private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
+        treeBuilder.createImplicitElement("body")
+        return reprocessIn(InBody)
     }
 }

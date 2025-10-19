@@ -26,11 +26,102 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Attribute
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intr
+ */
 internal object InRow : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
-        TODO("Not yet implemented")
+
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.StartTag if token.name.lowercase() in setOf("th", "td") -> {
+                clearStackBackToTableRowContext(treeBuilder)
+                val attributes = token.attributes.map { (name, value) ->
+                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+                }
+                treeBuilder.insertElement(token.name, attributes = attributes)
+                treeBuilder.activeFormattingElements.insertMarker()
+                switchTo(InCell)
+            }
+
+            is Token.EndTag if token.name.equals("tr", ignoreCase = true) -> {
+                if (!treeBuilder.hasElementInTableScope("tr")) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableRowContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    switchTo(InTableBody)
+                }
+            }
+
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr"
+            ) -> {
+                if (!treeBuilder.hasElementInTableScope("tr")) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableRowContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTableBody)
+                }
+            }
+
+            is Token.EndTag if token.name.equals("table", ignoreCase = true) -> {
+                if (!treeBuilder.hasElementInTableScope("tr")) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableRowContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTableBody)
+                }
+            }
+
+            is Token.EndTag if token.name.lowercase() in setOf("tbody", "tfoot", "thead") -> {
+                val tagName = token.name.lowercase()
+                if (!treeBuilder.hasElementInTableScope(tagName)) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else if (!treeBuilder.hasElementInTableScope("tr")) {
+                    // Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    clearStackBackToTableRowContext(treeBuilder)
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InTableBody)
+                }
+            }
+
+            is Token.EndTag if token.name.lowercase() in setOf(
+                "body", "caption", "col", "colgroup", "html", "td", "th"
+            ) -> {
+                // Parse error. Ignore the token.
+                continueInCurrentMode()
+            }
+
+            else -> InTable.process(token, treeBuilder)
+        }
+    }
+
+    private fun clearStackBackToTableRowContext(treeBuilder: TreeBuilder) {
+        while (treeBuilder.elementStack.isNotEmpty()) {
+            val currentNode = treeBuilder.currentNode
+            if (currentNode.namespace == Namespaces.HTML &&
+                currentNode.localName in setOf("tr", "template", "html")
+            ) {
+                break
+            }
+            treeBuilder.popCurrentElement()
+        }
     }
 }

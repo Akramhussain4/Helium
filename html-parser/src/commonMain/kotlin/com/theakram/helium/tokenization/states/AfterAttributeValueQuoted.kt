@@ -41,25 +41,24 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
         }
 
         return when {
-            codePoint.isWhiteSpace() -> consumeNextChar { BeforeAttributeName(currentTagToken) }
+            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName(currentTagToken))
 
-            codePoint.IS(Chars.Solidus) -> consumeNextChar {
-                SelfClosingStartTag(currentTagToken)
-            }
+            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag(currentTagToken))
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.emitToken(currentTagToken)
-                consumeNextChar { Data }
+                switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                endOfFile { Data }
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
             else -> {
                 tokenizer.logParseError("missing-whitespace-between-attributes")
-                reconsumeCurrentChar { BeforeAttributeName(currentTagToken) }
+                reconsumeIn(BeforeAttributeName(currentTagToken))
             }
         }
     }

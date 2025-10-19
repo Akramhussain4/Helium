@@ -26,10 +26,32 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-after-after-frameset-insertion-mode
+ */
 internal object AfterAfterFrameSet : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.Comment -> {
+                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                continueInCurrentMode()
+            }
 
+            is Token.DocType -> InBody.process(token, treeBuilder)
+
+            is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals("html", true) -> InBody.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.equals("noframes", true) -> InHead.process(token, treeBuilder)
+
+            is Token.EOF -> stopParsing()
+
+            else -> continueInCurrentMode()
+        }
     }
 }

@@ -27,7 +27,12 @@ package com.theakram.helium.tokenization
 
 internal sealed interface Token {
 
-    data object DocType : Token
+    data class DocType(
+        var name: String? = null,
+        var publicId: String? = null,
+        var systemId: String? = null,
+        var forceQuirks: Boolean = false
+    ) : Token
 
     data class StartTag(
         val name: String,
@@ -47,4 +52,6 @@ internal sealed interface Token {
     data class Comment(val data: String) : Token
 
     data class Character(val data: Char) : Token
+
+    data object EOF : Token
 }

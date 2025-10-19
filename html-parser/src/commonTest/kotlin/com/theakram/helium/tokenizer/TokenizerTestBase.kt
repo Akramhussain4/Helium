@@ -27,20 +27,58 @@ package com.theakram.helium.tokenizer
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.states.TokenizationState
+import com.theakram.helium.treebuilder.TokenizerStateType
 
 internal abstract class TokenizerTestBase {
 
-    private val emittedTokens = mutableListOf<Token>()
-    private val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+    protected fun tokenize(
+        input: String,
+        initialState: TokenizerStateType = TokenizerStateType.DATA,
+        lastStartTag: String? = null
+    ): List<Token> {
+        val emittedTokens = mutableListOf<Token>()
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
 
-    protected fun tokenize(input: String): List<Token> {
-        emittedTokens.clear()
+        // Set the initial state
+        tokenizer.switchState(initialState)
+
+        // Set the lastStartTagName if provided
+        if (lastStartTag != null) {
+            tokenizer.lastStartTagName = lastStartTag
+        }
+
         tokenizer.tokenize(html = input)
-        return emittedTokens.toList()
+        return emittedTokens.filterNot { it is Token.EOF }
     }
 
-    protected fun assertTokenization(input: String, expectedTokens: List<Token>) {
-        val actualTokens = tokenize(input)
+    protected fun tokenizeWithDirectState(
+        input: String,
+        initialState: TokenizationState,
+        lastStartTag: String? = null
+    ): List<Token> {
+        val emittedTokens = mutableListOf<Token>()
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+
+        // Set the initial state using
+        tokenizer.setState(initialState)
+
+        // Set the lastStartTagName if provided
+        if (lastStartTag != null) {
+            tokenizer.lastStartTagName = lastStartTag
+        }
+
+        tokenizer.tokenize(html = input)
+        return emittedTokens.filterNot { it is Token.EOF }
+    }
+
+    protected fun assertTokenization(
+        input: String,
+        expectedTokens: List<Token>,
+        initialState: TokenizerStateType = TokenizerStateType.DATA,
+        lastStartTag: String? = null
+    ) {
+        val actualTokens = tokenize(input, initialState, lastStartTag)
         if (actualTokens.size != expectedTokens.size) {
             throw AssertionError(
                 "Token count mismatch. Expected ${expectedTokens.size}," +
@@ -74,6 +112,18 @@ internal abstract class TokenizerTestBase {
         fun char(c: Char) = Token.Character(c)
 
         fun comment(data: String) = Token.Comment(data)
+
+        fun doctype(
+            name: String? = null,
+            publicId: String? = null,
+            systemId: String? = null,
+            forceQuirks: Boolean = false
+        ) = Token.DocType(
+            name = name,
+            publicId = publicId,
+            systemId = systemId,
+            forceQuirks = forceQuirks
+        )
 
         fun chars(text: String) = text.map { char(it) }
     }

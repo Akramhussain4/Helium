@@ -39,17 +39,19 @@ internal class AttributeName(private val currentTagToken: Token) : TokenizationS
             codePoint.IS(
                 Chars.Solidus,
                 Chars.GreaterThan
-            ) || codePoint.isWhiteSpace() || codePoint == -1 -> reconsumeCurrentChar {
-                AfterAttributeName(currentTagToken = currentTagToken)
-            }
+            ) || codePoint.isWhiteSpace() || codePoint == -1 -> reconsumeIn(AfterAttributeName(currentTagToken = currentTagToken))
 
-            codePoint.IS(Chars.Equals) -> consumeNextChar {
-                BeforeAttributeValue(currentTagToken = currentTagToken)
-            }
+            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue(currentTagToken = currentTagToken))
 
             codePoint.isAsciiUpperAlpha() -> {
                 tokenizer.currentAttributeName.append((codePoint + 0x0020).toChar())
-                consumeNextChar { this }
+                switchTo(this)
+            }
+
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.currentAttributeName.append('\uFFFD')
+                switchTo(this)
             }
 
             codePoint.IS(
@@ -59,12 +61,12 @@ internal class AttributeName(private val currentTagToken: Token) : TokenizationS
             ) -> {
                 tokenizer.logParseError("unexpected-character-in-attribute-name")
                 tokenizer.currentAttributeName.append(codePoint.toChar())
-                consumeNextChar { this }
+                switchTo(this)
             }
 
             else -> {
                 tokenizer.currentAttributeName.append(codePoint.toChar())
-                consumeNextChar { this }
+                switchTo(this)
             }
         }
     }

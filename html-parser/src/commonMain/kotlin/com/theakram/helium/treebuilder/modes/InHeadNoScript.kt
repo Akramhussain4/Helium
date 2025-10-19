@@ -27,9 +27,52 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.*
+import com.theakram.helium.util.isAsciiWhitespace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inheadnoscript
+ */
 internal object InHeadNoScript : InsertionMode {
-    override fun process(token: Token, treeBuilder: TreeBuilder) {
+    override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token) {
+            is Token.DocType -> continueInCurrentMode()
 
+            is Token.StartTag if token.name.equals(other = "html", ignoreCase = true) -> InBody.process(
+                token = token,
+                treeBuilder = treeBuilder
+            )
+
+            is Token.EndTag if token.name.equals(other = "noscript", ignoreCase = true) -> {
+                treeBuilder.popCurrentElement()
+                switchTo(InHead)
+            }
+
+            is Token.Character if token.data.code.isAsciiWhitespace() -> InHead.process(token, treeBuilder)
+            is Token.Comment -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name.lowercase() in setOf(
+                "basefont",
+                "bgsound",
+                "link",
+                "meta",
+                "noframes",
+                "style"
+            ) -> InHead.process(token, treeBuilder)
+
+            is Token.StartTag if token.name.lowercase() in setOf("head", "noscript") -> continueInCurrentMode()
+
+            is Token.EndTag -> when {
+                token.name.equals("br", true) -> {
+                    treeBuilder.popCurrentElement()
+                    reprocessIn(InHead)
+                }
+
+                else -> continueInCurrentMode()
+            }
+
+            else -> {
+                treeBuilder.popCurrentElement()
+                reprocessIn(InHead)
+            }
+        }
     }
 }

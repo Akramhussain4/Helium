@@ -38,18 +38,18 @@ internal data object Data : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.Ampersand) -> consumeNextChar {
-                CharacterReference(returnState = this)
+            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(returnState = this))
+
+            codePoint.IS(Chars.LessThan) -> switchTo(TagOpen)
+
+            codePoint == -1 -> {
+                tokenizer.emitToken(Token.EOF)
+                continueInCurrentState()
             }
 
-            codePoint.IS(Chars.LessThan) -> consumeNextChar { TagOpen }
-
-            codePoint == -1 -> endOfFile { this }
-
             else -> {
-                val characterToken = Token.Character(data = codePoint.toChar())
-                tokenizer.emitToken(characterToken)
-                consumeNextChar { Data }
+                tokenizer.emitToken(Token.Character(data = codePoint.toChar()))
+                continueInCurrentState()
             }
         }
     }
