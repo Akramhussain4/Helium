@@ -29,6 +29,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.QuirksMode
+import com.theakram.helium.treebuilder.ForeignAttributeAdjustments
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -221,9 +222,8 @@ internal object InBody : InsertionMode {
 
             "math" -> {
                 treeBuilder.reconstructActiveFormattingElements()
-                // TODO: Adjust MathML attributes for the token
-                // TODO: Adjust foreign attributes for the token
-                treeBuilder.insertElement("math", Namespaces.MATHML, attributes)
+                val adjustedAttributes = ForeignAttributeAdjustments.adjustMathMLAttributesFull(token.attributes)
+                treeBuilder.insertElement("math", Namespaces.MATHML, adjustedAttributes)
                 if (token.selfClosing) {
                     treeBuilder.popCurrentElement()
                 }
@@ -232,9 +232,8 @@ internal object InBody : InsertionMode {
 
             "svg" -> {
                 treeBuilder.reconstructActiveFormattingElements()
-                // TODO: Adjust SVG attributes for the token
-                // TODO: Adjust foreign attributes for the token
-                treeBuilder.insertElement("svg", Namespaces.SVG, attributes)
+                val adjustedAttributes = ForeignAttributeAdjustments.adjustSVGAttributesFull(token.attributes)
+                treeBuilder.insertElement("svg", Namespaces.SVG, adjustedAttributes)
                 if (token.selfClosing) {
                     treeBuilder.popCurrentElement()
                 }
