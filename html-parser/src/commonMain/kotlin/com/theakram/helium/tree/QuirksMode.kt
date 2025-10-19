@@ -26,32 +26,10 @@
 package com.theakram.helium.tree
 
 /**
- * Document quirks mode as defined by the WHATWG HTML specification.
- *
- * The quirks mode affects how CSS is rendered and how certain HTML constructs are parsed.
- * It's determined by the DOCTYPE declaration at the beginning of the document.
- *
- * Spec references:
- * - Quirks mode: https://dom.spec.whatwg.org/#concept-document-quirks
+ * Spec: https://dom.spec.whatwg.org/#concept-document-quirks
  */
 public enum class QuirksMode {
-    /**
-     * No-quirks mode (standards mode).
-     * Modern DOCTYPE declarations trigger this mode.
-     */
     NO_QUIRKS,
-
-    /**
-     * Quirks mode.
-     * Triggered by missing or old DOCTYPE declarations.
-     * Emulates legacy browser behavior for backward compatibility.
-     */
     QUIRKS,
-
-    /**
-     * Limited-quirks mode.
-     * Triggered by certain transitional DOCTYPEs.
-     * A hybrid between no-quirks and quirks mode.
-     */
     LIMITED_QUIRKS
 }
