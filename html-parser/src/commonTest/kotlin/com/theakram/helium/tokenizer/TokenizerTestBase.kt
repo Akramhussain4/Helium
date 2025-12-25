@@ -38,7 +38,7 @@ internal abstract class TokenizerTestBase {
         lastStartTag: String? = null
     ): List<Token> {
         val emittedTokens = mutableListOf<Token>()
-        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add, onParseError = { _, _ -> })
 
         // Set the initial state
         tokenizer.switchState(initialState)
@@ -58,7 +58,7 @@ internal abstract class TokenizerTestBase {
         lastStartTag: String? = null
     ): List<Token> {
         val emittedTokens = mutableListOf<Token>()
-        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add)
+        val tokenizer = Tokenizer(onTokenEmitted = emittedTokens::add, onParseError = { _, _ -> })
 
         // Set the initial state using
         tokenizer.setState(initialState)
