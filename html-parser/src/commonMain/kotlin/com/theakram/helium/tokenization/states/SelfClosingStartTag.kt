@@ -30,22 +30,11 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 
-internal class SelfClosingStartTag(private val currentTagToken: Token) : TokenizationState {
+internal data object SelfClosingStartTag : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
-                when (currentTagToken) {
-                    is Token.StartTag -> {
-                        val token = currentTagToken.copy(selfClosing = true)
-                        tokenizer.emitToken(token)
-                    }
-
-                    is Token.EndTag -> {
-                        tokenizer.emitToken(currentTagToken)
-                    }
-
-                    else -> throw IllegalStateException("Expected a StartTag token, got $currentTagToken")
-                }
+                tokenizer.emitCurrentTag(selfClosing = true)
                 switchTo(Data)
             }
 
@@ -57,7 +46,7 @@ internal class SelfClosingStartTag(private val currentTagToken: Token) : Tokeniz
 
             else -> {
                 tokenizer.logParseError("unexpected-solidus-in-tag")
-                reconsumeIn(BeforeAttributeName(currentTagToken))
+                reconsumeIn(BeforeAttributeName)
             }
         }
     }

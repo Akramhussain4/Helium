@@ -26,34 +26,33 @@
 package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tokenization.Token.Comment
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 
-internal class BogusComment(private val commentToken: Comment) : TokenizationState {
+internal data object BogusComment : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 switchTo(Data)
             }
 
             codePoint == -1 -> {
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                val newToken = Comment(commentToken.data + '\uFFFD')
-                switchTo(BogusComment(newToken))
+                tokenizer.currentCommentData.append('\uFFFD')
+                switchTo(BogusComment)
             }
 
             else -> {
-                val newToken = Comment(commentToken.data + codePoint.toChar())
-                switchTo(BogusComment(newToken))
+                tokenizer.currentCommentData.append(codePoint.toChar())
+                switchTo(BogusComment)
             }
         }
     }

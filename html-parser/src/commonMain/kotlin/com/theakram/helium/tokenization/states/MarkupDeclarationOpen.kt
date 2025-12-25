@@ -48,8 +48,8 @@ internal data object MarkupDeclarationOpen : TokenizationState {
         return when {
             next2 == "--" -> {
                 tokenizer.currentPosition += 1
-                tokenizer.currentToken = Token.Comment("")
-                switchTo(CommentStart(Token.Comment("")))
+                tokenizer.currentCommentData.clear()
+                switchTo(CommentStart)
             }
 
             next7.equals("DOCTYPE", ignoreCase = true) -> {
@@ -62,8 +62,9 @@ internal data object MarkupDeclarationOpen : TokenizationState {
                 // TODO: Check if there is an adjusted current node and it is not an element in the HTML namespace
                 // For now, treat as CDATA in HTML content (parse error)
                 tokenizer.logParseError("cdata-in-html-content")
-                val commentToken = Token.Comment("[CDATA[")
-                switchTo(BogusComment(commentToken))
+                tokenizer.currentCommentData.clear()
+                tokenizer.currentCommentData.append("[CDATA[")
+                switchTo(BogusComment)
             }
 
             else -> handleAnythingElse(tokenizer)
@@ -72,7 +73,7 @@ internal data object MarkupDeclarationOpen : TokenizationState {
 
     private fun handleAnythingElse(tokenizer: Tokenizer): StateTransition {
         tokenizer.logParseError("incorrectly-opened-comment")
-        val commentToken = Token.Comment("")
-        return reconsumeIn(BogusComment(commentToken))
+        tokenizer.currentCommentData.clear()
+        return reconsumeIn(BogusComment)
     }
 }

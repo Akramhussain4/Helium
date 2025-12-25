@@ -95,13 +95,11 @@ internal class InsertionLocation(
             return getFosterParentingLocation()
         }
         // Otherwise:
-        val adjustedInsertionParent = target
-        // Step 3:
-        if (adjustedInsertionParent.namespace == Namespaces.HTML &&
-            adjustedInsertionParent.localName == "template"
-        ) {
-            // TODO: When template content is implemented, use template content
-            // For now, insert into the template element itself
+        var adjustedInsertionParent = target
+        // Step 3: If the adjusted insertion location is a template element,
+        // let it instead be inside the template element's template contents
+        if (adjustedInsertionParent.isTemplate && adjustedInsertionParent.templateContent != null) {
+            adjustedInsertionParent = adjustedInsertionParent.templateContent!!
         }
         // Step 4:
         return AdjustedLocation(adjustedInsertionParent, null)
@@ -123,9 +121,8 @@ internal class InsertionLocation(
         if (lastTemplate != null && (lastTable == null || lastTemplateIndex > lastTableIndex)) {
             // Let adjusted insertion location be inside last template's template contents,
             // after its last child (if any)
-            // TODO: When template content is implemented, insert into template content
-            // For now, insert into the template element itself
-            return AdjustedLocation(lastTemplate, null)
+            val insertionParent = lastTemplate.templateContent ?: lastTemplate
+            return AdjustedLocation(insertionParent, null)
         }
 
         // Step 4:

@@ -31,19 +31,19 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isWhiteSpace
 
-internal class AttributeValueUnquoted(val currentTagToken: Token) : TokenizationState {
+internal data object AttributeValueUnquoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> {
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
-                switchTo(BeforeAttributeName(currentTagToken = currentTagToken))
+                tokenizer.addCurrentAttribute()
+                switchTo(BeforeAttributeName)
             }
 
             codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
-                tokenizer.emitToken(currentTagToken)
+                tokenizer.addCurrentAttribute()
+                tokenizer.emitCurrentTag()
                 switchTo(Data)
             }
 
@@ -53,13 +53,7 @@ internal class AttributeValueUnquoted(val currentTagToken: Token) : Tokenization
                 switchTo(this)
             }
 
-            codePoint.IS(
-                Chars.QuotationMark,
-                Chars.Apostrophe,
-                Chars.LessThan,
-                Chars.Equals,
-                Chars.GraveAccent
-            ) -> {
+            codePoint.IS(Chars.QuotationMark, Chars.Apostrophe, Chars.LessThan, Chars.Equals, Chars.GraveAccent) -> {
                 tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
                 tokenizer.currentAttributeValue.append(codePoint.toChar())
                 switchTo(this)
@@ -67,7 +61,7 @@ internal class AttributeValueUnquoted(val currentTagToken: Token) : Tokenization
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-attribute-value")
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
+                tokenizer.addCurrentAttribute()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }

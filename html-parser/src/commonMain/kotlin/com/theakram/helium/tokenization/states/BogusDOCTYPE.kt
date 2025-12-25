@@ -32,24 +32,23 @@ import com.theakram.helium.util.Chars
 
 internal data object BogusDOCTYPE : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val token = tokenizer.currentToken as Token.DocType
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(token)
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
-            
+
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
                 continueInCurrentState()
             }
-            
+
             codePoint == -1 -> {
-                tokenizer.emitToken(token)
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
-            
+
             else -> continueInCurrentState()
         }
     }

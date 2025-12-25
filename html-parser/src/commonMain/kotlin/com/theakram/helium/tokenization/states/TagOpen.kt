@@ -39,14 +39,15 @@ internal data object TagOpen : TokenizationState {
             codePoint.IS(Chars.Solidus) -> switchTo(EndTagOpen)
 
             codePoint.isAsciiAlpha() -> {
-                val startTagToken = Token.StartTag(name = "")
-                reconsumeIn(TagName(startTagToken))
+                tokenizer.isCurrentTagStartTag = true
+                tokenizer.startTagBuilder.reset()
+                reconsumeIn(TagName)
             }
 
             codePoint.IS(Chars.QuestionMark) -> {
                 tokenizer.logParseError("unexpected-question-mark-instead-of-tag-name")
-                val commentToken = Token.Comment(data = "")
-                reconsumeIn(BogusComment(commentToken))
+                tokenizer.currentCommentData.clear()
+                reconsumeIn(BogusComment)
             }
 
             codePoint == -1 -> {

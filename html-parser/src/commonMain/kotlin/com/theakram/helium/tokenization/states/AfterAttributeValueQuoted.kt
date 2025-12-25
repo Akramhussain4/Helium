@@ -31,22 +31,17 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isWhiteSpace
 
-internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : TokenizationState {
+internal data object AfterAttributeValueQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        if (currentTagToken is Token.StartTag && tokenizer.currentAttributeName.isNotEmpty()) {
-            currentTagToken.addAttribute(
-                tokenizer.currentAttributeName.toString(),
-                tokenizer.currentAttributeValue.toString()
-            )
-        }
+        tokenizer.addCurrentAttribute()
 
         return when {
-            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName(currentTagToken))
+            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName)
 
-            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag(currentTagToken))
+            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(currentTagToken)
+                tokenizer.emitCurrentTag()
                 switchTo(Data)
             }
 
@@ -58,7 +53,7 @@ internal class AfterAttributeValueQuoted(private val currentTagToken: Token) : T
 
             else -> {
                 tokenizer.logParseError("missing-whitespace-between-attributes")
-                reconsumeIn(BeforeAttributeName(currentTagToken))
+                reconsumeIn(BeforeAttributeName)
             }
         }
     }

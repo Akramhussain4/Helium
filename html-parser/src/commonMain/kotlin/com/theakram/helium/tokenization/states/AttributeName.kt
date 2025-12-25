@@ -25,23 +25,19 @@
 
 package com.theakram.helium.tokenization.states
 
-import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isAsciiUpperAlpha
 import com.theakram.helium.util.isWhiteSpace
 
-internal class AttributeName(private val currentTagToken: Token) : TokenizationState {
-
+internal data object AttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(
-                Chars.Solidus,
-                Chars.GreaterThan
-            ) || codePoint.isWhiteSpace() || codePoint == -1 -> reconsumeIn(AfterAttributeName(currentTagToken = currentTagToken))
+            codePoint.IS(Chars.Solidus, Chars.GreaterThan) || codePoint.isWhiteSpace() || codePoint == -1 ->
+                reconsumeIn(AfterAttributeName)
 
-            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue(currentTagToken = currentTagToken))
+            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue)
 
             codePoint.isAsciiUpperAlpha() -> {
                 tokenizer.currentAttributeName.append((codePoint + 0x0020).toChar())
@@ -54,11 +50,7 @@ internal class AttributeName(private val currentTagToken: Token) : TokenizationS
                 switchTo(this)
             }
 
-            codePoint.IS(
-                Chars.QuotationMark,
-                Chars.Apostrophe,
-                Chars.LessThan
-            ) -> {
+            codePoint.IS(Chars.QuotationMark, Chars.Apostrophe, Chars.LessThan) -> {
                 tokenizer.logParseError("unexpected-character-in-attribute-name")
                 tokenizer.currentAttributeName.append(codePoint.toChar())
                 switchTo(this)

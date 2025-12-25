@@ -32,33 +32,33 @@ import com.theakram.helium.util.Chars
 
 internal data object DOCTYPESystemIdentifierSingleQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val token = tokenizer.currentToken as Token.DocType
+        val builder = tokenizer.docTypeBuilder
         return when {
             codePoint.IS(Chars.Apostrophe) -> switchTo(AfterDOCTYPESystemIdentifier)
-            
+
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                token.systemId += '\uFFFD'
+                builder.systemId.append('\uFFFD')
                 continueInCurrentState()
             }
-            
+
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("abrupt-doctype-system-identifier")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
-            
+
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
-            
+
             else -> {
-                token.systemId += codePoint.toChar()
+                builder.systemId.append(codePoint.toChar())
                 continueInCurrentState()
             }
         }

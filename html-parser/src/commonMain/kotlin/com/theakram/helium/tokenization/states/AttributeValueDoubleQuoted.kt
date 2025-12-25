@@ -30,16 +30,12 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 
-internal class AttributeValueDoubleQuoted(val currentTagToken: Token) : TokenizationState {
+internal data object AttributeValueDoubleQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.QuotationMark) -> switchTo(AfterAttributeValueQuoted(currentTagToken))
+            codePoint.IS(Chars.QuotationMark) -> switchTo(AfterAttributeValueQuoted)
 
-            codePoint.IS(Chars.Ampersand) -> switchTo(
-                CharacterReference(
-                    returnState = AttributeValueDoubleQuoted(currentTagToken = currentTagToken)
-                )
-            )
+            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")

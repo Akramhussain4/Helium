@@ -26,33 +26,29 @@
 package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.util.Chars
-import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isWhiteSpace
 
-internal class BeforeAttributeName(private val currentTagToken: Token) : TokenizationState {
+internal data object BeforeAttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> switchTo(this)
 
-            codePoint.IS(
-                Chars.Solidus,
-                Chars.GreaterThan
-            ) -> reconsumeIn(AfterAttributeName(currentTagToken = currentTagToken))
+            codePoint.IS(Chars.Solidus, Chars.GreaterThan) -> reconsumeIn(AfterAttributeName)
 
             codePoint.IS(Chars.Equals) -> {
                 tokenizer.logParseError("unexpected-equals-sign-before-attribute-name")
                 tokenizer.currentAttributeName.clear()
                 tokenizer.currentAttributeValue.clear()
                 tokenizer.currentAttributeName.append(codePoint.toChar())
-                switchTo(AttributeName(currentTagToken = currentTagToken))
+                switchTo(AttributeName)
             }
 
             else -> {
                 tokenizer.currentAttributeName.clear()
                 tokenizer.currentAttributeValue.clear()
-                reconsumeIn(AttributeName(currentTagToken = currentTagToken))
+                reconsumeIn(AttributeName)
             }
         }
     }

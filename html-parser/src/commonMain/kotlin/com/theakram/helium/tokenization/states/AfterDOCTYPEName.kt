@@ -36,7 +36,7 @@ import com.theakram.helium.util.Chars
 internal data object AfterDOCTYPEName : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val token = tokenizer.currentToken as Token.DocType
+        val builder = tokenizer.docTypeBuilder
 
         return when {
             codePoint.IS(Chars.Tab) || codePoint.IS(Chars.LineFeed) ||
@@ -45,14 +45,14 @@ internal data object AfterDOCTYPEName : TokenizationState {
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(token)
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
@@ -72,7 +72,7 @@ internal data object AfterDOCTYPEName : TokenizationState {
                     }
                     else -> {
                         tokenizer.logParseError("invalid-character-sequence-after-doctype-name")
-                        token.forceQuirks = true
+                        builder.forceQuirks = true
                         reconsumeIn(BogusDOCTYPE)
                     }
                 }

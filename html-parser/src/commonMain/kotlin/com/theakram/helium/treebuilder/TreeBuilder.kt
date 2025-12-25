@@ -67,16 +67,15 @@ public class TreeBuilder(
         getCurrentTemplateInsertionMode = { currentTemplateInsertionMode() }
     )
 
-    public var headElement: TreeNode? = null
-    public var formElement: TreeNode? = null
+    internal var headElement: TreeNode? = null
+    internal var formElement: TreeNode? = null
     private var originalInsertionMode: InsertionMode? = null
     private val templateInsertionModes = mutableListOf<InsertionMode>()
     private var framesetOk: Boolean = true
 
     internal val pendingTableCharacterTokens = mutableListOf<Token.Character>()
-    public val currentNode: TreeNode get() = stack.currentNode ?: document
-    public val currentElement: TreeNode get() = currentNode
-    public val elementStack: List<TreeNode> get() = stack.toList()
+    internal val currentNode: TreeNode get() = stack.currentNode ?: document
+    internal val elementStack: List<TreeNode> get() = stack.toList()
     internal val currentMode: InsertionMode get() = insertionMode
 
     internal fun process(token: Token) {
@@ -104,7 +103,7 @@ public class TreeBuilder(
         }
     }
 
-    public fun insertElement(
+    internal fun insertElement(
         tagName: String,
         namespace: String = Namespaces.HTML,
         attributes: List<Attribute> = emptyList()
@@ -120,35 +119,35 @@ public class TreeBuilder(
         return element
     }
 
-    public fun insertComment(data: String) {
+    internal fun insertComment(data: String) {
         currentNode.appendChild(TreeNode.createComment(data))
     }
 
-    public fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
+    internal fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
         document.appendChild(TreeNode.createDocumentType(name, publicId, systemId))
     }
 
-    public fun popCurrentElement(): TreeNode? = stack.pop()
+    internal fun popCurrentElement(): TreeNode? = stack.pop()
 
-    public fun popUntil(tagName: String): Unit = stack.popUntil(tagName)
+    internal fun popUntil(tagName: String): Unit = stack.popUntil(tagName)
 
     internal fun pushElement(element: TreeNode) = stack.push(element)
 
     internal fun removeElement(element: TreeNode): Boolean = stack.remove(element)
 
-    public fun hasElementInScope(tagName: String): Boolean =
+    internal fun hasElementInScope(tagName: String): Boolean =
         scopeChecker.hasElementInScope(tagName)
 
-    public fun hasElementInListItemScope(tagName: String): Boolean =
+    internal fun hasElementInListItemScope(tagName: String): Boolean =
         scopeChecker.hasElementInListItemScope(tagName)
 
-    public fun hasElementInButtonScope(tagName: String): Boolean =
+    internal fun hasElementInButtonScope(tagName: String): Boolean =
         scopeChecker.hasElementInButtonScope(tagName)
 
-    public fun hasElementInTableScope(tagName: String): Boolean =
+    internal fun hasElementInTableScope(tagName: String): Boolean =
         scopeChecker.hasElementInTableScope(tagName)
 
-    public fun hasElementInSelectScope(tagName: String): Boolean =
+    internal fun hasElementInSelectScope(tagName: String): Boolean =
         scopeChecker.hasElementInSelectScope(tagName)
 
     internal fun enableFosterParenting() = fosterParenting.enable()
@@ -203,10 +202,11 @@ public class TreeBuilder(
         insertionLocation.insertCharacter(data)
     }
 
-    public fun reset() {
+    internal fun reset() {
         insertionMode = Initial
         stack.clear()
         document.children.clear()
+        document.quirksMode = null
         headElement = null
         formElement = null
         activeFormattingElements.clear()
@@ -214,9 +214,10 @@ public class TreeBuilder(
         templateInsertionModes.clear()
         framesetOk = true
         fosterParenting.disable()
+        pendingTableCharacterTokens.clear()
     }
 
-    public fun toTreeString(): String {
+    internal fun toTreeString(): String {
         val result = StringBuilder()
         document.children.forEachIndexed { index, child ->
             result.append(child.toTreeString())

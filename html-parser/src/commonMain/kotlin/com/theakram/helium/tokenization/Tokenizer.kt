@@ -38,7 +38,10 @@ import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
 
-internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
+internal class Tokenizer(
+    private val onTokenEmitted: (Token) -> Unit,
+    private val onParseError: (String, Int) -> Unit
+) {
     var currentPosition = 0
     lateinit var htmlBuffer: String
     private var currentState: TokenizationState = Data
@@ -49,7 +52,12 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
     var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)
     var currentAttributeValue = StringBuilder(DEFAULT_BUFFER_SIZE)
 
-    var currentToken: Token? = null
+    val docTypeBuilder = DocTypeBuilder()
+    val startTagBuilder = StartTagBuilder()
+    var currentEndTagName = StringBuilder(DEFAULT_BUFFER_SIZE)
+    var currentCommentData = StringBuilder(DEFAULT_BUFFER_SIZE)
+
+    var isCurrentTagStartTag: Boolean = true
     var lastStartTagName: String = ""
 
     fun tokenize(html: String) {
@@ -86,13 +94,14 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
         return step2
     }
 
-    fun addCurrentAttributeToToken(currentToken: Token) {
-        if (currentToken is Token.StartTag && currentAttributeName.isNotEmpty()) {
-            val name = currentAttributeName.toString()
-            val value = currentAttributeValue.toString()
-            currentToken.addAttribute(name, value)
+    fun addCurrentAttribute() {
+        if (isCurrentTagStartTag && currentAttributeName.isNotEmpty()) {
+            startTagBuilder.addAttribute(
+                currentAttributeName.toString(),
+                currentAttributeValue.toString()
+            )
         }
-        // Clear buffers for the next attribute
+        // Clear buffers for the next attribute (for both start and end tags)
         currentAttributeName.clear()
         currentAttributeValue.clear()
     }
@@ -111,7 +120,9 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
         return htmlBuffer.substring(currentPosition + 1, endIndex)
     }
 
-    fun logParseError(error: String) = System.err.println("Parse error: $error at position: $currentPosition")
+    fun logParseError(error: String) {
+        onParseError(error, currentPosition)
+    }
 
     fun setState(state: TokenizationState) {
         currentState = state
@@ -124,6 +135,51 @@ internal class Tokenizer(private val onTokenEmitted: (Token) -> Unit) {
             TokenizerStateType.RAWTEXT -> RawText
             TokenizerStateType.SCRIPT_DATA -> RawText  // SCRIPT_DATA not implemented, treating as RAWTEXT
             TokenizerStateType.PLAINTEXT -> PlainText
+        }
+    }
+
+    fun reset() {
+        currentPosition = 0
+        currentState = Data
+        characterReferenceCode = 0L
+        tempBuffer.clear()
+        currentAttributeName.clear()
+        currentAttributeValue.clear()
+        docTypeBuilder.reset()
+        startTagBuilder.reset()
+        currentEndTagName.clear()
+        currentCommentData.clear()
+        isCurrentTagStartTag = true
+        lastStartTagName = ""
+    }
+
+    fun emitStartTag(selfClosing: Boolean = false) {
+        val tag = startTagBuilder.build(selfClosing)
+        lastStartTagName = tag.name
+        onTokenEmitted(tag)
+        startTagBuilder.reset()
+    }
+
+    fun emitEndTag() {
+        onTokenEmitted(Token.EndTag(currentEndTagName.toString()))
+        currentEndTagName.clear()
+    }
+
+    fun emitDocType() {
+        onTokenEmitted(docTypeBuilder.build())
+        docTypeBuilder.reset()
+    }
+
+    fun emitComment() {
+        onTokenEmitted(Token.Comment(currentCommentData.toString()))
+        currentCommentData.clear()
+    }
+
+    fun emitCurrentTag(selfClosing: Boolean = false) {
+        if (isCurrentTagStartTag) {
+            emitStartTag(selfClosing)
+        } else {
+            emitEndTag()
         }
     }
 }

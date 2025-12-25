@@ -25,7 +25,6 @@
 
 package com.theakram.helium.tokenization.states
 
-import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
@@ -33,21 +32,21 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-less-than-sign-state
  */
-internal class CommentLessThanSign(private val commentToken: Token.Comment): TokenizationState {
+internal data object CommentLessThanSign : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.ExclamationMark) -> {
-                val newToken = Token.Comment(commentToken.data + codePoint.toChar())
-                switchTo(CommentLessThanSignBang(newToken))
+                tokenizer.currentCommentData.append(codePoint.toChar())
+                switchTo(CommentLessThanSignBang)
             }
 
             codePoint.IS(Chars.LessThan) -> {
-                val newToken = Token.Comment(commentToken.data + codePoint.toChar())
-                switchTo(CommentLessThanSign(newToken))
+                tokenizer.currentCommentData.append(codePoint.toChar())
+                switchTo(CommentLessThanSign)
             }
 
-            else -> reconsumeIn(Comment(commentToken))
+            else -> reconsumeIn(Comment)
         }
     }
 }

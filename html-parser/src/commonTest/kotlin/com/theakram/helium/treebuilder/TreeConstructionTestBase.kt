@@ -40,9 +40,12 @@ internal abstract class TreeConstructionTestBase {
                 tokenizer.switchState(stateType)
             }
         )
-        tokenizer = Tokenizer { token ->
-            treeBuilder.process(token)
-        }
+        tokenizer = Tokenizer(
+            onTokenEmitted = { token ->
+                treeBuilder.process(token)
+            },
+            onParseError = { _, _ -> }
+        )
 
         tokenizer.tokenize(input)
         return treeBuilder.toTreeString().trim()

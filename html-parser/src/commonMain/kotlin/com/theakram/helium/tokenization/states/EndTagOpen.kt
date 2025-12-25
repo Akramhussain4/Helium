@@ -36,8 +36,9 @@ internal data object EndTagOpen : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlpha() -> {
-                val endTagToken = Token.EndTag(name = "")
-                reconsumeIn(TagName(endTagToken))
+                tokenizer.isCurrentTagStartTag = false
+                tokenizer.currentEndTagName.clear()
+                reconsumeIn(TagName)
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
@@ -55,8 +56,8 @@ internal data object EndTagOpen : TokenizationState {
 
             else -> {
                 tokenizer.logParseError("invalid-first-character-of-tag-name")
-                val commentToken = Token.Comment(data = "")
-                reconsumeIn(BogusComment(commentToken))
+                tokenizer.currentCommentData.clear()
+                reconsumeIn(BogusComment)
             }
         }
     }

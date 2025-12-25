@@ -33,31 +33,31 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-end-bang-state
  */
-internal class CommentEndBang(private val commentToken: Token.Comment): TokenizationState {
+internal data object CommentEndBang : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.HyphenMinus) -> {
-                val newToken = Token.Comment(commentToken.data + "--!")
-                switchTo(CommentEndDash(newToken))
+                tokenizer.currentCommentData.append("--!")
+                switchTo(CommentEndDash)
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("incorrectly-closed-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
-                val newToken = Token.Comment(commentToken.data + "--!")
-                reconsumeIn(Comment(newToken))
+                tokenizer.currentCommentData.append("--!")
+                reconsumeIn(Comment)
             }
         }
     }

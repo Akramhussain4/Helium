@@ -32,39 +32,39 @@ import com.theakram.helium.util.Chars
 
 internal data object BeforeDOCTYPEPublicIdentifier : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val token = tokenizer.currentToken as Token.DocType
+        val builder = tokenizer.docTypeBuilder
         return when {
             codePoint.IS(Chars.Tab) || codePoint.IS(Chars.LineFeed) ||
             codePoint.IS(Chars.FormFeed) || codePoint.IS(Chars.Space) -> continueInCurrentState()
-            
+
             codePoint.IS(Chars.QuotationMark) -> {
-                token.publicId = ""
+                builder.publicIdSet = true
                 switchTo(DOCTYPEPublicIdentifierDoubleQuoted)
             }
-            
+
             codePoint.IS(Chars.Apostrophe) -> {
-                token.publicId = ""
+                builder.publicIdSet = true
                 switchTo(DOCTYPEPublicIdentifierSingleQuoted)
             }
-            
+
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-doctype-public-identifier")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
-            
+
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
-            
+
             else -> {
                 tokenizer.logParseError("missing-quote-before-doctype-public-identifier")
-                token.forceQuirks = true
+                builder.forceQuirks = true
                 reconsumeIn(BogusDOCTYPE)
             }
         }

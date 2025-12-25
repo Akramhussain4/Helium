@@ -54,9 +54,12 @@ public object FragmentParser {
                 tokenizer.switchState(stateType)
             },
         )
-        tokenizer = Tokenizer { token ->
-            treeBuilder.process(token)
-        }
+        tokenizer = Tokenizer(
+            onTokenEmitted = { token ->
+                treeBuilder.process(token)
+            },
+            onParseError = { _, _ -> }
+        )
 
         // Step 6:
         val tokenizerState = getInitialTokenizerState(context, scriptingEnabled)

@@ -43,8 +43,7 @@ internal data object RCDataEndTagName : TokenizationState {
             codePoint.IS(Chars.FormFeed) ||
             codePoint.IS(Chars.Space) -> {
                 if (isAppropriateEndTag(tokenizer)) {
-                    val currentToken = tokenizer.currentToken!!
-                    switchTo(BeforeAttributeName(currentToken))
+                    switchTo(BeforeAttributeName)
                 } else {
                     anythingElse(tokenizer)
                 }
@@ -52,8 +51,7 @@ internal data object RCDataEndTagName : TokenizationState {
 
             codePoint.IS(Chars.Solidus) -> {
                 if (isAppropriateEndTag(tokenizer)) {
-                    val currentToken = tokenizer.currentToken!!
-                    switchTo(SelfClosingStartTag(currentToken))
+                    switchTo(SelfClosingStartTag)
                 } else {
                     anythingElse(tokenizer)
                 }
@@ -61,7 +59,7 @@ internal data object RCDataEndTagName : TokenizationState {
 
             codePoint.IS(Chars.GreaterThan) -> {
                 if (isAppropriateEndTag(tokenizer)) {
-                    tokenizer.emitToken(tokenizer.currentToken!!)
+                    tokenizer.emitEndTag()
                     switchTo(Data)
                 } else {
                     anythingElse(tokenizer)
@@ -69,15 +67,13 @@ internal data object RCDataEndTagName : TokenizationState {
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                val currentToken = tokenizer.currentToken as Token.EndTag
-                tokenizer.currentToken = currentToken.copy(name = currentToken.name + codePoint.toChar().lowercaseChar())
+                tokenizer.currentEndTagName.append(codePoint.toChar().lowercaseChar())
                 tokenizer.tempBuffer.append(codePoint.toChar())
                 continueInCurrentState()
             }
 
             codePoint.isAsciiLowerAlpha() -> {
-                val currentToken = tokenizer.currentToken as Token.EndTag
-                tokenizer.currentToken = currentToken.copy(name = currentToken.name + codePoint.toChar())
+                tokenizer.currentEndTagName.append(codePoint.toChar())
                 tokenizer.tempBuffer.append(codePoint.toChar())
                 continueInCurrentState()
             }
@@ -87,8 +83,7 @@ internal data object RCDataEndTagName : TokenizationState {
     }
 
     private fun isAppropriateEndTag(tokenizer: Tokenizer): Boolean {
-        val currentToken = tokenizer.currentToken as? Token.EndTag ?: return false
-        return currentToken.name.equals(tokenizer.lastStartTagName, ignoreCase = true)
+        return tokenizer.currentEndTagName.toString().equals(tokenizer.lastStartTagName, ignoreCase = true)
     }
 
     private fun anythingElse(tokenizer: Tokenizer): StateTransition {

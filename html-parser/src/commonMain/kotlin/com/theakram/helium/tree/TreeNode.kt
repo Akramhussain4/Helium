@@ -46,8 +46,17 @@ public class TreeNode(
     public var parent: TreeNode? = null,
     public var quirksMode: QuirksMode? = null,
     public var parserCannotChangeMode: Boolean = false,
-    public var isIframeSrcdoc: Boolean = false
+    public var isIframeSrcdoc: Boolean = false,
+    public var templateContent: TreeNode? = null
 ) {
+
+    /**
+     * Returns true if this is a template element with content.
+     */
+    public val isTemplate: Boolean
+        get() = type == NodeType.ELEMENT &&
+                namespace == Namespaces.HTML &&
+                localName == "template"
 
     public val name: String?
         get() = when {
@@ -208,6 +217,17 @@ public class TreeNode(
             }
         }
 
+        // For template elements, render the content document fragment
+        if (isTemplate && templateContent != null) {
+            result.append("\n")
+            val contentIndent = "| " + "  ".repeat(depth + 1)
+            result.append("${contentIndent}content")
+            for (child in templateContent!!.children) {
+                result.append("\n")
+                result.append(child.toTreeString(depth + 2).trimEnd())
+            }
+        }
+
         for (child in children) {
             result.append("\n")
             result.append(child.toTreeString(depth + 1).trimEnd())
@@ -233,13 +253,18 @@ public class TreeNode(
             prefix: String? = null,
             attributes: List<Attribute> = emptyList()
         ): TreeNode {
-            return TreeNode(
+            val element = TreeNode(
                 type = NodeType.ELEMENT,
                 namespace = namespace,
                 localName = localName,
                 prefix = prefix,
                 attributes = attributes.toMutableList()
             )
+            // Per spec, template elements have a content property that is a DocumentFragment
+            if (namespace == Namespaces.HTML && localName == "template") {
+                element.templateContent = createDocumentFragment()
+            }
+            return element
         }
 
         public fun createText(data: String): TreeNode {

@@ -33,32 +33,32 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-end-state
  */
-internal class CommentEnd(private val commentToken: Token.Comment): TokenizationState {
+internal data object CommentEnd : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 switchTo(Data)
             }
 
-            codePoint.IS(Chars.ExclamationMark) -> switchTo(CommentEndBang(commentToken))
+            codePoint.IS(Chars.ExclamationMark) -> switchTo(CommentEndBang)
 
             codePoint.IS(Chars.HyphenMinus) -> {
-                val newToken = Token.Comment(commentToken.data + '-')
-                switchTo(CommentEnd(newToken))
+                tokenizer.currentCommentData.append('-')
+                switchTo(CommentEnd)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
-                val newToken = Token.Comment(commentToken.data + "--")
-                reconsumeIn(Comment(newToken))
+                tokenizer.currentCommentData.append("--")
+                reconsumeIn(Comment)
             }
         }
     }

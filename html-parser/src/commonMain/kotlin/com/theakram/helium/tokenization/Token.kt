@@ -28,24 +28,17 @@ package com.theakram.helium.tokenization
 internal sealed interface Token {
 
     data class DocType(
-        var name: String? = null,
-        var publicId: String? = null,
-        var systemId: String? = null,
-        var forceQuirks: Boolean = false
+        val name: String?,
+        val publicId: String?,
+        val systemId: String?,
+        val forceQuirks: Boolean
     ) : Token
 
     data class StartTag(
         val name: String,
         val selfClosing: Boolean = false,
-        val attributes: MutableMap<String, String> = LinkedHashMap()
-    ) : Token {
-
-        fun addAttribute(name: String, value: String) {
-            if (!attributes.containsKey(name)) {
-                attributes[name.lowercase()] = value
-            }
-        }
-    }
+        val attributes: Map<String, String> = emptyMap()
+    ) : Token
 
     data class EndTag(val name: String) : Token
 
@@ -54,4 +47,58 @@ internal sealed interface Token {
     data class Character(val data: Char) : Token
 
     data object EOF : Token
+}
+
+/**
+ * Builder for DocType tokens. Accumulates state during tokenization.
+ */
+internal class DocTypeBuilder {
+    val name = StringBuilder()
+    val publicId = StringBuilder()
+    val systemId = StringBuilder()
+    var forceQuirks: Boolean = false
+    var publicIdSet: Boolean = false
+    var systemIdSet: Boolean = false
+
+    fun build(): Token.DocType = Token.DocType(
+        name = if (name.isEmpty()) null else name.toString(),
+        publicId = if (publicIdSet) publicId.toString() else null,
+        systemId = if (systemIdSet) systemId.toString() else null,
+        forceQuirks = forceQuirks
+    )
+
+    fun reset() {
+        name.clear()
+        publicId.clear()
+        systemId.clear()
+        forceQuirks = false
+        publicIdSet = false
+        systemIdSet = false
+    }
+}
+
+/**
+ * Builder for StartTag tokens. Accumulates attributes during tokenization.
+ */
+internal class StartTagBuilder {
+    val name = StringBuilder()
+    private val attributes = LinkedHashMap<String, String>()
+
+    fun addAttribute(attrName: String, attrValue: String) {
+        val lowerName = attrName.lowercase()
+        if (!attributes.containsKey(lowerName)) {
+            attributes[lowerName] = attrValue
+        }
+    }
+
+    fun build(selfClosing: Boolean = false) = Token.StartTag(
+        name = name.toString(),
+        selfClosing = selfClosing,
+        attributes = attributes.toMap()
+    )
+
+    fun reset() {
+        name.clear()
+        attributes.clear()
+    }
 }

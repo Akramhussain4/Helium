@@ -46,8 +46,9 @@ internal data object DOCTYPE : TokenizationState {
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                val token = Token.DocType(forceQuirks = true)
-                tokenizer.emitToken(token)
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }

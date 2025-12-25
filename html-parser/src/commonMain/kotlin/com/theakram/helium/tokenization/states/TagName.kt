@@ -32,27 +32,27 @@ import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isAsciiUpperAlpha
 import com.theakram.helium.util.isWhiteSpace
 
-internal class TagName(private val currentTagToken: Token) : TokenizationState {
+internal data object TagName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName(currentTagToken))
+            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName)
 
-            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag(currentTagToken))
+            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(currentTagToken)
+                tokenizer.emitCurrentTag()
                 switchTo(Data)
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                val token = updateTagName(codePoint + 0x0020)
-                switchTo(TagName(token))
+                appendToTagName(tokenizer, (codePoint + 0x0020).toChar())
+                switchTo(this)
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                val token = updateTagName(0xFFFD)
-                switchTo(TagName(token))
+                appendToTagName(tokenizer, '\uFFFD')
+                switchTo(this)
             }
 
             codePoint == -1 -> {
@@ -62,26 +62,17 @@ internal class TagName(private val currentTagToken: Token) : TokenizationState {
             }
 
             else -> {
-                val token = updateTagName(codePoint)
-                switchTo(TagName(currentTagToken = token))
+                appendToTagName(tokenizer, codePoint.toChar())
+                switchTo(this)
             }
         }
     }
 
-
-    private fun updateTagName(codePoint: Int): Token {
-        return when (currentTagToken) {
-            is Token.StartTag -> {
-                val newStartTagTokenName = currentTagToken.name + codePoint.toChar()
-                currentTagToken.copy(name = newStartTagTokenName)
-            }
-
-            is Token.EndTag -> {
-                val newEndTagTokenName = currentTagToken.name + codePoint.toChar()
-                currentTagToken.copy(name = newEndTagTokenName)
-            }
-
-            else -> throw Exception("Expected a StartTag or EndTag token, got $currentTagToken")
+    private fun appendToTagName(tokenizer: Tokenizer, char: Char) {
+        if (tokenizer.isCurrentTagStartTag) {
+            tokenizer.startTagBuilder.name.append(char)
+        } else {
+            tokenizer.currentEndTagName.append(char)
         }
     }
 }

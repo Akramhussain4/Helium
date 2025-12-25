@@ -33,22 +33,22 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-end-dash-state
  */
-internal class CommentEndDash(private val commentToken: Token.Comment): TokenizationState {
+internal data object CommentEndDash : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentEnd(commentToken))
+            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentEnd)
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
-                val newToken = Token.Comment(commentToken.data + '-')
-                reconsumeIn(Comment(newToken))
+                tokenizer.currentCommentData.append('-')
+                reconsumeIn(Comment)
             }
         }
     }

@@ -31,21 +31,21 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isWhiteSpace
 
-internal class AfterAttributeName(private val currentTagToken: Token) : TokenizationState {
+internal data object AfterAttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isWhiteSpace() -> switchTo(this)
 
             codePoint.IS(Chars.Solidus) -> {
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
-                switchTo(SelfClosingStartTag(currentTagToken))
+                tokenizer.addCurrentAttribute()
+                switchTo(SelfClosingStartTag)
             }
 
-            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue(currentTagToken = currentTagToken))
+            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
-                tokenizer.emitToken(currentTagToken)
+                tokenizer.addCurrentAttribute()
+                tokenizer.emitCurrentTag()
                 switchTo(Data)
             }
 
@@ -56,10 +56,10 @@ internal class AfterAttributeName(private val currentTagToken: Token) : Tokeniza
             }
 
             else -> {
-                tokenizer.addCurrentAttributeToToken(currentTagToken)
+                tokenizer.addCurrentAttribute()
                 tokenizer.currentAttributeName.clear()
                 tokenizer.currentAttributeValue.clear()
-                reconsumeIn(AttributeName(currentTagToken = currentTagToken))
+                reconsumeIn(AttributeName)
             }
         }
     }

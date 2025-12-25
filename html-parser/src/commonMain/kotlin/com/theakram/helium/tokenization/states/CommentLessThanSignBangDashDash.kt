@@ -25,7 +25,6 @@
 
 package com.theakram.helium.tokenization.states
 
-import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
@@ -33,17 +32,17 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-less-than-sign-bang-dash-dash-state
  */
-internal class CommentLessThanSignBangDashDash(private val commentToken: Token.Comment): TokenizationState {
+internal data object CommentLessThanSignBangDashDash : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.GreaterThan) -> reconsumeIn(CommentEnd(commentToken))
+            codePoint.IS(Chars.GreaterThan) -> reconsumeIn(CommentEnd)
 
-            codePoint == -1 -> reconsumeIn(CommentEnd(commentToken))
+            codePoint == -1 -> reconsumeIn(CommentEnd)
 
             else -> {
                 tokenizer.logParseError("nested-comment")
-                reconsumeIn(CommentEnd(commentToken))
+                reconsumeIn(CommentEnd)
             }
         }
     }

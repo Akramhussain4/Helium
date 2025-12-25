@@ -33,33 +33,33 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-state
  */
-internal class Comment(private val commentToken: Token.Comment) : TokenizationState {
+internal data object Comment : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.LessThan) -> {
-                val newToken = Token.Comment(commentToken.data + codePoint.toChar())
-                switchTo(CommentLessThanSign(newToken))
+                tokenizer.currentCommentData.append(codePoint.toChar())
+                switchTo(CommentLessThanSign)
             }
 
-            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentEndDash(commentToken))
+            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentEndDash)
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                val newToken = Token.Comment(commentToken.data + '\uFFFD')
-                switchTo(Comment(newToken))
+                tokenizer.currentCommentData.append('\uFFFD')
+                switchTo(Comment)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
-                val newToken = Token.Comment(commentToken.data + codePoint.toChar())
-                switchTo(Comment(newToken))
+                tokenizer.currentCommentData.append(codePoint.toChar())
+                switchTo(Comment)
             }
         }
     }

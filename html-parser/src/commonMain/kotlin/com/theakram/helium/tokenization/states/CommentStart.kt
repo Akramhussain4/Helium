@@ -25,7 +25,6 @@
 
 package com.theakram.helium.tokenization.states
 
-import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
@@ -33,18 +32,18 @@ import com.theakram.helium.util.Chars
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#comment-start-state
  */
-internal class CommentStart(private val commentToken: Token.Comment) : TokenizationState {
+internal data object CommentStart : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentStartDash(commentToken))
+            codePoint.IS(Chars.HyphenMinus) -> switchTo(CommentStartDash)
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("abrupt-closing-of-empty-comment")
-                tokenizer.emitToken(commentToken)
+                tokenizer.emitComment()
                 switchTo(Data)
             }
 
-            else -> reconsumeIn(Comment(commentToken))
+            else -> reconsumeIn(Comment)
         }
     }
 }

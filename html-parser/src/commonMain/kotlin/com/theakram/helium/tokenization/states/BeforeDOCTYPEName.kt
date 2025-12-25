@@ -43,33 +43,38 @@ internal data object BeforeDOCTYPEName : TokenizationState {
             }
 
             codePoint in 'A'.code..'Z'.code -> {
-                tokenizer.currentToken = Token.DocType(name = (codePoint + 0x0020).toChar().toString())
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.name.append((codePoint + 0x0020).toChar())
                 switchTo(DOCTYPEName)
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                tokenizer.currentToken = Token.DocType(name = "\uFFFD")
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.name.append('\uFFFD')
                 switchTo(DOCTYPEName)
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-doctype-name")
-                val token = Token.DocType(forceQuirks = true)
-                tokenizer.emitToken(token)
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.forceQuirks = true
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                val token = Token.DocType(forceQuirks = true)
-                tokenizer.emitToken(token)
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
-                tokenizer.currentToken = Token.DocType(name = codePoint.toChar().toString())
+                tokenizer.docTypeBuilder.reset()
+                tokenizer.docTypeBuilder.name.append(codePoint.toChar())
                 switchTo(DOCTYPEName)
             }
         }

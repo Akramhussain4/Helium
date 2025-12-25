@@ -36,7 +36,8 @@ internal data object RCDataEndTagOpen : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlpha() -> {
-                tokenizer.currentToken = Token.EndTag("")
+                tokenizer.isCurrentTagStartTag = false
+                tokenizer.currentEndTagName.clear()
                 reconsumeIn(RCDataEndTagName)
             }
 

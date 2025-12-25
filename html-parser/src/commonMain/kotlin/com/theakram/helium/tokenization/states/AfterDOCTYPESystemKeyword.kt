@@ -32,43 +32,43 @@ import com.theakram.helium.util.Chars
 
 internal data object AfterDOCTYPESystemKeyword : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val token = tokenizer.currentToken as Token.DocType
+        val builder = tokenizer.docTypeBuilder
         return when {
             codePoint.IS(Chars.Tab) || codePoint.IS(Chars.LineFeed) ||
             codePoint.IS(Chars.FormFeed) || codePoint.IS(Chars.Space) -> {
                 switchTo(BeforeDOCTYPESystemIdentifier)
             }
-            
+
             codePoint.IS(Chars.QuotationMark) -> {
                 tokenizer.logParseError("missing-whitespace-after-doctype-system-keyword")
-                token.systemId = ""
+                builder.systemIdSet = true
                 switchTo(DOCTYPESystemIdentifierDoubleQuoted)
             }
-            
+
             codePoint.IS(Chars.Apostrophe) -> {
                 tokenizer.logParseError("missing-whitespace-after-doctype-system-keyword")
-                token.systemId = ""
+                builder.systemIdSet = true
                 switchTo(DOCTYPESystemIdentifierSingleQuoted)
             }
-            
+
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-doctype-system-identifier")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 switchTo(Data)
             }
-            
+
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-doctype")
-                token.forceQuirks = true
-                tokenizer.emitToken(token)
+                builder.forceQuirks = true
+                tokenizer.emitDocType()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
-            
+
             else -> {
                 tokenizer.logParseError("missing-quote-before-doctype-system-identifier")
-                token.forceQuirks = true
+                builder.forceQuirks = true
                 reconsumeIn(BogusDOCTYPE)
             }
         }
