@@ -4,10 +4,9 @@ plugins {
 }
 
 kotlin {
-    applyDefaultHierarchyTemplate()
     explicitApi()
 
-    jvmToolchain(11)
+    jvmToolchain(21)
     jvm { }
 
     sourceSets {
