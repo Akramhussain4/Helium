@@ -49,7 +49,23 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
 
         results.forEach { println(it.formatSummary()) }
 
-        TestSummary(results).print()
+        val summary = TestSummary(results)
+        summary.print()
+
+        val loadErrors = results.filter { it.error != null }
+        if (loadErrors.isNotEmpty()) {
+            throw AssertionError(
+                "Could not load ${loadErrors.size} test files (is the html5lib-tests submodule checked out?): " +
+                    loadErrors.joinToString { "${it.filename}: ${it.error}" }
+            )
+        }
+
+        // Raise this as conformance improves so regressions fail the build
+        if (summary.totalPassed < MIN_PASSING_TESTS) {
+            throw AssertionError(
+                "Tree construction regressed: ${summary.totalPassed} tests passed, expected at least $MIN_PASSING_TESTS"
+            )
+        }
     }
 
     @Test
@@ -174,6 +190,10 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
             println("\n... and ${failures.size - maxShow} more failure(s) not shown")
             println("Re-run with individual test to see full details")
         }
+    }
+
+    private companion object {
+        const val MIN_PASSING_TESTS = 1351
     }
 
     private data class TestFailure(

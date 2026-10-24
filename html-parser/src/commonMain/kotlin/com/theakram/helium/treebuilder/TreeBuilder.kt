@@ -38,7 +38,8 @@ public class TreeBuilder(
     private val onSwitchTokenizerState: (TokenizerStateType) -> Unit
 ) {
     private var insertionMode: InsertionMode = Initial
-    public val document: TreeNode = TreeNode.createDocument()
+    public var document: TreeNode = TreeNode.createDocument()
+        private set
 
     private val stack = StackOfOpenElements()
     private val scopeChecker = ScopeChecker(stack)
@@ -205,8 +206,8 @@ public class TreeBuilder(
     internal fun reset() {
         insertionMode = Initial
         stack.clear()
-        document.children.clear()
-        document.quirksMode = null
+        // A new document per parse, so trees returned by earlier parses stay intact
+        document = TreeNode.createDocument()
         headElement = null
         formElement = null
         activeFormattingElements.clear()

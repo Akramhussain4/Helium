@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -10,12 +9,8 @@ kotlin {
     jvm { }
 
     sourceSets {
-        commonMain.dependencies {
-
-        }
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(libs.kotlinx.json)
         }
     }
 }
