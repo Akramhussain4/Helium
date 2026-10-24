@@ -1,0 +1,154 @@
+public final class com/theakram/helium/HTMLParser {
+	public fun <init> ()V
+	public final fun getDocument ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getErrors ()Ljava/util/List;
+	public final fun parse (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
+}
+
+public final class com/theakram/helium/ParseError {
+	public fun <init> (Ljava/lang/String;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun copy (Ljava/lang/String;I)Lcom/theakram/helium/ParseError;
+	public static synthetic fun copy$default (Lcom/theakram/helium/ParseError;Ljava/lang/String;IILjava/lang/Object;)Lcom/theakram/helium/ParseError;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getPosition ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/theakram/helium/tree/Attribute {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/theakram/helium/tree/Attribute;
+	public static synthetic fun copy$default (Lcom/theakram/helium/tree/Attribute;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/theakram/helium/tree/Attribute;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLocalName ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getNamespace ()Ljava/lang/String;
+	public final fun getPrefix ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/theakram/helium/tree/Namespaces {
+	public static final field HTML Ljava/lang/String;
+	public static final field INSTANCE Lcom/theakram/helium/tree/Namespaces;
+	public static final field MATHML Ljava/lang/String;
+	public static final field SVG Ljava/lang/String;
+	public static final field XLINK Ljava/lang/String;
+	public static final field XML Ljava/lang/String;
+	public static final field XMLNS Ljava/lang/String;
+}
+
+public final class com/theakram/helium/tree/NodeType : java/lang/Enum {
+	public static final field CDATA_SECTION Lcom/theakram/helium/tree/NodeType;
+	public static final field COMMENT Lcom/theakram/helium/tree/NodeType;
+	public static final field DOCUMENT Lcom/theakram/helium/tree/NodeType;
+	public static final field DOCUMENT_FRAGMENT Lcom/theakram/helium/tree/NodeType;
+	public static final field DOCUMENT_TYPE Lcom/theakram/helium/tree/NodeType;
+	public static final field ELEMENT Lcom/theakram/helium/tree/NodeType;
+	public static final field PROCESSING_INSTRUCTION Lcom/theakram/helium/tree/NodeType;
+	public static final field TEXT Lcom/theakram/helium/tree/NodeType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/theakram/helium/tree/NodeType;
+	public static fun values ()[Lcom/theakram/helium/tree/NodeType;
+}
+
+public final class com/theakram/helium/tree/QuirksMode : java/lang/Enum {
+	public static final field LIMITED_QUIRKS Lcom/theakram/helium/tree/QuirksMode;
+	public static final field NO_QUIRKS Lcom/theakram/helium/tree/QuirksMode;
+	public static final field QUIRKS Lcom/theakram/helium/tree/QuirksMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/theakram/helium/tree/QuirksMode;
+	public static fun values ()[Lcom/theakram/helium/tree/QuirksMode;
+}
+
+public final class com/theakram/helium/tree/TreeNode {
+	public static final field Companion Lcom/theakram/helium/tree/TreeNode$Companion;
+	public fun <init> (Lcom/theakram/helium/tree/NodeType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lcom/theakram/helium/tree/TreeNode;Lcom/theakram/helium/tree/QuirksMode;ZZLcom/theakram/helium/tree/TreeNode;)V
+	public synthetic fun <init> (Lcom/theakram/helium/tree/NodeType;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lcom/theakram/helium/tree/TreeNode;Lcom/theakram/helium/tree/QuirksMode;ZZLcom/theakram/helium/tree/TreeNode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun appendChild (Lcom/theakram/helium/tree/TreeNode;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun findChildElement (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun getAttribute (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getAttributeNS (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public final fun getAttributes ()Ljava/util/List;
+	public final fun getChildElements ()Ljava/util/List;
+	public final fun getChildren ()Ljava/util/List;
+	public final fun getData ()Ljava/lang/String;
+	public final fun getFirstChild ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getLastChild ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getLocalName ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getNamespace ()Ljava/lang/String;
+	public final fun getNextSibling ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getParent ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getParserCannotChangeMode ()Z
+	public final fun getPrefix ()Ljava/lang/String;
+	public final fun getPreviousSibling ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getPublicId ()Ljava/lang/String;
+	public final fun getQuirksMode ()Lcom/theakram/helium/tree/QuirksMode;
+	public final fun getSystemId ()Ljava/lang/String;
+	public final fun getTemplateContent ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getType ()Lcom/theakram/helium/tree/NodeType;
+	public final fun hasAttribute (Ljava/lang/String;)Z
+	public final fun hasAttributeNS (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun hasChildren ()Z
+	public fun hashCode ()I
+	public final fun insertBefore (Lcom/theakram/helium/tree/TreeNode;Lcom/theakram/helium/tree/TreeNode;)V
+	public final fun isIframeSrcdoc ()Z
+	public final fun isTemplate ()Z
+	public final fun removeChild (Lcom/theakram/helium/tree/TreeNode;)V
+	public final fun setAttribute (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setAttributeNS (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setData (Ljava/lang/String;)V
+	public final fun setIframeSrcdoc (Z)V
+	public final fun setParent (Lcom/theakram/helium/tree/TreeNode;)V
+	public final fun setParserCannotChangeMode (Z)V
+	public final fun setQuirksMode (Lcom/theakram/helium/tree/QuirksMode;)V
+	public final fun setTemplateContent (Lcom/theakram/helium/tree/TreeNode;)V
+	public final fun toTreeString (I)Ljava/lang/String;
+	public static synthetic fun toTreeString$default (Lcom/theakram/helium/tree/TreeNode;IILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/theakram/helium/tree/TreeNode$Companion {
+	public final fun createComment (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun createDocument (Lcom/theakram/helium/tree/QuirksMode;)Lcom/theakram/helium/tree/TreeNode;
+	public static synthetic fun createDocument$default (Lcom/theakram/helium/tree/TreeNode$Companion;Lcom/theakram/helium/tree/QuirksMode;ILjava/lang/Object;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun createDocumentFragment ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun createDocumentType (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
+	public static synthetic fun createDocumentType$default (Lcom/theakram/helium/tree/TreeNode$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun createElement (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/theakram/helium/tree/TreeNode;
+	public static synthetic fun createElement$default (Lcom/theakram/helium/tree/TreeNode$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun createText (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
+}
+
+public final class com/theakram/helium/treebuilder/FragmentParser {
+	public static final field INSTANCE Lcom/theakram/helium/treebuilder/FragmentParser;
+	public final fun parseFragment (Lcom/theakram/helium/tree/TreeNode;Ljava/lang/String;Z)Ljava/util/List;
+	public static synthetic fun parseFragment$default (Lcom/theakram/helium/treebuilder/FragmentParser;Lcom/theakram/helium/tree/TreeNode;Ljava/lang/String;ZILjava/lang/Object;)Ljava/util/List;
+}
+
+public final class com/theakram/helium/treebuilder/TokenizerStateType : java/lang/Enum {
+	public static final field DATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static final field PLAINTEXT Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static final field RAWTEXT Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static final field RCDATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static final field SCRIPT_DATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/theakram/helium/treebuilder/TokenizerStateType;
+	public static fun values ()[Lcom/theakram/helium/treebuilder/TokenizerStateType;
+}
+
+public final class com/theakram/helium/treebuilder/TreeBuilder {
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public final fun getDocument ()Lcom/theakram/helium/tree/TreeNode;
+}
+

@@ -1,17 +1,16 @@
-*.iml
+# Gradle
 .gradle
 **/build/
-xcuserdata
 !src/**/build/
 local.properties
+
+# Kotlin
+.kotlin
+
+# IDE
 .idea
+*.iml
+.fleet
+
+# OS
 .DS_Store
-captures
-.externalNativeBuild
-.cxx
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcodeproj/project.xcworkspace/
-!*.xcworkspace/contents.xcworkspacedata
-**/xcshareddata/WorkspaceSettings.xcsettings

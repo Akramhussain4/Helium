@@ -1,0 +1,4 @@
+# Keep wrapper scripts runnable on every platform regardless of local git settings
+gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
