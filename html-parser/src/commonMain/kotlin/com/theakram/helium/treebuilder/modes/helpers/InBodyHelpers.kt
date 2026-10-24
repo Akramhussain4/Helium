@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mohammed Akram Hussain
+ * Copyright (c) 2023-2026 Mohammed Akram Hussain
  * Website: https://theakram.com
  */
 
