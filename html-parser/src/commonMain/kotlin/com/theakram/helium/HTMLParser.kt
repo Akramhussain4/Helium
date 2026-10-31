@@ -29,6 +29,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.FragmentParser
+import com.theakram.helium.treebuilder.ScriptingMode
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 
@@ -52,7 +53,7 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
     )
     private val treeBuilder = TreeBuilder(
         onSwitchTokenizerState = ::switchTokenizerState,
-        scriptingEnabled = scriptingEnabled
+        scriptingMode = if (scriptingEnabled) ScriptingMode.NORMAL else ScriptingMode.DISABLED
     )
 
     /** The document produced by the most recent call to [parse]. */
@@ -93,7 +94,8 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
         val nodes = FragmentParser.parseFragment(
             context = context,
             input = html,
-            scriptingEnabled = scriptingEnabled,
+            // Fragment parsing defaults to Inert, and to Disabled when the context's document has scripting disabled
+            scriptingMode = if (scriptingEnabled) ScriptingMode.INERT else ScriptingMode.DISABLED,
             onParseError = ::handleParseError
         )
         // Detach the nodes from the html element the algorithm parses them into
