@@ -170,8 +170,11 @@ internal class TreeBuilder(
         return element
     }
 
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-comment
+     */
     internal fun insertComment(data: String) {
-        currentNode.appendChild(TreeNode.createComment(data))
+        insertAtAppropriatePlace(TreeNode.createComment(data))
     }
 
     internal fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
