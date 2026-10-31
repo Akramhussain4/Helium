@@ -563,17 +563,17 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 66`() = assertTokenization(
-        input = ";􀀀",
+        input = ";\uDBC0\uDC00",
         expectedTokens = listOf(
-            *chars(";􀀀").toTypedArray()
+            *chars(";\uDBC0\uDC00").toTypedArray()
         )
     )
 
     @Test
     fun `uDBC0uDC00 67`() = assertTokenization(
-        input = ";􀀀",
+        input = ";\uDBC0\uDC00",
         expectedTokens = listOf(
-            *chars(";􀀀").toTypedArray()
+            *chars(";\uDBC0\uDC00").toTypedArray()
         )
     )
 
@@ -1147,9 +1147,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 139`() = assertTokenization(
-        input = "<!-- -􀀀",
+        input = "<!-- -\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment(" -􀀀")
+            comment(" -\uDBC0\uDC00")
         )
     )
 
@@ -1315,9 +1315,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 160`() = assertTokenization(
-        input = "<!-- 􀀀",
+        input = "<!-- \uDBC0\uDC00",
         expectedTokens = listOf(
-            comment(" 􀀀")
+            comment(" \uDBC0\uDC00")
         )
     )
 
@@ -1859,9 +1859,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 228`() = assertTokenization(
-        input = "<!----􀀀",
+        input = "<!----\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("--􀀀")
+            comment("--\uDBC0\uDC00")
         )
     )
 
@@ -2019,9 +2019,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 248`() = assertTokenization(
-        input = "<!---􀀀",
+        input = "<!---\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("-􀀀")
+            comment("-\uDBC0\uDC00")
         )
     )
 
@@ -2179,9 +2179,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 268`() = assertTokenization(
-        input = "<!--􀀀",
+        input = "<!--\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("􀀀")
+            comment("\uDBC0\uDC00")
         )
     )
 
@@ -3227,9 +3227,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a PUBLICuDBC0uDC00 399`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC\"􀀀",
+        input = "<!DOCTYPE a PUBLIC\"\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+            doctype(name = "a", publicId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -3651,7 +3651,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a PUBLICuDBC0uDC00 452`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC''􀀀",
+        input = "<!DOCTYPE a PUBLIC''\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", publicId = "", forceQuirks = true)
         )
@@ -3827,9 +3827,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a PUBLICuDBC0uDC00 474`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC'􀀀",
+        input = "<!DOCTYPE a PUBLIC'\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+            doctype(name = "a", publicId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -4003,7 +4003,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a PUBLICuDBC0uDC00 496`() = assertTokenization(
-        input = "<!DOCTYPE a PUBLIC􀀀",
+        input = "<!DOCTYPE a PUBLIC\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -4371,9 +4371,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a SYSTEMuDBC0uDC00 542`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM\"􀀀",
+        input = "<!DOCTYPE a SYSTEM\"\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+            doctype(name = "a", systemId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -4763,7 +4763,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a SYSTEMuDBC0uDC00 591`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM''􀀀",
+        input = "<!DOCTYPE a SYSTEM''\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", systemId = "")
         )
@@ -4939,9 +4939,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a SYSTEMuDBC0uDC00 613`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM'􀀀",
+        input = "<!DOCTYPE a SYSTEM'\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+            doctype(name = "a", systemId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -5115,7 +5115,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a SYSTEMuDBC0uDC00 635`() = assertTokenization(
-        input = "<!DOCTYPE a SYSTEM􀀀",
+        input = "<!DOCTYPE a SYSTEM\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -5395,7 +5395,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a auDBC0uDC00 670`() = assertTokenization(
-        input = "<!DOCTYPE a a􀀀",
+        input = "<!DOCTYPE a a\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -5435,7 +5435,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE a uDBC0uDC00 675`() = assertTokenization(
-        input = "<!DOCTYPE a 􀀀",
+        input = "<!DOCTYPE a \uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -5643,9 +5643,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE auDBC0uDC00 701`() = assertTokenization(
-        input = "<!DOCTYPE a􀀀",
+        input = "<!DOCTYPE a\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a􀀀", forceQuirks = true)
+            doctype(name = "a\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -5683,9 +5683,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPE uDBC0uDC00 706`() = assertTokenization(
-        input = "<!DOCTYPE 􀀀",
+        input = "<!DOCTYPE \uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "􀀀", forceQuirks = true)
+            doctype(name = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -6467,9 +6467,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa PUBLICuDBC0uDC00 804`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC\"􀀀",
+        input = "<!DOCTYPEa PUBLIC\"\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+            doctype(name = "a", publicId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -6859,7 +6859,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa PUBLICuDBC0uDC00 853`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC''􀀀",
+        input = "<!DOCTYPEa PUBLIC''\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", publicId = "", forceQuirks = true)
         )
@@ -7035,9 +7035,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa PUBLICuDBC0uDC00 875`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC'􀀀",
+        input = "<!DOCTYPEa PUBLIC'\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", publicId = "􀀀", forceQuirks = true)
+            doctype(name = "a", publicId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -7211,7 +7211,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa PUBLICuDBC0uDC00 897`() = assertTokenization(
-        input = "<!DOCTYPEa PUBLIC􀀀",
+        input = "<!DOCTYPEa PUBLIC\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -7563,9 +7563,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa SYSTEMuDBC0uDC00 941`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM\"􀀀",
+        input = "<!DOCTYPEa SYSTEM\"\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+            doctype(name = "a", systemId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -7939,7 +7939,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa SYSTEMuDBC0uDC00 988`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM''􀀀",
+        input = "<!DOCTYPEa SYSTEM''\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", systemId = "")
         )
@@ -8115,9 +8115,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa SYSTEMuDBC0uDC00 1010`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM'􀀀",
+        input = "<!DOCTYPEa SYSTEM'\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a", systemId = "􀀀", forceQuirks = true)
+            doctype(name = "a", systemId = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -8291,7 +8291,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa SYSTEMuDBC0uDC00 1032`() = assertTokenization(
-        input = "<!DOCTYPEa SYSTEM􀀀",
+        input = "<!DOCTYPEa SYSTEM\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -8571,7 +8571,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa auDBC0uDC00 1067`() = assertTokenization(
-        input = "<!DOCTYPEa a􀀀",
+        input = "<!DOCTYPEa a\uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -8611,7 +8611,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEa uDBC0uDC00 1072`() = assertTokenization(
-        input = "<!DOCTYPEa 􀀀",
+        input = "<!DOCTYPEa \uDBC0\uDC00",
         expectedTokens = listOf(
             doctype(name = "a", forceQuirks = true)
         )
@@ -8819,9 +8819,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEauDBC0uDC00 1098`() = assertTokenization(
-        input = "<!DOCTYPEa􀀀",
+        input = "<!DOCTYPEa\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "a􀀀", forceQuirks = true)
+            doctype(name = "a\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -8859,9 +8859,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `DOCTYPEuDBC0uDC00 1103`() = assertTokenization(
-        input = "<!DOCTYPE􀀀",
+        input = "<!DOCTYPE\uDBC0\uDC00",
         expectedTokens = listOf(
-            doctype(name = "􀀀", forceQuirks = true)
+            doctype(name = "\uDBC0\uDC00", forceQuirks = true)
         )
     )
 
@@ -8931,9 +8931,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 1112`() = assertTokenization(
-        input = "<!􀀀",
+        input = "<!\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("􀀀")
+            comment("\uDBC0\uDC00")
         )
     )
 
@@ -9242,9 +9242,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 1151`() = assertTokenization(
-        input = "</􀀀",
+        input = "</\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("􀀀")
+            comment("\uDBC0\uDC00")
         )
     )
 
@@ -9657,9 +9657,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 1206`() = assertTokenization(
-        input = "<?􀀀",
+        input = "<?\uDBC0\uDC00",
         expectedTokens = listOf(
-            comment("?􀀀")
+            comment("?\uDBC0\uDC00")
         )
     )
 
@@ -10433,9 +10433,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a a uDBC0uDC00 1303`() = assertTokenization(
-        input = "<a a 􀀀>",
+        input = "<a a \uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\uDBC0\uDC00" to ""))
         )
     )
 
@@ -10897,9 +10897,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a auDBC0uDC00 1361`() = assertTokenization(
-        input = "<a a=\"􀀀\">",
+        input = "<a a=\"\uDBC0\uDC00\">",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "􀀀"))
+            startTag(name = "a", attributes = mapOf("a" to "\uDBC0\uDC00"))
         )
     )
 
@@ -11297,9 +11297,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a auDBC0uDC00 1411`() = assertTokenization(
-        input = "<a a=''􀀀>",
+        input = "<a a=''\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
+            startTag(name = "a", attributes = mapOf("a" to "", "\uDBC0\uDC00" to ""))
         )
     )
 
@@ -11473,9 +11473,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a auDBC0uDC00 1433`() = assertTokenization(
-        input = "<a a='􀀀'>",
+        input = "<a a='\uDBC0\uDC00'>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "􀀀"))
+            startTag(name = "a", attributes = mapOf("a" to "\uDBC0\uDC00"))
         )
     )
 
@@ -11905,9 +11905,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a aauDBC0uDC00 1487`() = assertTokenization(
-        input = "<a a=a􀀀>",
+        input = "<a a=a\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "a􀀀"))
+            startTag(name = "a", attributes = mapOf("a" to "a\uDBC0\uDC00"))
         )
     )
 
@@ -11945,9 +11945,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a auDBC0uDC00 1492`() = assertTokenization(
-        input = "<a a=􀀀>",
+        input = "<a a=\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a" to "􀀀"))
+            startTag(name = "a", attributes = mapOf("a" to "\uDBC0\uDC00"))
         )
     )
 
@@ -12065,9 +12065,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a auDBC0uDC00 1507`() = assertTokenization(
-        input = "<a a􀀀>",
+        input = "<a a\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("a􀀀" to ""))
+            startTag(name = "a", attributes = mapOf("a\uDBC0\uDC00" to ""))
         )
     )
 
@@ -12105,9 +12105,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `a uDBC0uDC00 1512`() = assertTokenization(
-        input = "<a 􀀀>",
+        input = "<a \uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("􀀀" to ""))
+            startTag(name = "a", attributes = mapOf("\uDBC0\uDC00" to ""))
         )
     )
 
@@ -12409,9 +12409,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `auDBC0uDC00 1550`() = assertTokenization(
-        input = "<a/􀀀>",
+        input = "<a/\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a", attributes = mapOf("􀀀" to ""))
+            startTag(name = "a", attributes = mapOf("\uDBC0\uDC00" to ""))
         )
     )
 
@@ -12569,9 +12569,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `auDBC0uDC00 1570`() = assertTokenization(
-        input = "<a􀀀>",
+        input = "<a\uDBC0\uDC00>",
         expectedTokens = listOf(
-            startTag(name = "a􀀀")
+            startTag(name = "a\uDBC0\uDC00")
         )
     )
 
@@ -12609,9 +12609,9 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 1575`() = assertTokenization(
-        input = "<􀀀",
+        input = "<\uDBC0\uDC00",
         expectedTokens = listOf(
-            *chars("<􀀀").toTypedArray()
+            *chars("<\uDBC0\uDC00").toTypedArray()
         )
     )
 
@@ -12841,17 +12841,17 @@ internal class TokenizerTest3 : TokenizerTestBase() {
 
     @Test
     fun `uDBC0uDC00 1604`() = assertTokenization(
-        input = "􀀀",
+        input = "\uDBC0\uDC00",
         expectedTokens = listOf(
-            *chars("􀀀").toTypedArray()
+            *chars("\uDBC0\uDC00").toTypedArray()
         )
     )
 
     @Test
     fun `uDBC0uDC00 1605`() = assertTokenization(
-        input = "􀀀",
+        input = "\uDBC0\uDC00",
         expectedTokens = listOf(
-            *chars("􀀀").toTypedArray()
+            *chars("\uDBC0\uDC00").toTypedArray()
         )
     )
 }
