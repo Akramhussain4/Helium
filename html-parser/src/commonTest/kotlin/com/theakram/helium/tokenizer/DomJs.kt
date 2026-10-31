@@ -27,7 +27,6 @@ package com.theakram.helium.tokenizer
 
 import com.theakram.helium.tokenization.states.CDATASection
 import com.theakram.helium.treebuilder.TokenizerStateType
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 internal class DomJs : TokenizerTestBase() {
@@ -263,8 +262,6 @@ internal class DomJs : TokenizerTestBase() {
         )
     }
 
-    // Needs the script data double escaped states, which the tokenizer does not implement yet
-    @Ignore
     @Test
     fun `script in script HTML comment double escaped Scriptdata 17`() {
         assertTokenization(
@@ -278,8 +275,6 @@ internal class DomJs : TokenizerTestBase() {
         )
     }
 
-    // Needs the script data double escaped states, which the tokenizer does not implement yet
-    @Ignore
     @Test
     fun `script in script HTML comment double escaped with nested script Scriptdata 18`() {
         assertTokenization(
