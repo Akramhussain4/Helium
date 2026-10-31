@@ -16,11 +16,7 @@ import com.theakram.helium.treebuilder.continueInCurrentMode
 internal object FormElementHandler {
 
     fun handleFormStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        val hasTemplateInStack = treeBuilder.elementStack.any {
-            it.localName == "template" && it.namespace == Namespaces.HTML
-        }
-
-        if (treeBuilder.formElement != null && !hasTemplateInStack) {
+        if (treeBuilder.formElement != null && !treeBuilder.isParsingTemplateContents) {
             // Parse error
             return continueInCurrentMode()
         }
@@ -30,18 +26,14 @@ internal object FormElementHandler {
         }
 
         val formElement = treeBuilder.insertElement("form", attributes = attributes)
-        if (!hasTemplateInStack) {
+        if (!treeBuilder.isParsingTemplateContents) {
             treeBuilder.formElement = formElement
         }
         return continueInCurrentMode()
     }
 
     fun handleFormEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
-        val hasTemplateInStack = treeBuilder.elementStack.any {
-            it.localName == "template" && it.namespace == Namespaces.HTML
-        }
-
-        if (!hasTemplateInStack) {
+        if (!treeBuilder.isParsingTemplateContents) {
             val node = treeBuilder.formElement
             treeBuilder.formElement = null
             if (node == null || !treeBuilder.elementStack.contains(node)) {

@@ -129,14 +129,13 @@ internal object InTable : InsertionMode {
 
                     "form" -> {
                         // Parse error
-                        val hasTemplateInStack = treeBuilder.elementStack.any {
-                            it.localName == "template" && it.namespace == Namespaces.HTML
-                        }
-                        if (hasTemplateInStack || treeBuilder.formElement != null) {
+                        if (treeBuilder.formElement != null && !treeBuilder.isParsingTemplateContents) {
                             continueInCurrentMode()
                         } else {
                             val formElement = treeBuilder.insertElement("form", attributes = attributes)
-                            treeBuilder.formElement = formElement
+                            if (!treeBuilder.isParsingTemplateContents) {
+                                treeBuilder.formElement = formElement
+                            }
                             treeBuilder.popCurrentElement()
                             continueInCurrentMode()
                         }
