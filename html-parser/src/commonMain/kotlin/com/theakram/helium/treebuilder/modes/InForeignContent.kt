@@ -34,6 +34,7 @@ import com.theakram.helium.treebuilder.IntegrationPoints
 import com.theakram.helium.treebuilder.SVGTagNameAdjustments
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.util.asciiLowercase
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -148,7 +149,7 @@ internal object InForeignContent : InsertionMode {
         var node = stack[index]
 
         // Step 2:
-        if (!node.localName.equals(token.name, ignoreCase = true)) {
+        if (node.localName?.asciiLowercase() != token.name) {
             // Parse error
         }
 
@@ -157,7 +158,7 @@ internal object InForeignContent : InsertionMode {
             if (index == 0) return continueInCurrentMode()
 
             // Step 4:
-            if (node.localName.equals(token.name, ignoreCase = true)) {
+            if (node.localName?.asciiLowercase() == token.name) {
                 treeBuilder.popUntilElement(node)
                 return continueInCurrentMode()
             }
