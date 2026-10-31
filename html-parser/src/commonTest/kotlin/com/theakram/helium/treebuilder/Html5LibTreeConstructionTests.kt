@@ -33,8 +33,8 @@ import kotlin.test.Test
 /**
  * Tree construction tests from html5lib-tests.
  *
- * Source: https://github.com/html5lib/html5lib-tests
- * Total available: 59 files, 1,782 tests
+ * Source: https://github.com/web-platform-tests/wpt/tree/master/html/syntax/parsing/resources
+ * (moved there from https://github.com/html5lib/html5lib-tests)
  */
 internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
 
@@ -193,7 +193,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
     }
 
     private companion object {
-        const val MIN_PASSING_TESTS = 1773
+        const val MIN_PASSING_TESTS = 3701
     }
 
     private data class TestFailure(

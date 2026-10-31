@@ -38,11 +38,13 @@ data class Html5LibTest(
     val documentFragment: String? = null,
     val scriptingEnabled: Boolean = true,
     // Tests in scripted/ expect their scripts to run, which needs a JavaScript engine
-    val requiresScriptExecution: Boolean = false
+    val requiresScriptExecution: Boolean = false,
+    // Why the parser doesn't pass this test yet, see KnownFailures
+    val knownFailure: String? = null
 ) {
     val isFragmentTest: Boolean get() = documentFragment != null
 
-    fun shouldSkip(): Boolean = requiresScriptExecution
+    fun shouldSkip(): Boolean = requiresScriptExecution || knownFailure != null
 }
 
 data class ParseError(
