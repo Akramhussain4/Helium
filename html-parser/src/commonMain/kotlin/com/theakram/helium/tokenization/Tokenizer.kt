@@ -43,7 +43,9 @@ private const val INITIAL_BUFFER_CAPACITY = 64
 
 internal class Tokenizer(
     private val onTokenEmitted: (Token) -> Unit,
-    private val onParseError: (String, Int) -> Unit
+    private val onParseError: (String, Int) -> Unit,
+    // Whether the tree builder's adjusted current node is an SVG or MathML element, where <![CDATA[ is allowed
+    private val hasForeignAdjustedCurrentNode: () -> Boolean = { false }
 ) {
     var currentPosition = 0
     lateinit var htmlBuffer: String
@@ -122,6 +124,8 @@ internal class Tokenizer(
         val endIndex = (currentPosition + 1 + count).coerceAtMost(htmlBuffer.length)
         return htmlBuffer.substring(currentPosition + 1, endIndex)
     }
+
+    fun isInForeignContent(): Boolean = hasForeignAdjustedCurrentNode()
 
     fun logParseError(error: String) {
         onParseError(error, currentPosition)

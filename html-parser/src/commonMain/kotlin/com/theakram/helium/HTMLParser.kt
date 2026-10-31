@@ -42,7 +42,8 @@ public class HTMLParser {
     private val _errors = mutableListOf<ParseError>()
     private val tokenizer = Tokenizer(
         onTokenEmitted = ::processToken,
-        onParseError = ::handleParseError
+        onParseError = ::handleParseError,
+        hasForeignAdjustedCurrentNode = ::hasForeignAdjustedCurrentNode
     )
     private val treeBuilder = TreeBuilder(onSwitchTokenizerState = ::switchTokenizerState)
 
@@ -79,6 +80,8 @@ public class HTMLParser {
     private fun processToken(token: Token) {
         treeBuilder.process(token)
     }
+
+    private fun hasForeignAdjustedCurrentNode(): Boolean = treeBuilder.hasForeignAdjustedCurrentNode()
 
     private fun switchTokenizerState(stateType: TokenizerStateType) {
         tokenizer.switchState(stateType)

@@ -83,6 +83,9 @@ internal class TreeBuilder(
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#adjusted-current-node
      */
     internal val adjustedCurrentNode: TreeNode get() = currentNode
+
+    internal fun hasForeignAdjustedCurrentNode(): Boolean =
+        stack.isNotEmpty() && adjustedCurrentNode.namespace != Namespaces.HTML
     internal val elementStack: List<TreeNode> get() = stack.toList()
     internal val currentMode: InsertionMode get() = insertionMode
 
