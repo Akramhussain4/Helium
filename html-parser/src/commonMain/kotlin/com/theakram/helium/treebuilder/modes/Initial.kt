@@ -98,7 +98,7 @@ internal object Initial : InsertionMode {
         val systemId = token.systemId.orEmpty()
 
         return token.forceQuirks || !name.equals(other = "html", ignoreCase = true)
-                || publicId in QUIRKS_MODE_EXACT_PUBLIC_IDS || systemId.equals(
+                || QUIRKS_MODE_EXACT_PUBLIC_IDS.any { publicId.equals(it, ignoreCase = true) } || systemId.equals(
             other = "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd",
             ignoreCase = true
         ) || QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWith(it, ignoreCase = true) } ||
