@@ -83,24 +83,21 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
     }
 
     /**
-     * Parses [html] as the contents of [context], the way setting `innerHTML` on it does, and returns the
-     * resulting nodes. The context decides how the markup is read: `<td>` is only allowed in a table row, for
-     * example, and content of an `<svg>` context is SVG.
+     * Parses [html] as the contents of [target], the way setting `innerHTML` on it does, and returns a document
+     * fragment holding the resulting nodes. The target decides how the markup is read: `<td>` is only allowed in a
+     * table row, for example, and content of an `<svg>` target is SVG.
      *
-     * [context] is not modified; the nodes are returned without a parent.
+     * [target] is an element, or a template's contents, and is not modified.
      */
-    public fun parseFragment(html: String, context: TreeNode): List<TreeNode> {
+    public fun parseFragment(html: String, target: TreeNode): TreeNode {
         _errors.clear()
-        val nodes = FragmentParser.parseFragment(
-            context = context,
+        return FragmentParser.parseFragment(
+            target = target,
             input = html,
-            // Fragment parsing defaults to Inert, and to Disabled when the context's document has scripting disabled
-            scriptingMode = if (scriptingEnabled) ScriptingMode.INERT else ScriptingMode.DISABLED,
+            scriptingMode = ScriptingMode.INERT,
+            isContextDocumentScriptingDisabled = !scriptingEnabled,
             onParseError = ::handleParseError
         )
-        // Detach the nodes from the html element the algorithm parses them into
-        nodes.forEach { it.parent?.removeChild(it) }
-        return nodes
     }
 
     private fun handleParseError(code: String, position: Int) {

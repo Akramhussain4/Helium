@@ -67,10 +67,11 @@ internal abstract class TreeConstructionTestBase {
         }
         val contextElement = TreeNode.createElement(localName = localName, namespace = namespace)
         return FragmentParser.parseFragment(
-            contextElement,
-            input,
-            if (scriptingEnabled) ScriptingMode.INERT else ScriptingMode.DISABLED
+            target = contextElement,
+            input = input,
+            isContextDocumentScriptingDisabled = !scriptingEnabled
         )
+            .children
             .joinToString("\n") { it.toTreeString() }
             .trim()
     }

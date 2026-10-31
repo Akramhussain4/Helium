@@ -145,7 +145,7 @@ final class com.theakram.helium/HTMLParser { // com.theakram.helium/HTMLParser|n
         final fun <get-errors>(): kotlin.collections/List<com.theakram.helium/ParseError> // com.theakram.helium/HTMLParser.errors.<get-errors>|<get-errors>(){}[0]
 
     final fun parse(kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium/HTMLParser.parse|parse(kotlin.String){}[0]
-    final fun parseFragment(kotlin/String, com.theakram.helium.tree/TreeNode): kotlin.collections/List<com.theakram.helium.tree/TreeNode> // com.theakram.helium/HTMLParser.parseFragment|parseFragment(kotlin.String;com.theakram.helium.tree.TreeNode){}[0]
+    final fun parseFragment(kotlin/String, com.theakram.helium.tree/TreeNode): com.theakram.helium.tree/TreeNode // com.theakram.helium/HTMLParser.parseFragment|parseFragment(kotlin.String;com.theakram.helium.tree.TreeNode){}[0]
 }
 
 final class com.theakram.helium/ParseError { // com.theakram.helium/ParseError|null[0]
