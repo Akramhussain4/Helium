@@ -25,6 +25,7 @@
 
 package com.theakram.helium.treebuilder
 
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
 
 /**
@@ -53,7 +54,7 @@ internal class StackOfOpenElements {
     fun popUntil(tagName: String) {
         while (elements.isNotEmpty()) {
             val element = pop()
-            if (element?.localName?.equals(tagName, ignoreCase = true) == true) {
+            if (element?.namespace == Namespaces.HTML && element.localName?.equals(tagName, ignoreCase = true) == true) {
                 break
             }
         }
@@ -78,7 +79,7 @@ internal class StackOfOpenElements {
 
     fun indexOfLastTagName(tagName: String): Int {
         return elements.indexOfLast {
-            it.localName?.equals(tagName, ignoreCase = true) == true
+            it.namespace == Namespaces.HTML && it.localName?.equals(tagName, ignoreCase = true) == true
         }
     }
 

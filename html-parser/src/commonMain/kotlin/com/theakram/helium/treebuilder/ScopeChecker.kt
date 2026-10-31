@@ -59,7 +59,7 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
             val element = stack[i]
             val elementName = element.localName
 
-            if (elementName?.equals(tagName, ignoreCase = true) == true) {
+            if (element.namespace == Namespaces.HTML && elementName?.equals(tagName, ignoreCase = true) == true) {
                 return true
             }
 
@@ -93,8 +93,8 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
             val elementName = element.localName
             val namespace = element.namespace
 
-            // If we found ANY element with the target tag name
-            if (elementName?.equals(tagName, ignoreCase = true) == true) {
+            // If we found an HTML element with the target tag name
+            if (namespace == Namespaces.HTML && elementName?.equals(tagName, ignoreCase = true) == true) {
                 return true
             }
 
@@ -128,6 +128,11 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
 
         if (namespace == Namespaces.HTML && localName in boundaries) {
             return true
+        }
+
+        // Table scope is the only scope whose boundaries are all HTML elements
+        if (boundaries === TABLE_SCOPE_BOUNDARIES) {
+            return false
         }
 
         if (namespace == Namespaces.MATHML && localName in MATHML_SCOPE_BOUNDARIES) {
