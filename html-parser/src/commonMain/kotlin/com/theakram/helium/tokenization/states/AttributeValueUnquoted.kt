@@ -37,7 +37,10 @@ internal data object AttributeValueUnquoted : TokenizationState {
         return when {
             codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName)
 
-            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
+            codePoint.IS(Chars.Ampersand) -> {
+                tokenizer.returnState = this
+                switchTo(CharacterReference)
+            }
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.switchToDataStateAndEmitCurrentTag()

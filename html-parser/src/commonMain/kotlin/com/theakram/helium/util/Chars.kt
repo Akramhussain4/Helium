@@ -57,6 +57,5 @@ internal enum class Chars(val char: Char) {
     LowLine('_'),
     OpeningSquareBracket('['),
     ClosingSquareBracket(']'),
-    EOF('\u001A'),
     Null('\u0000'),
 }

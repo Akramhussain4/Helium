@@ -56,6 +56,13 @@ internal class Tokenizer(
     lateinit var htmlBuffer: String
     private var currentState: TokenizationState = Data
 
+    /**
+     * The state the character reference states return to.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#return-state
+     */
+    var returnState: TokenizationState = Data
+
     var characterReferenceCode = 0L
     val tempBuffer = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
@@ -166,7 +173,11 @@ internal class Tokenizer(
         return ContinueInCurrentState
     }
 
-    fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + currentCharacterLength) ?: Chars.EOF.char
+    /** The input character after the current one, without consuming it, or -1 at the end of the input. */
+    fun peekNextChar(): Int {
+        val index = currentPosition + currentCharacterLength
+        return if (index < htmlBuffer.length) htmlBuffer.codePointAt(index) else -1
+    }
 
     fun peekNextChars(count: Int): String {
         val startIndex = (currentPosition + currentCharacterLength).coerceAtMost(htmlBuffer.length)
@@ -199,6 +210,7 @@ internal class Tokenizer(
         currentCharacterLength = 1
         checkedPosition = 0
         currentState = Data
+        returnState = Data
         characterReferenceCode = 0L
         tempBuffer.clear()
         docTypeBuilder.reset()
