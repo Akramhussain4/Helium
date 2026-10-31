@@ -25,6 +25,10 @@
 
 package com.theakram.helium.tree
 
+import com.theakram.helium.util.appendUnicode
+import com.theakram.helium.util.codePointAt
+import com.theakram.helium.util.utf16Length
+
 /**
  * A processing instruction's attribute map: the pseudo-attributes in its data, such as name="x".
  *
@@ -119,13 +123,7 @@ internal object ProcessingInstructionAttributes {
             else -> null
         } ?: return null
         if (!isXmlChar(codePoint)) return null
-        val code = codePoint.toInt()
-        return if (code < 0x10000) {
-            code.toChar().toString()
-        } else {
-            val offset = code - 0x10000
-            charArrayOf((0xD800 + (offset shr 10)).toChar(), (0xDC00 + (offset and 0x3FF)).toChar()).concatToString()
-        }
+        return StringBuilder(2).appendUnicode(codePoint.toInt()).toString()
     }
 
     // Returns the index after the Name starting at [start], or null if there isn't one
@@ -133,21 +131,13 @@ internal object ProcessingInstructionAttributes {
         var position = start
         var first = true
         while (position < string.length) {
-            val codePoint = codePointAt(string, position)
+            val codePoint = string.codePointAt(position)
             val isNameChar = if (first) isNameStartChar(codePoint) else isNameChar(codePoint)
             if (!isNameChar) break
-            position += if (codePoint >= 0x10000) 2 else 1
+            position += codePoint.utf16Length()
             first = false
         }
         return if (first) null else position
-    }
-
-    private fun codePointAt(string: String, index: Int): Int {
-        val high = string[index]
-        if (high.isHighSurrogate() && index + 1 < string.length && string[index + 1].isLowSurrogate()) {
-            return 0x10000 + ((high.code - 0xD800) shl 10) + (string[index + 1].code - 0xDC00)
-        }
-        return high.code
     }
 
     // S ::= (#x20 | #x9 | #xD | #xA)+

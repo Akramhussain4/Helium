@@ -42,8 +42,8 @@ internal data object RawTextEndTagOpen : TokenizationState {
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character('<'))
-                tokenizer.emitToken(Token.Character('/'))
+                tokenizer.emitToken(Token.Character('<'.code))
+                tokenizer.emitToken(Token.Character('/'.code))
                 reconsumeIn(RawText)
             }
         }

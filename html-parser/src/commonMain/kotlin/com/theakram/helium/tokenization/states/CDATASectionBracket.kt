@@ -40,7 +40,7 @@ internal data object CDATASectionBracket : TokenizationState {
             codePoint.IS(Chars.ClosingSquareBracket) -> switchTo(CDATASectionEnd)
 
             else -> {
-                tokenizer.emitToken(Token.Character(']'))
+                tokenizer.emitToken(Token.Character(']'.code))
                 reconsumeIn(CDATASection)
             }
         }

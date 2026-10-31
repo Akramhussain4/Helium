@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -50,7 +51,7 @@ internal data object DOCTYPEName : TokenizationState {
             }
 
             codePoint in 'A'.code..'Z'.code -> {
-                builder.name.append((codePoint + 0x0020).toChar())
+                builder.name.appendUnicode(codePoint + 0x0020)
                 continueInCurrentState()
             }
 
@@ -69,7 +70,7 @@ internal data object DOCTYPEName : TokenizationState {
             }
 
             else -> {
-                builder.name.append(codePoint.toChar())
+                builder.name.appendUnicode(codePoint)
                 continueInCurrentState()
             }
         }

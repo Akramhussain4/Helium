@@ -25,6 +25,8 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.forEachCodePoint
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -67,14 +69,14 @@ internal data object RCDataEndTagName : TokenizationState {
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                tokenizer.currentEndTagName.append(codePoint.toChar().lowercaseChar())
-                tokenizer.tempBuffer.append(codePoint.toChar())
+                tokenizer.currentEndTagName.appendUnicode(codePoint + 0x0020)
+                tokenizer.tempBuffer.appendUnicode(codePoint)
                 continueInCurrentState()
             }
 
             codePoint.isAsciiLowerAlpha() -> {
-                tokenizer.currentEndTagName.append(codePoint.toChar())
-                tokenizer.tempBuffer.append(codePoint.toChar())
+                tokenizer.currentEndTagName.appendUnicode(codePoint)
+                tokenizer.tempBuffer.appendUnicode(codePoint)
                 continueInCurrentState()
             }
 
@@ -87,10 +89,10 @@ internal data object RCDataEndTagName : TokenizationState {
     }
 
     private fun anythingElse(tokenizer: Tokenizer): StateTransition {
-        tokenizer.emitToken(Token.Character('<'))
-        tokenizer.emitToken(Token.Character('/'))
-        tokenizer.tempBuffer.forEach { char ->
-            tokenizer.emitToken(Token.Character(char))
+        tokenizer.emitToken(Token.Character('<'.code))
+        tokenizer.emitToken(Token.Character('/'.code))
+        tokenizer.tempBuffer.forEachCodePoint { codePoint ->
+            tokenizer.emitToken(Token.Character(codePoint))
         }
         return reconsumeIn(RCData)
     }

@@ -36,8 +36,12 @@ import com.theakram.helium.tokenization.states.ScriptData
 import com.theakram.helium.tokenization.states.TokenizationState
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.util.Chars
+import com.theakram.helium.util.codePointAt
+import com.theakram.helium.util.isAsciiWhitespace
+import com.theakram.helium.util.isControl
 import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
+import com.theakram.helium.util.utf16Length
 
 private const val INITIAL_BUFFER_CAPACITY = 64
 
@@ -67,38 +71,65 @@ internal class Tokenizer(
     var isCurrentTagStartTag: Boolean = true
     var lastStartTagName: String = ""
 
+    /** The number of UTF-16 units the current input character takes in [htmlBuffer]: 2 for a supplementary one. */
+    private var currentCharacterLength = 1
+
+    /** Where the input stream's parse errors have been checked up to, as a position in [htmlBuffer]. */
+    private var checkedPosition = 0
+
     fun tokenize(html: String) {
-        htmlBuffer = preprocess(html)
+        htmlBuffer = normalizeNewlines(html)
 
         while (currentPosition <= htmlBuffer.length) {
-            val codePoint = htmlBuffer.getOrNull(currentPosition)?.code ?: -1
+            val codePoint = if (currentPosition < htmlBuffer.length) htmlBuffer.codePointAt(currentPosition) else -1
+            currentCharacterLength = codePoint.utf16Length()
+            checkInputStreamUpTo(currentPosition)
             val stateBeforeConsume = currentState
             val transition = currentState.consume(codePoint, this)
 
             when (transition) {
-                ContinueInCurrentState -> currentPosition++
+                ContinueInCurrentState -> currentPosition += currentCharacterLength
                 is SwitchTo -> {
                     if (currentState == stateBeforeConsume) {
                         currentState = transition.newState
                     }
-                    currentPosition++
+                    currentPosition += currentCharacterLength
                 }
                 is ReconsumeIn -> currentState = transition.newState
             }
         }
     }
 
-    private fun preprocess(input: String): String {
-        val step1 = input.replace("\r\n", "\n")
-        val step2 = step1.replace('\r', '\n')
-        step2.forEach { char ->
-            val codePoint = char.code
+    /**
+     * Normalizes newlines in the input stream, the first step of preprocessing it. Its parse errors are reported by
+     * [checkInputStreamUpTo] as the tokenizer reaches each character.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#preprocessing-the-input-stream
+     */
+    private fun normalizeNewlines(input: String): String = input.replace("\r\n", "\n").replace('\r', '\n')
+
+    /**
+     * Reports the input stream's parse errors for every code point up to and including the one at [position]: "Any
+     * occurrences of surrogates are surrogate-in-input-stream parse errors. Any occurrences of noncharacters are
+     * noncharacter-in-input-stream parse errors and any occurrences of controls other than ASCII whitespace and
+     * U+0000 NULL characters are control-character-in-input-stream parse errors."
+     *
+     * Each one is reported when the tokenizer first reaches it, so the errors come in the order of the input, and a
+     * character that a state only looks ahead at is reported once it is consumed.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#preprocessing-the-input-stream
+     */
+    private fun checkInputStreamUpTo(position: Int) {
+        while (checkedPosition <= position && checkedPosition < htmlBuffer.length) {
+            val codePoint = htmlBuffer.codePointAt(checkedPosition)
             when {
-                codePoint.isSurrogate() -> logParseError("surrogate-in-input-stream")
-                codePoint.isNonCharacter() -> logParseError("noncharacter-in-input-stream")
+                codePoint.isSurrogate() -> onParseError("surrogate-in-input-stream", checkedPosition)
+                codePoint.isNonCharacter() -> onParseError("noncharacter-in-input-stream", checkedPosition)
+                codePoint.isControl() && !codePoint.isAsciiWhitespace() && codePoint != 0x0000 ->
+                    onParseError("control-character-in-input-stream", checkedPosition)
             }
+            checkedPosition += codePoint.utf16Length()
         }
-        return step2
     }
 
     fun addCurrentAttribute() {
@@ -120,11 +151,12 @@ internal class Tokenizer(
         onTokenEmitted(token)
     }
 
-    fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + 1) ?: Chars.EOF.char
+    fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + currentCharacterLength) ?: Chars.EOF.char
 
     fun peekNextChars(count: Int): String {
-        val endIndex = (currentPosition + 1 + count).coerceAtMost(htmlBuffer.length)
-        return htmlBuffer.substring(currentPosition + 1, endIndex)
+        val startIndex = (currentPosition + currentCharacterLength).coerceAtMost(htmlBuffer.length)
+        val endIndex = (startIndex + count).coerceAtMost(htmlBuffer.length)
+        return htmlBuffer.substring(startIndex, endIndex)
     }
 
     fun isInForeignContent(): Boolean = hasForeignAdjustedCurrentNode()
@@ -149,6 +181,8 @@ internal class Tokenizer(
 
     fun reset() {
         currentPosition = 0
+        currentCharacterLength = 1
+        checkedPosition = 0
         currentState = Data
         characterReferenceCode = 0L
         tempBuffer.clear()

@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -51,7 +52,7 @@ internal data object BogusComment : TokenizationState {
             }
 
             else -> {
-                tokenizer.currentCommentData.append(codePoint.toChar())
+                tokenizer.currentCommentData.appendUnicode(codePoint)
                 switchTo(BogusComment)
             }
         }

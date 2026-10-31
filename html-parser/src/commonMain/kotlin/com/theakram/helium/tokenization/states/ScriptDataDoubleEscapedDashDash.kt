@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -37,23 +38,23 @@ internal data object ScriptDataDoubleEscapedDashDash : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.HyphenMinus) -> {
-                tokenizer.emitToken(Token.Character('-'))
+                tokenizer.emitToken(Token.Character('-'.code))
                 continueInCurrentState()
             }
 
             codePoint.IS(Chars.LessThan) -> {
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 switchTo(ScriptDataDoubleEscapedLessThanSign)
             }
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(Token.Character('>'))
+                tokenizer.emitToken(Token.Character('>'.code))
                 switchTo(ScriptData)
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                tokenizer.emitToken(Token.Character('\uFFFD'))
+                tokenizer.emitToken(Token.Character('\uFFFD'.code))
                 switchTo(ScriptDataDoubleEscaped)
             }
 
@@ -64,7 +65,7 @@ internal data object ScriptDataDoubleEscapedDashDash : TokenizationState {
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                tokenizer.emitToken(Token.Character(codePoint))
                 switchTo(ScriptDataDoubleEscaped)
             }
         }

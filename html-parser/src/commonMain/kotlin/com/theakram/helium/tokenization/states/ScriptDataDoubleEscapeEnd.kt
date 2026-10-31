@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -44,7 +45,7 @@ internal data object ScriptDataDoubleEscapeEnd : TokenizationState {
             codePoint.IS(Chars.Space) ||
             codePoint.IS(Chars.Solidus) ||
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                tokenizer.emitToken(Token.Character(codePoint))
                 if (tokenizer.tempBuffer.toString() == "script") {
                     switchTo(ScriptDataEscaped)
                 } else {
@@ -53,14 +54,14 @@ internal data object ScriptDataDoubleEscapeEnd : TokenizationState {
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                tokenizer.tempBuffer.append(codePoint.toChar().lowercaseChar())
-                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                tokenizer.tempBuffer.appendUnicode(codePoint + 0x0020)
+                tokenizer.emitToken(Token.Character(codePoint))
                 continueInCurrentState()
             }
 
             codePoint.isAsciiLowerAlpha() -> {
-                tokenizer.tempBuffer.append(codePoint.toChar())
-                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                tokenizer.tempBuffer.appendUnicode(codePoint)
+                tokenizer.emitToken(Token.Character(codePoint))
                 continueInCurrentState()
             }
 

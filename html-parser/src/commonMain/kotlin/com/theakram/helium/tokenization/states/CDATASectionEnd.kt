@@ -38,15 +38,15 @@ internal data object CDATASectionEnd : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.ClosingSquareBracket) -> {
-                tokenizer.emitToken(Token.Character(']'))
+                tokenizer.emitToken(Token.Character(']'.code))
                 continueInCurrentState()
             }
 
             codePoint.IS(Chars.GreaterThan) -> switchTo(Data)
 
             else -> {
-                tokenizer.emitToken(Token.Character(']'))
-                tokenizer.emitToken(Token.Character(']'))
+                tokenizer.emitToken(Token.Character(']'.code))
+                tokenizer.emitToken(Token.Character(']'.code))
                 reconsumeIn(CDATASection)
             }
         }

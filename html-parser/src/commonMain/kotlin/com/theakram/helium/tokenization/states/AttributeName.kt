@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
@@ -40,7 +41,7 @@ internal data object AttributeName : TokenizationState {
             codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue)
 
             codePoint.isAsciiUpperAlpha() -> {
-                tokenizer.currentAttributeName.append((codePoint + 0x0020).toChar())
+                tokenizer.currentAttributeName.appendUnicode(codePoint + 0x0020)
                 switchTo(this)
             }
 
@@ -52,12 +53,12 @@ internal data object AttributeName : TokenizationState {
 
             codePoint.IS(Chars.QuotationMark, Chars.Apostrophe, Chars.LessThan) -> {
                 tokenizer.logParseError("unexpected-character-in-attribute-name")
-                tokenizer.currentAttributeName.append(codePoint.toChar())
+                tokenizer.currentAttributeName.appendUnicode(codePoint)
                 switchTo(this)
             }
 
             else -> {
-                tokenizer.currentAttributeName.append(codePoint.toChar())
+                tokenizer.currentAttributeName.appendUnicode(codePoint)
                 switchTo(this)
             }
         }

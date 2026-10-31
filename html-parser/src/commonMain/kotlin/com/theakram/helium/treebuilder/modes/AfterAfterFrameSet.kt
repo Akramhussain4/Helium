@@ -48,7 +48,7 @@ internal object AfterAfterFrameSet : InsertionMode {
 
             is Token.DocType -> InBody.process(token, treeBuilder)
 
-            is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
 
             is Token.StartTag if token.name.equals("html", true) -> InBody.process(token, treeBuilder)
 
