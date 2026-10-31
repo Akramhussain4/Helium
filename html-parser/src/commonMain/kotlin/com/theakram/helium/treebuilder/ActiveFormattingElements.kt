@@ -139,7 +139,7 @@ internal class ActiveFormattingElements {
         for (i in entries.lastIndex downTo startIndex) {
             val entry = entries[i]
             if (entry is Entry.Element &&
-                entry.node.localName?.equals(tagName, ignoreCase = true) == true) {
+                entry.node.localName == tagName) {
                 return entry.node
             }
         }

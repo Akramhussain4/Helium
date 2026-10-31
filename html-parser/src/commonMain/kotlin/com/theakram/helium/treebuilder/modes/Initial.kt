@@ -35,6 +35,8 @@ import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
+import com.theakram.helium.util.startsWithAsciiCaseInsensitive
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-initial-insertion-mode
@@ -97,13 +99,10 @@ internal object Initial : InsertionMode {
         val publicId = token.publicId.orEmpty()
         val systemId = token.systemId.orEmpty()
 
-        return token.forceQuirks || !name.equals(other = "html", ignoreCase = true)
-                || QUIRKS_MODE_EXACT_PUBLIC_IDS.any { publicId.equals(it, ignoreCase = true) } || systemId.equals(
-            other = "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd",
-            ignoreCase = true
-        ) || QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWith(it, ignoreCase = true) } ||
+        return token.forceQuirks || name != "html"
+                || QUIRKS_MODE_EXACT_PUBLIC_IDS.any { publicId.equalsAsciiCaseInsensitive(it) } || systemId.equalsAsciiCaseInsensitive("http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd") || QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) } ||
                 systemId.isEmpty() && QUIRKS_MODE_SYSTEM_ID_MISSING_PREFIXES.any {
-            publicId.startsWith(it, ignoreCase = true)
+            publicId.startsWithAsciiCaseInsensitive(it)
         }
     }
 
@@ -111,9 +110,9 @@ internal object Initial : InsertionMode {
         val publicId = token.publicId.orEmpty()
         val systemId = token.systemId.orEmpty()
 
-        return LIMITED_QUIRKS_MODE_PREFIXES.any { publicId.startsWith(prefix = it, ignoreCase = true) }
+        return LIMITED_QUIRKS_MODE_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) }
                 || systemId.isNotEmpty() && LIMITED_QUIRKS_SYSTEM_ID_NOT_MISSING_PREFIXES.any {
-            publicId.startsWith(it, ignoreCase = true)
+            publicId.startsWithAsciiCaseInsensitive(it)
         }
     }
 

@@ -83,7 +83,7 @@ internal data object RCDataEndTagName : TokenizationState {
     }
 
     private fun isAppropriateEndTag(tokenizer: Tokenizer): Boolean {
-        return tokenizer.currentEndTagName.toString().equals(tokenizer.lastStartTagName, ignoreCase = true)
+        return tokenizer.currentEndTagName.toString() == tokenizer.lastStartTagName
     }
 
     private fun anythingElse(tokenizer: Tokenizer): StateTransition {

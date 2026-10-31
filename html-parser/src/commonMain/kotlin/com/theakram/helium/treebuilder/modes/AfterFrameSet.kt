@@ -50,11 +50,11 @@ internal object AfterFrameSet : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.EndTag if token.name.equals("html", ignoreCase = true) -> switchTo(AfterAfterFrameSet)
+            is Token.EndTag if token.name == "html" -> switchTo(AfterAfterFrameSet)
 
-            is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name == "noframes" -> InHead.process(token, treeBuilder)
 
             is Token.EOF -> stopParsing()
 

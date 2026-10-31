@@ -58,9 +58,9 @@ internal object InColumnGroup : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.equals("col", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "col" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -70,7 +70,7 @@ internal object InColumnGroup : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.EndTag if token.name.equals("colgroup", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "colgroup" -> {
                 if (treeBuilder.currentNode.localName != "colgroup" ||
                     treeBuilder.currentNode.namespace != Namespaces.HTML
                 ) {
@@ -82,14 +82,14 @@ internal object InColumnGroup : InsertionMode {
                 }
             }
 
-            is Token.EndTag if token.name.equals("col", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "col" -> {
                 // Parse error. Ignore the token.
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
-            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.EndTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
             is Token.EOF -> InBody.process(token, treeBuilder)
 

@@ -34,6 +34,7 @@ import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intable
@@ -62,7 +63,7 @@ internal object InTable : InsertionMode {
             }
 
             is Token.StartTag -> {
-                val tagName = token.name.lowercase()
+                val tagName = token.name
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -114,8 +115,8 @@ internal object InTable : InsertionMode {
                     "style", "script", "template" -> InHead.process(token, treeBuilder)
 
                     "input" -> {
-                        val typeAttr = attributes.find { it.localName.equals("type", ignoreCase = true) }
-                        val isHidden = typeAttr?.value?.equals("hidden", ignoreCase = true) == true
+                        val typeAttr = attributes.find { it.localName == "type" }
+                        val isHidden = typeAttr?.value?.equalsAsciiCaseInsensitive("hidden") == true
                         if (!isHidden) {
                             handleAnythingElse(token, treeBuilder)
                         } else {
@@ -146,7 +147,7 @@ internal object InTable : InsertionMode {
             }
 
             is Token.EndTag -> {
-                val tagName = token.name.lowercase()
+                val tagName = token.name
 
                 when (tagName) {
                     "table" -> {

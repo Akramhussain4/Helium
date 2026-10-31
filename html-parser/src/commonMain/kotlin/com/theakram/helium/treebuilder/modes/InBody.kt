@@ -96,7 +96,7 @@ internal object InBody : InsertionMode {
         token: Token.StartTag,
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
-        val tagName = token.name.lowercase()
+        val tagName = token.name
         val attributes = InBodyHelpers.toAttributeList(token.attributes)
 
         return when (tagName) {
@@ -256,7 +256,7 @@ internal object InBody : InsertionMode {
         token: Token.EndTag,
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
-        val tagName = token.name.lowercase()
+        val tagName = token.name
 
         return when (tagName) {
             "body" -> EndTagHandler.handleBodyEndTag(treeBuilder)

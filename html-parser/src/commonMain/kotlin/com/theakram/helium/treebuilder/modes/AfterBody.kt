@@ -46,12 +46,12 @@ internal object AfterBody : InsertionMode {
 
             is Token.DocType -> continueInCurrentMode()
 
-            is Token.StartTag if token.name.equals(other = "html", ignoreCase = true) -> InBody.process(
+            is Token.StartTag if token.name == "html" -> InBody.process(
                 token = token,
                 treeBuilder = treeBuilder
             )
 
-            is Token.EndTag if token.name.equals(other = "html", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "html" -> {
                 if (treeBuilder.isFragmentCase) {
                     // Parse error. Ignore the token.
                     continueInCurrentMode()

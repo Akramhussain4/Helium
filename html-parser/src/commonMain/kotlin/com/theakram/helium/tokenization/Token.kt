@@ -85,9 +85,8 @@ internal class StartTagBuilder {
     private val attributes = LinkedHashMap<String, String>()
 
     fun addAttribute(attrName: String, attrValue: String) {
-        val lowerName = attrName.lowercase()
-        if (!attributes.containsKey(lowerName)) {
-            attributes[lowerName] = attrValue
+        if (!attributes.containsKey(attrName)) {
+            attributes[attrName] = attrValue
         }
     }
 

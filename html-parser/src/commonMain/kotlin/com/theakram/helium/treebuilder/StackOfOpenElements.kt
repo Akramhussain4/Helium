@@ -54,7 +54,7 @@ internal class StackOfOpenElements {
     fun popUntil(tagName: String) {
         while (elements.isNotEmpty()) {
             val element = pop()
-            if (element?.namespace == Namespaces.HTML && element.localName?.equals(tagName, ignoreCase = true) == true) {
+            if (element?.namespace == Namespaces.HTML && element.localName == tagName) {
                 break
             }
         }
@@ -79,7 +79,7 @@ internal class StackOfOpenElements {
 
     fun indexOfLastTagName(tagName: String): Int {
         return elements.indexOfLast {
-            it.namespace == Namespaces.HTML && it.localName?.equals(tagName, ignoreCase = true) == true
+            it.namespace == Namespaces.HTML && it.localName == tagName
         }
     }
 

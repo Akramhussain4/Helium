@@ -11,6 +11,7 @@ import com.theakram.helium.tree.Attribute
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 internal object MediaElementHandler {
 
@@ -42,8 +43,8 @@ internal object MediaElementHandler {
         treeBuilder.popCurrentElement()
 
         // If NOT type="hidden": set frameset-ok
-        val typeAttr = attributes.find { it.localName.equals("type", ignoreCase = true) }
-        if (typeAttr == null || !typeAttr.value.equals("hidden", ignoreCase = true)) {
+        val typeAttr = attributes.find { it.localName == "type" }
+        if (typeAttr == null || !typeAttr.value.equalsAsciiCaseInsensitive("hidden")) {
             treeBuilder.setFramesetNotOk()
         }
         return continueInCurrentMode()
