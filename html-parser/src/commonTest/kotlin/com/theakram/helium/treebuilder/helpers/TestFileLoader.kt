@@ -37,6 +37,7 @@ object TestFileLoader {
     fun loadTests(filename: String): List<Html5LibTest> =
         loadFileContent("$TEST_DIR/$filename")
             .let { DatFileParser.parse(it) }
+            .map { it.copy(requiresScriptExecution = filename.startsWith("scripted/")) }
 
     // Test working directories differ per platform, so files are resolved against an absolute path from the build
     private fun loadFileContent(path: String): String {
