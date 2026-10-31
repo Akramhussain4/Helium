@@ -26,15 +26,21 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
+import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.ContentPatching
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.ScriptingMode
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InBodyHelpers
 import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
+import com.theakram.helium.util.asciiLowercase
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -130,51 +136,9 @@ internal object InHead : InsertionMode {
                 reprocessIn(AfterHead)
             }
 
-            is Token.StartTag if token.name == "template" -> {
-                // Step 1:
-                treeBuilder.activeFormattingElements.insertMarker()
-                // Step 2:
-                treeBuilder.setFramesetNotOk()
-                // Step 4:
-                treeBuilder.pushTemplateInsertionMode(InTemplate)
-                // TODO: Implement full declarative shadow DOM logic from the spec:
-                // For now, we just insert a regular template element:
-                val attributes = InHeadHelpers.toAttributeList(token.attributes)
-                treeBuilder.insertElement(token.name, attributes = attributes)
-                // Step 3:
-                switchTo(InTemplate)
-            }
+            is Token.StartTag if token.name == "template" -> processTemplateStartTag(token, treeBuilder)
 
-            is Token.EndTag if token.name == "template" -> {
-                val hasTemplateInStack = treeBuilder.elementStack.any {
-                    it.localName == "template" && it.namespace == com.theakram.helium.tree.Namespaces.HTML
-                }
-                if (!hasTemplateInStack) {
-                    // Parse error: ignore the token
-                    return continueInCurrentMode()
-                }
-
-                // Step 1:
-                // TODO: Implement generateAllImpliedEndTagsThoroughly()
-                // For now, we'll skip this step
-
-                // Step 2:
-                if (treeBuilder.currentNode.localName != "template" ||
-                    treeBuilder.currentNode.namespace != com.theakram.helium.tree.Namespaces.HTML
-                ) {
-                    // Parse error
-                }
-
-                // Step 3:
-                treeBuilder.popUntil("template")
-                // Step 4:
-                treeBuilder.activeFormattingElements.clearToLastMarker()
-                // Step 5:
-                treeBuilder.popTemplateInsertionMode()
-                // Step 6:
-                treeBuilder.resetInsertionModeAppropriately()
-                switchTo(treeBuilder.currentMode)
-            }
+            is Token.EndTag if token.name == "template" -> processTemplateEndTag(treeBuilder)
 
             is Token.StartTag if token.name == "head" -> {
                 // Parse error
@@ -191,5 +155,128 @@ internal object InHead : InsertionMode {
                 reprocessIn(AfterHead)
             }
         }
+    }
+
+    private fun processTemplateStartTag(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition {
+        // Step 1:
+        val templateStartTag = token
+        // Step 2:
+        treeBuilder.activeFormattingElements.insertMarker()
+        // Step 3:
+        treeBuilder.setFramesetNotOk()
+        // Steps 4-5:
+        treeBuilder.pushTemplateInsertionMode(InTemplate)
+        // Step 6:
+        val declarativeShadowHostElement = treeBuilder.currentNode
+        // Step 7:
+        val hostIsRoot = treeBuilder.elementStack.firstOrNull() === declarativeShadowHostElement
+        // Step 8:
+        val template = TreeNode.createElement(
+            localName = templateStartTag.name,
+            attributes = InHeadHelpers.toAttributeList(templateStartTag.attributes)
+        )
+        // Step 9:
+        val insertionLocation = treeBuilder.appropriatePlaceForInsertingNode()
+        // Step 10:
+        treeBuilder.pushElement(template)
+
+        // Steps 11-13: Without a sanitizer configuration, sanitizerAction is "Keep"
+        when {
+            // Step 13 "Keep", 1:
+            template.getAttribute("shadowrootmode")?.asciiLowercase() in setOf("open", "closed") -> {
+                // Step 13 "Keep", 1.1: Declarative shadow roots aren't allowed, so the template is always
+                // inserted as a regular template element and steps 1.2-1.9, which attach a shadow root, never run
+                if (!treeBuilder.allowDeclarativeShadowRoots ||
+                    hostIsRoot ||
+                    treeBuilder.insertionTargetRedirectionMap.containsKey(declarativeShadowHostElement)
+                ) {
+                    treeBuilder.insertElementAtAdjustedInsertionLocation(template, insertionLocation)
+                }
+            }
+
+            // Step 13 "Keep", 2:
+            template.hasAttribute("for") -> {
+                // Step 13 "Keep", 2.1:
+                var scope = treeBuilder.adjustedInsertionLocation(insertionLocation).targetParent
+                // Step 13 "Keep", 2.2:
+                if (isBodyElementOfItsNodeDocument(scope)) {
+                    scope = scope.parent!!
+                }
+                // Step 13 "Keep", 2.3:
+                val success = ContentPatching.prepareContentPatching(scope, template)
+                // Step 13 "Keep", 2.4:
+                if (!success) {
+                    treeBuilder.insertElementAtAdjustedInsertionLocation(template, insertionLocation)
+                }
+            }
+
+            // Step 13 "Keep", 3:
+            else -> treeBuilder.insertElementAtAdjustedInsertionLocation(template, insertionLocation)
+        }
+        return switchTo(InTemplate)
+    }
+
+    private fun processTemplateEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
+        val templates = treeBuilder.elementStack.filter { it.namespace == Namespaces.HTML && it.localName == "template" }
+        if (templates.isEmpty()) {
+            // Parse error. Ignore the token.
+            return continueInCurrentMode()
+        }
+
+        // Step 1:
+        InBodyHelpers.generateAllImpliedEndTagsThoroughly(treeBuilder)
+
+        // Step 2:
+        if (treeBuilder.currentNode.namespace != Namespaces.HTML || treeBuilder.currentNode.localName != "template") {
+            // Parse error
+        }
+
+        // Step 3:
+        val template = templates.last()
+
+        // Step 4:
+        if (template.insertionTarget != null) {
+            // Steps 4.1-4.3:
+            val start = checkNotNull(template.insertionStartMarker) { "A template with an insertion target has a start marker" }
+            val end = template.insertionEndMarker
+            // Step 4.4:
+            start.parent?.removeChild(start)
+            // Step 4.5:
+            if (end != null) {
+                end.parent?.removeChild(end)
+            }
+            // Steps 4.6-4.8:
+            template.insertionTarget = null
+            template.insertionStartMarker = null
+            template.insertionEndMarker = null
+        }
+
+        // Step 5:
+        treeBuilder.popUntil("template")
+        // Step 6:
+        treeBuilder.activeFormattingElements.clearToLastMarker()
+        // Step 7:
+        treeBuilder.popTemplateInsertionMode()
+        // Step 8:
+        treeBuilder.resetInsertionModeAppropriately()
+        return switchTo(treeBuilder.currentMode)
+    }
+
+    /**
+     * The first of the html element's children that is a body or frameset element, if [node] is that body element.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/dom.html#the-body-element-2
+     */
+    private fun isBodyElementOfItsNodeDocument(node: TreeNode): Boolean {
+        if (node.namespace != Namespaces.HTML || node.localName != "body") return false
+        val htmlElement = node.parent ?: return false
+        if (htmlElement.namespace != Namespaces.HTML || htmlElement.localName != "html") return false
+        val document = htmlElement.parent ?: return false
+        if (document.type != NodeType.DOCUMENT || document.children.firstOrNull { it.type == NodeType.ELEMENT } !== htmlElement) {
+            return false
+        }
+        return htmlElement.children.firstOrNull {
+            it.namespace == Namespaces.HTML && (it.localName == "body" || it.localName == "frameset")
+        } === node
     }
 }

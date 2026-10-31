@@ -81,6 +81,13 @@ internal class TreeBuilder(
     internal val isFragmentCase: Boolean get() = contextElement != null
 
     /**
+     * Initially false, and none of Helium's parsing entry points allow declarative shadow roots.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#concept-parser-allow-declarative-shadow-roots
+     */
+    internal val allowDeclarativeShadowRoots: Boolean = false
+
+    /**
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-template-contents
      */
     internal val isParsingTemplateContents: Boolean
