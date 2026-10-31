@@ -31,10 +31,13 @@ import com.theakram.helium.tree.TreeNode
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+ *
+ * Internal until the tree builder supports the fragment case (the context element in step 4); the
+ * html5lib fragment tests are skipped until then.
  */
-public object FragmentParser {
+internal object FragmentParser {
 
-    public fun parseFragment(
+    fun parseFragment(
         context: TreeNode,
         input: String,
         scriptingEnabled: Boolean = true

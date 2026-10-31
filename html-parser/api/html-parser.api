@@ -128,25 +128,3 @@ public final class com/theakram/helium/tree/TreeNode$Companion {
 	public final fun createText (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
 }
 
-public final class com/theakram/helium/treebuilder/FragmentParser {
-	public static final field INSTANCE Lcom/theakram/helium/treebuilder/FragmentParser;
-	public final fun parseFragment (Lcom/theakram/helium/tree/TreeNode;Ljava/lang/String;Z)Ljava/util/List;
-	public static synthetic fun parseFragment$default (Lcom/theakram/helium/treebuilder/FragmentParser;Lcom/theakram/helium/tree/TreeNode;Ljava/lang/String;ZILjava/lang/Object;)Ljava/util/List;
-}
-
-public final class com/theakram/helium/treebuilder/TokenizerStateType : java/lang/Enum {
-	public static final field DATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static final field PLAINTEXT Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static final field RAWTEXT Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static final field RCDATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static final field SCRIPT_DATA Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/theakram/helium/treebuilder/TokenizerStateType;
-	public static fun values ()[Lcom/theakram/helium/treebuilder/TokenizerStateType;
-}
-
-public final class com/theakram/helium/treebuilder/TreeBuilder {
-	public fun <init> (Lkotlin/jvm/functions/Function1;)V
-	public final fun getDocument ()Lcom/theakram/helium/tree/TreeNode;
-}
-

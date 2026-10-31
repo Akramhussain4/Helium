@@ -31,6 +31,12 @@ import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 
+/**
+ * Parses HTML documents following the WHATWG HTML parsing algorithm.
+ *
+ * A parser can be reused: each call to [parse] produces a new, independent document.
+ * Instances are not thread-safe.
+ */
 public class HTMLParser {
 
     private val _errors = mutableListOf<ParseError>()
@@ -40,12 +46,24 @@ public class HTMLParser {
     )
     private val treeBuilder = TreeBuilder(onSwitchTokenizerState = ::switchTokenizerState)
 
+    /** The document produced by the most recent call to [parse]. */
     public val document: TreeNode
         get() = treeBuilder.document
 
+    /**
+     * Parse errors reported by the tokenizer during the most recent call to [parse].
+     *
+     * Tree construction errors are not reported yet.
+     */
     public val errors: List<ParseError>
         get() = _errors.toList()
 
+    /**
+     * Parses [html] into a document tree.
+     *
+     * Like a browser, the parser recovers from malformed markup instead of rejecting it, recording a
+     * [ParseError] in [errors] where the tokenizer detects one.
+     */
     public fun parse(html: String): TreeNode {
         _errors.clear()
         tokenizer.reset()

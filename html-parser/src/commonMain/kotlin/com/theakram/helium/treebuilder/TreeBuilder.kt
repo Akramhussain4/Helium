@@ -34,11 +34,11 @@ import com.theakram.helium.treebuilder.modes.Initial
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction
  */
-public class TreeBuilder(
+internal class TreeBuilder(
     private val onSwitchTokenizerState: (TokenizerStateType) -> Unit
 ) {
     private var insertionMode: InsertionMode = Initial
-    public var document: TreeNode = TreeNode.createDocument()
+    var document: TreeNode = TreeNode.createDocument()
         private set
 
     private val stack = StackOfOpenElements()

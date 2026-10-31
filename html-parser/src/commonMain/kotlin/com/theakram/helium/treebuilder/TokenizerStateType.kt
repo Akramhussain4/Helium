@@ -28,7 +28,7 @@ package com.theakram.helium.treebuilder
 /**
  * spec: https://html.spec.whatwg.org/multipage/parsing.html#tokenization
  */
-public enum class TokenizerStateType {
+internal enum class TokenizerStateType {
     DATA,
 
     RCDATA,
