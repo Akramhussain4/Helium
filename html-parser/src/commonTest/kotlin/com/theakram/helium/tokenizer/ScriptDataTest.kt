@@ -106,7 +106,7 @@ internal class ScriptDataTest : TokenizerTestBase() {
         input = "x</script foo=\"bar\">y",
         expectedTokens = listOf(
             char('x'),
-            endTag("script"),
+            endTag("script", attributes = mapOf("foo" to "bar")),
             char('y')
         ),
         initialState = TokenizerStateType.SCRIPT_DATA,

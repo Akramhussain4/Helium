@@ -41,9 +41,7 @@ internal data object BeforeAttributeValue : TokenizationState {
 
             codePoint.IS(Chars.GreaterThan) -> {
                 tokenizer.logParseError("missing-attribute-value")
-                tokenizer.addCurrentAttribute()
-                tokenizer.emitCurrentTag()
-                switchTo(Data)
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             else -> reconsumeIn(AttributeValueUnquoted)

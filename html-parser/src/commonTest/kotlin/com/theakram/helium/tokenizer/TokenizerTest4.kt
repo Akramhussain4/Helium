@@ -559,13 +559,13 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     @Test
     fun `Uppercase close tag attributes`() = assertTokenization(
         input = "</x X>",
-        expectedTokens = listOf(endTag(name = "x"))
+        expectedTokens = listOf(endTag(name = "x", attributes = mapOf("x" to "")))
     )
 
     @Test
     fun `Duplicate close tag attributes`() = assertTokenization(
         input = "</x x x>",
-        expectedTokens = listOf(endTag(name = "x"))
+        expectedTokens = listOf(endTag(name = "x", attributes = mapOf("x" to "")))
     )
 
     @Test
@@ -583,7 +583,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     @Test
     fun `Permitted slash but in close tag`() = assertTokenization(
         input = "</br/>",
-        expectedTokens = listOf(endTag(name = "br"))
+        expectedTokens = listOf(endTag(name = "br", selfClosing = true))
     )
 
     @Test
