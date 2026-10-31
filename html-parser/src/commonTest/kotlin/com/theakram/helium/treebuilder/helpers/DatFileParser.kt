@@ -47,25 +47,35 @@ object DatFileParser {
             while (index < lines.size) {
                 skipBlankLines()
                 if (currentLine?.trim() == "#data") {
-                    add(parseTest())
+                    addAll(parseTest())
                 } else {
                     index++
                 }
             }
         }
 
-        private fun parseTest(): Html5LibTest {
+        // A test without #script-on or #script-off runs once with scripting enabled and once with it disabled
+        private fun parseTest(): List<Html5LibTest> {
             val lineNumber = index + 1
             expectSection("#data")
 
-            return Html5LibTest(
-                lineNumber = lineNumber,
-                data = parseContent(),
-                errors = parseErrors(),
-                documentFragment = parseDocumentFragment(),
-                scriptingEnabled = parseScriptingDirective(),
-                document = parseDocument()
-            ).also { skipBlankLines() }
+            val data = parseContent()
+            val errors = parseErrors()
+            val documentFragment = parseDocumentFragment()
+            val scriptingEnabled = parseScriptingDirective()
+            val document = parseDocument()
+            skipBlankLines()
+
+            return (scriptingEnabled?.let { listOf(it) } ?: listOf(true, false)).map {
+                Html5LibTest(
+                    lineNumber = lineNumber,
+                    data = data,
+                    errors = errors,
+                    documentFragment = documentFragment,
+                    scriptingEnabled = it,
+                    document = document
+                )
+            }
         }
 
         private fun parseContent(): String = buildString {
@@ -100,11 +110,11 @@ object DatFileParser {
                 lines[index].trim().also { index++ }
             } else null
 
-        private fun parseScriptingDirective(): Boolean =
+        private fun parseScriptingDirective(): Boolean? =
             when (currentLine?.trim()) {
                 "#script-on" -> true.also { index++ }
                 "#script-off" -> false.also { index++ }
-                else -> true
+                else -> null
             }
 
         private fun parseDocument(): String {
@@ -119,11 +129,11 @@ object DatFileParser {
         }
 
         // The document is the last section, and its text nodes can contain blank lines, so it only ends at
-        // the blank line before the next test's #data or at the end of the file
+        // the blank line before the next test, which starts with #description or #data, or at the end of the file
         private fun isEndOfTest(): Boolean {
             if (currentLine?.isNotBlank() == true) return false
             val nextContentLine = lines.asSequence().drop(index).firstOrNull { it.isNotBlank() }
-            return nextContentLine == null || nextContentLine.trim() == "#data"
+            return nextContentLine == null || nextContentLine.trim() in setOf("#description", "#data")
         }
 
         private fun expectSection(section: String) {
