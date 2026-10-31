@@ -61,7 +61,8 @@ internal object FragmentParser {
             onTokenEmitted = { token ->
                 treeBuilder.process(token)
             },
-            onParseError = { _, _ -> }
+            onParseError = { _, _ -> },
+            hasForeignAdjustedCurrentNode = treeBuilder::hasForeignAdjustedCurrentNode
         )
 
         // Step 6:

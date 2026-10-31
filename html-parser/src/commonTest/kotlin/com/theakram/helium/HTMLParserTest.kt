@@ -26,6 +26,7 @@
 package com.theakram.helium
 
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.QuirksMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -94,5 +95,18 @@ internal class HTMLParserTest {
 
         assertEquals(listOf("svg", "p"), body.children.map { it.localName })
         assertEquals(Namespaces.HTML, body.children[1].namespace)
+    }
+
+    @Test
+    fun `cdata is text in svg and a bogus comment in html`() {
+        val body = HTMLParser()
+            .parse("<svg><![CDATA[a<b]]></svg><![CDATA[c]]>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+        val (svg, comment) = body.children
+
+        assertEquals("a<b", svg.children.single().data)
+        assertEquals(NodeType.COMMENT, comment.type)
+        assertEquals("[CDATA[c]]", comment.data)
     }
 }
