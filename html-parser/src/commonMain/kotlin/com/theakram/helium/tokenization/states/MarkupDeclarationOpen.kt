@@ -40,15 +40,11 @@ internal data object MarkupDeclarationOpen : TokenizationState {
             return handleAnythingElse(tokenizer)
         }
 
-        val currentChar = StringBuilder(2).appendUnicode(codePoint).toString()
-        val next1 = tokenizer.peekNextChar().toString()
-        val next2 = currentChar + next1
-
-        val next6 = tokenizer.peekNextChars(6)
-        val next7 = currentChar + next6
+        // The state looks at the next few characters, of which codePoint is the first, before consuming any
+        val next7 = StringBuilder(7).appendUnicode(codePoint).append(tokenizer.peekNextChars(6)).toString()
 
         return when {
-            next2 == "--" -> {
+            codePoint == '-'.code && tokenizer.peekNextChar() == '-'.code -> {
                 tokenizer.currentPosition += 1
                 tokenizer.currentCommentData.clear()
                 switchTo(CommentStart)

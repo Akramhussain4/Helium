@@ -35,25 +35,23 @@ import com.theakram.helium.util.isAsciiAlphaNumeric
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#character-reference-state
  */
-internal class CharacterReference(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object CharacterReference : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.append('&')
 
         return when {
-            codePoint.isAsciiAlphaNumeric() -> reconsumeIn(NamedCharacterReference(returnState))
+            codePoint.isAsciiAlphaNumeric() -> reconsumeIn(NamedCharacterReference)
 
             codePoint.IS(Chars.NumberSign) -> {
                 tokenizer.tempBuffer.appendUnicode(codePoint)
-                switchTo(NumericCharacterReference(returnState))
+                switchTo(NumericCharacterReference)
             }
 
             else -> {
-                returnState.flushCodePoints(tokenizer)
-                reconsumeIn(returnState)
+                tokenizer.returnState.flushCodePoints(tokenizer)
+                reconsumeIn(tokenizer.returnState)
             }
         }
     }

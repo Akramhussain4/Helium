@@ -34,21 +34,44 @@ import com.theakram.helium.util.isAsciiAlphaNumeric
 /**
  * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
  */
-internal class NamedCharacterReference(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object NamedCharacterReference : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val match = consumeMaximalMatch(tokenizer)
+        // "Consume the maximum number of characters possible, where the consumed characters are one of the
+        // identifiers in the first column of the named character references table. Append each character to the
+        // temporary buffer when it's consumed." The state is entered by reconsuming, so the current input character
+        // is the first that can be consumed.
+        val match = longestMatch(tokenizer)
+            ?: run {
+                // Otherwise: nothing was consumed, so switching reconsumes the current input character
+                tokenizer.returnState.flushCodePoints(tokenizer)
+                return reconsumeIn(AmbiguousAmpersand)
+            }
+        tokenizer.tempBuffer.append(match.name)
+        tokenizer.currentPosition += match.name.length
 
-        return if (match != null) {
-            processMatch(match, tokenizer)
-        } else {
-            processNoMatch(tokenizer)
+        val lastCharacterMatchedIsSemicolon = match.name.endsWith(';')
+        val nextInputCharacter = tokenizer.htmlBuffer.getOrNull(tokenizer.currentPosition)
+
+        // The matched characters are consumed, so from here "switch to" a state reconsumes the next input character
+        if (tokenizer.returnState.isAttributeState() && !lastCharacterMatchedIsSemicolon && nextInputCharacter != null &&
+            (nextInputCharacter == '=' || nextInputCharacter.code.isAsciiAlphaNumeric())
+        ) {
+            // For historical reasons
+            tokenizer.returnState.flushCodePoints(tokenizer)
+            return reconsumeIn(tokenizer.returnState)
         }
+
+        if (!lastCharacterMatchedIsSemicolon) {
+            tokenizer.logParseError("missing-semicolon-after-character-reference")
+        }
+        tokenizer.tempBuffer.clear()
+        tokenizer.tempBuffer.append(match.characters)
+        tokenizer.returnState.flushCodePoints(tokenizer)
+        return reconsumeIn(tokenizer.returnState)
     }
 
-    private fun consumeMaximalMatch(tokenizer: Tokenizer): EntityMatch? {
+    private fun longestMatch(tokenizer: Tokenizer): EntityMatch? {
         var currentNode = NamedCharacterReferenceTrie.root
         var longestMatch: EntityMatch? = null
         var currentLength = 0
@@ -62,58 +85,18 @@ internal class NamedCharacterReference(
 
             currentNode = nextNode
             currentLength++
-            currentNode.entityMatch?.let {
-                longestMatch = it.copy(matchLength = currentLength)
-            }
+            currentNode.entityMatch?.let { longestMatch = it }
         }
         return longestMatch
     }
-
-    private fun processNoMatch(tokenizer: Tokenizer): StateTransition {
-        returnState.flushCodePoints(tokenizer)
-        return reconsumeIn(AmbiguousAmpersand(returnState))
-    }
-
-    private fun processMatch(match: EntityMatch, tokenizer: Tokenizer): StateTransition {
-        val endsWithSemicolon = match.name.endsWith(';')
-        val nextChar = tokenizer.htmlBuffer.getOrNull(tokenizer.currentPosition + match.matchLength)
-
-        return when {
-            returnState.isAttributeState() && !endsWithSemicolon && nextChar != null &&
-                    (nextChar == '=' || nextChar.code.isAsciiAlphaNumeric()) -> {
-                returnState.flushCodePoints(tokenizer)
-                tokenizer.currentAttributeValue.append(match.name)
-                tokenizer.currentPosition += match.matchLength
-                reconsumeIn(returnState)
-            }
-
-            else -> processStandardMatch(match, endsWithSemicolon, tokenizer)
-        }
-    }
-
-    private fun processStandardMatch(
-        match: EntityMatch,
-        endsWithSemicolon: Boolean,
-        tokenizer: Tokenizer
-    ): StateTransition {
-        if (!endsWithSemicolon) {
-            tokenizer.logParseError("missing-semicolon-after-character-reference")
-        }
-        tokenizer.tempBuffer.clear()
-        tokenizer.tempBuffer.append(match.characters)
-        returnState.flushCodePoints(tokenizer)
-        tokenizer.currentPosition += match.matchLength
-        return reconsumeIn(returnState)
-    }
 }
 
-private data class EntityMatch(
+private class EntityMatch(
     val name: String,
-    val characters: String,
-    val matchLength: Int = 0
+    val characters: String
 )
 
-private data class TrieNode(
+private class TrieNode(
     val children: MutableMap<Char, TrieNode> = mutableMapOf(),
     var entityMatch: EntityMatch? = null
 )

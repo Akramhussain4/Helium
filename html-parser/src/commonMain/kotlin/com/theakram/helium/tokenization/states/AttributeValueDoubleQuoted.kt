@@ -36,7 +36,10 @@ internal data object AttributeValueDoubleQuoted : TokenizationState {
         return when {
             codePoint.IS(Chars.QuotationMark) -> switchTo(AfterAttributeValueQuoted)
 
-            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
+            codePoint.IS(Chars.Ampersand) -> {
+                tokenizer.returnState = this
+                switchTo(CharacterReference)
+            }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")

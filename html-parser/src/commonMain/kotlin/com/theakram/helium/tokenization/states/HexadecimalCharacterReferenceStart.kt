@@ -29,19 +29,17 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.flushCodePoints
 import com.theakram.helium.util.isAsciiHexDigit
 
-internal class HexadecimalCharacterReferenceStart(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object HexadecimalCharacterReferenceStart : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiHexDigit() -> {
-                reconsumeIn(HexadecimalCharacterReference(returnState = returnState))
+                reconsumeIn(HexadecimalCharacterReference)
             }
 
             else -> {
                 tokenizer.logParseError("absence-of-digits-in-numeric-character-reference")
-                returnState.flushCodePoints(tokenizer)
-                reconsumeIn(returnState)
+                tokenizer.returnState.flushCodePoints(tokenizer)
+                reconsumeIn(tokenizer.returnState)
             }
         }
     }

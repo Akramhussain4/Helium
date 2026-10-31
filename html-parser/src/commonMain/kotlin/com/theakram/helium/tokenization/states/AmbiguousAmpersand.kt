@@ -36,13 +36,11 @@ import com.theakram.helium.util.isAsciiAlphaNumeric
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#ambiguous-ampersand-state
  */
-internal class AmbiguousAmpersand(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object AmbiguousAmpersand : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlphaNumeric() -> {
-                if (returnState.isAttributeState()) {
+                if (tokenizer.returnState.isAttributeState()) {
                     tokenizer.currentAttributeValue.appendUnicode(codePoint)
                 } else {
                     tokenizer.emitToken(Token.Character(codePoint))
@@ -51,10 +49,10 @@ internal class AmbiguousAmpersand(
             }
             codePoint.IS(Chars.SemiColon) -> {
                 tokenizer.logParseError("unknown-named-character-reference")
-                reconsumeIn(returnState)
+                reconsumeIn(tokenizer.returnState)
             }
 
-            else -> reconsumeIn(returnState)
+            else -> reconsumeIn(tokenizer.returnState)
         }
     }
 }

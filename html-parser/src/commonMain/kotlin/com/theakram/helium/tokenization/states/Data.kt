@@ -39,7 +39,10 @@ internal data object Data : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(returnState = this))
+            codePoint.IS(Chars.Ampersand) -> {
+                tokenizer.returnState = this
+                switchTo(CharacterReference)
+            }
 
             codePoint.IS(Chars.LessThan) -> switchTo(TagOpen)
 

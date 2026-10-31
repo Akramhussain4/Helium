@@ -30,9 +30,7 @@ import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isAsciiDigit
 
-internal class DecimalCharacterReference(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object DecimalCharacterReference : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiDigit() -> {
@@ -45,12 +43,12 @@ internal class DecimalCharacterReference(
             }
 
             codePoint.IS(Chars.SemiColon) -> {
-                switchTo(NumericCharacterReferenceEnd(returnState = returnState))
+                switchTo(NumericCharacterReferenceEnd)
             }
 
             else -> {
                 tokenizer.logParseError("missing-semicolon-after-character-reference")
-                reconsumeIn(NumericCharacterReferenceEnd(returnState = returnState))
+                reconsumeIn(NumericCharacterReferenceEnd)
             }
         }
     }

@@ -37,9 +37,7 @@ import com.theakram.helium.util.isSurrogate
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
  */
-internal class NumericCharacterReferenceEnd(
-    private val returnState: TokenizationState,
-) : TokenizationState {
+internal data object NumericCharacterReferenceEnd : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         // Check the character reference code. Each check reads the code as the checks before it left it, so a
         // null character reference becomes U+FFFD before the control check runs.
@@ -72,9 +70,9 @@ internal class NumericCharacterReferenceEnd(
 
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.appendUnicode(tokenizer.characterReferenceCode.toInt())
-        returnState.flushCodePoints(tokenizer)
+        tokenizer.returnState.flushCodePoints(tokenizer)
         // This state consumes no input character, so reconsuming the one it was given in the return state is the
         // spec's "Switch to the return state"
-        return reconsumeIn(returnState)
+        return reconsumeIn(tokenizer.returnState)
     }
 }

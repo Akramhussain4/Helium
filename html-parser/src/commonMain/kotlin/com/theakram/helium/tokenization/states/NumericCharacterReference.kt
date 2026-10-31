@@ -35,9 +35,7 @@ import com.theakram.helium.util.isAsciiDigit
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-state
  */
-internal class NumericCharacterReference(
-    private val returnState: TokenizationState
-) : TokenizationState {
+internal data object NumericCharacterReference : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.characterReferenceCode = 0L
@@ -47,15 +45,15 @@ internal class NumericCharacterReference(
                 Chars.UpperX
             ) -> {
                 tokenizer.tempBuffer.appendUnicode(codePoint)
-                switchTo(HexadecimalCharacterReferenceStart(returnState = returnState))
+                switchTo(HexadecimalCharacterReferenceStart)
             }
 
-            codePoint.isAsciiDigit() -> reconsumeIn(DecimalCharacterReference(returnState = returnState))
+            codePoint.isAsciiDigit() -> reconsumeIn(DecimalCharacterReference)
 
             else -> {
                 tokenizer.logParseError("absence-of-digits-in-numeric-character-reference")
-                returnState.flushCodePoints(tokenizer)
-                reconsumeIn(returnState)
+                tokenizer.returnState.flushCodePoints(tokenizer)
+                reconsumeIn(tokenizer.returnState)
             }
         }
     }
