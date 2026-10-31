@@ -35,20 +35,6 @@ final enum class com.theakram.helium.tree/QuirksMode : kotlin/Enum<com.theakram.
     final fun values(): kotlin/Array<com.theakram.helium.tree/QuirksMode> // com.theakram.helium.tree/QuirksMode.values|values#static(){}[0]
 }
 
-final enum class com.theakram.helium.treebuilder/TokenizerStateType : kotlin/Enum<com.theakram.helium.treebuilder/TokenizerStateType> { // com.theakram.helium.treebuilder/TokenizerStateType|null[0]
-    enum entry DATA // com.theakram.helium.treebuilder/TokenizerStateType.DATA|null[0]
-    enum entry PLAINTEXT // com.theakram.helium.treebuilder/TokenizerStateType.PLAINTEXT|null[0]
-    enum entry RAWTEXT // com.theakram.helium.treebuilder/TokenizerStateType.RAWTEXT|null[0]
-    enum entry RCDATA // com.theakram.helium.treebuilder/TokenizerStateType.RCDATA|null[0]
-    enum entry SCRIPT_DATA // com.theakram.helium.treebuilder/TokenizerStateType.SCRIPT_DATA|null[0]
-
-    final val entries // com.theakram.helium.treebuilder/TokenizerStateType.entries|#static{}entries[0]
-        final fun <get-entries>(): kotlin.enums/EnumEntries<com.theakram.helium.treebuilder/TokenizerStateType> // com.theakram.helium.treebuilder/TokenizerStateType.entries.<get-entries>|<get-entries>#static(){}[0]
-
-    final fun valueOf(kotlin/String): com.theakram.helium.treebuilder/TokenizerStateType // com.theakram.helium.treebuilder/TokenizerStateType.valueOf|valueOf#static(kotlin.String){}[0]
-    final fun values(): kotlin/Array<com.theakram.helium.treebuilder/TokenizerStateType> // com.theakram.helium.treebuilder/TokenizerStateType.values|values#static(){}[0]
-}
-
 final class com.theakram.helium.tree/Attribute { // com.theakram.helium.tree/Attribute|null[0]
     constructor <init>(kotlin/String? = ..., kotlin/String? = ..., kotlin/String, kotlin/String) // com.theakram.helium.tree/Attribute.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.String;kotlin.String){}[0]
 
@@ -149,13 +135,6 @@ final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/Tree
     }
 }
 
-final class com.theakram.helium.treebuilder/TreeBuilder { // com.theakram.helium.treebuilder/TreeBuilder|null[0]
-    constructor <init>(kotlin/Function1<com.theakram.helium.treebuilder/TokenizerStateType, kotlin/Unit>) // com.theakram.helium.treebuilder/TreeBuilder.<init>|<init>(kotlin.Function1<com.theakram.helium.treebuilder.TokenizerStateType,kotlin.Unit>){}[0]
-
-    final var document // com.theakram.helium.treebuilder/TreeBuilder.document|{}document[0]
-        final fun <get-document>(): com.theakram.helium.tree/TreeNode // com.theakram.helium.treebuilder/TreeBuilder.document.<get-document>|<get-document>(){}[0]
-}
-
 final class com.theakram.helium/HTMLParser { // com.theakram.helium/HTMLParser|null[0]
     constructor <init>() // com.theakram.helium/HTMLParser.<init>|<init>(){}[0]
 
@@ -196,8 +175,4 @@ final object com.theakram.helium.tree/Namespaces { // com.theakram.helium.tree/N
         final fun <get-XML>(): kotlin/String // com.theakram.helium.tree/Namespaces.XML.<get-XML>|<get-XML>(){}[0]
     final const val XMLNS // com.theakram.helium.tree/Namespaces.XMLNS|{}XMLNS[0]
         final fun <get-XMLNS>(): kotlin/String // com.theakram.helium.tree/Namespaces.XMLNS.<get-XMLNS>|<get-XMLNS>(){}[0]
-}
-
-final object com.theakram.helium.treebuilder/FragmentParser { // com.theakram.helium.treebuilder/FragmentParser|null[0]
-    final fun parseFragment(com.theakram.helium.tree/TreeNode, kotlin/String, kotlin/Boolean = ...): kotlin.collections/List<com.theakram.helium.tree/TreeNode> // com.theakram.helium.treebuilder/FragmentParser.parseFragment|parseFragment(com.theakram.helium.tree.TreeNode;kotlin.String;kotlin.Boolean){}[0]
 }
