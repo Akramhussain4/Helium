@@ -26,8 +26,13 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.TreeNode
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionLocation
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.stopParsing
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -49,15 +54,14 @@ internal object AfterAfterBody : InsertionMode {
             is Token.DocType -> InBody.process(token, treeBuilder)
 
             is Token.Character if token.codePoint.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
-            is Token.StartTag if token.name.equals("html", true) -> InBody.process(
-                token = token,
-                treeBuilder = treeBuilder
-            )
+
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.EOF -> stopParsing()
 
             else -> {
-                // Parse error.
+                // Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                treeBuilder.parseError()
                 reprocessIn(InBody)
             }
         }
