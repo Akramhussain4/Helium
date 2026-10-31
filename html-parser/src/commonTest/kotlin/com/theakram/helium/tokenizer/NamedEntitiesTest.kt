@@ -254,7 +254,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ApplyFunction with a semicolon`() = assertTokenization(
         input = "&ApplyFunction;",
         expectedTokens = listOf(
-            char('⁡')
+            char('\u2061')
         )
     )
 
@@ -1438,7 +1438,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity DotDot with a semicolon`() = assertTokenization(
         input = "&DotDot;",
         expectedTokens = listOf(
-            char('⃜')
+            char('\u20DC')
         )
     )
 
@@ -1742,7 +1742,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity DownBreve with a semicolon`() = assertTokenization(
         input = "&DownBreve;",
         expectedTokens = listOf(
-            char('̑')
+            char('\u0311')
         )
     )
 
@@ -3262,7 +3262,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity InvisibleComma with a semicolon`() = assertTokenization(
         input = "&InvisibleComma;",
         expectedTokens = listOf(
-            char('⁣')
+            char('\u2063')
         )
     )
 
@@ -3278,7 +3278,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity InvisibleTimes with a semicolon`() = assertTokenization(
         input = "&InvisibleTimes;",
         expectedTokens = listOf(
-            char('⁢')
+            char('\u2062')
         )
     )
 
@@ -4622,7 +4622,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity MediumSpace with a semicolon`() = assertTokenization(
         input = "&MediumSpace;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u205F')
         )
     )
 
@@ -4814,7 +4814,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NegativeMediumSpace with a semicolon`() = assertTokenization(
         input = "&NegativeMediumSpace;",
         expectedTokens = listOf(
-            char('​')
+            char('\u200B')
         )
     )
 
@@ -4830,7 +4830,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NegativeThickSpace with a semicolon`() = assertTokenization(
         input = "&NegativeThickSpace;",
         expectedTokens = listOf(
-            char('​')
+            char('\u200B')
         )
     )
 
@@ -4846,7 +4846,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NegativeThinSpace with a semicolon`() = assertTokenization(
         input = "&NegativeThinSpace;",
         expectedTokens = listOf(
-            char('​')
+            char('\u200B')
         )
     )
 
@@ -4862,7 +4862,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NegativeVeryThinSpace with a semicolon`() = assertTokenization(
         input = "&NegativeVeryThinSpace;",
         expectedTokens = listOf(
-            char('​')
+            char('\u200B')
         )
     )
 
@@ -4942,7 +4942,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NoBreak with a semicolon`() = assertTokenization(
         input = "&NoBreak;",
         expectedTokens = listOf(
-            char('⁠')
+            char('\u2060')
         )
     )
 
@@ -4958,7 +4958,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NonBreakingSpace with a semicolon`() = assertTokenization(
         input = "&NonBreakingSpace;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u00A0')
         )
     )
 
@@ -5086,7 +5086,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotEqualTilde with a semicolon`() = assertTokenization(
         input = "&NotEqualTilde;",
         expectedTokens = listOf(
-            *chars("≂̸").toTypedArray()
+            *chars("≂\u0338").toTypedArray()
         )
     )
 
@@ -5150,7 +5150,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotGreaterFullEqual with a semicolon`() = assertTokenization(
         input = "&NotGreaterFullEqual;",
         expectedTokens = listOf(
-            *chars("≧̸").toTypedArray()
+            *chars("≧\u0338").toTypedArray()
         )
     )
 
@@ -5166,7 +5166,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotGreaterGreater with a semicolon`() = assertTokenization(
         input = "&NotGreaterGreater;",
         expectedTokens = listOf(
-            *chars("≫̸").toTypedArray()
+            *chars("≫\u0338").toTypedArray()
         )
     )
 
@@ -5198,7 +5198,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotGreaterSlantEqual with a semicolon`() = assertTokenization(
         input = "&NotGreaterSlantEqual;",
         expectedTokens = listOf(
-            *chars("⩾̸").toTypedArray()
+            *chars("⩾\u0338").toTypedArray()
         )
     )
 
@@ -5230,7 +5230,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotHumpDownHump with a semicolon`() = assertTokenization(
         input = "&NotHumpDownHump;",
         expectedTokens = listOf(
-            *chars("≎̸").toTypedArray()
+            *chars("≎\u0338").toTypedArray()
         )
     )
 
@@ -5246,7 +5246,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotHumpEqual with a semicolon`() = assertTokenization(
         input = "&NotHumpEqual;",
         expectedTokens = listOf(
-            *chars("≏̸").toTypedArray()
+            *chars("≏\u0338").toTypedArray()
         )
     )
 
@@ -5278,7 +5278,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotLeftTriangleBar with a semicolon`() = assertTokenization(
         input = "&NotLeftTriangleBar;",
         expectedTokens = listOf(
-            *chars("⧏̸").toTypedArray()
+            *chars("⧏\u0338").toTypedArray()
         )
     )
 
@@ -5358,7 +5358,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotLessLess with a semicolon`() = assertTokenization(
         input = "&NotLessLess;",
         expectedTokens = listOf(
-            *chars("≪̸").toTypedArray()
+            *chars("≪\u0338").toTypedArray()
         )
     )
 
@@ -5374,7 +5374,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotLessSlantEqual with a semicolon`() = assertTokenization(
         input = "&NotLessSlantEqual;",
         expectedTokens = listOf(
-            *chars("⩽̸").toTypedArray()
+            *chars("⩽\u0338").toTypedArray()
         )
     )
 
@@ -5406,7 +5406,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotNestedGreaterGreater with a semicolon`() = assertTokenization(
         input = "&NotNestedGreaterGreater;",
         expectedTokens = listOf(
-            *chars("⪢̸").toTypedArray()
+            *chars("⪢\u0338").toTypedArray()
         )
     )
 
@@ -5422,7 +5422,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotNestedLessLess with a semicolon`() = assertTokenization(
         input = "&NotNestedLessLess;",
         expectedTokens = listOf(
-            *chars("⪡̸").toTypedArray()
+            *chars("⪡\u0338").toTypedArray()
         )
     )
 
@@ -5454,7 +5454,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotPrecedesEqual with a semicolon`() = assertTokenization(
         input = "&NotPrecedesEqual;",
         expectedTokens = listOf(
-            *chars("⪯̸").toTypedArray()
+            *chars("⪯\u0338").toTypedArray()
         )
     )
 
@@ -5518,7 +5518,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotRightTriangleBar with a semicolon`() = assertTokenization(
         input = "&NotRightTriangleBar;",
         expectedTokens = listOf(
-            *chars("⧐̸").toTypedArray()
+            *chars("⧐\u0338").toTypedArray()
         )
     )
 
@@ -5550,7 +5550,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSquareSubset with a semicolon`() = assertTokenization(
         input = "&NotSquareSubset;",
         expectedTokens = listOf(
-            *chars("⊏̸").toTypedArray()
+            *chars("⊏\u0338").toTypedArray()
         )
     )
 
@@ -5582,7 +5582,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSquareSuperset with a semicolon`() = assertTokenization(
         input = "&NotSquareSuperset;",
         expectedTokens = listOf(
-            *chars("⊐̸").toTypedArray()
+            *chars("⊐\u0338").toTypedArray()
         )
     )
 
@@ -5614,7 +5614,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSubset with a semicolon`() = assertTokenization(
         input = "&NotSubset;",
         expectedTokens = listOf(
-            *chars("⊂⃒").toTypedArray()
+            *chars("⊂\u20D2").toTypedArray()
         )
     )
 
@@ -5662,7 +5662,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSucceedsEqual with a semicolon`() = assertTokenization(
         input = "&NotSucceedsEqual;",
         expectedTokens = listOf(
-            *chars("⪰̸").toTypedArray()
+            *chars("⪰\u0338").toTypedArray()
         )
     )
 
@@ -5694,7 +5694,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSucceedsTilde with a semicolon`() = assertTokenization(
         input = "&NotSucceedsTilde;",
         expectedTokens = listOf(
-            *chars("≿̸").toTypedArray()
+            *chars("≿\u0338").toTypedArray()
         )
     )
 
@@ -5710,7 +5710,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity NotSuperset with a semicolon`() = assertTokenization(
         input = "&NotSuperset;",
         expectedTokens = listOf(
-            *chars("⊃⃒").toTypedArray()
+            *chars("⊃\u20D2").toTypedArray()
         )
     )
 
@@ -8142,7 +8142,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ThickSpace with a semicolon`() = assertTokenization(
         input = "&ThickSpace;",
         expectedTokens = listOf(
-            *chars("  ").toTypedArray()
+            *chars("\u205F\u200A").toTypedArray()
         )
     )
 
@@ -8158,7 +8158,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ThinSpace with a semicolon`() = assertTokenization(
         input = "&ThinSpace;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2009')
         )
     )
 
@@ -8254,7 +8254,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity TripleDot with a semicolon`() = assertTokenization(
         input = "&TripleDot;",
         expectedTokens = listOf(
-            char('⃛')
+            char('\u20DB')
         )
     )
 
@@ -9070,7 +9070,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity VeryThinSpace with a semicolon`() = assertTokenization(
         input = "&VeryThinSpace;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u200A')
         )
     )
 
@@ -9534,7 +9534,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ZeroWidthSpace with a semicolon`() = assertTokenization(
         input = "&ZeroWidthSpace;",
         expectedTokens = listOf(
-            char('​')
+            char('\u200B')
         )
     )
 
@@ -9662,7 +9662,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity acE with a semicolon`() = assertTokenization(
         input = "&acE;",
         expectedTokens = listOf(
-            *chars("∾̳").toTypedArray()
+            *chars("∾\u0333").toTypedArray()
         )
     )
 
@@ -9758,7 +9758,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity af with a semicolon`() = assertTokenization(
         input = "&af;",
         expectedTokens = listOf(
-            char('⁡')
+            char('\u2061')
         )
     )
 
@@ -11340,7 +11340,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity bne with a semicolon`() = assertTokenization(
         input = "&bne;",
         expectedTokens = listOf(
-            *chars("=⃥").toTypedArray()
+            *chars("=\u20E5").toTypedArray()
         )
     )
 
@@ -11356,7 +11356,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity bnequiv with a semicolon`() = assertTokenization(
         input = "&bnequiv;",
         expectedTokens = listOf(
-            *chars("≡⃥").toTypedArray()
+            *chars("≡\u20E5").toTypedArray()
         )
     )
 
@@ -12524,7 +12524,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity caps with a semicolon`() = assertTokenization(
         input = "&caps;",
         expectedTokens = listOf(
-            *chars("∩︀").toTypedArray()
+            *chars("∩\uFE00").toTypedArray()
         )
     )
 
@@ -13660,7 +13660,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity cups with a semicolon`() = assertTokenization(
         input = "&cups;",
         expectedTokens = listOf(
-            *chars("∪︀").toTypedArray()
+            *chars("∪\uFE00").toTypedArray()
         )
     )
 
@@ -15340,7 +15340,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity emsp13 with a semicolon`() = assertTokenization(
         input = "&emsp13;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2004')
         )
     )
 
@@ -15356,7 +15356,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity emsp14 with a semicolon`() = assertTokenization(
         input = "&emsp14;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2005')
         )
     )
 
@@ -15364,7 +15364,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity emsp with a semicolon`() = assertTokenization(
         input = "&emsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2003')
         )
     )
 
@@ -15396,7 +15396,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ensp with a semicolon`() = assertTokenization(
         input = "&ensp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2002')
         )
     )
 
@@ -16804,7 +16804,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity gesl with a semicolon`() = assertTokenization(
         input = "&gesl;",
         expectedTokens = listOf(
-            *chars("⋛︀").toTypedArray()
+            *chars("⋛\uFE00").toTypedArray()
         )
     )
 
@@ -17300,7 +17300,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity gvertneqq with a semicolon`() = assertTokenization(
         input = "&gvertneqq;",
         expectedTokens = listOf(
-            *chars("≩︀").toTypedArray()
+            *chars("≩\uFE00").toTypedArray()
         )
     )
 
@@ -17316,7 +17316,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity gvnE with a semicolon`() = assertTokenization(
         input = "&gvnE;",
         expectedTokens = listOf(
-            *chars("≩︀").toTypedArray()
+            *chars("≩\uFE00").toTypedArray()
         )
     )
 
@@ -17348,7 +17348,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity hairsp with a semicolon`() = assertTokenization(
         input = "&hairsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u200A')
         )
     )
 
@@ -17796,7 +17796,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ic with a semicolon`() = assertTokenization(
         input = "&ic;",
         expectedTokens = listOf(
-            char('⁣')
+            char('\u2063')
         )
     )
 
@@ -18516,7 +18516,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity it with a semicolon`() = assertTokenization(
         input = "&it;",
         expectedTokens = listOf(
-            char('⁢')
+            char('\u2062')
         )
     )
 
@@ -19316,7 +19316,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity lates with a semicolon`() = assertTokenization(
         input = "&lates;",
         expectedTokens = listOf(
-            *chars("⪭︀").toTypedArray()
+            *chars("⪭\uFE00").toTypedArray()
         )
     )
 
@@ -19940,7 +19940,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity lesg with a semicolon`() = assertTokenization(
         input = "&lesg;",
         expectedTokens = listOf(
-            *chars("⋚︀").toTypedArray()
+            *chars("⋚\uFE00").toTypedArray()
         )
     )
 
@@ -20852,7 +20852,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity lrm with a semicolon`() = assertTokenization(
         input = "&lrm;",
         expectedTokens = listOf(
-            char('‎')
+            char('\u200E')
         )
     )
 
@@ -21180,7 +21180,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity lvertneqq with a semicolon`() = assertTokenization(
         input = "&lvertneqq;",
         expectedTokens = listOf(
-            *chars("≨︀").toTypedArray()
+            *chars("≨\uFE00").toTypedArray()
         )
     )
 
@@ -21196,7 +21196,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity lvnE with a semicolon`() = assertTokenization(
         input = "&lvnE;",
         expectedTokens = listOf(
-            *chars("≨︀").toTypedArray()
+            *chars("≨\uFE00").toTypedArray()
         )
     )
 
@@ -21804,7 +21804,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nGg with a semicolon`() = assertTokenization(
         input = "&nGg;",
         expectedTokens = listOf(
-            *chars("⋙̸").toTypedArray()
+            *chars("⋙\u0338").toTypedArray()
         )
     )
 
@@ -21820,7 +21820,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nGt with a semicolon`() = assertTokenization(
         input = "&nGt;",
         expectedTokens = listOf(
-            *chars("≫⃒").toTypedArray()
+            *chars("≫\u20D2").toTypedArray()
         )
     )
 
@@ -21836,7 +21836,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nGtv with a semicolon`() = assertTokenization(
         input = "&nGtv;",
         expectedTokens = listOf(
-            *chars("≫̸").toTypedArray()
+            *chars("≫\u0338").toTypedArray()
         )
     )
 
@@ -21884,7 +21884,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nLl with a semicolon`() = assertTokenization(
         input = "&nLl;",
         expectedTokens = listOf(
-            *chars("⋘̸").toTypedArray()
+            *chars("⋘\u0338").toTypedArray()
         )
     )
 
@@ -21900,7 +21900,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nLt with a semicolon`() = assertTokenization(
         input = "&nLt;",
         expectedTokens = listOf(
-            *chars("≪⃒").toTypedArray()
+            *chars("≪\u20D2").toTypedArray()
         )
     )
 
@@ -21916,7 +21916,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nLtv with a semicolon`() = assertTokenization(
         input = "&nLtv;",
         expectedTokens = listOf(
-            *chars("≪̸").toTypedArray()
+            *chars("≪\u0338").toTypedArray()
         )
     )
 
@@ -22012,7 +22012,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nang with a semicolon`() = assertTokenization(
         input = "&nang;",
         expectedTokens = listOf(
-            *chars("∠⃒").toTypedArray()
+            *chars("∠\u20D2").toTypedArray()
         )
     )
 
@@ -22044,7 +22044,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity napE with a semicolon`() = assertTokenization(
         input = "&napE;",
         expectedTokens = listOf(
-            *chars("⩰̸").toTypedArray()
+            *chars("⩰\u0338").toTypedArray()
         )
     )
 
@@ -22060,7 +22060,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity napid with a semicolon`() = assertTokenization(
         input = "&napid;",
         expectedTokens = listOf(
-            *chars("≋̸").toTypedArray()
+            *chars("≋\u0338").toTypedArray()
         )
     )
 
@@ -22148,7 +22148,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbsp without a semicolon`() = assertTokenization(
         input = "&nbsp",
         expectedTokens = listOf(
-            char(' ')
+            char('\u00A0')
         )
     )
 
@@ -22156,7 +22156,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbsp with a semicolon`() = assertTokenization(
         input = "&nbsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u00A0')
         )
     )
 
@@ -22172,7 +22172,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbump with a semicolon`() = assertTokenization(
         input = "&nbump;",
         expectedTokens = listOf(
-            *chars("≎̸").toTypedArray()
+            *chars("≎\u0338").toTypedArray()
         )
     )
 
@@ -22188,7 +22188,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nbumpe with a semicolon`() = assertTokenization(
         input = "&nbumpe;",
         expectedTokens = listOf(
-            *chars("≏̸").toTypedArray()
+            *chars("≏\u0338").toTypedArray()
         )
     )
 
@@ -22268,7 +22268,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ncongdot with a semicolon`() = assertTokenization(
         input = "&ncongdot;",
         expectedTokens = listOf(
-            *chars("⩭̸").toTypedArray()
+            *chars("⩭\u0338").toTypedArray()
         )
     )
 
@@ -22412,7 +22412,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nedot with a semicolon`() = assertTokenization(
         input = "&nedot;",
         expectedTokens = listOf(
-            *chars("≐̸").toTypedArray()
+            *chars("≐\u0338").toTypedArray()
         )
     )
 
@@ -22460,7 +22460,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nesim with a semicolon`() = assertTokenization(
         input = "&nesim;",
         expectedTokens = listOf(
-            *chars("≂̸").toTypedArray()
+            *chars("≂\u0338").toTypedArray()
         )
     )
 
@@ -22524,7 +22524,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ngE with a semicolon`() = assertTokenization(
         input = "&ngE;",
         expectedTokens = listOf(
-            *chars("≧̸").toTypedArray()
+            *chars("≧\u0338").toTypedArray()
         )
     )
 
@@ -22572,7 +22572,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ngeqq with a semicolon`() = assertTokenization(
         input = "&ngeqq;",
         expectedTokens = listOf(
-            *chars("≧̸").toTypedArray()
+            *chars("≧\u0338").toTypedArray()
         )
     )
 
@@ -22588,7 +22588,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity ngeqslant with a semicolon`() = assertTokenization(
         input = "&ngeqslant;",
         expectedTokens = listOf(
-            *chars("⩾̸").toTypedArray()
+            *chars("⩾\u0338").toTypedArray()
         )
     )
 
@@ -22604,7 +22604,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nges with a semicolon`() = assertTokenization(
         input = "&nges;",
         expectedTokens = listOf(
-            *chars("⩾̸").toTypedArray()
+            *chars("⩾\u0338").toTypedArray()
         )
     )
 
@@ -22812,7 +22812,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nlE with a semicolon`() = assertTokenization(
         input = "&nlE;",
         expectedTokens = listOf(
-            *chars("≦̸").toTypedArray()
+            *chars("≦\u0338").toTypedArray()
         )
     )
 
@@ -22924,7 +22924,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nleqq with a semicolon`() = assertTokenization(
         input = "&nleqq;",
         expectedTokens = listOf(
-            *chars("≦̸").toTypedArray()
+            *chars("≦\u0338").toTypedArray()
         )
     )
 
@@ -22940,7 +22940,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nleqslant with a semicolon`() = assertTokenization(
         input = "&nleqslant;",
         expectedTokens = listOf(
-            *chars("⩽̸").toTypedArray()
+            *chars("⩽\u0338").toTypedArray()
         )
     )
 
@@ -22956,7 +22956,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nles with a semicolon`() = assertTokenization(
         input = "&nles;",
         expectedTokens = listOf(
-            *chars("⩽̸").toTypedArray()
+            *chars("⩽\u0338").toTypedArray()
         )
     )
 
@@ -23100,7 +23100,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity notinE with a semicolon`() = assertTokenization(
         input = "&notinE;",
         expectedTokens = listOf(
-            *chars("⋹̸").toTypedArray()
+            *chars("⋹\u0338").toTypedArray()
         )
     )
 
@@ -23108,7 +23108,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity notindot with a semicolon`() = assertTokenization(
         input = "&notindot;",
         expectedTokens = listOf(
-            *chars("⋵̸").toTypedArray()
+            *chars("⋵\u0338").toTypedArray()
         )
     )
 
@@ -23212,7 +23212,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nparsl with a semicolon`() = assertTokenization(
         input = "&nparsl;",
         expectedTokens = listOf(
-            *chars("⫽⃥").toTypedArray()
+            *chars("⫽\u20E5").toTypedArray()
         )
     )
 
@@ -23228,7 +23228,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity npart with a semicolon`() = assertTokenization(
         input = "&npart;",
         expectedTokens = listOf(
-            *chars("∂̸").toTypedArray()
+            *chars("∂\u0338").toTypedArray()
         )
     )
 
@@ -23292,7 +23292,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity npre with a semicolon`() = assertTokenization(
         input = "&npre;",
         expectedTokens = listOf(
-            *chars("⪯̸").toTypedArray()
+            *chars("⪯\u0338").toTypedArray()
         )
     )
 
@@ -23324,7 +23324,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity npreceq with a semicolon`() = assertTokenization(
         input = "&npreceq;",
         expectedTokens = listOf(
-            *chars("⪯̸").toTypedArray()
+            *chars("⪯\u0338").toTypedArray()
         )
     )
 
@@ -23372,7 +23372,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nrarrc with a semicolon`() = assertTokenization(
         input = "&nrarrc;",
         expectedTokens = listOf(
-            *chars("⤳̸").toTypedArray()
+            *chars("⤳\u0338").toTypedArray()
         )
     )
 
@@ -23388,7 +23388,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nrarrw with a semicolon`() = assertTokenization(
         input = "&nrarrw;",
         expectedTokens = listOf(
-            *chars("↝̸").toTypedArray()
+            *chars("↝\u0338").toTypedArray()
         )
     )
 
@@ -23484,7 +23484,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsce with a semicolon`() = assertTokenization(
         input = "&nsce;",
         expectedTokens = listOf(
-            *chars("⪰̸").toTypedArray()
+            *chars("⪰\u0338").toTypedArray()
         )
     )
 
@@ -23676,7 +23676,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsubE with a semicolon`() = assertTokenization(
         input = "&nsubE;",
         expectedTokens = listOf(
-            *chars("⫅̸").toTypedArray()
+            *chars("⫅\u0338").toTypedArray()
         )
     )
 
@@ -23708,7 +23708,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsubset with a semicolon`() = assertTokenization(
         input = "&nsubset;",
         expectedTokens = listOf(
-            *chars("⊂⃒").toTypedArray()
+            *chars("⊂\u20D2").toTypedArray()
         )
     )
 
@@ -23740,7 +23740,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsubseteqq with a semicolon`() = assertTokenization(
         input = "&nsubseteqq;",
         expectedTokens = listOf(
-            *chars("⫅̸").toTypedArray()
+            *chars("⫅\u0338").toTypedArray()
         )
     )
 
@@ -23772,7 +23772,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsucceq with a semicolon`() = assertTokenization(
         input = "&nsucceq;",
         expectedTokens = listOf(
-            *chars("⪰̸").toTypedArray()
+            *chars("⪰\u0338").toTypedArray()
         )
     )
 
@@ -23804,7 +23804,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsupE with a semicolon`() = assertTokenization(
         input = "&nsupE;",
         expectedTokens = listOf(
-            *chars("⫆̸").toTypedArray()
+            *chars("⫆\u0338").toTypedArray()
         )
     )
 
@@ -23836,7 +23836,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsupset with a semicolon`() = assertTokenization(
         input = "&nsupset;",
         expectedTokens = listOf(
-            *chars("⊃⃒").toTypedArray()
+            *chars("⊃\u20D2").toTypedArray()
         )
     )
 
@@ -23868,7 +23868,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nsupseteqq with a semicolon`() = assertTokenization(
         input = "&nsupseteqq;",
         expectedTokens = listOf(
-            *chars("⫆̸").toTypedArray()
+            *chars("⫆\u0338").toTypedArray()
         )
     )
 
@@ -24044,7 +24044,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity numsp with a semicolon`() = assertTokenization(
         input = "&numsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2007')
         )
     )
 
@@ -24092,7 +24092,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvap with a semicolon`() = assertTokenization(
         input = "&nvap;",
         expectedTokens = listOf(
-            *chars("≍⃒").toTypedArray()
+            *chars("≍\u20D2").toTypedArray()
         )
     )
 
@@ -24124,7 +24124,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvge with a semicolon`() = assertTokenization(
         input = "&nvge;",
         expectedTokens = listOf(
-            *chars("≥⃒").toTypedArray()
+            *chars("≥\u20D2").toTypedArray()
         )
     )
 
@@ -24140,7 +24140,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvgt with a semicolon`() = assertTokenization(
         input = "&nvgt;",
         expectedTokens = listOf(
-            *chars(">⃒").toTypedArray()
+            *chars(">\u20D2").toTypedArray()
         )
     )
 
@@ -24188,7 +24188,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvle with a semicolon`() = assertTokenization(
         input = "&nvle;",
         expectedTokens = listOf(
-            *chars("≤⃒").toTypedArray()
+            *chars("≤\u20D2").toTypedArray()
         )
     )
 
@@ -24204,7 +24204,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvlt with a semicolon`() = assertTokenization(
         input = "&nvlt;",
         expectedTokens = listOf(
-            *chars("<⃒").toTypedArray()
+            *chars("<\u20D2").toTypedArray()
         )
     )
 
@@ -24220,7 +24220,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvltrie with a semicolon`() = assertTokenization(
         input = "&nvltrie;",
         expectedTokens = listOf(
-            *chars("⊴⃒").toTypedArray()
+            *chars("⊴\u20D2").toTypedArray()
         )
     )
 
@@ -24252,7 +24252,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvrtrie with a semicolon`() = assertTokenization(
         input = "&nvrtrie;",
         expectedTokens = listOf(
-            *chars("⊵⃒").toTypedArray()
+            *chars("⊵\u20D2").toTypedArray()
         )
     )
 
@@ -24268,7 +24268,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity nvsim with a semicolon`() = assertTokenization(
         input = "&nvsim;",
         expectedTokens = listOf(
-            *chars("∼⃒").toTypedArray()
+            *chars("∼\u20D2").toTypedArray()
         )
     )
 
@@ -26244,7 +26244,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity puncsp with a semicolon`() = assertTokenization(
         input = "&puncsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2008')
         )
     )
 
@@ -26500,7 +26500,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity race with a semicolon`() = assertTokenization(
         input = "&race;",
         expectedTokens = listOf(
-            *chars("∽̱").toTypedArray()
+            *chars("∽\u0331").toTypedArray()
         )
     )
 
@@ -27588,7 +27588,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity rlm with a semicolon`() = assertTokenization(
         input = "&rlm;",
         expectedTokens = listOf(
-            char('‏')
+            char('\u200F')
         )
     )
 
@@ -28620,7 +28620,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity shy without a semicolon`() = assertTokenization(
         input = "&shy",
         expectedTokens = listOf(
-            char('­')
+            char('\u00AD')
         )
     )
 
@@ -28628,7 +28628,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity shy with a semicolon`() = assertTokenization(
         input = "&shy;",
         expectedTokens = listOf(
-            char('­')
+            char('\u00AD')
         )
     )
 
@@ -28996,7 +28996,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity smtes with a semicolon`() = assertTokenization(
         input = "&smtes;",
         expectedTokens = listOf(
-            *chars("⪬︀").toTypedArray()
+            *chars("⪬\uFE00").toTypedArray()
         )
     )
 
@@ -29156,7 +29156,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity sqcaps with a semicolon`() = assertTokenization(
         input = "&sqcaps;",
         expectedTokens = listOf(
-            *chars("⊓︀").toTypedArray()
+            *chars("⊓\uFE00").toTypedArray()
         )
     )
 
@@ -29188,7 +29188,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity sqcups with a semicolon`() = assertTokenization(
         input = "&sqcups;",
         expectedTokens = listOf(
-            *chars("⊔︀").toTypedArray()
+            *chars("⊔\uFE00").toTypedArray()
         )
     )
 
@@ -30580,7 +30580,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity tdot with a semicolon`() = assertTokenization(
         input = "&tdot;",
         expectedTokens = listOf(
-            char('⃛')
+            char('\u20DB')
         )
     )
 
@@ -30740,7 +30740,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity thinsp with a semicolon`() = assertTokenization(
         input = "&thinsp;",
         expectedTokens = listOf(
-            char(' ')
+            char('\u2009')
         )
     )
 
@@ -32332,7 +32332,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity varsubsetneq with a semicolon`() = assertTokenization(
         input = "&varsubsetneq;",
         expectedTokens = listOf(
-            *chars("⊊︀").toTypedArray()
+            *chars("⊊\uFE00").toTypedArray()
         )
     )
 
@@ -32348,7 +32348,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity varsubsetneqq with a semicolon`() = assertTokenization(
         input = "&varsubsetneqq;",
         expectedTokens = listOf(
-            *chars("⫋︀").toTypedArray()
+            *chars("⫋\uFE00").toTypedArray()
         )
     )
 
@@ -32364,7 +32364,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity varsupsetneq with a semicolon`() = assertTokenization(
         input = "&varsupsetneq;",
         expectedTokens = listOf(
-            *chars("⊋︀").toTypedArray()
+            *chars("⊋\uFE00").toTypedArray()
         )
     )
 
@@ -32380,7 +32380,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity varsupsetneqq with a semicolon`() = assertTokenization(
         input = "&varsupsetneqq;",
         expectedTokens = listOf(
-            *chars("⫌︀").toTypedArray()
+            *chars("⫌\uFE00").toTypedArray()
         )
     )
 
@@ -32604,7 +32604,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vnsub with a semicolon`() = assertTokenization(
         input = "&vnsub;",
         expectedTokens = listOf(
-            *chars("⊂⃒").toTypedArray()
+            *chars("⊂\u20D2").toTypedArray()
         )
     )
 
@@ -32620,7 +32620,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vnsup with a semicolon`() = assertTokenization(
         input = "&vnsup;",
         expectedTokens = listOf(
-            *chars("⊃⃒").toTypedArray()
+            *chars("⊃\u20D2").toTypedArray()
         )
     )
 
@@ -32700,7 +32700,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vsubnE with a semicolon`() = assertTokenization(
         input = "&vsubnE;",
         expectedTokens = listOf(
-            *chars("⫋︀").toTypedArray()
+            *chars("⫋\uFE00").toTypedArray()
         )
     )
 
@@ -32716,7 +32716,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vsubne with a semicolon`() = assertTokenization(
         input = "&vsubne;",
         expectedTokens = listOf(
-            *chars("⊊︀").toTypedArray()
+            *chars("⊊\uFE00").toTypedArray()
         )
     )
 
@@ -32732,7 +32732,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vsupnE with a semicolon`() = assertTokenization(
         input = "&vsupnE;",
         expectedTokens = listOf(
-            *chars("⫌︀").toTypedArray()
+            *chars("⫌\uFE00").toTypedArray()
         )
     )
 
@@ -32748,7 +32748,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity vsupne with a semicolon`() = assertTokenization(
         input = "&vsupne;",
         expectedTokens = listOf(
-            *chars("⊋︀").toTypedArray()
+            *chars("⊋\uFE00").toTypedArray()
         )
     )
 
@@ -33692,7 +33692,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity zwj with a semicolon`() = assertTokenization(
         input = "&zwj;",
         expectedTokens = listOf(
-            char('‍')
+            char('\u200D')
         )
     )
 
@@ -33708,7 +33708,7 @@ internal class NamedEntitiesTest : TokenizerTestBase() {
     fun `Named entity zwnj with a semicolon`() = assertTokenization(
         input = "&zwnj;",
         expectedTokens = listOf(
-            char('‌')
+            char('\u200C')
         )
     )
 }

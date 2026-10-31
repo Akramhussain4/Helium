@@ -4,7 +4,17 @@ hand. Run it from the repository root after updating the html5lib-tests submodul
 
     python3 scripts/generate-tokenizer-test3.py
 """
-import json, re
+import json, re, unicodedata
+
+# Invisible, combining and non-character code points are written as escapes so that no editor can change them
+def is_invisible(ch):
+    return ch != ' ' and unicodedata.category(ch) in ('Zs', 'Cf', 'Mn', 'Me', 'Cc', 'Co', 'Cs', 'Zl', 'Zp')
+
+def escape(ch):
+    o = ord(ch)
+    if o < 0x10000: return '\\u%04X' % o
+    o -= 0x10000
+    return '\\u%04X\\u%04X' % (0xD800 + (o >> 10), 0xDC00 + (o & 0x3FF))
 
 def kstr(s):
     out = []
@@ -17,6 +27,7 @@ def kstr(s):
         elif ch == '\n': out.append('\\n')
         elif ch == '\r': out.append('\\r')
         elif o < 0x20 or o == 0x7f: out.append('\\u%04x' % o)
+        elif is_invisible(ch) or o > 0xFFFF: out.append(escape(ch))
         else: out.append(ch)
     return '"' + ''.join(out) + '"'
 
@@ -29,6 +40,7 @@ def kchar(c):
     if c == '\r': return "'\\r'"
     if c == '`': return "'\\u0060'"
     if o < 0x20 or o == 0x7f: return "'\\u%04x'" % o
+    if is_invisible(c): return "'" + escape(c) + "'"
     return "'" + c + "'"
 
 def name(desc, i):

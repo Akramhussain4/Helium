@@ -203,7 +203,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows-1252 REPLACEMENT CHAR numeric entity`() = assertTokenization(
         input = "&#0129;",
         expectedTokens = listOf(
-            char('')
+            char('\u0081')
         ),
     )
 
@@ -299,7 +299,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows-1252 REPLACEMENT CHAR numeric entity 3`() = assertTokenization(
         input = "&#0141;",
         expectedTokens = listOf(
-            char('')
+            char('\u008D')
         ),
     )
 
@@ -315,7 +315,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows-1252 REPLACEMENT CHAR numeric entity 1`() = assertTokenization(
         input = "&#0143;",
         expectedTokens = listOf(
-            char('')
+            char('\u008F')
         ),
     )
 
@@ -323,7 +323,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows-1252 REPLACEMENT CHAR numeric entity 2`() = assertTokenization(
         input = "&#0144;",
         expectedTokens = listOf(
-            char('')
+            char('\u0090')
         ),
     )
 
@@ -427,7 +427,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows 1252 REPLACEMENT CHAR numeric entity`() = assertTokenization(
         input = "&#0157;",
         expectedTokens = listOf(
-            char('')
+            char('\u009D')
         ),
     )
 
@@ -443,7 +443,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows-1252 REPLACEMENT CHAR hexadecimal numeric entity`() = assertTokenization(
         input = "&#x081;",
         expectedTokens = listOf(
-            char('')
+            char('\u0081')
         ),
     )
 
@@ -539,7 +539,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 3`() = assertTokenization(
         input = "&#x08D;",
         expectedTokens = listOf(
-            char('')
+            char('\u008D')
         ),
     )
 
@@ -555,14 +555,14 @@ internal class EntitiesTest : TokenizerTestBase() {
     fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 1`() = assertTokenization(
         input = "&#x08F;",
         expectedTokens = listOf(
-            char('')
+            char('\u008F')
         ),
     )
 
     @Test
     fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity 2`() = assertTokenization(
         input = "&#x090;",
-        expectedTokens = listOf(char(''))
+        expectedTokens = listOf(char('\u0090'))
     )
 
     @Test
@@ -640,7 +640,7 @@ internal class EntitiesTest : TokenizerTestBase() {
     @Test
     fun `Windows 1252 REPLACEMENT CHAR hexadecimal numeric entity`() = assertTokenization(
         input = "&#x09D;",
-        expectedTokens = listOf(char(''))
+        expectedTokens = listOf(char('\u009D'))
     )
 
     @Test
