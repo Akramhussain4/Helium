@@ -79,7 +79,7 @@ the spec's error codes:
 
 ```kotlin
 parser.parse("<p>&notanentity</p>")
-parser.errors // [ParseError(missing-semicolon-after-character-reference at position 4)]
+parser.errors // [ParseError(missing-semicolon-after-character-reference at position 7)]
 ```
 
 A parser can be reused: every call to `parse` returns a new, independent document. Instances aren't thread-safe.
