@@ -29,6 +29,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.modes.InForeignContent
 import com.theakram.helium.treebuilder.modes.Initial
 
 /**
@@ -77,6 +78,11 @@ internal class TreeBuilder(
 
     internal val pendingTableCharacterTokens = mutableListOf<Token.Character>()
     internal val currentNode: TreeNode get() = stack.currentNode ?: document
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#adjusted-current-node
+     */
+    internal val adjustedCurrentNode: TreeNode get() = currentNode
     internal val elementStack: List<TreeNode> get() = stack.toList()
     internal val currentMode: InsertionMode get() = insertionMode
 
@@ -87,7 +93,11 @@ internal class TreeBuilder(
         }
 
         while (true) {
-            val transition = insertionMode.process(token, this)
+            val transition = if (isProcessedAsHTMLContent(token)) {
+                insertionMode.process(token, this)
+            } else {
+                InForeignContent.process(token, this)
+            }
 
             when (transition) {
                 is InsertionModeTransition.Continue -> break
@@ -108,6 +118,25 @@ internal class TreeBuilder(
                 }
             }
         }
+    }
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction-dispatcher
+     */
+    private fun isProcessedAsHTMLContent(token: Token): Boolean {
+        if (stack.isEmpty()) return true
+        val node = adjustedCurrentNode
+        val isMathMLTextIntegrationPoint = IntegrationPoints.isMathMLTextIntegrationPoint(node)
+        val isHTMLIntegrationPoint = IntegrationPoints.isHTMLIntegrationPoint(node)
+        return node.namespace == Namespaces.HTML ||
+                (isMathMLTextIntegrationPoint && token is Token.StartTag &&
+                        token.name != "mglyph" && token.name != "malignmark") ||
+                (isMathMLTextIntegrationPoint && token is Token.Character) ||
+                (node.namespace == Namespaces.MATHML && node.localName == "annotation-xml" &&
+                        token is Token.StartTag && token.name == "svg") ||
+                (isHTMLIntegrationPoint && token is Token.StartTag) ||
+                (isHTMLIntegrationPoint && token is Token.Character) ||
+                token is Token.EOF
     }
 
     internal fun insertElement(
@@ -137,6 +166,8 @@ internal class TreeBuilder(
     internal fun popCurrentElement(): TreeNode? = stack.pop()
 
     internal fun popUntil(tagName: String): Unit = stack.popUntil(tagName)
+
+    internal fun popUntilElement(element: TreeNode): Unit = stack.popUntilElement(element)
 
     internal fun pushElement(element: TreeNode) = stack.push(element)
 

@@ -25,6 +25,7 @@
 
 package com.theakram.helium
 
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.QuirksMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -67,5 +68,31 @@ internal class HTMLParserTest {
             .findChildElement("body")!!
 
         assertEquals(listOf("A", "B", "C", "\nD"), body.children.map { it.children.single().data })
+    }
+
+    @Test
+    fun `svg and mathml content is parsed in its own namespace`() {
+        val body = HTMLParser()
+            .parse("<svg><lineargradient/><foreignObject><b>x</b></foreignObject></svg><math><mi><b>y</b></mi></math>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+        val (svg, math) = body.children
+
+        assertEquals(Namespaces.SVG, svg.namespace)
+        assertEquals(listOf("linearGradient", "foreignObject"), svg.children.map { it.localName })
+        assertEquals(Namespaces.HTML, svg.children[1].children.single().namespace)
+        assertEquals(Namespaces.MATHML, math.children.single().namespace)
+        assertEquals(Namespaces.HTML, math.children.single().children.single().namespace)
+    }
+
+    @Test
+    fun `html start tag breaks out of svg`() {
+        val body = HTMLParser()
+            .parse("<svg><circle><p>text")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+
+        assertEquals(listOf("svg", "p"), body.children.map { it.localName })
+        assertEquals(Namespaces.HTML, body.children[1].namespace)
     }
 }
