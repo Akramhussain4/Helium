@@ -75,3 +75,15 @@ internal fun StringBuilder.appendUnicode(codePoint: Int): StringBuilder {
     append((0xD800 + (offset shr 10)).toChar())
     return append((0xDC00 + (offset and 0x3FF)).toChar())
 }
+
+/**
+ * Replaces ASCII upper alphas with their lowercase counterparts and leaves every other character as is,
+ * unlike [String.lowercase], which also changes non-ASCII characters.
+ *
+ * Spec: https://infra.spec.whatwg.org/#ascii-lowercase
+ */
+internal fun String.asciiLowercase(): String = buildString(length) {
+    for (char in this@asciiLowercase) {
+        append(if (char.code.isAsciiUpperAlpha()) char + 0x20 else char)
+    }
+}
