@@ -30,6 +30,17 @@ internal object InBodyHelpers {
         return context.namespace == Namespaces.HTML && context.localName == "select"
     }
 
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#generate-all-implied-end-tags-thoroughly
+     */
+    fun generateAllImpliedEndTagsThoroughly(treeBuilder: TreeBuilder) {
+        while (treeBuilder.currentNode.namespace == Namespaces.HTML &&
+            treeBuilder.currentNode.localName in TreeConstructionConstants.THOROUGH_IMPLIED_END_TAG_ELEMENTS
+        ) {
+            treeBuilder.popCurrentElement()
+        }
+    }
+
     fun generateImpliedEndTags(treeBuilder: TreeBuilder, except: String? = null) {
         while (treeBuilder.elementStack.isNotEmpty()) {
             val currentNode = treeBuilder.currentNode
