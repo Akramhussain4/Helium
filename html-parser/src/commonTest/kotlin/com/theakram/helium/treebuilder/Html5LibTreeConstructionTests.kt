@@ -193,7 +193,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
     }
 
     private companion object {
-        const val MIN_PASSING_TESTS = 1776
+        const val MIN_PASSING_TESTS = 1777
     }
 
     private data class TestFailure(

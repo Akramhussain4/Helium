@@ -62,4 +62,13 @@ internal class FragmentParserTest {
         assertEquals("linearGradient", nodes.first().localName)
         assertEquals("text", nodes.last().data)
     }
+
+    @Test
+    fun `input is inserted and a nested select ignored in a select context`() {
+        val context = TreeNode.createElement(localName = "select")
+
+        val nodes = FragmentParser.parseFragment(context, "<input><select><option>")
+
+        assertEquals(listOf("input", "option"), nodes.map { it.localName })
+    }
 }

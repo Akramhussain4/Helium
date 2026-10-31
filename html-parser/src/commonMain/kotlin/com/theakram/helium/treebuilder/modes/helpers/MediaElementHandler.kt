@@ -26,11 +26,6 @@ internal object MediaElementHandler {
     }
 
     fun handleInputStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        if (InBodyHelpers.isSelectContext(treeBuilder)) {
-            // Parse error. Ignore the token.
-            return continueInCurrentMode()
-        }
-
         // An input closes an open select, then is inserted after it
         if (treeBuilder.hasElementInScope("select")) {
             // Parse error
