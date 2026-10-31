@@ -41,15 +41,16 @@ kotlin {
         }
     }
 
-    // Tests read the html5lib-tests files from disk, which only Node can do, so browser test runs are disabled
+    // Tests read the html5lib-tests files from disk, which only Node can do, so browser test runs are disabled.
+    // Mocha's default 2s timeout is too short for running every html5lib test in one test on slow CI hosts.
     js {
         browser { testTask { enabled = false } }
-        nodejs()
+        nodejs { testTask { useMocha { timeout = "5m" } } }
     }
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser { testTask { enabled = false } }
-        nodejs()
+        nodejs { testTask { useMocha { timeout = "5m" } } }
     }
 
     iosArm64()
