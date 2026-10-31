@@ -44,7 +44,7 @@ internal object SpecialElementHandler {
 
     fun handleTextareaStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         treeBuilder.insertElement("textarea", attributes = attributes)
-        // TODO: If the next token is a U+000A LINE FEED (LF) character token, then ignore that token
+        treeBuilder.ignoreNextLineFeed()
         treeBuilder.switchTokenizerState(TokenizerStateType.RCDATA)
         treeBuilder.saveOriginalInsertionMode()
         treeBuilder.setFramesetNotOk()
