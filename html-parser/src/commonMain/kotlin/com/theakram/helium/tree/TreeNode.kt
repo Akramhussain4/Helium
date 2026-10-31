@@ -69,6 +69,47 @@ public class TreeNode(
     internal var insertionEndMarker: TreeNode? = null
 
     /**
+     * The Document a tree root other than a Document still belongs to: a node removed from its parent keeps its
+     * node document, and a fragment returned by fragment parsing belongs to its target's. Null for a node created on
+     * its own.
+     */
+    internal var rootNodeDocument: TreeNode? = null
+
+    /**
+     * Whether this Document was created by the appropriate template contents owner document algorithm, whose
+     * documents have no browsing context.
+     */
+    internal var isInertTemplateDocument: Boolean = false
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/scripting.html#associated-inert-template-document
+     */
+    private var associatedInertTemplateDocument: TreeNode? = null
+
+    /**
+     * The Document this node belongs to, found from the node's root since nodes don't link to it: the root itself if
+     * it is a Document, the template's appropriate template contents owner document for template contents, or the
+     * Document a removed node or parsed fragment was left with. Null for a node that was never in a document.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-node-document
+     */
+    internal val nodeDocument: TreeNode?
+        get() {
+            var root = this
+            while (true) {
+                root = root.parent ?: break
+            }
+            val host = root.host
+            return when {
+                root.type == NodeType.DOCUMENT -> root
+                root.rootNodeDocument != null -> root.rootNodeDocument
+                // Template contents keep the document they were created for, even if the template is given new ones
+                host != null -> appropriateTemplateContentsOwnerDocument(host.nodeDocument)
+                else -> null
+            }
+        }
+
+    /**
      * Spec: https://dom.spec.whatwg.org/#concept-tree-host-including-inclusive-ancestor
      */
     internal fun isHostIncludingInclusiveAncestorOf(node: TreeNode): Boolean {
@@ -133,8 +174,10 @@ public class TreeNode(
     }
 
     public fun removeChild(child: TreeNode) {
+        val document = nodeDocument
         if (children.remove(child)) {
             child.parent = null
+            child.rootNodeDocument = document
         } else {
             throw IllegalArgumentException("Node is not a child of this node")
         }
@@ -269,6 +312,19 @@ public class TreeNode(
     }
 
     public companion object {
+        /**
+         * Spec: https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document
+         *
+         * A template created on its own has no node document, so its contents get a new inert document.
+         */
+        internal fun appropriateTemplateContentsOwnerDocument(document: TreeNode?): TreeNode {
+            if (document != null && document.isInertTemplateDocument) return document
+            document?.associatedInertTemplateDocument?.let { return it }
+            val newDocument = createDocument().also { it.isInertTemplateDocument = true }
+            document?.associatedInertTemplateDocument = newDocument
+            return newDocument
+        }
+
         public fun createDocument(quirksMode: QuirksMode = QuirksMode.NO_QUIRKS): TreeNode {
             return TreeNode(
                 type = NodeType.DOCUMENT,

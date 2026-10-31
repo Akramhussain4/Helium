@@ -42,7 +42,9 @@ internal object FragmentParser {
 
     /**
      * @param target the element, or a document fragment whose host is the element, to parse the contents of
-     * @param isContextDocumentScriptingDisabled whether scripting is disabled for the context's node document
+     * @param isContextDocumentScriptingDisabled whether scripting is disabled for the context's node document, when
+     * that document has a browsing context. Template contents belong to an inert document, which has none, so
+     * scripting is always disabled for them
      * @return a document fragment holding the parsed nodes
      */
     fun parseFragment(
@@ -63,10 +65,13 @@ internal object FragmentParser {
         }
 
         // Step 5:
-        val contextDocument = getNodeDocument(context)
+        val contextDocument = context.nodeDocument
 
-        // Step 8:
-        val parserScriptingMode = if (isContextDocumentScriptingDisabled) ScriptingMode.DISABLED else scriptingMode
+        // Step 8: Scripting is disabled for a node whose node document's browsing context is null
+        val parserScriptingMode = when {
+            isContextDocumentScriptingDisabled || contextDocument?.isInertTemplateDocument == true -> ScriptingMode.DISABLED
+            else -> scriptingMode
+        }
 
         // Step 9:
         lateinit var tokenizer: Tokenizer
@@ -88,10 +93,10 @@ internal object FragmentParser {
         // Step 4:
         val document = treeBuilder.document
 
-        // Steps 6-7:
-        val contextQuirksMode = contextDocument?.quirksMode
-        if (contextQuirksMode == QuirksMode.QUIRKS || contextQuirksMode == QuirksMode.LIMITED_QUIRKS) {
-            document.quirksMode = contextQuirksMode
+        // Steps 6-7: A context that was never in a document is taken to be in a no-quirks one
+        val contextDocumentMode = contextDocument?.quirksMode
+        if (contextDocumentMode == QuirksMode.QUIRKS || contextDocumentMode == QuirksMode.LIMITED_QUIRKS) {
+            document.quirksMode = contextDocumentMode
         }
 
         // Step 10:
@@ -111,7 +116,7 @@ internal object FragmentParser {
         treeBuilder.pushElement(root)
 
         // Step 14:
-        val fragment = TreeNode.createDocumentFragment()
+        val fragment = TreeNode.createDocumentFragment().also { it.rootNodeDocument = target.nodeDocument }
 
         // Step 15:
         treeBuilder.insertionTargetRedirectionMap[root] = InsertionLocation(fragment, null)
@@ -133,17 +138,9 @@ internal object FragmentParser {
         // Steps 20-21:
         tokenizer.tokenize(input)
 
-        // Steps 22-23: The fragment has no node document to adopt it into
+        // Step 22: The fragment was created with the target's node document, so adopting it into that changes nothing
+        // Step 23:
         return fragment
-    }
-
-    // A node inside template contents belongs to a document with the same mode as its template's
-    private fun getNodeDocument(node: TreeNode): TreeNode? {
-        var current = node
-        while (true) {
-            current = current.parent ?: current.host ?: break
-        }
-        return current.takeIf { it.type == NodeType.DOCUMENT }
     }
 
     private fun getInitialTokenizerState(context: TreeNode, scriptingMode: ScriptingMode): TokenizerStateType {
