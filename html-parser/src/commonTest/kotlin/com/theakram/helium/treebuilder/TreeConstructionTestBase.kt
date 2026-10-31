@@ -33,12 +33,13 @@ import com.theakram.helium.tokenization.Tokenizer
  */
 internal abstract class TreeConstructionTestBase {
 
-    protected fun parseTree(input: String): String {
+    protected fun parseTree(input: String, scriptingEnabled: Boolean = true): String {
         lateinit var tokenizer: Tokenizer
         val treeBuilder = TreeBuilder(
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
-            }
+            },
+            scriptingEnabled = scriptingEnabled
         )
         tokenizer = Tokenizer(
             onTokenEmitted = { token ->
@@ -55,8 +56,8 @@ internal abstract class TreeConstructionTestBase {
     /**
      * Assert that HTML input produces the expected tree structure.
      */
-    protected fun assertTreeConstruction(input: String, expectedTree: String) {
-        val actualTree = parseTree(input)
+    protected fun assertTreeConstruction(input: String, expectedTree: String, scriptingEnabled: Boolean = true) {
+        val actualTree = parseTree(input, scriptingEnabled)
         if (actualTree != expectedTree.trim()) {
             throw AssertionError(formatTreeMismatchError(input, expectedTree.trim(), actualTree))
         }

@@ -56,6 +56,7 @@ internal object FragmentParser {
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
             },
+            scriptingEnabled = scriptingEnabled
         )
         tokenizer = Tokenizer(
             onTokenEmitted = { token ->
