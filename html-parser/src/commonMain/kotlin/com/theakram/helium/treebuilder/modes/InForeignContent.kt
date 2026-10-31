@@ -142,6 +142,7 @@ internal object InForeignContent : InsertionMode {
         // A self-closing SVG script is handled like its end tag, which also just pops it
         if (token.selfClosing) {
             treeBuilder.popCurrentElement()
+            treeBuilder.acknowledgeSelfClosingFlag()
         }
         return continueInCurrentMode()
     }

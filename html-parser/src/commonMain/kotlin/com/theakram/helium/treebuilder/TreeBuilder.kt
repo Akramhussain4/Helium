@@ -40,7 +40,9 @@ import com.theakram.helium.treebuilder.modes.Initial
 internal class TreeBuilder(
     private val onSwitchTokenizerState: (TokenizerStateType) -> Unit,
     /** Spec: https://html.spec.whatwg.org/multipage/parsing.html#scripting-mode */
-    internal val scriptingMode: ScriptingMode = ScriptingMode.NORMAL
+    internal val scriptingMode: ScriptingMode = ScriptingMode.NORMAL,
+    // Called with the error's code, or null for a parse error the spec gives no dedicated code
+    private val onParseError: (code: String?) -> Unit = {}
 ) {
     private var insertionMode: InsertionMode = Initial
     var document: TreeNode = TreeNode.createDocument()
@@ -116,12 +118,44 @@ internal class TreeBuilder(
     internal val elementStack: List<TreeNode> get() = stack.toList()
     internal val currentMode: InsertionMode get() = insertionMode
 
+    // Whether tree construction has acknowledged the self-closing flag of the start tag token being processed
+    private var selfClosingFlagAcknowledged = false
+
+    /**
+     * Reports a parse error of tree construction that the spec gives no dedicated code.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parse-errors
+     */
+    internal fun parseError() = onParseError(null)
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#acknowledge-self-closing-flag
+     */
+    internal fun acknowledgeSelfClosingFlag() {
+        selfClosingFlagAcknowledged = true
+    }
+
     internal fun process(token: Token) {
         if (ignoreNextLineFeed) {
             ignoreNextLineFeed = false
             if (token is Token.Character && token.codePoint == '\n'.code) return
         }
 
+        selfClosingFlagAcknowledged = false
+        dispatch(token)
+
+        // "When a start tag token is emitted with its self-closing flag set, if the flag is not acknowledged when it
+        // is processed by the tree construction stage, that is a non-void-html-element-start-tag-with-trailing-solidus
+        // parse error."
+        if (token is Token.StartTag && token.selfClosing && !selfClosingFlagAcknowledged) {
+            onParseError("non-void-html-element-start-tag-with-trailing-solidus")
+        }
+    }
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tree-construction-dispatcher
+     */
+    private fun dispatch(token: Token) {
         while (true) {
             val transition = if (isProcessedAsHTMLContent(token)) {
                 insertionMode.process(token, this)

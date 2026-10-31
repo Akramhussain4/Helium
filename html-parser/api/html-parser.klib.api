@@ -149,16 +149,16 @@ final class com.theakram.helium/HTMLParser { // com.theakram.helium/HTMLParser|n
 }
 
 final class com.theakram.helium/ParseError { // com.theakram.helium/ParseError|null[0]
-    constructor <init>(kotlin/String, kotlin/Int) // com.theakram.helium/ParseError.<init>|<init>(kotlin.String;kotlin.Int){}[0]
+    constructor <init>(kotlin/String?, kotlin/Int) // com.theakram.helium/ParseError.<init>|<init>(kotlin.String?;kotlin.Int){}[0]
 
     final val code // com.theakram.helium/ParseError.code|{}code[0]
-        final fun <get-code>(): kotlin/String // com.theakram.helium/ParseError.code.<get-code>|<get-code>(){}[0]
+        final fun <get-code>(): kotlin/String? // com.theakram.helium/ParseError.code.<get-code>|<get-code>(){}[0]
     final val position // com.theakram.helium/ParseError.position|{}position[0]
         final fun <get-position>(): kotlin/Int // com.theakram.helium/ParseError.position.<get-position>|<get-position>(){}[0]
 
-    final fun component1(): kotlin/String // com.theakram.helium/ParseError.component1|component1(){}[0]
+    final fun component1(): kotlin/String? // com.theakram.helium/ParseError.component1|component1(){}[0]
     final fun component2(): kotlin/Int // com.theakram.helium/ParseError.component2|component2(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/Int = ...): com.theakram.helium/ParseError // com.theakram.helium/ParseError.copy|copy(kotlin.String;kotlin.Int){}[0]
+    final fun copy(kotlin/String? = ..., kotlin/Int = ...): com.theakram.helium/ParseError // com.theakram.helium/ParseError.copy|copy(kotlin.String?;kotlin.Int){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.theakram.helium/ParseError.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.theakram.helium/ParseError.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.theakram.helium/ParseError.toString|toString(){}[0]

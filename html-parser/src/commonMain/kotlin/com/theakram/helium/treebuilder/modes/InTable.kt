@@ -128,7 +128,7 @@ internal object InTable : InsertionMode {
                             // Parse error
                             treeBuilder.insertElement("input", attributes = attributes)
                             treeBuilder.popCurrentElement()
-                            // TODO: Acknowledge the token's self-closing flag, if it is set
+                            treeBuilder.acknowledgeSelfClosingFlag()
                             continueInCurrentMode()
                         }
                     }

@@ -79,6 +79,7 @@ internal object BlockElementHandler {
 
         treeBuilder.insertElement("hr", attributes = attributes)
         treeBuilder.popCurrentElement()
+        treeBuilder.acknowledgeSelfClosingFlag()
         treeBuilder.setFramesetNotOk()
         return continueInCurrentMode()
     }

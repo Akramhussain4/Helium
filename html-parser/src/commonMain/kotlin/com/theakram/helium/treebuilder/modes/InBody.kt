@@ -235,6 +235,7 @@ internal object InBody : InsertionMode {
                 treeBuilder.insertElement("math", Namespaces.MATHML, adjustedAttributes)
                 if (token.selfClosing) {
                     treeBuilder.popCurrentElement()
+                    treeBuilder.acknowledgeSelfClosingFlag()
                 }
                 continueInCurrentMode()
             }
@@ -245,6 +246,7 @@ internal object InBody : InsertionMode {
                 treeBuilder.insertElement("svg", Namespaces.SVG, adjustedAttributes)
                 if (token.selfClosing) {
                     treeBuilder.popCurrentElement()
+                    treeBuilder.acknowledgeSelfClosingFlag()
                 }
                 continueInCurrentMode()
             }

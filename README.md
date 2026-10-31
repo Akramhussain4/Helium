@@ -74,8 +74,8 @@ Each node is a `TreeNode` with a `type` (element, text, comment, doctype, …), 
 links, and for elements a `localName`, `namespace` and `attributes`. SVG and MathML content is placed in its own
 namespace (see `Namespaces`).
 
-Malformed markup doesn't need special handling, but problems the tokenizer detects are available afterwards, using
-the spec's error codes:
+Malformed markup doesn't need special handling, but its parse errors are available afterwards, with the spec's error
+code where it gives one (most tree construction errors have none, so their `code` is null):
 
 ```kotlin
 parser.parse("<p>&notanentity</p>")
