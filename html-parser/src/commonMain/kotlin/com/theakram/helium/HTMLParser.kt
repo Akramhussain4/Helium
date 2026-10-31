@@ -36,8 +36,12 @@ import com.theakram.helium.treebuilder.TreeBuilder
  *
  * A parser can be reused: each call to [parse] produces a new, independent document.
  * Instances are not thread-safe.
+ *
+ * @param scriptingEnabled whether to parse as a browser with scripting enabled does, which is the default.
+ * The only difference is `<noscript>`: with scripting enabled its content is raw text, and with scripting
+ * disabled it is parsed as markup.
  */
-public class HTMLParser {
+public class HTMLParser(scriptingEnabled: Boolean = true) {
 
     private val _errors = mutableListOf<ParseError>()
     private val tokenizer = Tokenizer(
@@ -45,7 +49,10 @@ public class HTMLParser {
         onParseError = ::handleParseError,
         hasForeignAdjustedCurrentNode = ::hasForeignAdjustedCurrentNode
     )
-    private val treeBuilder = TreeBuilder(onSwitchTokenizerState = ::switchTokenizerState)
+    private val treeBuilder = TreeBuilder(
+        onSwitchTokenizerState = ::switchTokenizerState,
+        scriptingEnabled = scriptingEnabled
+    )
 
     /** The document produced by the most recent call to [parse]. */
     public val document: TreeNode

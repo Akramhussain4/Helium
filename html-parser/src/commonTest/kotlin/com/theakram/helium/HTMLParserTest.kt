@@ -109,4 +109,17 @@ internal class HTMLParserTest {
         assertEquals(NodeType.COMMENT, comment.type)
         assertEquals("[CDATA[c]]", comment.data)
     }
+
+    @Test
+    fun `noscript content is text with scripting enabled and markup with scripting disabled`() {
+        val html = "<noscript><b>off</b></noscript>"
+
+        val enabled = HTMLParser().parse(html).findChildElement("html")!!.findChildElement("head")!!
+        val disabled = HTMLParser(scriptingEnabled = false).parse(html)
+            .findChildElement("html")!!.findChildElement("head")!!
+
+        assertEquals("<b>off</b>", enabled.findChildElement("noscript")!!.children.single().data)
+        assertEquals("noscript", disabled.children.single().localName)
+        assertEquals(emptyList(), disabled.findChildElement("noscript")!!.children)
+    }
 }
