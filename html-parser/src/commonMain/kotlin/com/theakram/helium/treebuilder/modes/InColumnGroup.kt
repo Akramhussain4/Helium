@@ -26,12 +26,13 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
@@ -60,26 +61,23 @@ internal object InColumnGroup : InsertionMode {
 
             is Token.DocType -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
             is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.StartTag if token.name == "col" -> {
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
-                }
-                treeBuilder.insertElement("col", attributes = attributes)
+                treeBuilder.insertElement("col", attributes = InHeadHelpers.toAttributeList(token.attributes))
                 treeBuilder.popCurrentElement()
                 treeBuilder.acknowledgeSelfClosingFlag()
                 continueInCurrentMode()
             }
 
             is Token.EndTag if token.name == "colgroup" -> {
-                if (treeBuilder.currentNode.localName != "colgroup" ||
-                    treeBuilder.currentNode.namespace != Namespaces.HTML
-                ) {
-                    // Parse error. Ignore the token.
+                if (!isColgroup(treeBuilder.currentNode)) {
+                    // This is a parse error; ignore the token.
+                    treeBuilder.parseError()
                     continueInCurrentMode()
                 } else {
                     treeBuilder.popCurrentElement()
@@ -89,6 +87,7 @@ internal object InColumnGroup : InsertionMode {
 
             is Token.EndTag if token.name == "col" -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -99,10 +98,9 @@ internal object InColumnGroup : InsertionMode {
             is Token.EOF -> InBody.process(token, treeBuilder)
 
             else -> {
-                if (treeBuilder.currentNode.localName != "colgroup" ||
-                    treeBuilder.currentNode.namespace != Namespaces.HTML
-                ) {
-                    // Parse error. Ignore the token.
+                if (!isColgroup(treeBuilder.currentNode)) {
+                    // This is a parse error; ignore the token.
+                    treeBuilder.parseError()
                     continueInCurrentMode()
                 } else {
                     treeBuilder.popCurrentElement()
@@ -111,4 +109,7 @@ internal object InColumnGroup : InsertionMode {
             }
         }
     }
+
+    private fun isColgroup(node: TreeNode): Boolean =
+        node.namespace == Namespaces.HTML && node.localName == "colgroup"
 }

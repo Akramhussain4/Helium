@@ -31,7 +31,8 @@ internal class SelfClosingFlagTest {
 
     private fun codes(html: String) = HTMLParser().run {
         parse("<!DOCTYPE html>$html")
-        errors.map { it.code }
+        // Only the errors with codes, as the self-closing flag's is; the rest are tree construction's own
+        errors.mapNotNull { it.code }
     }
 
     @Test

@@ -39,6 +39,14 @@ import com.theakram.helium.treebuilder.stopParsing
  */
 internal object InTemplate : InsertionMode {
 
+    private val IN_HEAD_START_TAGS = setOf(
+        "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
+    )
+
+    private val TABLE_START_TAGS = setOf("caption", "colgroup", "tbody", "tfoot", "thead")
+
+    private val CELL_START_TAGS = setOf("td", "th")
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.Character,
@@ -46,64 +54,65 @@ internal object InTemplate : InsertionMode {
             is Token.ProcessingInstruction,
             is Token.DocType -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name in setOf(
-                "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
-            ) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name in IN_HEAD_START_TAGS -> InHead.process(token, treeBuilder)
 
             is Token.EndTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
-            is Token.StartTag if token.name in setOf(
-                "caption", "colgroup", "tbody", "tfoot", "thead"
-            ) -> {
-                treeBuilder.popTemplateInsertionMode()
-                treeBuilder.pushTemplateInsertionMode(InTable)
-                reprocessIn(InTable)
-            }
+            is Token.StartTag if token.name in TABLE_START_TAGS -> replaceTemplateModeAndReprocess(InTable, treeBuilder)
 
-            is Token.StartTag if token.name == "col" -> {
-                treeBuilder.popTemplateInsertionMode()
-                treeBuilder.pushTemplateInsertionMode(InColumnGroup)
-                reprocessIn(InColumnGroup)
-            }
+            is Token.StartTag if token.name == "col" -> replaceTemplateModeAndReprocess(InColumnGroup, treeBuilder)
 
-            is Token.StartTag if token.name == "tr" -> {
-                treeBuilder.popTemplateInsertionMode()
-                treeBuilder.pushTemplateInsertionMode(InTableBody)
-                reprocessIn(InTableBody)
-            }
+            is Token.StartTag if token.name == "tr" -> replaceTemplateModeAndReprocess(InTableBody, treeBuilder)
 
-            is Token.StartTag if token.name in setOf("td", "th") -> {
-                treeBuilder.popTemplateInsertionMode()
-                treeBuilder.pushTemplateInsertionMode(InRow)
-                reprocessIn(InRow)
-            }
+            is Token.StartTag if token.name in CELL_START_TAGS -> replaceTemplateModeAndReprocess(InRow, treeBuilder)
 
-            is Token.StartTag -> {
-                treeBuilder.popTemplateInsertionMode()
-                treeBuilder.pushTemplateInsertionMode(InBody)
-                reprocessIn(InBody)
-            }
+            is Token.StartTag -> replaceTemplateModeAndReprocess(InBody, treeBuilder)
 
             is Token.EndTag -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
             is Token.EOF -> {
                 val hasTemplate = treeBuilder.elementStack.any {
-                    it.localName == "template" && it.namespace == Namespaces.HTML
+                    it.namespace == Namespaces.HTML && it.localName == "template"
                 }
                 if (!hasTemplate) {
-                    // Stop parsing
+                    // If there is no template element on the stack of open elements, then stop parsing.
+                    // (fragment case)
                     return stopParsing()
                 }
-                // Parse error
+                // Otherwise, this is a parse error.
+                treeBuilder.parseError()
+
+                // Pop elements from the stack of open elements until a template element has been popped from the
+                // stack.
                 treeBuilder.popUntil("template")
+
+                // Clear the list of active formatting elements up to the last marker.
                 treeBuilder.activeFormattingElements.clearToLastMarker()
+
+                // Pop the current template insertion mode off the stack of template insertion modes.
                 treeBuilder.popTemplateInsertionMode()
-                treeBuilder.resetInsertionModeAppropriately()
-                reprocessIn(treeBuilder.currentMode)
+
+                // Reset the insertion mode appropriately, then reprocess the token.
+                treeBuilder.resetInsertionModeAndReprocess()
             }
         }
+    }
+
+    /**
+     * Pop the current template insertion mode off the stack of template insertion modes, push [mode] onto it so
+     * that it is the new current template insertion mode, then switch the insertion mode to [mode] and reprocess
+     * the token.
+     */
+    private fun replaceTemplateModeAndReprocess(
+        mode: InsertionMode,
+        treeBuilder: TreeBuilder
+    ): InsertionModeTransition {
+        treeBuilder.popTemplateInsertionMode()
+        treeBuilder.pushTemplateInsertionMode(mode)
+        return reprocessIn(mode)
     }
 }
