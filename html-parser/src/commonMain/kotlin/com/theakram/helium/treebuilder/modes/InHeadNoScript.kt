@@ -47,7 +47,7 @@ internal object InHeadNoScript : InsertionMode {
                 switchTo(InHead)
             }
 
-            is Token.Character if token.data.code.isAsciiWhitespace() -> InHead.process(token, treeBuilder)
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> InHead.process(token, treeBuilder)
             is Token.Comment -> InHead.process(token, treeBuilder)
             is Token.ProcessingInstruction -> InHead.process(token, treeBuilder)
             is Token.StartTag if token.name in setOf(

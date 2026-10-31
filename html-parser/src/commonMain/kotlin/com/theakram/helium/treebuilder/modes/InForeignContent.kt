@@ -56,19 +56,19 @@ internal object InForeignContent : InsertionMode {
 
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.data == '\u0000' -> {
+            is Token.Character if token.codePoint == 0x0000 -> {
                 // Parse error: unexpected null character
-                treeBuilder.insertCharacter('�')
+                treeBuilder.insertCharacter(0xFFFD)
                 continueInCurrentMode()
             }
 
-            is Token.Character if token.data.code.isAsciiWhitespace() -> {
-                treeBuilder.insertCharacter(token.data)
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.codePoint)
                 continueInCurrentMode()
             }
 
             is Token.Character -> {
-                treeBuilder.insertCharacter(token.data)
+                treeBuilder.insertCharacter(token.codePoint)
                 treeBuilder.setFramesetNotOk()
                 continueInCurrentMode()
             }

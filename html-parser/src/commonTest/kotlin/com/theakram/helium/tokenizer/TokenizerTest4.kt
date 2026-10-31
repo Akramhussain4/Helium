@@ -444,8 +444,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     fun `Non-BMP numeric entity`() = assertTokenization(
         input = "&#x10000;",
         expectedTokens = listOf(
-            char('\uD800'),
-            char('\uDC00')
+            char(0x10000)
         )
     )
 
@@ -453,8 +452,7 @@ internal class TokenizerTest4 : TokenizerTestBase() {
     fun `Maximum non-BMP numeric entity`() = assertTokenization(
         input = "&#X10FFFF;",
         expectedTokens = listOf(
-            char('\uDBFF'),
-            char('\uDFFF')
+            char(0x10FFFF)
         )
     )
 

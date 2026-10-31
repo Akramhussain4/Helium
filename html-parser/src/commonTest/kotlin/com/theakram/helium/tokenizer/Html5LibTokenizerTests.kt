@@ -35,6 +35,7 @@ import com.theakram.helium.tokenization.states.RawText
 import com.theakram.helium.tokenization.states.ScriptData
 import com.theakram.helium.tokenizer.helpers.Json
 import com.theakram.helium.tokenizer.helpers.KnownTokenizerFailures
+import com.theakram.helium.util.appendUnicode
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -178,7 +179,7 @@ internal class Html5LibTokenizerTests {
         }
         for (token in tokens) {
             if (token is Token.Character) {
-                characters.append(token.data)
+                characters.appendUnicode(token.codePoint)
                 continue
             }
             flushCharacters()

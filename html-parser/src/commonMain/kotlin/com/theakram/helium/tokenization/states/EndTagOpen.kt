@@ -48,8 +48,8 @@ internal data object EndTagOpen : TokenizationState {
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
-                tokenizer.emitToken(Token.Character(data = '<'))
-                tokenizer.emitToken(Token.Character(data = '/'))
+                tokenizer.emitToken(Token.Character('<'.code))
+                tokenizer.emitToken(Token.Character('/'.code))
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }

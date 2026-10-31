@@ -30,6 +30,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isAsciiUpperAlpha
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.isWhiteSpace
 
 internal data object TagName : TokenizationState {
@@ -45,13 +46,13 @@ internal data object TagName : TokenizationState {
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                appendToTagName(tokenizer, (codePoint + 0x0020).toChar())
+                appendToTagName(tokenizer, codePoint + 0x0020)
                 switchTo(this)
             }
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                appendToTagName(tokenizer, '\uFFFD')
+                appendToTagName(tokenizer, 0xFFFD)
                 switchTo(this)
             }
 
@@ -62,17 +63,17 @@ internal data object TagName : TokenizationState {
             }
 
             else -> {
-                appendToTagName(tokenizer, codePoint.toChar())
+                appendToTagName(tokenizer, codePoint)
                 switchTo(this)
             }
         }
     }
 
-    private fun appendToTagName(tokenizer: Tokenizer, char: Char) {
+    private fun appendToTagName(tokenizer: Tokenizer, codePoint: Int) {
         if (tokenizer.isCurrentTagStartTag) {
-            tokenizer.startTagBuilder.name.append(char)
+            tokenizer.startTagBuilder.name.appendUnicode(codePoint)
         } else {
-            tokenizer.currentEndTagName.append(char)
+            tokenizer.currentEndTagName.appendUnicode(codePoint)
         }
     }
 }

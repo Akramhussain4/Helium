@@ -40,7 +40,7 @@ import com.theakram.helium.util.isNull
 internal object InTableText : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.data.code.isNull() -> continueInCurrentMode()
+            is Token.Character if token.codePoint.isNull() -> continueInCurrentMode()
 
             is Token.Character -> {
                 treeBuilder.pendingTableCharacterTokens.add(token)
@@ -49,7 +49,7 @@ internal object InTableText : InsertionMode {
 
             else -> {
                 val hasNonWhitespace = treeBuilder.pendingTableCharacterTokens.any {
-                    !it.data.code.isAsciiWhitespace()
+                    !it.codePoint.isAsciiWhitespace()
                 }
 
                 if (hasNonWhitespace) {
@@ -60,7 +60,7 @@ internal object InTableText : InsertionMode {
                     treeBuilder.disableFosterParenting()
                 } else {
                     for (characterToken in treeBuilder.pendingTableCharacterTokens) {
-                        treeBuilder.insertCharacter(characterToken.data)
+                        treeBuilder.insertCharacter(characterToken.codePoint)
                     }
                 }
 

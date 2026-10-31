@@ -51,14 +51,14 @@ internal data object TagOpen : TokenizationState {
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-before-tag-name")
-                tokenizer.emitToken(Token.Character(data = '<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
 
             else -> {
                 tokenizer.logParseError("invalid-first-character-of-tag-name")
-                val charToken = Token.Character(data = '<')
+                val charToken = Token.Character('<'.code)
                 tokenizer.emitToken(charToken)
                 reconsumeIn(Data)
             }

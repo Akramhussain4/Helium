@@ -42,7 +42,7 @@ internal data object RawTextLessThanSign : TokenizationState {
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 reconsumeIn(RawText)
             }
         }

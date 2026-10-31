@@ -37,7 +37,7 @@ internal data object ScriptDataEscapeStartDash : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.HyphenMinus) -> {
-                tokenizer.emitToken(Token.Character('-'))
+                tokenizer.emitToken(Token.Character('-'.code))
                 switchTo(ScriptDataEscapedDashDash)
             }
 

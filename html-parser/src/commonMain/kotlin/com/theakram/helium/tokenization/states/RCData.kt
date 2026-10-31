@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -42,7 +43,7 @@ internal data object RCData : TokenizationState {
 
             codePoint.IS(Chars.Null) -> {
                 tokenizer.logParseError("unexpected-null-character")
-                tokenizer.emitToken(Token.Character('\uFFFD'))
+                tokenizer.emitToken(Token.Character('\uFFFD'.code))
                 continueInCurrentState()
             }
 
@@ -52,7 +53,7 @@ internal data object RCData : TokenizationState {
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                tokenizer.emitToken(Token.Character(codePoint))
                 continueInCurrentState()
             }
         }

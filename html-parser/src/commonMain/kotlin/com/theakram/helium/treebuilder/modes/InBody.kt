@@ -50,20 +50,20 @@ internal object InBody : InsertionMode {
         return when (token) {
             is Token.Character -> {
                 when {
-                    token.data == '\u0000' -> {
+                    token.codePoint == 0x0000 -> {
                         // Parse error: unexpected null character
                         continueInCurrentMode()
                     }
 
-                    token.data.code.isAsciiWhitespace() -> {
+                    token.codePoint.isAsciiWhitespace() -> {
                         treeBuilder.reconstructActiveFormattingElements()
-                        treeBuilder.insertCharacter(token.data)
+                        treeBuilder.insertCharacter(token.codePoint)
                         continueInCurrentMode()
                     }
 
                     else -> {
                         treeBuilder.reconstructActiveFormattingElements()
-                        treeBuilder.insertCharacter(token.data)
+                        treeBuilder.insertCharacter(token.codePoint)
                         treeBuilder.setFramesetNotOk()
                         continueInCurrentMode()
                     }

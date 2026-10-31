@@ -29,7 +29,8 @@ package com.theakram.helium
  * Represents a parse error encountered during HTML parsing.
  *
  * @property code The error code as defined by the HTML5 specification
- * @property position The character position in the input where the error occurred
+ * @property position Where the parser was in the input when it reported the error: an index into the input, in UTF-16
+ * units, after its newlines are normalized
  */
 public data class ParseError(
     val code: String,

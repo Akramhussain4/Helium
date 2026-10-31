@@ -29,6 +29,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.states.TokenizationState
 import com.theakram.helium.treebuilder.TokenizerStateType
+import com.theakram.helium.util.forEachCodePoint
 
 internal abstract class TokenizerTestBase {
 
@@ -109,7 +110,9 @@ internal abstract class TokenizerTestBase {
 
         fun endTag(name: String) = Token.EndTag(name)
 
-        fun char(c: Char) = Token.Character(c)
+        fun char(c: Char) = Token.Character(c.code)
+
+        fun char(codePoint: Int) = Token.Character(codePoint)
 
         fun comment(data: String) = Token.Comment(data)
 
@@ -127,6 +130,6 @@ internal abstract class TokenizerTestBase {
             forceQuirks = forceQuirks
         )
 
-        fun chars(text: String) = text.map { char(it) }
+        fun chars(text: String) = buildList { text.forEachCodePoint { add(char(it)) } }
     }
 }

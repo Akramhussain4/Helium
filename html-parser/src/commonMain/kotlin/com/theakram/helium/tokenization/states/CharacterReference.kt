@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.Chars
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -40,13 +41,13 @@ internal class CharacterReference(
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         tokenizer.tempBuffer.clear()
-        tokenizer.tempBuffer.append(Chars.Ampersand.char.code.toChar())
+        tokenizer.tempBuffer.append('&')
 
         return when {
             codePoint.isAsciiAlphaNumeric() -> reconsumeIn(NamedCharacterReference(returnState))
 
             codePoint.IS(Chars.NumberSign) -> {
-                tokenizer.tempBuffer.append(codePoint.toChar())
+                tokenizer.tempBuffer.appendUnicode(codePoint)
                 switchTo(NumericCharacterReference(returnState))
             }
 
