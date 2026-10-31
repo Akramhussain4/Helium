@@ -229,6 +229,9 @@ internal class TreeBuilder(
     internal fun hasElementInScope(tagName: String): Boolean =
         scopeChecker.hasElementInScope(tagName)
 
+    internal fun hasElementInScope(element: TreeNode): Boolean =
+        scopeChecker.isElementInScope(element)
+
     internal fun hasElementInListItemScope(tagName: String): Boolean =
         scopeChecker.hasElementInListItemScope(tagName)
 

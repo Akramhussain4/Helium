@@ -36,7 +36,7 @@ internal object FormElementHandler {
         if (!treeBuilder.isParsingTemplateContents) {
             val node = treeBuilder.formElement
             treeBuilder.formElement = null
-            if (node == null || !treeBuilder.elementStack.contains(node)) {
+            if (node == null || !treeBuilder.hasElementInScope(node)) {
                 // Parse error
                 return continueInCurrentMode()
             }

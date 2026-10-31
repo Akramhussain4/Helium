@@ -273,7 +273,7 @@ internal object InBody : InsertionMode {
                 "address", "article", "aside", "blockquote", "button", "center",
                 "details", "dialog", "dir", "div", "dl", "fieldset", "figcaption",
                 "figure", "footer", "header", "hgroup", "listing", "main", "menu",
-                "nav", "ol", "pre", "search", "section", "summary", "ul"
+                "nav", "ol", "pre", "search", "section", "select", "summary", "ul"
             ) -> BlockElementHandler.handleBlockEndTag(treeBuilder, tagName)
 
             "form" -> FormElementHandler.handleFormEndTag(treeBuilder)
