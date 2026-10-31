@@ -31,12 +31,10 @@ internal object MediaElementHandler {
             return continueInCurrentMode()
         }
 
-        // If select in scope:
+        // An input closes an open select, then is inserted after it
         if (treeBuilder.hasElementInScope("select")) {
             // Parse error
-            // Pop elements until select popped
             treeBuilder.popUntil("select")
-            return continueInCurrentMode()
         }
 
         treeBuilder.reconstructActiveFormattingElements()
