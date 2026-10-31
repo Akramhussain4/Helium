@@ -44,7 +44,8 @@ internal abstract class TreeConstructionTestBase {
             onTokenEmitted = { token ->
                 treeBuilder.process(token)
             },
-            onParseError = { _, _ -> }
+            onParseError = { _, _ -> },
+            hasForeignAdjustedCurrentNode = treeBuilder::hasForeignAdjustedCurrentNode
         )
 
         tokenizer.tokenize(input)

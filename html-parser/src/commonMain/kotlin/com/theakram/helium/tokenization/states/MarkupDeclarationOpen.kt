@@ -59,12 +59,14 @@ internal data object MarkupDeclarationOpen : TokenizationState {
 
             next7 == "[CDATA[" -> {
                 tokenizer.currentPosition += 6
-                // TODO: Check if there is an adjusted current node and it is not an element in the HTML namespace
-                // For now, treat as CDATA in HTML content (parse error)
-                tokenizer.logParseError("cdata-in-html-content")
-                tokenizer.currentCommentData.clear()
-                tokenizer.currentCommentData.append("[CDATA[")
-                switchTo(BogusComment)
+                if (tokenizer.isInForeignContent()) {
+                    switchTo(CDATASection)
+                } else {
+                    tokenizer.logParseError("cdata-in-html-content")
+                    tokenizer.currentCommentData.clear()
+                    tokenizer.currentCommentData.append("[CDATA[")
+                    switchTo(BogusComment)
+                }
             }
 
             else -> handleAnythingElse(tokenizer)
