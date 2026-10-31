@@ -44,7 +44,7 @@ internal class TreeBuilder(
     var document: TreeNode = TreeNode.createDocument()
         private set
 
-    private val stack = StackOfOpenElements()
+    private val stack = StackOfOpenElements(onElementPopped = SelectedContent::onElementPopped)
     private val scopeChecker = ScopeChecker(stack)
     private val fosterParenting = FosterParenting(stack)
     internal val activeFormattingElements = ActiveFormattingElements()

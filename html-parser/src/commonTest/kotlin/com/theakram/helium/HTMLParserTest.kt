@@ -163,4 +163,20 @@ internal class HTMLParserTest {
 
         assertEquals(listOf("select", "input", null), body.children.map { it.localName })
     }
+
+    @Test
+    fun `selectedcontent shows a copy of the selected option`() {
+        fun selectedContentText(html: String): String? = HTMLParser().parse(html)
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+            .findChildElement("select")!!
+            .findChildElement("button")!!
+            .findChildElement("selectedcontent")!!
+            .children.single().data
+
+        val button = "<select><button><selectedcontent></selectedcontent></button>"
+        assertEquals("X", selectedContentText("$button<option>X<option>Y"))
+        assertEquals("Y", selectedContentText("$button<option>X<option selected>Y"))
+        assertEquals("Y", selectedContentText("$button<option disabled>X<option>Y"))
+    }
 }

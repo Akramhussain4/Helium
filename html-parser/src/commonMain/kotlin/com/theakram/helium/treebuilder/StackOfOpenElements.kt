@@ -31,7 +31,9 @@ import com.theakram.helium.tree.TreeNode
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-stack-of-open-elements
  */
-internal class StackOfOpenElements {
+internal class StackOfOpenElements(
+    private val onElementPopped: (TreeNode) -> Unit = {}
+) {
 
     private val elements = mutableListOf<TreeNode>()
 
@@ -49,7 +51,7 @@ internal class StackOfOpenElements {
         elements.add(element)
     }
 
-    fun pop(): TreeNode? = elements.removeLastOrNull()
+    fun pop(): TreeNode? = elements.removeLastOrNull()?.also(onElementPopped)
 
     fun popUntil(tagName: String) {
         while (elements.isNotEmpty()) {
