@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -60,7 +61,7 @@ internal data object AfterDOCTYPEName : TokenizationState {
 
             else -> {
                 val next6 = tokenizer.peekNextChars(5)
-                val keyword = codePoint.toChar() + next6
+                val keyword = StringBuilder(2).appendUnicode(codePoint).append(next6).toString()
 
                 when {
                     keyword.equalsAsciiCaseInsensitive("PUBLIC") -> {

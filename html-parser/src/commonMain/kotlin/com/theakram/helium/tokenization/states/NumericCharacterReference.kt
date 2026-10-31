@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.tokenization.util.flushCodePoints
@@ -45,7 +46,7 @@ internal class NumericCharacterReference(
                 Chars.LowerX,
                 Chars.UpperX
             ) -> {
-                tokenizer.tempBuffer.append(codePoint.toChar())
+                tokenizer.tempBuffer.appendUnicode(codePoint)
                 switchTo(HexadecimalCharacterReferenceStart(returnState = returnState))
             }
 

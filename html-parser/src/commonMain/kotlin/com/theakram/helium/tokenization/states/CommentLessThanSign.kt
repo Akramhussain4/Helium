@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
@@ -37,12 +38,12 @@ internal data object CommentLessThanSign : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.ExclamationMark) -> {
-                tokenizer.currentCommentData.append(codePoint.toChar())
+                tokenizer.currentCommentData.appendUnicode(codePoint)
                 switchTo(CommentLessThanSignBang)
             }
 
             codePoint.IS(Chars.LessThan) -> {
-                tokenizer.currentCommentData.append(codePoint.toChar())
+                tokenizer.currentCommentData.appendUnicode(codePoint)
                 switchTo(CommentLessThanSign)
             }
 

@@ -42,13 +42,13 @@ internal data object ScriptDataLessThanSign : TokenizationState {
             }
 
             codePoint.IS(Chars.ExclamationMark) -> {
-                tokenizer.emitToken(Token.Character('<'))
-                tokenizer.emitToken(Token.Character('!'))
+                tokenizer.emitToken(Token.Character('<'.code))
+                tokenizer.emitToken(Token.Character('!'.code))
                 switchTo(ScriptDataEscapeStart)
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 reconsumeIn(ScriptData)
             }
         }

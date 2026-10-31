@@ -35,8 +35,8 @@ import com.theakram.helium.util.isAsciiWhitespace
 internal object AfterFrameSet : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.data.code.isAsciiWhitespace() -> {
-                treeBuilder.insertCharacter(token.data)
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> {
+                treeBuilder.insertCharacter(token.codePoint)
                 continueInCurrentMode()
             }
 

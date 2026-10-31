@@ -45,7 +45,7 @@ import com.theakram.helium.util.startsWithAsciiCaseInsensitive
 internal object Initial : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.Comment -> {
                 treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.document, null))

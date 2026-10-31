@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.Chars
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
@@ -41,7 +42,7 @@ internal data object BeforeAttributeName : TokenizationState {
                 tokenizer.logParseError("unexpected-equals-sign-before-attribute-name")
                 tokenizer.currentAttributeName.clear()
                 tokenizer.currentAttributeValue.clear()
-                tokenizer.currentAttributeName.append(codePoint.toChar())
+                tokenizer.currentAttributeName.appendUnicode(codePoint)
                 switchTo(AttributeName)
             }
 

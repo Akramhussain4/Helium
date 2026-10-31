@@ -30,6 +30,7 @@ import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.treebuilder.modes.InForeignContent
 import com.theakram.helium.treebuilder.modes.Initial
 
@@ -118,7 +119,7 @@ internal class TreeBuilder(
     internal fun process(token: Token) {
         if (ignoreNextLineFeed) {
             ignoreNextLineFeed = false
-            if (token is Token.Character && token.data == '\n') return
+            if (token is Token.Character && token.codePoint == '\n'.code) return
         }
 
         while (true) {
@@ -299,9 +300,8 @@ internal class TreeBuilder(
     internal fun createImplicitElement(tagName: String): TreeNode =
         insertElement(tagName = tagName, namespace = Namespaces.HTML, attributes = emptyList())
 
-    internal fun insertCharacter(char: Char) {
-        val data = char.toString()
-        nodeInsertion.insertCharacter(data)
+    internal fun insertCharacter(codePoint: Int) {
+        nodeInsertion.insertCharacter(StringBuilder(2).appendUnicode(codePoint).toString())
     }
 
     internal fun reset() {

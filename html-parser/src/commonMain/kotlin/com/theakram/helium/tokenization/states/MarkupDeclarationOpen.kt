@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.util.equalsAsciiCaseInsensitive
@@ -39,7 +40,7 @@ internal data object MarkupDeclarationOpen : TokenizationState {
             return handleAnythingElse(tokenizer)
         }
 
-        val currentChar = codePoint.toChar().toString()
+        val currentChar = StringBuilder(2).appendUnicode(codePoint).toString()
         val next1 = tokenizer.peekNextChar().toString()
         val next2 = currentChar + next1
 

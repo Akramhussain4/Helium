@@ -42,7 +42,7 @@ import com.theakram.helium.util.isAsciiWhitespace
 internal object BeforeHead : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
+            is Token.Character if token.codePoint.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.Comment -> {
                 treeBuilder.insertComment(token.data)

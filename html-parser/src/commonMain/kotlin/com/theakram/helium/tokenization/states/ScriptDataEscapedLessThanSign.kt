@@ -44,12 +44,12 @@ internal data object ScriptDataEscapedLessThanSign : TokenizationState {
 
             codePoint.isAsciiAlpha() -> {
                 tokenizer.tempBuffer.clear()
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 reconsumeIn(ScriptDataDoubleEscapeStart)
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 reconsumeIn(ScriptDataEscaped)
             }
         }

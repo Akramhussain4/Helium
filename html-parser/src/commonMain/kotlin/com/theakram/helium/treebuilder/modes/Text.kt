@@ -37,7 +37,7 @@ internal object Text : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.Character -> {
-                treeBuilder.insertCharacter(token.data)
+                treeBuilder.insertCharacter(token.codePoint)
                 continueInCurrentMode()
             }
 

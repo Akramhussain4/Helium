@@ -46,7 +46,8 @@ internal sealed interface Token {
 
     data class ProcessingInstruction(val target: String, val data: String) : Token
 
-    data class Character(val data: Char) : Token
+    /** A character token, holding one code point. */
+    data class Character(val codePoint: Int) : Token
 
     data object EOF : Token
 }

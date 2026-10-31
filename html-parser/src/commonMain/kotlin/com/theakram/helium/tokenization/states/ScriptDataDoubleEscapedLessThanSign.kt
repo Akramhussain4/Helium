@@ -38,7 +38,7 @@ internal data object ScriptDataDoubleEscapedLessThanSign : TokenizationState {
         return when {
             codePoint.IS(Chars.Solidus) -> {
                 tokenizer.tempBuffer.clear()
-                tokenizer.emitToken(Token.Character('/'))
+                tokenizer.emitToken(Token.Character('/'.code))
                 switchTo(ScriptDataDoubleEscapeEnd)
             }
 

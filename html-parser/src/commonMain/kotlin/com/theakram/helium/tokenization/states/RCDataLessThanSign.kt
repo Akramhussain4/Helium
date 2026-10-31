@@ -42,7 +42,7 @@ internal data object RCDataLessThanSign : TokenizationState {
             }
 
             else -> {
-                tokenizer.emitToken(Token.Character('<'))
+                tokenizer.emitToken(Token.Character('<'.code))
                 reconsumeIn(RCData)
             }
         }

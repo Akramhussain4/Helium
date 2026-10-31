@@ -78,6 +78,32 @@ internal fun Int.isWhiteSpace(): Boolean {
 
 internal fun Int.isNull() = this == Chars.Null.char.code
 
+/**
+ * The code point that starts at [index], combining a surrogate pair into one supplementary code point. A surrogate
+ * that is not part of a pair is a code point of its own.
+ */
+internal fun CharSequence.codePointAt(index: Int): Int {
+    val high = this[index]
+    if (high.isHighSurrogate() && index + 1 < length) {
+        val low = this[index + 1]
+        if (low.isLowSurrogate()) return 0x10000 + ((high.code - 0xD800) shl 10) + (low.code - 0xDC00)
+    }
+    return high.code
+}
+
+/** The number of UTF-16 code units [this] code point takes. */
+internal fun Int.utf16Length(): Int = if (this > 0xFFFF) 2 else 1
+
+/** Calls [action] with each code point of this sequence, in order. */
+internal inline fun CharSequence.forEachCodePoint(action: (Int) -> Unit) {
+    var index = 0
+    while (index < length) {
+        val codePoint = codePointAt(index)
+        action(codePoint)
+        index += codePoint.utf16Length()
+    }
+}
+
 /** Appends [codePoint] as UTF-16, writing a surrogate pair for supplementary code points. */
 internal fun StringBuilder.appendUnicode(codePoint: Int): StringBuilder {
     if (codePoint < 0x10000) return append(codePoint.toChar())

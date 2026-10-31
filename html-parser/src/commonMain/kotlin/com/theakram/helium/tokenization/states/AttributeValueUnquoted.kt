@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tokenization.states
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.Chars
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
@@ -55,7 +56,7 @@ internal data object AttributeValueUnquoted : TokenizationState {
 
             codePoint.IS(Chars.QuotationMark, Chars.Apostrophe, Chars.LessThan, Chars.Equals, Chars.GraveAccent) -> {
                 tokenizer.logParseError("unexpected-character-in-unquoted-attribute-value")
-                tokenizer.currentAttributeValue.append(codePoint.toChar())
+                tokenizer.currentAttributeValue.appendUnicode(codePoint)
                 switchTo(this)
             }
 
@@ -67,7 +68,7 @@ internal data object AttributeValueUnquoted : TokenizationState {
             }
 
             else -> {
-                tokenizer.currentAttributeValue.append(codePoint.toChar())
+                tokenizer.currentAttributeValue.appendUnicode(codePoint)
                 switchTo(this)
             }
         }
