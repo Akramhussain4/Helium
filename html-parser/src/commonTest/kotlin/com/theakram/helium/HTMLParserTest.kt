@@ -181,7 +181,8 @@ internal class HTMLParserTest {
         val publicKeyword = HTMLParser().parse("<!DOCTYPE html PUBL\u0131C \"-//W3O//DTD W3 HTML Strict 3.0//EN//\">")
         val identifier = HTMLParser().parse("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Trans\u0131t\u0131onal//\">")
 
-        assertEquals(null, publicKeyword.children.first().publicId)
+        // PUBLıC isn't the PUBLIC keyword, so there is no public identifier, which the doctype stores as ""
+        assertEquals("", publicKeyword.children.first().publicId)
         assertEquals(QuirksMode.NO_QUIRKS, identifier.quirksMode)
     }
 

@@ -37,12 +37,12 @@ internal object AfterAfterBody : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.Comment -> {
-                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
             is Token.ProcessingInstruction -> {
-                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                treeBuilder.insertProcessingInstruction(token.target, token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
