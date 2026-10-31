@@ -28,20 +28,21 @@ package com.theakram.helium
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.FragmentParser
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 
 /**
  * Parses HTML documents following the WHATWG HTML parsing algorithm.
  *
- * A parser can be reused: each call to [parse] produces a new, independent document.
+ * A parser can be reused: each call to [parse] or [parseFragment] produces a new, independent tree.
  * Instances are not thread-safe.
  *
  * @param scriptingEnabled whether to parse as a browser with scripting enabled does, which is the default.
  * The only difference is `<noscript>`: with scripting enabled its content is raw text, and with scripting
  * disabled it is parsed as markup.
  */
-public class HTMLParser(scriptingEnabled: Boolean = true) {
+public class HTMLParser(private val scriptingEnabled: Boolean = true) {
 
     private val _errors = mutableListOf<ParseError>()
     private val tokenizer = Tokenizer(
@@ -59,7 +60,7 @@ public class HTMLParser(scriptingEnabled: Boolean = true) {
         get() = treeBuilder.document
 
     /**
-     * Parse errors reported by the tokenizer during the most recent call to [parse].
+     * Parse errors reported by the tokenizer during the most recent call to [parse] or [parseFragment].
      *
      * Tree construction errors are not reported yet.
      */
@@ -78,6 +79,26 @@ public class HTMLParser(scriptingEnabled: Boolean = true) {
         treeBuilder.reset()
         tokenizer.tokenize(html)
         return document
+    }
+
+    /**
+     * Parses [html] as the contents of [context], the way setting `innerHTML` on it does, and returns the
+     * resulting nodes. The context decides how the markup is read: `<td>` is only allowed in a table row, for
+     * example, and content of an `<svg>` context is SVG.
+     *
+     * [context] is not modified; the nodes are returned without a parent.
+     */
+    public fun parseFragment(html: String, context: TreeNode): List<TreeNode> {
+        _errors.clear()
+        val nodes = FragmentParser.parseFragment(
+            context = context,
+            input = html,
+            scriptingEnabled = scriptingEnabled,
+            onParseError = ::handleParseError
+        )
+        // Detach the nodes from the html element the algorithm parses them into
+        nodes.forEach { it.parent?.removeChild(it) }
+        return nodes
     }
 
     private fun handleParseError(code: String, position: Int) {
