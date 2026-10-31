@@ -32,6 +32,7 @@ import com.theakram.helium.tokenization.states.Data
 import com.theakram.helium.tokenization.states.PlainText
 import com.theakram.helium.tokenization.states.RCData
 import com.theakram.helium.tokenization.states.RawText
+import com.theakram.helium.tokenization.states.ScriptData
 import com.theakram.helium.tokenization.states.TokenizationState
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.util.Chars
@@ -135,7 +136,7 @@ internal class Tokenizer(
             TokenizerStateType.DATA -> Data
             TokenizerStateType.RCDATA -> RCData
             TokenizerStateType.RAWTEXT -> RawText
-            TokenizerStateType.SCRIPT_DATA -> RawText  // SCRIPT_DATA not implemented, treating as RAWTEXT
+            TokenizerStateType.SCRIPT_DATA -> ScriptData
             TokenizerStateType.PLAINTEXT -> PlainText
         }
     }

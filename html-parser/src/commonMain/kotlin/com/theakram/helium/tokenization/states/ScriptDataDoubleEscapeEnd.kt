@@ -1,0 +1,70 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023-2026 Mohammed Akram Hussain
+ * Website: https://theakram.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.theakram.helium.tokenization.states
+
+import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tokenization.util.IS
+import com.theakram.helium.util.Chars
+import com.theakram.helium.util.isAsciiLowerAlpha
+import com.theakram.helium.util.isAsciiUpperAlpha
+
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#script-data-double-escape-end-state
+ */
+internal data object ScriptDataDoubleEscapeEnd : TokenizationState {
+    override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
+        return when {
+            codePoint.IS(Chars.Tab) ||
+            codePoint.IS(Chars.LineFeed) ||
+            codePoint.IS(Chars.FormFeed) ||
+            codePoint.IS(Chars.Space) ||
+            codePoint.IS(Chars.Solidus) ||
+            codePoint.IS(Chars.GreaterThan) -> {
+                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                if (tokenizer.tempBuffer.toString() == "script") {
+                    switchTo(ScriptDataEscaped)
+                } else {
+                    switchTo(ScriptDataDoubleEscaped)
+                }
+            }
+
+            codePoint.isAsciiUpperAlpha() -> {
+                tokenizer.tempBuffer.append(codePoint.toChar().lowercaseChar())
+                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                continueInCurrentState()
+            }
+
+            codePoint.isAsciiLowerAlpha() -> {
+                tokenizer.tempBuffer.append(codePoint.toChar())
+                tokenizer.emitToken(Token.Character(codePoint.toChar()))
+                continueInCurrentState()
+            }
+
+            else -> reconsumeIn(ScriptDataDoubleEscaped)
+        }
+    }
+}

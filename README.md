@@ -93,7 +93,7 @@ suite for HTML parsers:
 
 - **Tokenization:** produces the expected tokens for the html5lib tokenizer tests. The reported parse errors aren't
   checked against the suite yet.
-- **Tree construction:** passes 1,354 of the 1,563 html5lib document tests that are run (87%). Fragment and
+- **Tree construction:** passes 1,407 of the 1,563 html5lib document tests that are run (90%). Fragment and
   scripting-disabled tests aren't run yet.
 
 Not supported yet:
