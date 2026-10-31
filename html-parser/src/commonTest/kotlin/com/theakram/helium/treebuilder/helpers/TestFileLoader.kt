@@ -32,12 +32,18 @@ import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readString
 
 object TestFileLoader {
-    private const val TEST_DIR = "html5lib-tests/tree-construction"
+    // Copied from web-platform-tests by scripts/update-tree-construction-tests.sh
+    private const val TEST_DIR = "tree-construction"
 
     fun loadTests(filename: String): List<Html5LibTest> =
         loadFileContent("$TEST_DIR/$filename")
             .let { DatFileParser.parse(it) }
-            .map { it.copy(requiresScriptExecution = filename.startsWith("scripted/")) }
+            .map {
+                it.copy(
+                    requiresScriptExecution = filename.startsWith("scripted_"),
+                    knownFailure = KnownFailures.reasonFor(filename, it.lineNumber)
+                )
+            }
 
     // Test working directories differ per platform, so files are resolved against an absolute path from the build
     private fun loadFileContent(path: String): String {
@@ -63,11 +69,13 @@ object TestFileLoader {
         "main-element.dat", "math.dat", "menuitem-element.dat",
         "namespace-sensitivity.dat", "noscript01.dat", "pending-spec-changes.dat",
         "pending-spec-changes-plain-text-unsafe.dat", "plain-text-unsafe.dat",
-        "quirks01.dat", "ruby.dat", "scriptdata01.dat", "search-element.dat",
-        "svg.dat", "tables01.dat", "template.dat", "tests_innerHTML_1.dat",
-        "tricky01.dat", "webkit01.dat", "webkit02.dat",
+        "processing-instructions.dat", "quirks01.dat", "ruby.dat", "scriptdata01.dat",
+        "search-element.dat", "svg.dat", "tables01.dat", "template.dat",
+        "tests_innerHTML_1.dat", "tricky01.dat", "void-in-phrasing.dat",
+        "webkit01.dat", "webkit02.dat",
 
         // Scripted tests
-        "scripted/adoption01.dat", "scripted/ark.dat", "scripted/webkit01.dat"
+        "scripted_adoption01.dat", "scripted_ark.dat", "scripted_foster01.dat",
+        "scripted_webkit01.dat"
     )
 }

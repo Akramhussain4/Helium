@@ -99,13 +99,16 @@ as markup instead, as a browser with JavaScript disabled does, create the parser
 
 Helium is pre-1.0 and its API may change between minor versions.
 
-Conformance is measured against [html5lib-tests](https://github.com/html5lib/html5lib-tests), the standard conformance
-suite for HTML parsers:
+Conformance is measured against the standard conformance suite for HTML parsers, which started in
+[html5lib-tests](https://github.com/html5lib/html5lib-tests); its tree construction tests now live in
+[web-platform-tests](https://github.com/web-platform-tests/wpt/tree/master/html/syntax/parsing/resources):
 
 - **Tokenization:** produces the expected tokens for the html5lib tokenizer tests. The reported parse errors aren't
   checked against the suite yet.
-- **Tree construction:** passes 1,773 of the 1,778 html5lib tests (99%), document and fragment tests
-  alike. The 4 tests in `scripted/` aren't run, since they need a JavaScript engine.
+- **Tree construction:** passes 3,701 of the 3,898 test runs (95%), document and fragment tests alike, each with
+  scripting enabled and disabled where the test allows both. The rest are listed with their reasons in
+  [`KnownFailures`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/helpers/KnownFailures.kt).
+  The `scripted_*` tests aren't run, since they need a JavaScript engine.
 
 Not supported yet:
 
@@ -114,7 +117,7 @@ Not supported yet:
 
 ## Building
 
-The conformance tests use html5lib-tests as a git submodule, so clone with submodules:
+The tokenizer tests use html5lib-tests as a git submodule, so clone with submodules:
 
 ```shell
 git clone --recurse-submodules https://github.com/Akramhussain4/Helium.git
@@ -124,6 +127,9 @@ git clone --recurse-submodules https://github.com/Akramhussain4/Helium.git
 `check` runs the tests on every target the host can run. Running the Apple tests on macOS needs Xcode, not just the
 Command Line Tools. It also fails if the public API changed without an
 updated API dump; run `./gradlew updateKotlinAbi` to update it after an intentional change.
+
+The tree construction tests are copied from web-platform-tests into `html-parser/src/commonTest/resources/tree-construction`.
+To update them, run `scripts/update-tree-construction-tests.sh` with a web-platform-tests commit.
 
 ## License
 
