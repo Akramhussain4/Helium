@@ -57,6 +57,11 @@ internal object InTable : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                treeBuilder.insertProcessingInstruction(token.target, token.data)
+                continueInCurrentMode()
+            }
+
             is Token.DocType -> {
                 // Parse error. Ignore the token.
                 continueInCurrentMode()

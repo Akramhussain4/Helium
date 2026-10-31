@@ -105,7 +105,7 @@ Conformance is measured against the standard conformance suite for HTML parsers,
 
 - **Tokenization:** produces the expected tokens for the html5lib tokenizer tests. The reported parse errors aren't
   checked against the suite yet.
-- **Tree construction:** passes 3,713 of the 3,898 test runs (95%), document and fragment tests alike, each with
+- **Tree construction:** passes 3,888 of the 3,898 test runs (99%), document and fragment tests alike, each with
   scripting enabled and disabled where the test allows both. The rest are listed with their reasons in
   [`KnownFailures`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/helpers/KnownFailures.kt).
   The `scripted_*` tests aren't run, since they need a JavaScript engine.
@@ -129,7 +129,8 @@ Command Line Tools. It also fails if the public API changed without an
 updated API dump; run `./gradlew updateKotlinAbi` to update it after an intentional change.
 
 The tree construction tests are copied from web-platform-tests into `html-parser/src/commonTest/resources/tree-construction`.
-To update them, run `scripts/update-tree-construction-tests.sh` with a web-platform-tests commit.
+To update them, run `scripts/update-tree-construction-tests.sh` with a web-platform-tests commit. After updating the
+html5lib-tests submodule, regenerate `TokenizerTest3` with `python3 scripts/generate-tokenizer-test3.py`.
 
 ## License
 

@@ -43,6 +43,7 @@ internal object InTemplate : InsertionMode {
         return when (token) {
             is Token.Character,
             is Token.Comment,
+            is Token.ProcessingInstruction,
             is Token.DocType -> InBody.process(token, treeBuilder)
 
             is Token.StartTag if token.name in setOf(

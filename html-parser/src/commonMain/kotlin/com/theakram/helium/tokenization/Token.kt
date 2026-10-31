@@ -44,6 +44,8 @@ internal sealed interface Token {
 
     data class Comment(val data: String) : Token
 
+    data class ProcessingInstruction(val target: String, val data: String) : Token
+
     data class Character(val data: Char) : Token
 
     data object EOF : Token

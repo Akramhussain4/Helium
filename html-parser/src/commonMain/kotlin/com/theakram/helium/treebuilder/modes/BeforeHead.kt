@@ -49,6 +49,11 @@ internal object BeforeHead : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                treeBuilder.insertProcessingInstruction(token.target, token.data)
+                continueInCurrentMode()
+            }
+
             is Token.DocType -> continueInCurrentMode()
 
             is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)

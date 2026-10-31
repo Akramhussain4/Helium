@@ -276,6 +276,11 @@ public class TreeNode(
             return TreeNode(type = NodeType.COMMENT, data = data)
         }
 
+        /** Creates a processing instruction; [target] is stored as its [localName], as [name] reports it. */
+        public fun createProcessingInstruction(target: String, data: String): TreeNode {
+            return TreeNode(type = NodeType.PROCESSING_INSTRUCTION, localName = target, data = data)
+        }
+
         public fun createDocumentType(
             name: String,
             publicId: String? = null,

@@ -184,6 +184,13 @@ internal class TreeBuilder(
         insertAtAppropriatePlace(TreeNode.createComment(data))
     }
 
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-processing-instruction
+     */
+    internal fun insertProcessingInstruction(target: String, data: String) {
+        insertAtAppropriatePlace(TreeNode.createProcessingInstruction(target, data))
+    }
+
     internal fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
         document.appendChild(TreeNode.createDocumentType(name, publicId, systemId))
     }

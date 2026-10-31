@@ -29,7 +29,7 @@ import com.theakram.helium.tokenization.Token
 import kotlin.test.Test
 
 /**
- * Contains all 45 tests from here:
+ * Contains all 46 tests from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test2.test
  *
  * The commented (17) test cases are for Tokenization states that haven't been implemented yet.
@@ -311,16 +311,24 @@ internal class TokenizerTest2 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Simili processing instruction`() = assertTokenization(
+    fun `Processing instruction`() = assertTokenization(
         input = "<?namespace>",
-        expectedTokens = listOf(comment("?namespace"))
+        expectedTokens = listOf(processingInstruction(target = "namespace", data = ""))
     )
 
     @Test
-    fun `A bogus comment stops at greater than even if preceded by two dashes`() = assertTokenization(
-        input = "<?foo-->",
-        expectedTokens = listOf(comment("?foo--"))
-    )
+    fun `A processing instruction delimited by question mark greater than does not contain the delimiting question mark`() =
+        assertTokenization(
+            input = "<?foo bar?>",
+            expectedTokens = listOf(processingInstruction(target = "foo", data = "bar"))
+        )
+
+    @Test
+    fun `A processing instruction data delimited by question mark greater than contains the correct amount of question marks`() =
+        assertTokenization(
+            input = "<?foo bar??>",
+            expectedTokens = listOf(processingInstruction(target = "foo", data = "bar?"))
+        )
 
     @Test
     fun `Unescaped less than`() = assertTokenization(

@@ -113,6 +113,8 @@ internal abstract class TokenizerTestBase {
 
         fun comment(data: String) = Token.Comment(data)
 
+        fun processingInstruction(target: String, data: String) = Token.ProcessingInstruction(target, data)
+
         fun doctype(
             name: String? = null,
             publicId: String? = null,

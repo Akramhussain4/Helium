@@ -131,6 +131,7 @@ final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/Tree
         final fun createDocumentFragment(): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createDocumentFragment|createDocumentFragment(){}[0]
         final fun createDocumentType(kotlin/String, kotlin/String? = ..., kotlin/String? = ...): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createDocumentType|createDocumentType(kotlin.String;kotlin.String?;kotlin.String?){}[0]
         final fun createElement(kotlin/String, kotlin/String = ..., kotlin/String? = ..., kotlin.collections/List<com.theakram.helium.tree/Attribute> = ...): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createElement|createElement(kotlin.String;kotlin.String;kotlin.String?;kotlin.collections.List<com.theakram.helium.tree.Attribute>){}[0]
+        final fun createProcessingInstruction(kotlin/String, kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createProcessingInstruction|createProcessingInstruction(kotlin.String;kotlin.String){}[0]
         final fun createText(kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createText|createText(kotlin.String){}[0]
     }
 }

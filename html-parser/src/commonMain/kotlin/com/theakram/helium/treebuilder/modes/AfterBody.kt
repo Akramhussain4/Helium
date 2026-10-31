@@ -44,6 +44,12 @@ internal object AfterBody : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                val htmlElement = treeBuilder.elementStack.firstOrNull()
+                htmlElement?.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                continueInCurrentMode()
+            }
+
             is Token.DocType -> continueInCurrentMode()
 
             is Token.StartTag if token.name == "html" -> InBody.process(

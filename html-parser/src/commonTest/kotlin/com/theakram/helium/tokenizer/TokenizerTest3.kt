@@ -28,7 +28,7 @@ package com.theakram.helium.tokenizer
 import kotlin.test.Test
 
 /**
- * Contains all 1590 test from here:
+ * Contains all 1606 test from here:
  * https://github.com/html5lib/html5lib-tests/blob/master/tokenizer/test3.test
  *
  */
@@ -9300,12 +9300,179 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     fun `test 1158`() = assertTokenization(
         input = "<?",
         expectedTokens = listOf(
-            comment("?")
         )
     )
 
     @Test
-    fun `u0000 1159`() = assertTokenization(
+    fun `a 1159`() = assertTokenization(
+        input = "<?a",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `b 1160`() = assertTokenization(
+        input = "<?b",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `y 1161`() = assertTokenization(
+        input = "<?y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `z 1162`() = assertTokenization(
+        input = "<?z",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `A 1163`() = assertTokenization(
+        input = "<?A",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `B 1164`() = assertTokenization(
+        input = "<?B",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Y 1165`() = assertTokenization(
+        input = "<?Y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Z 1166`() = assertTokenization(
+        input = "<?Z",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `a a 1167`() = assertTokenization(
+        input = "<?a a",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `b b 1168`() = assertTokenization(
+        input = "<?b b",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `y y 1169`() = assertTokenization(
+        input = "<?y y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `z z 1170`() = assertTokenization(
+        input = "<?z z",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `A A 1171`() = assertTokenization(
+        input = "<?A A",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `B B 1172`() = assertTokenization(
+        input = "<?B B",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Y Y 1173`() = assertTokenization(
+        input = "<?Y Y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Z Z 1174`() = assertTokenization(
+        input = "<?Z Z?",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `a a 1175`() = assertTokenization(
+        input = "<?a a",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `b b 1176`() = assertTokenization(
+        input = "<?b b",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `y y 1177`() = assertTokenization(
+        input = "<?y y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `z z 1178`() = assertTokenization(
+        input = "<?z z",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `A A 1179`() = assertTokenization(
+        input = "<?A A",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `B B 1180`() = assertTokenization(
+        input = "<?B B",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Y Y 1181`() = assertTokenization(
+        input = "<?Y Y",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `Z Z 1182`() = assertTokenization(
+        input = "<?Z Z",
+        expectedTokens = listOf(
+        )
+    )
+
+    @Test
+    fun `u0000 1183`() = assertTokenization(
         input = "<?\u0000",
         expectedTokens = listOf(
             comment("?�")
@@ -9313,7 +9480,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0009 1160`() = assertTokenization(
+    fun `u0009 1184`() = assertTokenization(
         input = "<?\t",
         expectedTokens = listOf(
             comment("?\t")
@@ -9321,7 +9488,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000A 1161`() = assertTokenization(
+    fun `u000A 1185`() = assertTokenization(
         input = "<?\n",
         expectedTokens = listOf(
             comment("?\n")
@@ -9329,7 +9496,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000B 1162`() = assertTokenization(
+    fun `u000B 1186`() = assertTokenization(
         input = "<?\u000b",
         expectedTokens = listOf(
             comment("?\u000b")
@@ -9337,7 +9504,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u000C 1163`() = assertTokenization(
+    fun `u000C 1187`() = assertTokenization(
         input = "<?\u000c",
         expectedTokens = listOf(
             comment("?\u000c")
@@ -9345,7 +9512,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1164`() = assertTokenization(
+    fun `test 1188`() = assertTokenization(
         input = "<? ",
         expectedTokens = listOf(
             comment("? ")
@@ -9353,7 +9520,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `u0000 1165`() = assertTokenization(
+    fun `u0000 1189`() = assertTokenization(
         input = "<? \u0000",
         expectedTokens = listOf(
             comment("? �")
@@ -9361,7 +9528,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1166`() = assertTokenization(
+    fun `test 1190`() = assertTokenization(
         input = "<?!",
         expectedTokens = listOf(
             comment("?!")
@@ -9369,7 +9536,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1167`() = assertTokenization(
+    fun `test 1191`() = assertTokenization(
         input = "<?\"",
         expectedTokens = listOf(
             comment("?\"")
@@ -9377,7 +9544,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1168`() = assertTokenization(
+    fun `test 1192`() = assertTokenization(
         input = "<?&",
         expectedTokens = listOf(
             comment("?&")
@@ -9385,7 +9552,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1169`() = assertTokenization(
+    fun `test 1193`() = assertTokenization(
         input = "<?'",
         expectedTokens = listOf(
             comment("?'")
@@ -9393,7 +9560,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1170`() = assertTokenization(
+    fun `test 1194`() = assertTokenization(
         input = "<?-",
         expectedTokens = listOf(
             comment("?-")
@@ -9401,7 +9568,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1171`() = assertTokenization(
+    fun `test 1195`() = assertTokenization(
         input = "<?/",
         expectedTokens = listOf(
             comment("?/")
@@ -9409,7 +9576,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 0 1172`() = assertTokenization(
+    fun `test 0 1196`() = assertTokenization(
         input = "<?0",
         expectedTokens = listOf(
             comment("?0")
@@ -9417,7 +9584,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1 1173`() = assertTokenization(
+    fun `test 1 1197`() = assertTokenization(
         input = "<?1",
         expectedTokens = listOf(
             comment("?1")
@@ -9425,7 +9592,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 9 1174`() = assertTokenization(
+    fun `test 9 1198`() = assertTokenization(
         input = "<?9",
         expectedTokens = listOf(
             comment("?9")
@@ -9433,7 +9600,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1175`() = assertTokenization(
+    fun `test 1199`() = assertTokenization(
         input = "<?<",
         expectedTokens = listOf(
             comment("?<")
@@ -9441,7 +9608,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1176`() = assertTokenization(
+    fun `test 1200`() = assertTokenization(
         input = "<?=",
         expectedTokens = listOf(
             comment("?=")
@@ -9449,7 +9616,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1177`() = assertTokenization(
+    fun `test 1201`() = assertTokenization(
         input = "<?>",
         expectedTokens = listOf(
             comment("?")
@@ -9457,7 +9624,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1178`() = assertTokenization(
+    fun `test 1202`() = assertTokenization(
         input = "<??",
         expectedTokens = listOf(
             comment("??")
@@ -9465,7 +9632,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1179`() = assertTokenization(
+    fun `test 1203`() = assertTokenization(
         input = "<?@",
         expectedTokens = listOf(
             comment("?@")
@@ -9473,39 +9640,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 1180`() = assertTokenization(
-        input = "<?A",
-        expectedTokens = listOf(
-            comment("?A")
-        )
-    )
-
-    @Test
-    fun `B 1181`() = assertTokenization(
-        input = "<?B",
-        expectedTokens = listOf(
-            comment("?B")
-        )
-    )
-
-    @Test
-    fun `Y 1182`() = assertTokenization(
-        input = "<?Y",
-        expectedTokens = listOf(
-            comment("?Y")
-        )
-    )
-
-    @Test
-    fun `Z 1183`() = assertTokenization(
-        input = "<?Z",
-        expectedTokens = listOf(
-            comment("?Z")
-        )
-    )
-
-    @Test
-    fun `test 1184`() = assertTokenization(
+    fun `test 1204`() = assertTokenization(
         input = "<?`",
         expectedTokens = listOf(
             comment("?`")
@@ -9513,39 +9648,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1185`() = assertTokenization(
-        input = "<?a",
-        expectedTokens = listOf(
-            comment("?a")
-        )
-    )
-
-    @Test
-    fun `b 1186`() = assertTokenization(
-        input = "<?b",
-        expectedTokens = listOf(
-            comment("?b")
-        )
-    )
-
-    @Test
-    fun `y 1187`() = assertTokenization(
-        input = "<?y",
-        expectedTokens = listOf(
-            comment("?y")
-        )
-    )
-
-    @Test
-    fun `z 1188`() = assertTokenization(
-        input = "<?z",
-        expectedTokens = listOf(
-            comment("?z")
-        )
-    )
-
-    @Test
-    fun `test 1189`() = assertTokenization(
+    fun `test 1205`() = assertTokenization(
         input = "<?{",
         expectedTokens = listOf(
             comment("?{")
@@ -9553,7 +9656,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 1190`() = assertTokenization(
+    fun `uDBC0uDC00 1206`() = assertTokenization(
         input = "<?􀀀",
         expectedTokens = listOf(
             comment("?􀀀")
@@ -9561,7 +9664,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1191`() = assertTokenization(
+    fun `test 1207`() = assertTokenization(
         input = "<@",
         expectedTokens = listOf(
             *chars("<@").toTypedArray()
@@ -9569,7 +9672,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `A 1192`() = assertTokenization(
+    fun `A 1208`() = assertTokenization(
         input = "<A>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9577,7 +9680,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `B 1193`() = assertTokenization(
+    fun `B 1209`() = assertTokenization(
         input = "<B>",
         expectedTokens = listOf(
             startTag(name = "b")
@@ -9585,7 +9688,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Y 1194`() = assertTokenization(
+    fun `Y 1210`() = assertTokenization(
         input = "<Y>",
         expectedTokens = listOf(
             startTag(name = "y")
@@ -9593,7 +9696,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `Z 1195`() = assertTokenization(
+    fun `Z 1211`() = assertTokenization(
         input = "<Z>",
         expectedTokens = listOf(
             startTag(name = "z")
@@ -9601,7 +9704,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1196`() = assertTokenization(
+    fun `test 1212`() = assertTokenization(
         input = "<[",
         expectedTokens = listOf(
             *chars("<[").toTypedArray()
@@ -9609,7 +9712,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1197`() = assertTokenization(
+    fun `test 1213`() = assertTokenization(
         input = "<`",
         expectedTokens = listOf(
             *chars("<`").toTypedArray()
@@ -9617,7 +9720,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1198`() = assertTokenization(
+    fun `a 1214`() = assertTokenization(
         input = "<a>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9625,7 +9728,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0000 1199`() = assertTokenization(
+    fun `au0000 1215`() = assertTokenization(
         input = "<a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a�")
@@ -9633,7 +9736,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0008 1200`() = assertTokenization(
+    fun `au0008 1216`() = assertTokenization(
         input = "<a\u0008>",
         expectedTokens = listOf(
             startTag(name = "a\u0008")
@@ -9641,7 +9744,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0009 1201`() = assertTokenization(
+    fun `au0009 1217`() = assertTokenization(
         input = "<a\t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9649,7 +9752,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000A 1202`() = assertTokenization(
+    fun `au000A 1218`() = assertTokenization(
         input = "<a\n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9657,7 +9760,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000B 1203`() = assertTokenization(
+    fun `au000B 1219`() = assertTokenization(
         input = "<a\u000b>",
         expectedTokens = listOf(
             startTag(name = "a\u000b")
@@ -9665,7 +9768,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000C 1204`() = assertTokenization(
+    fun `au000C 1220`() = assertTokenization(
         input = "<a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9673,7 +9776,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000D 1205`() = assertTokenization(
+    fun `au000D 1221`() = assertTokenization(
         input = "<a\r>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9681,7 +9784,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au001F 1206`() = assertTokenization(
+    fun `au001F 1222`() = assertTokenization(
         input = "<a\u001f>",
         expectedTokens = listOf(
             startTag(name = "a\u001f")
@@ -9689,7 +9792,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1207`() = assertTokenization(
+    fun `a 1223`() = assertTokenization(
         input = "<a >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9697,7 +9800,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u0000 1208`() = assertTokenization(
+    fun `a u0000 1224`() = assertTokenization(
         input = "<a \u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("�" to ""))
@@ -9705,7 +9808,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u0008 1209`() = assertTokenization(
+    fun `a u0008 1225`() = assertTokenization(
         input = "<a \u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\u0008" to ""))
@@ -9713,7 +9816,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u0009 1210`() = assertTokenization(
+    fun `a u0009 1226`() = assertTokenization(
         input = "<a \t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9721,7 +9824,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000A 1211`() = assertTokenization(
+    fun `a u000A 1227`() = assertTokenization(
         input = "<a \n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9729,7 +9832,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000B 1212`() = assertTokenization(
+    fun `a u000B 1228`() = assertTokenization(
         input = "<a \u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\u000b" to ""))
@@ -9737,7 +9840,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000C 1213`() = assertTokenization(
+    fun `a u000C 1229`() = assertTokenization(
         input = "<a \u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9745,7 +9848,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u000D 1214`() = assertTokenization(
+    fun `a u000D 1230`() = assertTokenization(
         input = "<a \r>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9753,7 +9856,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a u001F 1215`() = assertTokenization(
+    fun `a u001F 1231`() = assertTokenization(
         input = "<a \u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\u001f" to ""))
@@ -9761,7 +9864,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1216`() = assertTokenization(
+    fun `a 1232`() = assertTokenization(
         input = "<a  >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9769,7 +9872,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1217`() = assertTokenization(
+    fun `a 1233`() = assertTokenization(
         input = "<a !>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("!" to ""))
@@ -9777,7 +9880,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1218`() = assertTokenization(
+    fun `a 1234`() = assertTokenization(
         input = "<a \">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\"" to ""))
@@ -9785,7 +9888,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1219`() = assertTokenization(
+    fun `a 1235`() = assertTokenization(
         input = "<a #>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("#" to ""))
@@ -9793,7 +9896,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1220`() = assertTokenization(
+    fun `a 1236`() = assertTokenization(
         input = "<a &>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("&" to ""))
@@ -9801,7 +9904,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1221`() = assertTokenization(
+    fun `a 1237`() = assertTokenization(
         input = "<a '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("'" to ""))
@@ -9809,7 +9912,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1222`() = assertTokenization(
+    fun `a 1238`() = assertTokenization(
         input = "<a (>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("(" to ""))
@@ -9817,7 +9920,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1223`() = assertTokenization(
+    fun `a 1239`() = assertTokenization(
         input = "<a ->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("-" to ""))
@@ -9825,7 +9928,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1224`() = assertTokenization(
+    fun `a 1240`() = assertTokenization(
         input = "<a .>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("." to ""))
@@ -9833,7 +9936,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1225`() = assertTokenization(
+    fun `a 1241`() = assertTokenization(
         input = "<a />",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -9841,7 +9944,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 0 1226`() = assertTokenization(
+    fun `a 0 1242`() = assertTokenization(
         input = "<a 0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("0" to ""))
@@ -9849,7 +9952,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1 1227`() = assertTokenization(
+    fun `a 1 1243`() = assertTokenization(
         input = "<a 1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("1" to ""))
@@ -9857,7 +9960,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 9 1228`() = assertTokenization(
+    fun `a 9 1244`() = assertTokenization(
         input = "<a 9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("9" to ""))
@@ -9865,7 +9968,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1229`() = assertTokenization(
+    fun `a 1245`() = assertTokenization(
         input = "<a <>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("<" to ""))
@@ -9873,7 +9976,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1230`() = assertTokenization(
+    fun `a 1246`() = assertTokenization(
         input = "<a =>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("=" to ""))
@@ -9881,7 +9984,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1231`() = assertTokenization(
+    fun `a 1247`() = assertTokenization(
         input = "<a >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -9889,7 +9992,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1232`() = assertTokenization(
+    fun `a 1248`() = assertTokenization(
         input = "<a ?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("?" to ""))
@@ -9897,7 +10000,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1233`() = assertTokenization(
+    fun `a 1249`() = assertTokenization(
         input = "<a @>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("@" to ""))
@@ -9905,7 +10008,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a A 1234`() = assertTokenization(
+    fun `a A 1250`() = assertTokenization(
         input = "<a A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9913,7 +10016,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a B 1235`() = assertTokenization(
+    fun `a B 1251`() = assertTokenization(
         input = "<a B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -9921,7 +10024,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a Y 1236`() = assertTokenization(
+    fun `a Y 1252`() = assertTokenization(
         input = "<a Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -9929,7 +10032,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a Z 1237`() = assertTokenization(
+    fun `a Z 1253`() = assertTokenization(
         input = "<a Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -9937,7 +10040,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1238`() = assertTokenization(
+    fun `a 1254`() = assertTokenization(
         input = "<a [>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("[" to ""))
@@ -9945,7 +10048,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1239`() = assertTokenization(
+    fun `a 1255`() = assertTokenization(
         input = "<a `>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("`" to ""))
@@ -9953,7 +10056,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1240`() = assertTokenization(
+    fun `a a 1256`() = assertTokenization(
         input = "<a a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9961,7 +10064,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 1241`() = assertTokenization(
+    fun `a au0000 1257`() = assertTokenization(
         input = "<a a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a�" to ""))
@@ -9969,7 +10072,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008 1242`() = assertTokenization(
+    fun `a au0008 1258`() = assertTokenization(
         input = "<a a\u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a\u0008" to ""))
@@ -9977,7 +10080,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 1243`() = assertTokenization(
+    fun `a au0009 1259`() = assertTokenization(
         input = "<a a\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9985,7 +10088,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 1244`() = assertTokenization(
+    fun `a au000A 1260`() = assertTokenization(
         input = "<a a\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -9993,7 +10096,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 1245`() = assertTokenization(
+    fun `a au000B 1261`() = assertTokenization(
         input = "<a a\u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a\u000b" to ""))
@@ -10001,7 +10104,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000C 1246`() = assertTokenization(
+    fun `a au000C 1262`() = assertTokenization(
         input = "<a a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10009,7 +10112,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000D 1247`() = assertTokenization(
+    fun `a au000D 1263`() = assertTokenization(
         input = "<a a\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10017,7 +10120,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F 1248`() = assertTokenization(
+    fun `a au001F 1264`() = assertTokenization(
         input = "<a a\u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a\u001f" to ""))
@@ -10025,7 +10128,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1249`() = assertTokenization(
+    fun `a a 1265`() = assertTokenization(
         input = "<a a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10033,7 +10136,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u0000 1250`() = assertTokenization(
+    fun `a a u0000 1266`() = assertTokenization(
         input = "<a a \u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "�" to ""))
@@ -10041,7 +10144,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u0008 1251`() = assertTokenization(
+    fun `a a u0008 1267`() = assertTokenization(
         input = "<a a \u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u0008" to ""))
@@ -10049,7 +10152,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u0009 1252`() = assertTokenization(
+    fun `a a u0009 1268`() = assertTokenization(
         input = "<a a \t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10057,7 +10160,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000A 1253`() = assertTokenization(
+    fun `a a u000A 1269`() = assertTokenization(
         input = "<a a \n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10065,7 +10168,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000B 1254`() = assertTokenization(
+    fun `a a u000B 1270`() = assertTokenization(
         input = "<a a \u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u000b" to ""))
@@ -10073,7 +10176,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000C 1255`() = assertTokenization(
+    fun `a a u000C 1271`() = assertTokenization(
         input = "<a a \u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10081,7 +10184,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u000D 1256`() = assertTokenization(
+    fun `a a u000D 1272`() = assertTokenization(
         input = "<a a \r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10089,7 +10192,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a u001F 1257`() = assertTokenization(
+    fun `a a u001F 1273`() = assertTokenization(
         input = "<a a \u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u001f" to ""))
@@ -10097,7 +10200,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1258`() = assertTokenization(
+    fun `a a 1274`() = assertTokenization(
         input = "<a a  >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10105,7 +10208,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1259`() = assertTokenization(
+    fun `a a 1275`() = assertTokenization(
         input = "<a a !>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "!" to ""))
@@ -10113,7 +10216,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1260`() = assertTokenization(
+    fun `a a 1276`() = assertTokenization(
         input = "<a a \">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\"" to ""))
@@ -10121,7 +10224,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1261`() = assertTokenization(
+    fun `a a 1277`() = assertTokenization(
         input = "<a a #>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "#" to ""))
@@ -10129,7 +10232,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1262`() = assertTokenization(
+    fun `a a 1278`() = assertTokenization(
         input = "<a a &>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "&" to ""))
@@ -10137,7 +10240,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1263`() = assertTokenization(
+    fun `a a 1279`() = assertTokenization(
         input = "<a a '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "'" to ""))
@@ -10145,7 +10248,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1264`() = assertTokenization(
+    fun `a a 1280`() = assertTokenization(
         input = "<a a (>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "(" to ""))
@@ -10153,7 +10256,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1265`() = assertTokenization(
+    fun `a a 1281`() = assertTokenization(
         input = "<a a ->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "-" to ""))
@@ -10161,7 +10264,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1266`() = assertTokenization(
+    fun `a a 1282`() = assertTokenization(
         input = "<a a .>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "." to ""))
@@ -10169,7 +10272,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1267`() = assertTokenization(
+    fun `a a 1283`() = assertTokenization(
         input = "<a a />",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
@@ -10177,7 +10280,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 0 1268`() = assertTokenization(
+    fun `a a 0 1284`() = assertTokenization(
         input = "<a a 0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "0" to ""))
@@ -10185,7 +10288,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1 1269`() = assertTokenization(
+    fun `a a 1 1285`() = assertTokenization(
         input = "<a a 1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "1" to ""))
@@ -10193,7 +10296,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 9 1270`() = assertTokenization(
+    fun `a a 9 1286`() = assertTokenization(
         input = "<a a 9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "9" to ""))
@@ -10201,7 +10304,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1271`() = assertTokenization(
+    fun `a a 1287`() = assertTokenization(
         input = "<a a <>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "<" to ""))
@@ -10209,7 +10312,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1272`() = assertTokenization(
+    fun `a a 1288`() = assertTokenization(
         input = "<a a =>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10217,7 +10320,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1273`() = assertTokenization(
+    fun `a a 1289`() = assertTokenization(
         input = "<a a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10225,7 +10328,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1274`() = assertTokenization(
+    fun `a a 1290`() = assertTokenization(
         input = "<a a ?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "?" to ""))
@@ -10233,7 +10336,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1275`() = assertTokenization(
+    fun `a a 1291`() = assertTokenization(
         input = "<a a @>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "@" to ""))
@@ -10241,7 +10344,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a A 1276`() = assertTokenization(
+    fun `a a A 1292`() = assertTokenization(
         input = "<a a A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10249,7 +10352,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a B 1277`() = assertTokenization(
+    fun `a a B 1293`() = assertTokenization(
         input = "<a a B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -10257,7 +10360,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a Y 1278`() = assertTokenization(
+    fun `a a Y 1294`() = assertTokenization(
         input = "<a a Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -10265,7 +10368,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a Z 1279`() = assertTokenization(
+    fun `a a Z 1295`() = assertTokenization(
         input = "<a a Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -10273,7 +10376,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1280`() = assertTokenization(
+    fun `a a 1296`() = assertTokenization(
         input = "<a a [>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "[" to ""))
@@ -10281,7 +10384,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1281`() = assertTokenization(
+    fun `a a 1297`() = assertTokenization(
         input = "<a a `>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "`" to ""))
@@ -10289,7 +10392,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a a 1282`() = assertTokenization(
+    fun `a a a 1298`() = assertTokenization(
         input = "<a a a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10297,7 +10400,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a b 1283`() = assertTokenization(
+    fun `a a b 1299`() = assertTokenization(
         input = "<a a b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -10305,7 +10408,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a y 1284`() = assertTokenization(
+    fun `a a y 1300`() = assertTokenization(
         input = "<a a y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -10313,7 +10416,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a z 1285`() = assertTokenization(
+    fun `a a z 1301`() = assertTokenization(
         input = "<a a z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -10321,7 +10424,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1286`() = assertTokenization(
+    fun `a a 1302`() = assertTokenization(
         input = "<a a {>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "{" to ""))
@@ -10329,7 +10432,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a uDBC0uDC00 1287`() = assertTokenization(
+    fun `a a uDBC0uDC00 1303`() = assertTokenization(
         input = "<a a 􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
@@ -10337,7 +10440,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1288`() = assertTokenization(
+    fun `a a 1304`() = assertTokenization(
         input = "<a a!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a!" to ""))
@@ -10345,7 +10448,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1289`() = assertTokenization(
+    fun `a a 1305`() = assertTokenization(
         input = "<a a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a\"" to ""))
@@ -10353,7 +10456,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1290`() = assertTokenization(
+    fun `a a 1306`() = assertTokenization(
         input = "<a a#>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a#" to ""))
@@ -10361,7 +10464,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1291`() = assertTokenization(
+    fun `a a 1307`() = assertTokenization(
         input = "<a a&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a&" to ""))
@@ -10369,7 +10472,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1292`() = assertTokenization(
+    fun `a a 1308`() = assertTokenization(
         input = "<a a'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a'" to ""))
@@ -10377,7 +10480,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1293`() = assertTokenization(
+    fun `a a 1309`() = assertTokenization(
         input = "<a a(>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a(" to ""))
@@ -10385,7 +10488,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1294`() = assertTokenization(
+    fun `a a 1310`() = assertTokenization(
         input = "<a a->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a-" to ""))
@@ -10393,7 +10496,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1295`() = assertTokenization(
+    fun `a a 1311`() = assertTokenization(
         input = "<a a.>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a." to ""))
@@ -10401,7 +10504,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1296`() = assertTokenization(
+    fun `a a 1312`() = assertTokenization(
         input = "<a a/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
@@ -10409,7 +10512,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 1297`() = assertTokenization(
+    fun `a a0 1313`() = assertTokenization(
         input = "<a a0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a0" to ""))
@@ -10417,7 +10520,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 1298`() = assertTokenization(
+    fun `a a1 1314`() = assertTokenization(
         input = "<a a1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a1" to ""))
@@ -10425,7 +10528,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 1299`() = assertTokenization(
+    fun `a a9 1315`() = assertTokenization(
         input = "<a a9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a9" to ""))
@@ -10433,7 +10536,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1300`() = assertTokenization(
+    fun `a a 1316`() = assertTokenization(
         input = "<a a<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a<" to ""))
@@ -10441,7 +10544,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1301`() = assertTokenization(
+    fun `a a 1317`() = assertTokenization(
         input = "<a a=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10449,7 +10552,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 1302`() = assertTokenization(
+    fun `a au0000 1318`() = assertTokenization(
         input = "<a a=\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -10457,7 +10560,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008 1303`() = assertTokenization(
+    fun `a au0008 1319`() = assertTokenization(
         input = "<a a=\u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u0008"))
@@ -10465,7 +10568,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 1304`() = assertTokenization(
+    fun `a au0009 1320`() = assertTokenization(
         input = "<a a=\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10473,7 +10576,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 1305`() = assertTokenization(
+    fun `a au000A 1321`() = assertTokenization(
         input = "<a a=\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10481,7 +10584,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 1306`() = assertTokenization(
+    fun `a au000B 1322`() = assertTokenization(
         input = "<a a=\u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u000b"))
@@ -10489,7 +10592,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000C 1307`() = assertTokenization(
+    fun `a au000C 1323`() = assertTokenization(
         input = "<a a=\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10497,7 +10600,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000D 1308`() = assertTokenization(
+    fun `a au000D 1324`() = assertTokenization(
         input = "<a a=\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10505,7 +10608,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F 1309`() = assertTokenization(
+    fun `a au001F 1325`() = assertTokenization(
         input = "<a a=\u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u001f"))
@@ -10513,7 +10616,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1310`() = assertTokenization(
+    fun `a a 1326`() = assertTokenization(
         input = "<a a= >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10521,7 +10624,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1311`() = assertTokenization(
+    fun `a a 1327`() = assertTokenization(
         input = "<a a=!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -10529,7 +10632,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1312`() = assertTokenization(
+    fun `a a 1328`() = assertTokenization(
         input = "<a a=\"\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10537,7 +10640,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 1313`() = assertTokenization(
+    fun `a au0000 1329`() = assertTokenization(
         input = "<a a=\"\u0000\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -10545,7 +10648,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 1314`() = assertTokenization(
+    fun `a au0009 1330`() = assertTokenization(
         input = "<a a=\"\t\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\t"))
@@ -10553,7 +10656,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 1315`() = assertTokenization(
+    fun `a au000A 1331`() = assertTokenization(
         input = "<a a=\"\n\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\n"))
@@ -10561,7 +10664,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 1316`() = assertTokenization(
+    fun `a au000B 1332`() = assertTokenization(
         input = "<a a=\"\u000b\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u000b"))
@@ -10569,7 +10672,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000C 1317`() = assertTokenization(
+    fun `a au000C 1333`() = assertTokenization(
         input = "<a a=\"\u000c\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u000c"))
@@ -10577,7 +10680,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1318`() = assertTokenization(
+    fun `a a 1334`() = assertTokenization(
         input = "<a a=\" \">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to " "))
@@ -10585,7 +10688,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1319`() = assertTokenization(
+    fun `a a 1335`() = assertTokenization(
         input = "<a a=\"!\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -10593,7 +10696,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1320`() = assertTokenization(
+    fun `a a 1336`() = assertTokenization(
         input = "<a a=\"\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10601,7 +10704,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1321`() = assertTokenization(
+    fun `a a 1337`() = assertTokenization(
         input = "<a a=\"#\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "#"))
@@ -10609,7 +10712,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1322`() = assertTokenization(
+    fun `a a 1338`() = assertTokenization(
         input = "<a a=\"%\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -10617,7 +10720,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1323`() = assertTokenization(
+    fun `a a 1339`() = assertTokenization(
         input = "<a a=\"&\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -10625,7 +10728,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1324`() = assertTokenization(
+    fun `a a 1340`() = assertTokenization(
         input = "<a a=\"'\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "'"))
@@ -10633,7 +10736,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1325`() = assertTokenization(
+    fun `a a 1341`() = assertTokenization(
         input = "<a a=\"-\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -10641,7 +10744,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1326`() = assertTokenization(
+    fun `a a 1342`() = assertTokenization(
         input = "<a a=\"/\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -10649,7 +10752,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 1327`() = assertTokenization(
+    fun `a a0 1343`() = assertTokenization(
         input = "<a a=\"0\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -10657,7 +10760,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 1328`() = assertTokenization(
+    fun `a a1 1344`() = assertTokenization(
         input = "<a a=\"1\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -10665,7 +10768,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 1329`() = assertTokenization(
+    fun `a a9 1345`() = assertTokenization(
         input = "<a a=\"9\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -10673,7 +10776,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1330`() = assertTokenization(
+    fun `a a 1346`() = assertTokenization(
         input = "<a a=\"<\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -10681,7 +10784,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1331`() = assertTokenization(
+    fun `a a 1347`() = assertTokenization(
         input = "<a a=\"=\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -10689,7 +10792,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1332`() = assertTokenization(
+    fun `a a 1348`() = assertTokenization(
         input = "<a a=\">\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ">"))
@@ -10697,7 +10800,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1333`() = assertTokenization(
+    fun `a a 1349`() = assertTokenization(
         input = "<a a=\"?\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -10705,7 +10808,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1334`() = assertTokenization(
+    fun `a a 1350`() = assertTokenization(
         input = "<a a=\"@\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -10713,7 +10816,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 1335`() = assertTokenization(
+    fun `a aA 1351`() = assertTokenization(
         input = "<a a=\"A\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -10721,7 +10824,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 1336`() = assertTokenization(
+    fun `a aB 1352`() = assertTokenization(
         input = "<a a=\"B\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -10729,7 +10832,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 1337`() = assertTokenization(
+    fun `a aY 1353`() = assertTokenization(
         input = "<a a=\"Y\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -10737,7 +10840,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 1338`() = assertTokenization(
+    fun `a aZ 1354`() = assertTokenization(
         input = "<a a=\"Z\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -10745,7 +10848,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1339`() = assertTokenization(
+    fun `a a 1355`() = assertTokenization(
         input = "<a a=\"`\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -10753,7 +10856,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1340`() = assertTokenization(
+    fun `a aa 1356`() = assertTokenization(
         input = "<a a=\"a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -10761,7 +10864,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 1341`() = assertTokenization(
+    fun `a ab 1357`() = assertTokenization(
         input = "<a a=\"b\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "b"))
@@ -10769,7 +10872,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 1342`() = assertTokenization(
+    fun `a ay 1358`() = assertTokenization(
         input = "<a a=\"y\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "y"))
@@ -10777,7 +10880,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 1343`() = assertTokenization(
+    fun `a az 1359`() = assertTokenization(
         input = "<a a=\"z\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "z"))
@@ -10785,7 +10888,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1344`() = assertTokenization(
+    fun `a a 1360`() = assertTokenization(
         input = "<a a=\"{\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "{"))
@@ -10793,7 +10896,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 1345`() = assertTokenization(
+    fun `a auDBC0uDC00 1361`() = assertTokenization(
         input = "<a a=\"􀀀\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "􀀀"))
@@ -10801,7 +10904,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1346`() = assertTokenization(
+    fun `a a 1362`() = assertTokenization(
         input = "<a a=#>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "#"))
@@ -10809,7 +10912,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1347`() = assertTokenization(
+    fun `a a 1363`() = assertTokenization(
         input = "<a a=%>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -10817,7 +10920,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1348`() = assertTokenization(
+    fun `a a 1364`() = assertTokenization(
         input = "<a a=&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -10825,7 +10928,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1349`() = assertTokenization(
+    fun `a a 1365`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10833,7 +10936,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 1350`() = assertTokenization(
+    fun `a au0000 1366`() = assertTokenization(
         input = "<a a='\u0000'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "�"))
@@ -10841,7 +10944,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 1351`() = assertTokenization(
+    fun `a au0009 1367`() = assertTokenization(
         input = "<a a='\t'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\t"))
@@ -10849,7 +10952,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 1352`() = assertTokenization(
+    fun `a au000A 1368`() = assertTokenization(
         input = "<a a='\n'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\n"))
@@ -10857,7 +10960,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 1353`() = assertTokenization(
+    fun `a au000B 1369`() = assertTokenization(
         input = "<a a='\u000b'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u000b"))
@@ -10865,7 +10968,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000C 1354`() = assertTokenization(
+    fun `a au000C 1370`() = assertTokenization(
         input = "<a a='\u000c'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\u000c"))
@@ -10873,7 +10976,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1355`() = assertTokenization(
+    fun `a a 1371`() = assertTokenization(
         input = "<a a=' '>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to " "))
@@ -10881,7 +10984,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1356`() = assertTokenization(
+    fun `a a 1372`() = assertTokenization(
         input = "<a a='!'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "!"))
@@ -10889,7 +10992,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1357`() = assertTokenization(
+    fun `a a 1373`() = assertTokenization(
         input = "<a a='\"'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "\""))
@@ -10897,7 +11000,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1358`() = assertTokenization(
+    fun `a a 1374`() = assertTokenization(
         input = "<a a='%'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "%"))
@@ -10905,7 +11008,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1359`() = assertTokenization(
+    fun `a a 1375`() = assertTokenization(
         input = "<a a='&'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "&"))
@@ -10913,7 +11016,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1360`() = assertTokenization(
+    fun `a a 1376`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10921,7 +11024,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0000 1361`() = assertTokenization(
+    fun `a au0000 1377`() = assertTokenization(
         input = "<a a=''\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "�" to ""))
@@ -10929,7 +11032,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0008 1362`() = assertTokenization(
+    fun `a au0008 1378`() = assertTokenization(
         input = "<a a=''\u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u0008" to ""))
@@ -10937,7 +11040,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au0009 1363`() = assertTokenization(
+    fun `a au0009 1379`() = assertTokenization(
         input = "<a a=''\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10945,7 +11048,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000A 1364`() = assertTokenization(
+    fun `a au000A 1380`() = assertTokenization(
         input = "<a a=''\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10953,7 +11056,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000B 1365`() = assertTokenization(
+    fun `a au000B 1381`() = assertTokenization(
         input = "<a a=''\u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u000b" to ""))
@@ -10961,7 +11064,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000C 1366`() = assertTokenization(
+    fun `a au000C 1382`() = assertTokenization(
         input = "<a a=''\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10969,7 +11072,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au000D 1367`() = assertTokenization(
+    fun `a au000D 1383`() = assertTokenization(
         input = "<a a=''\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10977,7 +11080,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a au001F 1368`() = assertTokenization(
+    fun `a au001F 1384`() = assertTokenization(
         input = "<a a=''\u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\u001f" to ""))
@@ -10985,7 +11088,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1369`() = assertTokenization(
+    fun `a a 1385`() = assertTokenization(
         input = "<a a='' >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -10993,7 +11096,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1370`() = assertTokenization(
+    fun `a a 1386`() = assertTokenization(
         input = "<a a=''!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "!" to ""))
@@ -11001,7 +11104,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1371`() = assertTokenization(
+    fun `a a 1387`() = assertTokenization(
         input = "<a a=''\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "\"" to ""))
@@ -11009,7 +11112,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1372`() = assertTokenization(
+    fun `a a 1388`() = assertTokenization(
         input = "<a a=''&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "&" to ""))
@@ -11017,7 +11120,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1373`() = assertTokenization(
+    fun `a a 1389`() = assertTokenization(
         input = "<a a='''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "'" to ""))
@@ -11025,7 +11128,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1374`() = assertTokenization(
+    fun `a a 1390`() = assertTokenization(
         input = "<a a=''->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "-" to ""))
@@ -11033,7 +11136,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1375`() = assertTokenization(
+    fun `a a 1391`() = assertTokenization(
         input = "<a a=''.>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "." to ""))
@@ -11041,7 +11144,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1376`() = assertTokenization(
+    fun `a a 1392`() = assertTokenization(
         input = "<a a=''/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""), selfClosing = true)
@@ -11049,7 +11152,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 1377`() = assertTokenization(
+    fun `a a0 1393`() = assertTokenization(
         input = "<a a=''0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "0" to ""))
@@ -11057,7 +11160,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 1378`() = assertTokenization(
+    fun `a a1 1394`() = assertTokenization(
         input = "<a a=''1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "1" to ""))
@@ -11065,7 +11168,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 1379`() = assertTokenization(
+    fun `a a9 1395`() = assertTokenization(
         input = "<a a=''9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "9" to ""))
@@ -11073,7 +11176,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1380`() = assertTokenization(
+    fun `a a 1396`() = assertTokenization(
         input = "<a a=''<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "<" to ""))
@@ -11081,7 +11184,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1381`() = assertTokenization(
+    fun `a a 1397`() = assertTokenization(
         input = "<a a=''=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "=" to ""))
@@ -11089,7 +11192,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1382`() = assertTokenization(
+    fun `a a 1398`() = assertTokenization(
         input = "<a a=''>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -11097,7 +11200,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1383`() = assertTokenization(
+    fun `a a 1399`() = assertTokenization(
         input = "<a a=''?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "?" to ""))
@@ -11105,7 +11208,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1384`() = assertTokenization(
+    fun `a a 1400`() = assertTokenization(
         input = "<a a=''@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "@" to ""))
@@ -11113,7 +11216,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 1385`() = assertTokenization(
+    fun `a aA 1401`() = assertTokenization(
         input = "<a a=''A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -11121,7 +11224,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 1386`() = assertTokenization(
+    fun `a aB 1402`() = assertTokenization(
         input = "<a a=''B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -11129,7 +11232,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 1387`() = assertTokenization(
+    fun `a aY 1403`() = assertTokenization(
         input = "<a a=''Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -11137,7 +11240,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 1388`() = assertTokenization(
+    fun `a aZ 1404`() = assertTokenization(
         input = "<a a=''Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -11145,7 +11248,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1389`() = assertTokenization(
+    fun `a a 1405`() = assertTokenization(
         input = "<a a=''`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "`" to ""))
@@ -11153,7 +11256,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1390`() = assertTokenization(
+    fun `a aa 1406`() = assertTokenization(
         input = "<a a=''a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -11161,7 +11264,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 1391`() = assertTokenization(
+    fun `a ab 1407`() = assertTokenization(
         input = "<a a=''b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "b" to ""))
@@ -11169,7 +11272,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 1392`() = assertTokenization(
+    fun `a ay 1408`() = assertTokenization(
         input = "<a a=''y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "y" to ""))
@@ -11177,7 +11280,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 1393`() = assertTokenization(
+    fun `a az 1409`() = assertTokenization(
         input = "<a a=''z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "z" to ""))
@@ -11185,7 +11288,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1394`() = assertTokenization(
+    fun `a a 1410`() = assertTokenization(
         input = "<a a=''{>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "{" to ""))
@@ -11193,7 +11296,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 1395`() = assertTokenization(
+    fun `a auDBC0uDC00 1411`() = assertTokenization(
         input = "<a a=''􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "", "􀀀" to ""))
@@ -11201,7 +11304,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1396`() = assertTokenization(
+    fun `a a 1412`() = assertTokenization(
         input = "<a a='('>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "("))
@@ -11209,7 +11312,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1397`() = assertTokenization(
+    fun `a a 1413`() = assertTokenization(
         input = "<a a='-'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -11217,7 +11320,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1398`() = assertTokenization(
+    fun `a a 1414`() = assertTokenization(
         input = "<a a='/'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -11225,7 +11328,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 1399`() = assertTokenization(
+    fun `a a0 1415`() = assertTokenization(
         input = "<a a='0'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -11233,7 +11336,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 1400`() = assertTokenization(
+    fun `a a1 1416`() = assertTokenization(
         input = "<a a='1'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -11241,7 +11344,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 1401`() = assertTokenization(
+    fun `a a9 1417`() = assertTokenization(
         input = "<a a='9'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -11249,7 +11352,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1402`() = assertTokenization(
+    fun `a a 1418`() = assertTokenization(
         input = "<a a='<'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -11257,7 +11360,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1403`() = assertTokenization(
+    fun `a a 1419`() = assertTokenization(
         input = "<a a='='>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -11265,7 +11368,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1404`() = assertTokenization(
+    fun `a a 1420`() = assertTokenization(
         input = "<a a='>'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ">"))
@@ -11273,7 +11376,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1405`() = assertTokenization(
+    fun `a a 1421`() = assertTokenization(
         input = "<a a='?'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -11281,7 +11384,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1406`() = assertTokenization(
+    fun `a a 1422`() = assertTokenization(
         input = "<a a='@'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -11289,7 +11392,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 1407`() = assertTokenization(
+    fun `a aA 1423`() = assertTokenization(
         input = "<a a='A'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -11297,7 +11400,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 1408`() = assertTokenization(
+    fun `a aB 1424`() = assertTokenization(
         input = "<a a='B'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -11305,7 +11408,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 1409`() = assertTokenization(
+    fun `a aY 1425`() = assertTokenization(
         input = "<a a='Y'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -11313,7 +11416,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 1410`() = assertTokenization(
+    fun `a aZ 1426`() = assertTokenization(
         input = "<a a='Z'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -11321,7 +11424,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1411`() = assertTokenization(
+    fun `a a 1427`() = assertTokenization(
         input = "<a a='`'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -11329,7 +11432,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1412`() = assertTokenization(
+    fun `a aa 1428`() = assertTokenization(
         input = "<a a='a'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11337,7 +11440,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 1413`() = assertTokenization(
+    fun `a ab 1429`() = assertTokenization(
         input = "<a a='b'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "b"))
@@ -11345,7 +11448,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 1414`() = assertTokenization(
+    fun `a ay 1430`() = assertTokenization(
         input = "<a a='y'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "y"))
@@ -11353,7 +11456,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 1415`() = assertTokenization(
+    fun `a az 1431`() = assertTokenization(
         input = "<a a='z'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "z"))
@@ -11361,7 +11464,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1416`() = assertTokenization(
+    fun `a a 1432`() = assertTokenization(
         input = "<a a='{'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "{"))
@@ -11369,7 +11472,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 1417`() = assertTokenization(
+    fun `a auDBC0uDC00 1433`() = assertTokenization(
         input = "<a a='􀀀'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "􀀀"))
@@ -11377,7 +11480,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1418`() = assertTokenization(
+    fun `a a 1434`() = assertTokenization(
         input = "<a a=(>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "("))
@@ -11385,7 +11488,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1419`() = assertTokenization(
+    fun `a a 1435`() = assertTokenization(
         input = "<a a=->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "-"))
@@ -11393,7 +11496,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1420`() = assertTokenization(
+    fun `a a 1436`() = assertTokenization(
         input = "<a a=/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "/"))
@@ -11401,7 +11504,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a0 1421`() = assertTokenization(
+    fun `a a0 1437`() = assertTokenization(
         input = "<a a=0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "0"))
@@ -11409,7 +11512,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a1 1422`() = assertTokenization(
+    fun `a a1 1438`() = assertTokenization(
         input = "<a a=1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "1"))
@@ -11417,7 +11520,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a9 1423`() = assertTokenization(
+    fun `a a9 1439`() = assertTokenization(
         input = "<a a=9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "9"))
@@ -11425,7 +11528,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1424`() = assertTokenization(
+    fun `a a 1440`() = assertTokenization(
         input = "<a a=<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "<"))
@@ -11433,7 +11536,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1425`() = assertTokenization(
+    fun `a a 1441`() = assertTokenization(
         input = "<a a==>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "="))
@@ -11441,7 +11544,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1426`() = assertTokenization(
+    fun `a a 1442`() = assertTokenization(
         input = "<a a=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -11449,7 +11552,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1427`() = assertTokenization(
+    fun `a a 1443`() = assertTokenization(
         input = "<a a=?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "?"))
@@ -11457,7 +11560,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1428`() = assertTokenization(
+    fun `a a 1444`() = assertTokenization(
         input = "<a a=@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "@"))
@@ -11465,7 +11568,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 1429`() = assertTokenization(
+    fun `a aA 1445`() = assertTokenization(
         input = "<a a=A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "A"))
@@ -11473,7 +11576,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 1430`() = assertTokenization(
+    fun `a aB 1446`() = assertTokenization(
         input = "<a a=B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "B"))
@@ -11481,7 +11584,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 1431`() = assertTokenization(
+    fun `a aY 1447`() = assertTokenization(
         input = "<a a=Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Y"))
@@ -11489,7 +11592,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 1432`() = assertTokenization(
+    fun `a aZ 1448`() = assertTokenization(
         input = "<a a=Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "Z"))
@@ -11497,7 +11600,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1433`() = assertTokenization(
+    fun `a a 1449`() = assertTokenization(
         input = "<a a=`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "`"))
@@ -11505,7 +11608,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1434`() = assertTokenization(
+    fun `a aa 1450`() = assertTokenization(
         input = "<a a=a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11513,7 +11616,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau0000 1435`() = assertTokenization(
+    fun `a aau0000 1451`() = assertTokenization(
         input = "<a a=a\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a�"))
@@ -11521,7 +11624,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau0008 1436`() = assertTokenization(
+    fun `a aau0008 1452`() = assertTokenization(
         input = "<a a=a\u0008>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a\u0008"))
@@ -11529,7 +11632,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau0009 1437`() = assertTokenization(
+    fun `a aau0009 1453`() = assertTokenization(
         input = "<a a=a\t>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11537,7 +11640,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000A 1438`() = assertTokenization(
+    fun `a aau000A 1454`() = assertTokenization(
         input = "<a a=a\n>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11545,7 +11648,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000B 1439`() = assertTokenization(
+    fun `a aau000B 1455`() = assertTokenization(
         input = "<a a=a\u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a\u000b"))
@@ -11553,7 +11656,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000C 1440`() = assertTokenization(
+    fun `a aau000C 1456`() = assertTokenization(
         input = "<a a=a\u000c>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11561,7 +11664,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau000D 1441`() = assertTokenization(
+    fun `a aau000D 1457`() = assertTokenization(
         input = "<a a=a\r>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11569,7 +11672,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aau001F 1442`() = assertTokenization(
+    fun `a aau001F 1458`() = assertTokenization(
         input = "<a a=a\u001f>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a\u001f"))
@@ -11577,7 +11680,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1443`() = assertTokenization(
+    fun `a aa 1459`() = assertTokenization(
         input = "<a a=a >",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11585,7 +11688,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1444`() = assertTokenization(
+    fun `a aa 1460`() = assertTokenization(
         input = "<a a=a!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a!"))
@@ -11593,7 +11696,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1445`() = assertTokenization(
+    fun `a aa 1461`() = assertTokenization(
         input = "<a a=a\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a\""))
@@ -11601,7 +11704,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1446`() = assertTokenization(
+    fun `a aa 1462`() = assertTokenization(
         input = "<a a=a#>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a#"))
@@ -11609,7 +11712,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1447`() = assertTokenization(
+    fun `a aa 1463`() = assertTokenization(
         input = "<a a=a%>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a%"))
@@ -11617,7 +11720,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1448`() = assertTokenization(
+    fun `a aa 1464`() = assertTokenization(
         input = "<a a=a&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a&"))
@@ -11625,7 +11728,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1449`() = assertTokenization(
+    fun `a aa 1465`() = assertTokenization(
         input = "<a a=a'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a'"))
@@ -11633,7 +11736,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1450`() = assertTokenization(
+    fun `a aa 1466`() = assertTokenization(
         input = "<a a=a(>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a("))
@@ -11641,7 +11744,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1451`() = assertTokenization(
+    fun `a aa 1467`() = assertTokenization(
         input = "<a a=a->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a-"))
@@ -11649,7 +11752,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1452`() = assertTokenization(
+    fun `a aa 1468`() = assertTokenization(
         input = "<a a=a/>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a/"))
@@ -11657,7 +11760,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa0 1453`() = assertTokenization(
+    fun `a aa0 1469`() = assertTokenization(
         input = "<a a=a0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a0"))
@@ -11665,7 +11768,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa1 1454`() = assertTokenization(
+    fun `a aa1 1470`() = assertTokenization(
         input = "<a a=a1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a1"))
@@ -11673,7 +11776,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa9 1455`() = assertTokenization(
+    fun `a aa9 1471`() = assertTokenization(
         input = "<a a=a9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a9"))
@@ -11681,7 +11784,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1456`() = assertTokenization(
+    fun `a aa 1472`() = assertTokenization(
         input = "<a a=a<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a<"))
@@ -11689,7 +11792,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1457`() = assertTokenization(
+    fun `a aa 1473`() = assertTokenization(
         input = "<a a=a=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a="))
@@ -11697,7 +11800,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1458`() = assertTokenization(
+    fun `a aa 1474`() = assertTokenization(
         input = "<a a=a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a"))
@@ -11705,7 +11808,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1459`() = assertTokenization(
+    fun `a aa 1475`() = assertTokenization(
         input = "<a a=a?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a?"))
@@ -11713,7 +11816,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1460`() = assertTokenization(
+    fun `a aa 1476`() = assertTokenization(
         input = "<a a=a@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a@"))
@@ -11721,7 +11824,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaA 1461`() = assertTokenization(
+    fun `a aaA 1477`() = assertTokenization(
         input = "<a a=aA>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "aA"))
@@ -11729,7 +11832,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaB 1462`() = assertTokenization(
+    fun `a aaB 1478`() = assertTokenization(
         input = "<a a=aB>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "aB"))
@@ -11737,7 +11840,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaY 1463`() = assertTokenization(
+    fun `a aaY 1479`() = assertTokenization(
         input = "<a a=aY>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "aY"))
@@ -11745,7 +11848,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaZ 1464`() = assertTokenization(
+    fun `a aaZ 1480`() = assertTokenization(
         input = "<a a=aZ>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "aZ"))
@@ -11753,7 +11856,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1465`() = assertTokenization(
+    fun `a aa 1481`() = assertTokenization(
         input = "<a a=a`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a`"))
@@ -11761,7 +11864,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaa 1466`() = assertTokenization(
+    fun `a aaa 1482`() = assertTokenization(
         input = "<a a=aa>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "aa"))
@@ -11769,7 +11872,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aab 1467`() = assertTokenization(
+    fun `a aab 1483`() = assertTokenization(
         input = "<a a=ab>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "ab"))
@@ -11777,7 +11880,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aay 1468`() = assertTokenization(
+    fun `a aay 1484`() = assertTokenization(
         input = "<a a=ay>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "ay"))
@@ -11785,7 +11888,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aaz 1469`() = assertTokenization(
+    fun `a aaz 1485`() = assertTokenization(
         input = "<a a=az>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "az"))
@@ -11793,7 +11896,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1470`() = assertTokenization(
+    fun `a aa 1486`() = assertTokenization(
         input = "<a a=a{>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a{"))
@@ -11801,7 +11904,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aauDBC0uDC00 1471`() = assertTokenization(
+    fun `a aauDBC0uDC00 1487`() = assertTokenization(
         input = "<a a=a􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "a􀀀"))
@@ -11809,7 +11912,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 1472`() = assertTokenization(
+    fun `a ab 1488`() = assertTokenization(
         input = "<a a=b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "b"))
@@ -11817,7 +11920,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 1473`() = assertTokenization(
+    fun `a ay 1489`() = assertTokenization(
         input = "<a a=y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "y"))
@@ -11825,7 +11928,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 1474`() = assertTokenization(
+    fun `a az 1490`() = assertTokenization(
         input = "<a a=z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "z"))
@@ -11833,7 +11936,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1475`() = assertTokenization(
+    fun `a a 1491`() = assertTokenization(
         input = "<a a={>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "{"))
@@ -11841,7 +11944,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 1476`() = assertTokenization(
+    fun `a auDBC0uDC00 1492`() = assertTokenization(
         input = "<a a=􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to "􀀀"))
@@ -11849,7 +11952,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1477`() = assertTokenization(
+    fun `a a 1493`() = assertTokenization(
         input = "<a a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -11857,7 +11960,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1478`() = assertTokenization(
+    fun `a a 1494`() = assertTokenization(
         input = "<a a?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a?" to ""))
@@ -11865,7 +11968,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1479`() = assertTokenization(
+    fun `a a 1495`() = assertTokenization(
         input = "<a a@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a@" to ""))
@@ -11873,7 +11976,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aA 1480`() = assertTokenization(
+    fun `a aA 1496`() = assertTokenization(
         input = "<a aA>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("aa" to ""))
@@ -11881,7 +11984,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aB 1481`() = assertTokenization(
+    fun `a aB 1497`() = assertTokenization(
         input = "<a aB>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("ab" to ""))
@@ -11889,7 +11992,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aY 1482`() = assertTokenization(
+    fun `a aY 1498`() = assertTokenization(
         input = "<a aY>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("ay" to ""))
@@ -11897,7 +12000,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aZ 1483`() = assertTokenization(
+    fun `a aZ 1499`() = assertTokenization(
         input = "<a aZ>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("az" to ""))
@@ -11905,7 +12008,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1484`() = assertTokenization(
+    fun `a a 1500`() = assertTokenization(
         input = "<a a[>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a[" to ""))
@@ -11913,7 +12016,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1485`() = assertTokenization(
+    fun `a a 1501`() = assertTokenization(
         input = "<a a`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a`" to ""))
@@ -11921,7 +12024,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a aa 1486`() = assertTokenization(
+    fun `a aa 1502`() = assertTokenization(
         input = "<a aa>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("aa" to ""))
@@ -11929,7 +12032,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ab 1487`() = assertTokenization(
+    fun `a ab 1503`() = assertTokenization(
         input = "<a ab>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("ab" to ""))
@@ -11937,7 +12040,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a ay 1488`() = assertTokenization(
+    fun `a ay 1504`() = assertTokenization(
         input = "<a ay>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("ay" to ""))
@@ -11945,7 +12048,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a az 1489`() = assertTokenization(
+    fun `a az 1505`() = assertTokenization(
         input = "<a az>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("az" to ""))
@@ -11953,7 +12056,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a a 1490`() = assertTokenization(
+    fun `a a 1506`() = assertTokenization(
         input = "<a a{>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a{" to ""))
@@ -11961,7 +12064,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a auDBC0uDC00 1491`() = assertTokenization(
+    fun `a auDBC0uDC00 1507`() = assertTokenization(
         input = "<a a􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a􀀀" to ""))
@@ -11969,7 +12072,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a b 1492`() = assertTokenization(
+    fun `a b 1508`() = assertTokenization(
         input = "<a b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -11977,7 +12080,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a y 1493`() = assertTokenization(
+    fun `a y 1509`() = assertTokenization(
         input = "<a y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -11985,7 +12088,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a z 1494`() = assertTokenization(
+    fun `a z 1510`() = assertTokenization(
         input = "<a z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -11993,7 +12096,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1495`() = assertTokenization(
+    fun `a 1511`() = assertTokenization(
         input = "<a {>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("{" to ""))
@@ -12001,7 +12104,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a uDBC0uDC00 1496`() = assertTokenization(
+    fun `a uDBC0uDC00 1512`() = assertTokenization(
         input = "<a 􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("􀀀" to ""))
@@ -12009,7 +12112,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1497`() = assertTokenization(
+    fun `a 1513`() = assertTokenization(
         input = "<a!>",
         expectedTokens = listOf(
             startTag(name = "a!")
@@ -12017,7 +12120,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1498`() = assertTokenization(
+    fun `a 1514`() = assertTokenization(
         input = "<a\">",
         expectedTokens = listOf(
             startTag(name = "a\"")
@@ -12025,7 +12128,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1499`() = assertTokenization(
+    fun `a 1515`() = assertTokenization(
         input = "<a&>",
         expectedTokens = listOf(
             startTag(name = "a&")
@@ -12033,7 +12136,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1500`() = assertTokenization(
+    fun `a 1516`() = assertTokenization(
         input = "<a'>",
         expectedTokens = listOf(
             startTag(name = "a'")
@@ -12041,7 +12144,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1501`() = assertTokenization(
+    fun `a 1517`() = assertTokenization(
         input = "<a->",
         expectedTokens = listOf(
             startTag(name = "a-")
@@ -12049,7 +12152,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1502`() = assertTokenization(
+    fun `a 1518`() = assertTokenization(
         input = "<a.>",
         expectedTokens = listOf(
             startTag(name = "a.")
@@ -12057,7 +12160,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1503`() = assertTokenization(
+    fun `a 1519`() = assertTokenization(
         input = "<a/>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -12065,7 +12168,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0000 1504`() = assertTokenization(
+    fun `au0000 1520`() = assertTokenization(
         input = "<a/\u0000>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("�" to ""))
@@ -12073,7 +12176,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au0009 1505`() = assertTokenization(
+    fun `au0009 1521`() = assertTokenization(
         input = "<a/\t>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -12081,7 +12184,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000A 1506`() = assertTokenization(
+    fun `au000A 1522`() = assertTokenization(
         input = "<a/\n>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -12089,7 +12192,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000B 1507`() = assertTokenization(
+    fun `au000B 1523`() = assertTokenization(
         input = "<a/\u000b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\u000b" to ""))
@@ -12097,7 +12200,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `au000C 1508`() = assertTokenization(
+    fun `au000C 1524`() = assertTokenization(
         input = "<a/\u000c>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -12105,7 +12208,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1509`() = assertTokenization(
+    fun `a 1525`() = assertTokenization(
         input = "<a/ >",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -12113,7 +12216,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1510`() = assertTokenization(
+    fun `a 1526`() = assertTokenization(
         input = "<a/!>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("!" to ""))
@@ -12121,7 +12224,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1511`() = assertTokenization(
+    fun `a 1527`() = assertTokenization(
         input = "<a/\">",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("\"" to ""))
@@ -12129,7 +12232,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1512`() = assertTokenization(
+    fun `a 1528`() = assertTokenization(
         input = "<a/&>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("&" to ""))
@@ -12137,7 +12240,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1513`() = assertTokenization(
+    fun `a 1529`() = assertTokenization(
         input = "<a/'>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("'" to ""))
@@ -12145,7 +12248,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1514`() = assertTokenization(
+    fun `a 1530`() = assertTokenization(
         input = "<a/->",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("-" to ""))
@@ -12153,7 +12256,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1515`() = assertTokenization(
+    fun `a 1531`() = assertTokenization(
         input = "<a//>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -12161,7 +12264,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a0 1516`() = assertTokenization(
+    fun `a0 1532`() = assertTokenization(
         input = "<a/0>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("0" to ""))
@@ -12169,7 +12272,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a1 1517`() = assertTokenization(
+    fun `a1 1533`() = assertTokenization(
         input = "<a/1>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("1" to ""))
@@ -12177,7 +12280,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a9 1518`() = assertTokenization(
+    fun `a9 1534`() = assertTokenization(
         input = "<a/9>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("9" to ""))
@@ -12185,7 +12288,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1519`() = assertTokenization(
+    fun `a 1535`() = assertTokenization(
         input = "<a/<>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("<" to ""))
@@ -12193,7 +12296,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1520`() = assertTokenization(
+    fun `a 1536`() = assertTokenization(
         input = "<a/=>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("=" to ""))
@@ -12201,7 +12304,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1521`() = assertTokenization(
+    fun `a 1537`() = assertTokenization(
         input = "<a/>",
         expectedTokens = listOf(
             startTag(name = "a", selfClosing = true)
@@ -12209,7 +12312,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1522`() = assertTokenization(
+    fun `a 1538`() = assertTokenization(
         input = "<a/?>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("?" to ""))
@@ -12217,7 +12320,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1523`() = assertTokenization(
+    fun `a 1539`() = assertTokenization(
         input = "<a/@>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("@" to ""))
@@ -12225,7 +12328,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aA 1524`() = assertTokenization(
+    fun `aA 1540`() = assertTokenization(
         input = "<a/A>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -12233,7 +12336,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aB 1525`() = assertTokenization(
+    fun `aB 1541`() = assertTokenization(
         input = "<a/B>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -12241,7 +12344,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aY 1526`() = assertTokenization(
+    fun `aY 1542`() = assertTokenization(
         input = "<a/Y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -12249,7 +12352,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aZ 1527`() = assertTokenization(
+    fun `aZ 1543`() = assertTokenization(
         input = "<a/Z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -12257,7 +12360,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1528`() = assertTokenization(
+    fun `a 1544`() = assertTokenization(
         input = "<a/`>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("`" to ""))
@@ -12265,7 +12368,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aa 1529`() = assertTokenization(
+    fun `aa 1545`() = assertTokenization(
         input = "<a/a>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("a" to ""))
@@ -12273,7 +12376,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ab 1530`() = assertTokenization(
+    fun `ab 1546`() = assertTokenization(
         input = "<a/b>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("b" to ""))
@@ -12281,7 +12384,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ay 1531`() = assertTokenization(
+    fun `ay 1547`() = assertTokenization(
         input = "<a/y>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("y" to ""))
@@ -12289,7 +12392,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `az 1532`() = assertTokenization(
+    fun `az 1548`() = assertTokenization(
         input = "<a/z>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("z" to ""))
@@ -12297,7 +12400,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1533`() = assertTokenization(
+    fun `a 1549`() = assertTokenization(
         input = "<a/{>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("{" to ""))
@@ -12305,7 +12408,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `auDBC0uDC00 1534`() = assertTokenization(
+    fun `auDBC0uDC00 1550`() = assertTokenization(
         input = "<a/􀀀>",
         expectedTokens = listOf(
             startTag(name = "a", attributes = mapOf("􀀀" to ""))
@@ -12313,7 +12416,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a0 1535`() = assertTokenization(
+    fun `a0 1551`() = assertTokenization(
         input = "<a0>",
         expectedTokens = listOf(
             startTag(name = "a0")
@@ -12321,7 +12424,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a1 1536`() = assertTokenization(
+    fun `a1 1552`() = assertTokenization(
         input = "<a1>",
         expectedTokens = listOf(
             startTag(name = "a1")
@@ -12329,7 +12432,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a9 1537`() = assertTokenization(
+    fun `a9 1553`() = assertTokenization(
         input = "<a9>",
         expectedTokens = listOf(
             startTag(name = "a9")
@@ -12337,7 +12440,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1538`() = assertTokenization(
+    fun `a 1554`() = assertTokenization(
         input = "<a<>",
         expectedTokens = listOf(
             startTag(name = "a<")
@@ -12345,7 +12448,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1539`() = assertTokenization(
+    fun `a 1555`() = assertTokenization(
         input = "<a=>",
         expectedTokens = listOf(
             startTag(name = "a=")
@@ -12353,7 +12456,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1540`() = assertTokenization(
+    fun `a 1556`() = assertTokenization(
         input = "<a>",
         expectedTokens = listOf(
             startTag(name = "a")
@@ -12361,7 +12464,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1541`() = assertTokenization(
+    fun `a 1557`() = assertTokenization(
         input = "<a?>",
         expectedTokens = listOf(
             startTag(name = "a?")
@@ -12369,7 +12472,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1542`() = assertTokenization(
+    fun `a 1558`() = assertTokenization(
         input = "<a@>",
         expectedTokens = listOf(
             startTag(name = "a@")
@@ -12377,7 +12480,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aA 1543`() = assertTokenization(
+    fun `aA 1559`() = assertTokenization(
         input = "<aA>",
         expectedTokens = listOf(
             startTag(name = "aa")
@@ -12385,7 +12488,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aB 1544`() = assertTokenization(
+    fun `aB 1560`() = assertTokenization(
         input = "<aB>",
         expectedTokens = listOf(
             startTag(name = "ab")
@@ -12393,7 +12496,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aY 1545`() = assertTokenization(
+    fun `aY 1561`() = assertTokenization(
         input = "<aY>",
         expectedTokens = listOf(
             startTag(name = "ay")
@@ -12401,7 +12504,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aZ 1546`() = assertTokenization(
+    fun `aZ 1562`() = assertTokenization(
         input = "<aZ>",
         expectedTokens = listOf(
             startTag(name = "az")
@@ -12409,7 +12512,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1547`() = assertTokenization(
+    fun `a 1563`() = assertTokenization(
         input = "<a[>",
         expectedTokens = listOf(
             startTag(name = "a[")
@@ -12417,7 +12520,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1548`() = assertTokenization(
+    fun `a 1564`() = assertTokenization(
         input = "<a`>",
         expectedTokens = listOf(
             startTag(name = "a`")
@@ -12425,7 +12528,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `aa 1549`() = assertTokenization(
+    fun `aa 1565`() = assertTokenization(
         input = "<aa>",
         expectedTokens = listOf(
             startTag(name = "aa")
@@ -12433,7 +12536,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ab 1550`() = assertTokenization(
+    fun `ab 1566`() = assertTokenization(
         input = "<ab>",
         expectedTokens = listOf(
             startTag(name = "ab")
@@ -12441,7 +12544,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `ay 1551`() = assertTokenization(
+    fun `ay 1567`() = assertTokenization(
         input = "<ay>",
         expectedTokens = listOf(
             startTag(name = "ay")
@@ -12449,7 +12552,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `az 1552`() = assertTokenization(
+    fun `az 1568`() = assertTokenization(
         input = "<az>",
         expectedTokens = listOf(
             startTag(name = "az")
@@ -12457,7 +12560,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1553`() = assertTokenization(
+    fun `a 1569`() = assertTokenization(
         input = "<a{>",
         expectedTokens = listOf(
             startTag(name = "a{")
@@ -12465,7 +12568,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `auDBC0uDC00 1554`() = assertTokenization(
+    fun `auDBC0uDC00 1570`() = assertTokenization(
         input = "<a􀀀>",
         expectedTokens = listOf(
             startTag(name = "a􀀀")
@@ -12473,7 +12576,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 1555`() = assertTokenization(
+    fun `b 1571`() = assertTokenization(
         input = "<b>",
         expectedTokens = listOf(
             startTag(name = "b")
@@ -12481,7 +12584,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 1556`() = assertTokenization(
+    fun `y 1572`() = assertTokenization(
         input = "<y>",
         expectedTokens = listOf(
             startTag(name = "y")
@@ -12489,7 +12592,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 1557`() = assertTokenization(
+    fun `z 1573`() = assertTokenization(
         input = "<z>",
         expectedTokens = listOf(
             startTag(name = "z")
@@ -12497,7 +12600,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1558`() = assertTokenization(
+    fun `test 1574`() = assertTokenization(
         input = "<{",
         expectedTokens = listOf(
             *chars("<{").toTypedArray()
@@ -12505,7 +12608,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 1559`() = assertTokenization(
+    fun `uDBC0uDC00 1575`() = assertTokenization(
         input = "<􀀀",
         expectedTokens = listOf(
             *chars("<􀀀").toTypedArray()
@@ -12513,143 +12616,135 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1560`() = assertTokenization(
-        input = "=",
-        expectedTokens = listOf(
-            char('=')
-        )
-    )
-
-    @Test
-    fun `test 1561`() = assertTokenization(
-        input = "=",
-        expectedTokens = listOf(
-            char('=')
-        )
-    )
-
-    @Test
-    fun `test 1562`() = assertTokenization(
-        input = ">",
-        expectedTokens = listOf(
-            char('>')
-        )
-    )
-
-    @Test
-    fun `test 1563`() = assertTokenization(
-        input = ">",
-        expectedTokens = listOf(
-            char('>')
-        )
-    )
-
-    @Test
-    fun `test 1564`() = assertTokenization(
-        input = "?",
-        expectedTokens = listOf(
-            char('?')
-        )
-    )
-
-    @Test
-    fun `test 1565`() = assertTokenization(
-        input = "?",
-        expectedTokens = listOf(
-            char('?')
-        )
-    )
-
-    @Test
-    fun `test 1566`() = assertTokenization(
-        input = "@",
-        expectedTokens = listOf(
-            char('@')
-        )
-    )
-
-    @Test
-    fun `test 1567`() = assertTokenization(
-        input = "@",
-        expectedTokens = listOf(
-            char('@')
-        )
-    )
-
-    @Test
-    fun `A 1568`() = assertTokenization(
-        input = "A",
-        expectedTokens = listOf(
-            char('A')
-        )
-    )
-
-    @Test
-    fun `A 1569`() = assertTokenization(
-        input = "A",
-        expectedTokens = listOf(
-            char('A')
-        )
-    )
-
-    @Test
-    fun `B 1570`() = assertTokenization(
-        input = "B",
-        expectedTokens = listOf(
-            char('B')
-        )
-    )
-
-    @Test
-    fun `B 1571`() = assertTokenization(
-        input = "B",
-        expectedTokens = listOf(
-            char('B')
-        )
-    )
-
-    @Test
-    fun `Y 1572`() = assertTokenization(
-        input = "Y",
-        expectedTokens = listOf(
-            char('Y')
-        )
-    )
-
-    @Test
-    fun `Y 1573`() = assertTokenization(
-        input = "Y",
-        expectedTokens = listOf(
-            char('Y')
-        )
-    )
-
-    @Test
-    fun `Z 1574`() = assertTokenization(
-        input = "Z",
-        expectedTokens = listOf(
-            char('Z')
-        )
-    )
-
-    @Test
-    fun `Z 1575`() = assertTokenization(
-        input = "Z",
-        expectedTokens = listOf(
-            char('Z')
-        )
-    )
-
-    @Test
     fun `test 1576`() = assertTokenization(
-        input = "`",
+        input = "=",
         expectedTokens = listOf(
-            char('\u0060')
+            char('=')
         )
     )
 
     @Test
     fun `test 1577`() = assertTokenization(
+        input = "=",
+        expectedTokens = listOf(
+            char('=')
+        )
+    )
+
+    @Test
+    fun `test 1578`() = assertTokenization(
+        input = ">",
+        expectedTokens = listOf(
+            char('>')
+        )
+    )
+
+    @Test
+    fun `test 1579`() = assertTokenization(
+        input = ">",
+        expectedTokens = listOf(
+            char('>')
+        )
+    )
+
+    @Test
+    fun `test 1580`() = assertTokenization(
+        input = "?",
+        expectedTokens = listOf(
+            char('?')
+        )
+    )
+
+    @Test
+    fun `test 1581`() = assertTokenization(
+        input = "?",
+        expectedTokens = listOf(
+            char('?')
+        )
+    )
+
+    @Test
+    fun `test 1582`() = assertTokenization(
+        input = "@",
+        expectedTokens = listOf(
+            char('@')
+        )
+    )
+
+    @Test
+    fun `test 1583`() = assertTokenization(
+        input = "@",
+        expectedTokens = listOf(
+            char('@')
+        )
+    )
+
+    @Test
+    fun `A 1584`() = assertTokenization(
+        input = "A",
+        expectedTokens = listOf(
+            char('A')
+        )
+    )
+
+    @Test
+    fun `A 1585`() = assertTokenization(
+        input = "A",
+        expectedTokens = listOf(
+            char('A')
+        )
+    )
+
+    @Test
+    fun `B 1586`() = assertTokenization(
+        input = "B",
+        expectedTokens = listOf(
+            char('B')
+        )
+    )
+
+    @Test
+    fun `B 1587`() = assertTokenization(
+        input = "B",
+        expectedTokens = listOf(
+            char('B')
+        )
+    )
+
+    @Test
+    fun `Y 1588`() = assertTokenization(
+        input = "Y",
+        expectedTokens = listOf(
+            char('Y')
+        )
+    )
+
+    @Test
+    fun `Y 1589`() = assertTokenization(
+        input = "Y",
+        expectedTokens = listOf(
+            char('Y')
+        )
+    )
+
+    @Test
+    fun `Z 1590`() = assertTokenization(
+        input = "Z",
+        expectedTokens = listOf(
+            char('Z')
+        )
+    )
+
+    @Test
+    fun `Z 1591`() = assertTokenization(
+        input = "Z",
+        expectedTokens = listOf(
+            char('Z')
+        )
+    )
+
+    @Test
+    fun `test 1592`() = assertTokenization(
         input = "`",
         expectedTokens = listOf(
             char('\u0060')
@@ -12657,7 +12752,15 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1578`() = assertTokenization(
+    fun `test 1593`() = assertTokenization(
+        input = "`",
+        expectedTokens = listOf(
+            char('\u0060')
+        )
+    )
+
+    @Test
+    fun `a 1594`() = assertTokenization(
         input = "a",
         expectedTokens = listOf(
             char('a')
@@ -12665,7 +12768,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `a 1579`() = assertTokenization(
+    fun `a 1595`() = assertTokenization(
         input = "a",
         expectedTokens = listOf(
             char('a')
@@ -12673,7 +12776,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 1580`() = assertTokenization(
+    fun `b 1596`() = assertTokenization(
         input = "b",
         expectedTokens = listOf(
             char('b')
@@ -12681,7 +12784,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `b 1581`() = assertTokenization(
+    fun `b 1597`() = assertTokenization(
         input = "b",
         expectedTokens = listOf(
             char('b')
@@ -12689,7 +12792,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 1582`() = assertTokenization(
+    fun `y 1598`() = assertTokenization(
         input = "y",
         expectedTokens = listOf(
             char('y')
@@ -12697,7 +12800,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `y 1583`() = assertTokenization(
+    fun `y 1599`() = assertTokenization(
         input = "y",
         expectedTokens = listOf(
             char('y')
@@ -12705,7 +12808,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 1584`() = assertTokenization(
+    fun `z 1600`() = assertTokenization(
         input = "z",
         expectedTokens = listOf(
             char('z')
@@ -12713,7 +12816,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `z 1585`() = assertTokenization(
+    fun `z 1601`() = assertTokenization(
         input = "z",
         expectedTokens = listOf(
             char('z')
@@ -12721,7 +12824,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1586`() = assertTokenization(
+    fun `test 1602`() = assertTokenization(
         input = "{",
         expectedTokens = listOf(
             char('{')
@@ -12729,7 +12832,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `test 1587`() = assertTokenization(
+    fun `test 1603`() = assertTokenization(
         input = "{",
         expectedTokens = listOf(
             char('{')
@@ -12737,7 +12840,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 1588`() = assertTokenization(
+    fun `uDBC0uDC00 1604`() = assertTokenization(
         input = "􀀀",
         expectedTokens = listOf(
             *chars("􀀀").toTypedArray()
@@ -12745,7 +12848,7 @@ internal class TokenizerTest3 : TokenizerTestBase() {
     )
 
     @Test
-    fun `uDBC0uDC00 1589`() = assertTokenization(
+    fun `uDBC0uDC00 1605`() = assertTokenization(
         input = "􀀀",
         expectedTokens = listOf(
             *chars("􀀀").toTypedArray()
