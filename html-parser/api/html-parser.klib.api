@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <Helium:html-parser>
+// Library unique name: <com.theakram:html-parser>
 final enum class com.theakram.helium.tree/NodeType : kotlin/Enum<com.theakram.helium.tree/NodeType> { // com.theakram.helium.tree/NodeType|null[0]
     enum entry CDATA_SECTION // com.theakram.helium.tree/NodeType.CDATA_SECTION|null[0]
     enum entry COMMENT // com.theakram.helium.tree/NodeType.COMMENT|null[0]

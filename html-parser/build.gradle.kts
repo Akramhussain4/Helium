@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.mavenPublish)
 }
 
 // Test working directories differ per platform (Node runs from build/js), so tests locate their
@@ -85,6 +87,58 @@ kotlin {
         jvmTest.dependencies {
             // kotlin-test-junit5 brings an old JUnit by default; the BOM aligns it to the latest release
             implementation(project.dependencies.platform(libs.junit.bom))
+        }
+    }
+}
+
+// Gives Java module-path consumers a stable module name instead of one derived from the jar file name
+tasks.named<Jar>("jvmJar") {
+    manifest { attributes("Automatic-Module-Name" to "com.theakram.helium") }
+}
+
+dokka {
+    moduleName = "Helium"
+    dokkaSourceSets.configureEach {
+        sourceLink {
+            localDirectory = layout.projectDirectory.dir("src")
+            remoteUrl("https://github.com/Akramhussain4/Helium/tree/master/html-parser/src")
+            remoteLineSuffix = "#L"
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    // Maven Central requires signatures; skipping without a key keeps publishToMavenLocal working on dev machines
+    if (providers.gradleProperty("signingInMemoryKey").isPresent) {
+        signAllPublications()
+    }
+
+    coordinates(artifactId = "helium")
+
+    pom {
+        name = "Helium"
+        description = "A spec-compliant HTML5 parser for Kotlin Multiplatform."
+        inceptionYear = "2023"
+        url = "https://github.com/Akramhussain4/Helium"
+        licenses {
+            license {
+                name = "MIT License"
+                url = "https://opensource.org/license/mit"
+                distribution = "repo"
+            }
+        }
+        developers {
+            developer {
+                id = "Akramhussain4"
+                name = "Mohammed Akram Hussain"
+                url = "https://theakram.com"
+            }
+        }
+        scm {
+            url = "https://github.com/Akramhussain4/Helium"
+            connection = "scm:git:https://github.com/Akramhussain4/Helium.git"
+            developerConnection = "scm:git:ssh://git@github.com/Akramhussain4/Helium.git"
         }
     }
 }
