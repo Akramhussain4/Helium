@@ -34,9 +34,6 @@ internal object KnownFailures {
     private const val PROCESSING_INSTRUCTIONS =
         "Processing instructions aren't supported yet (https://github.com/whatwg/html/commit/320c05f)"
 
-    private const val FRAMESET_OK_RESET =
-        "frameset-ok isn't reset when the body is inserted implicitly (https://github.com/whatwg/html/commit/83c0aa8)"
-
     private const val FORM_POINTER_IN_TEMPLATE =
         "The form element pointer isn't ignored inside template contents (https://github.com/whatwg/html/commit/9ed7f27)"
 
@@ -135,9 +132,6 @@ internal object KnownFailures {
         "processing-instructions.dat:1080" to PROCESSING_INSTRUCTIONS,
         "processing-instructions.dat:1111" to PROCESSING_INSTRUCTIONS,
         "processing-instructions.dat:1122" to PROCESSING_INSTRUCTIONS,
-        "template.dat:606" to FRAMESET_OK_RESET,
-        "template.dat:619" to FRAMESET_OK_RESET,
-        "template.dat:633" to FRAMESET_OK_RESET,
         "template.dat:1724" to FORM_POINTER_IN_TEMPLATE,
         "template.dat:1764" to FORM_POINTER_IN_TEMPLATE,
         "template.dat:1817" to FORM_POINTER_IN_TEMPLATE,

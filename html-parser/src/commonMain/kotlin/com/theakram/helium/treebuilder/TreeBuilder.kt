@@ -224,6 +224,10 @@ internal class TreeBuilder(
         framesetOk = false
     }
 
+    internal fun setFramesetOk() {
+        framesetOk = true
+    }
+
     internal fun isFramesetOk(): Boolean = framesetOk
 
     /**
