@@ -45,15 +45,6 @@ internal object KnownTokenizerFailures {
             "40 other html5lib tests with two errors at one position; this one test lists them the other way " +
             "round"
 
-    private const val DUPLICATE_ATTRIBUTE =
-        "duplicate-attribute is not reported"
-
-    private const val END_TAG_WITH_ATTRIBUTES =
-        "End tag tokens have no attributes, so end-tag-with-attributes is not reported"
-
-    private const val END_TAG_WITH_TRAILING_SOLIDUS =
-        "End tag tokens have no self-closing flag, so end-tag-with-trailing-solidus is not reported"
-
     private val failures = mapOf(
         "domjs.test: CR in bogus comment state (Data state)" to KnownFailure(
             STALE_QUESTION_MARK,
@@ -67,49 +58,9 @@ internal object KnownTokenizerFailures {
             STALE_QUESTION_MARK,
             listOf("invalid-first-character-of-processing-instruction-target")
         ),
-        "test1.test: End Tag w/attribute (Data state)" to KnownFailure(
-            END_TAG_WITH_ATTRIBUTES,
-            listOf()
-        ),
-        "test1.test: Repeated attr (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf()
-        ),
         "test3.test: <?\\u000B (Data state)" to KnownFailure(
             ERROR_ORDER,
             listOf("control-character-in-input-stream", "invalid-first-character-of-processing-instruction-target")
-        ),
-        "test3.test: <a a A> (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf()
-        ),
-        "test3.test: <a a a> (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf()
-        ),
-        "test3.test: <a a=''A> (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf("missing-whitespace-between-attributes")
-        ),
-        "test3.test: <a a=''a> (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf("missing-whitespace-between-attributes")
-        ),
-        "test4.test: Duplicate different-case attributes (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE,
-            listOf()
-        ),
-        "test4.test: Uppercase close tag attributes (Data state)" to KnownFailure(
-            END_TAG_WITH_ATTRIBUTES,
-            listOf()
-        ),
-        "test4.test: Duplicate close tag attributes (Data state)" to KnownFailure(
-            DUPLICATE_ATTRIBUTE + "; " + END_TAG_WITH_ATTRIBUTES,
-            listOf()
-        ),
-        "test4.test: Permitted slash but in close tag (Data state)" to KnownFailure(
-            END_TAG_WITH_TRAILING_SOLIDUS,
-            listOf()
         ),
     )
 

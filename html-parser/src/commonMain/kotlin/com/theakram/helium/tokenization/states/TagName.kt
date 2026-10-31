@@ -41,8 +41,7 @@ internal data object TagName : TokenizationState {
             codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitCurrentTag()
-                switchTo(Data)
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             codePoint.isAsciiUpperAlpha() -> {
@@ -70,10 +69,6 @@ internal data object TagName : TokenizationState {
     }
 
     private fun appendToTagName(tokenizer: Tokenizer, codePoint: Int) {
-        if (tokenizer.isCurrentTagStartTag) {
-            tokenizer.startTagBuilder.name.appendUnicode(codePoint)
-        } else {
-            tokenizer.currentEndTagName.appendUnicode(codePoint)
-        }
+        tokenizer.currentTag.name.appendUnicode(codePoint)
     }
 }

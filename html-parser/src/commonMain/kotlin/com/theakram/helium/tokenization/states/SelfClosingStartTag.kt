@@ -34,8 +34,8 @@ internal data object SelfClosingStartTag : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitCurrentTag(selfClosing = true)
-                switchTo(Data)
+                tokenizer.currentTag.selfClosing = true
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             codePoint == -1 -> {

@@ -35,10 +35,15 @@ import com.theakram.helium.util.isWhiteSpace
 internal data object AttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.IS(Chars.Solidus, Chars.GreaterThan) || codePoint.isWhiteSpace() || codePoint == -1 ->
+            codePoint.IS(Chars.Solidus, Chars.GreaterThan) || codePoint.isWhiteSpace() || codePoint == -1 -> {
+                tokenizer.leaveAttributeName()
                 reconsumeIn(AfterAttributeName)
+            }
 
-            codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue)
+            codePoint.IS(Chars.Equals) -> {
+                tokenizer.leaveAttributeName()
+                switchTo(BeforeAttributeValue)
+            }
 
             codePoint.isAsciiUpperAlpha() -> {
                 tokenizer.currentAttributeName.appendUnicode(codePoint + 0x0020)

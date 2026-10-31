@@ -108,7 +108,11 @@ internal abstract class TokenizerTestBase {
             attributes = attributes.toMutableMap()
         )
 
-        fun endTag(name: String) = Token.EndTag(name)
+        fun endTag(
+            name: String,
+            selfClosing: Boolean = false,
+            attributes: Map<String, String> = emptyMap()
+        ) = Token.EndTag(name = name, selfClosing = selfClosing, attributes = attributes)
 
         fun char(c: Char) = Token.Character(c.code)
 

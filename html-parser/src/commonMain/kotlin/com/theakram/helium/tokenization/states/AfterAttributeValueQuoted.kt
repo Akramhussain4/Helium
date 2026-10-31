@@ -33,16 +33,13 @@ import com.theakram.helium.util.isWhiteSpace
 
 internal data object AfterAttributeValueQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        tokenizer.addCurrentAttribute()
-
         return when {
             codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName)
 
             codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.emitCurrentTag()
-                switchTo(Data)
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             codePoint == -1 -> {
