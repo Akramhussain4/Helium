@@ -35,17 +35,12 @@ import com.theakram.helium.util.isWhiteSpace
 internal data object AttributeValueUnquoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
-            codePoint.isWhiteSpace() -> {
-                tokenizer.addCurrentAttribute()
-                switchTo(BeforeAttributeName)
-            }
+            codePoint.isWhiteSpace() -> switchTo(BeforeAttributeName)
 
             codePoint.IS(Chars.Ampersand) -> switchTo(CharacterReference(this))
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.addCurrentAttribute()
-                tokenizer.emitCurrentTag()
-                switchTo(Data)
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             codePoint.IS(Chars.Null) -> {
@@ -62,7 +57,6 @@ internal data object AttributeValueUnquoted : TokenizationState {
 
             codePoint == -1 -> {
                 tokenizer.logParseError("eof-in-tag")
-                tokenizer.addCurrentAttribute()
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }

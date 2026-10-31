@@ -40,7 +40,15 @@ internal sealed interface Token {
         val attributes: Map<String, String> = emptyMap()
     ) : Token
 
-    data class EndTag(val name: String) : Token
+    /**
+     * An end tag token. Like a start tag token it has a self-closing flag and attributes, which the tokenizer
+     * reports as parse errors and tree construction ignores.
+     */
+    data class EndTag(
+        val name: String,
+        val selfClosing: Boolean = false,
+        val attributes: Map<String, String> = emptyMap()
+    ) : Token
 
     data class Comment(val data: String) : Token
 
@@ -81,26 +89,65 @@ internal class DocTypeBuilder {
 }
 
 /**
- * Builder for StartTag tokens. Accumulates attributes during tokenization.
+ * The current tag token, a start or an end tag, as the tokenizer builds it.
+ *
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#current-tag-token
  */
-internal class StartTagBuilder {
-    val name = StringBuilder()
-    private val attributes = LinkedHashMap<String, String>()
-
-    fun addAttribute(attrName: String, attrValue: String) {
-        if (!attributes.containsKey(attrName)) {
-            attributes[attrName] = attrValue
-        }
+internal class TagTokenBuilder {
+    private class AttributeBuilder {
+        val name = StringBuilder()
+        val value = StringBuilder()
     }
 
-    fun build(selfClosing: Boolean = false) = Token.StartTag(
-        name = name.toString(),
-        selfClosing = selfClosing,
-        attributes = attributes.toMap()
-    )
+    var isStartTag: Boolean = true
+        private set
+    val name = StringBuilder()
+    var selfClosing: Boolean = false
+    private val attributes = mutableListOf<AttributeBuilder>()
+    private val attributeNames = HashSet<String>()
 
-    fun reset() {
+    // The attribute being built. One removed as a duplicate stays here, so the rest of it is consumed and dropped.
+    private var currentAttribute = AttributeBuilder()
+
+    val currentAttributeName: StringBuilder get() = currentAttribute.name
+    val currentAttributeValue: StringBuilder get() = currentAttribute.value
+    val hasAttributes: Boolean get() = attributes.isNotEmpty()
+
+    /** Starts a new start or end tag token, with an empty name, the self-closing flag unset and no attributes. */
+    fun create(isStartTag: Boolean) {
+        this.isStartTag = isStartTag
         name.clear()
+        selfClosing = false
         attributes.clear()
+        attributeNames.clear()
+        currentAttribute = AttributeBuilder()
+    }
+
+    /** "Start a new attribute in the current tag token": its name and value are the empty string. */
+    fun startNewAttribute() {
+        currentAttribute = AttributeBuilder()
+        attributes += currentAttribute
+    }
+
+    /**
+     * Run when leaving the attribute name state: "if there is already an attribute on the token with the exact same
+     * name, then this is a duplicate-attribute parse error and the new attribute must be removed from the token."
+     *
+     * @return whether the attribute was a duplicate
+     */
+    fun removeCurrentAttributeIfDuplicate(): Boolean {
+        if (attributeNames.add(currentAttribute.name.toString())) return false
+        // The current attribute is always the one added last
+        attributes.removeAt(attributes.lastIndex)
+        return true
+    }
+
+    fun build(): Token {
+        val attributes = attributes.associate { it.name.toString() to it.value.toString() }
+        return if (isStartTag) {
+            Token.StartTag(name = name.toString(), selfClosing = selfClosing, attributes = attributes)
+        } else {
+            Token.EndTag(name = name.toString(), selfClosing = selfClosing, attributes = attributes)
+        }
     }
 }

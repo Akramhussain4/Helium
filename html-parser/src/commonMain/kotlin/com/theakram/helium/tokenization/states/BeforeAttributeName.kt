@@ -36,19 +36,17 @@ internal data object BeforeAttributeName : TokenizationState {
         return when {
             codePoint.isWhiteSpace() -> switchTo(this)
 
-            codePoint.IS(Chars.Solidus, Chars.GreaterThan) -> reconsumeIn(AfterAttributeName)
+            codePoint.IS(Chars.Solidus, Chars.GreaterThan) || codePoint == -1 -> reconsumeIn(AfterAttributeName)
 
             codePoint.IS(Chars.Equals) -> {
                 tokenizer.logParseError("unexpected-equals-sign-before-attribute-name")
-                tokenizer.currentAttributeName.clear()
-                tokenizer.currentAttributeValue.clear()
+                tokenizer.currentTag.startNewAttribute()
                 tokenizer.currentAttributeName.appendUnicode(codePoint)
                 switchTo(AttributeName)
             }
 
             else -> {
-                tokenizer.currentAttributeName.clear()
-                tokenizer.currentAttributeValue.clear()
+                tokenizer.currentTag.startNewAttribute()
                 reconsumeIn(AttributeName)
             }
         }

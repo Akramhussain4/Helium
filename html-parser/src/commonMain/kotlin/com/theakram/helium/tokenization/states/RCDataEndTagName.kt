@@ -61,21 +61,20 @@ internal data object RCDataEndTagName : TokenizationState {
 
             codePoint.IS(Chars.GreaterThan) -> {
                 if (isAppropriateEndTag(tokenizer)) {
-                    tokenizer.emitEndTag()
-                    switchTo(Data)
+                    tokenizer.switchToDataStateAndEmitCurrentTag()
                 } else {
                     anythingElse(tokenizer)
                 }
             }
 
             codePoint.isAsciiUpperAlpha() -> {
-                tokenizer.currentEndTagName.appendUnicode(codePoint + 0x0020)
+                tokenizer.currentTag.name.appendUnicode(codePoint + 0x0020)
                 tokenizer.tempBuffer.appendUnicode(codePoint)
                 continueInCurrentState()
             }
 
             codePoint.isAsciiLowerAlpha() -> {
-                tokenizer.currentEndTagName.appendUnicode(codePoint)
+                tokenizer.currentTag.name.appendUnicode(codePoint)
                 tokenizer.tempBuffer.appendUnicode(codePoint)
                 continueInCurrentState()
             }
@@ -85,7 +84,7 @@ internal data object RCDataEndTagName : TokenizationState {
     }
 
     private fun isAppropriateEndTag(tokenizer: Tokenizer): Boolean {
-        return tokenizer.currentEndTagName.toString() == tokenizer.lastStartTagName
+        return tokenizer.currentTag.name.toString() == tokenizer.lastStartTagName
     }
 
     private fun anythingElse(tokenizer: Tokenizer): StateTransition {

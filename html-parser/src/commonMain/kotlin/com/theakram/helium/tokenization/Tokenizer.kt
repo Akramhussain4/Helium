@@ -28,6 +28,7 @@ package com.theakram.helium.tokenization
 import com.theakram.helium.tokenization.states.StateTransition.ContinueInCurrentState
 import com.theakram.helium.tokenization.states.StateTransition.SwitchTo
 import com.theakram.helium.tokenization.states.StateTransition.ReconsumeIn
+import com.theakram.helium.tokenization.states.StateTransition
 import com.theakram.helium.tokenization.states.Data
 import com.theakram.helium.tokenization.states.PlainText
 import com.theakram.helium.tokenization.states.RCData
@@ -58,17 +59,14 @@ internal class Tokenizer(
     var characterReferenceCode = 0L
     val tempBuffer = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
-    var currentAttributeName = StringBuilder(INITIAL_BUFFER_CAPACITY)
-    var currentAttributeValue = StringBuilder(INITIAL_BUFFER_CAPACITY)
-
     val docTypeBuilder = DocTypeBuilder()
-    val startTagBuilder = StartTagBuilder()
-    var currentEndTagName = StringBuilder(INITIAL_BUFFER_CAPACITY)
+    val currentTag = TagTokenBuilder()
+    val currentAttributeName: StringBuilder get() = currentTag.currentAttributeName
+    val currentAttributeValue: StringBuilder get() = currentTag.currentAttributeValue
     var currentCommentData = StringBuilder(INITIAL_BUFFER_CAPACITY)
     var currentProcessingInstructionTarget: String = ""
     val currentProcessingInstructionData = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
-    var isCurrentTagStartTag: Boolean = true
     var lastStartTagName: String = ""
 
     /** The number of UTF-16 units the current input character takes in [htmlBuffer]: 2 for a supplementary one. */
@@ -84,15 +82,12 @@ internal class Tokenizer(
             val codePoint = if (currentPosition < htmlBuffer.length) htmlBuffer.codePointAt(currentPosition) else -1
             currentCharacterLength = codePoint.utf16Length()
             checkInputStreamUpTo(currentPosition)
-            val stateBeforeConsume = currentState
             val transition = currentState.consume(codePoint, this)
 
             when (transition) {
                 ContinueInCurrentState -> currentPosition += currentCharacterLength
                 is SwitchTo -> {
-                    if (currentState == stateBeforeConsume) {
-                        currentState = transition.newState
-                    }
+                    currentState = transition.newState
                     currentPosition += currentCharacterLength
                 }
                 is ReconsumeIn -> currentState = transition.newState
@@ -132,23 +127,43 @@ internal class Tokenizer(
         }
     }
 
-    fun addCurrentAttribute() {
-        if (isCurrentTagStartTag && currentAttributeName.isNotEmpty()) {
-            startTagBuilder.addAttribute(
-                currentAttributeName.toString(),
-                currentAttributeValue.toString()
-            )
-        }
-        // Clear buffers for the next attribute (for both start and end tags)
-        currentAttributeName.clear()
-        currentAttributeValue.clear()
+    /** Emits [token], which is not a tag token: those are emitted with [switchToDataStateAndEmitCurrentTag]. */
+    fun emitToken(token: Token) {
+        onTokenEmitted(token)
     }
 
-    fun emitToken(token: Token) {
-        if (token is Token.StartTag) {
-            lastStartTagName = token.name
+    /**
+     * "Leaves the attribute name state": compares the attribute's complete name with the token's others, and removes
+     * it as a duplicate-attribute parse error if one has the same name.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#attribute-name-state
+     */
+    fun leaveAttributeName() {
+        if (currentTag.removeCurrentAttributeIfDuplicate()) {
+            logParseError("duplicate-attribute")
         }
-        onTokenEmitted(token)
+    }
+
+    /**
+     * "Switch to the data state. Emit the current tag token." The tokenizer switches first, so that tree construction
+     * can switch it to another state while it processes the token.
+     *
+     * An end tag token emitted with attributes is an end-tag-with-attributes parse error, and one emitted with its
+     * self-closing flag set is an end-tag-with-trailing-solidus parse error.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tokenization
+     */
+    fun switchToDataStateAndEmitCurrentTag(): StateTransition {
+        currentState = Data
+        if (currentTag.isStartTag) {
+            lastStartTagName = currentTag.name.toString()
+        } else {
+            if (currentTag.hasAttributes) logParseError("end-tag-with-attributes")
+            if (currentTag.selfClosing) logParseError("end-tag-with-trailing-solidus")
+        }
+        onTokenEmitted(currentTag.build())
+        // The current input character is consumed, in whatever state the tokenizer is now in
+        return ContinueInCurrentState
     }
 
     fun peekNextChar(): Char = htmlBuffer.getOrNull(currentPosition + currentCharacterLength) ?: Chars.EOF.char
@@ -186,28 +201,12 @@ internal class Tokenizer(
         currentState = Data
         characterReferenceCode = 0L
         tempBuffer.clear()
-        currentAttributeName.clear()
-        currentAttributeValue.clear()
         docTypeBuilder.reset()
-        startTagBuilder.reset()
-        currentEndTagName.clear()
+        currentTag.create(isStartTag = true)
         currentCommentData.clear()
         currentProcessingInstructionTarget = ""
         currentProcessingInstructionData.clear()
-        isCurrentTagStartTag = true
         lastStartTagName = ""
-    }
-
-    fun emitStartTag(selfClosing: Boolean = false) {
-        val tag = startTagBuilder.build(selfClosing)
-        lastStartTagName = tag.name
-        onTokenEmitted(tag)
-        startTagBuilder.reset()
-    }
-
-    fun emitEndTag() {
-        onTokenEmitted(Token.EndTag(currentEndTagName.toString()))
-        currentEndTagName.clear()
     }
 
     fun emitDocType() {
@@ -239,13 +238,5 @@ internal class Tokenizer(
         currentCommentData.clear()
         currentCommentData.append('?')
         currentCommentData.append(tempBuffer)
-    }
-
-    fun emitCurrentTag(selfClosing: Boolean = false) {
-        if (isCurrentTagStartTag) {
-            emitStartTag(selfClosing)
-        } else {
-            emitEndTag()
-        }
     }
 }

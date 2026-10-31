@@ -36,8 +36,7 @@ internal data object ScriptDataEscapedEndTagOpen : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {
             codePoint.isAsciiAlpha() -> {
-                tokenizer.isCurrentTagStartTag = false
-                tokenizer.currentEndTagName.clear()
+                tokenizer.currentTag.create(isStartTag = false)
                 reconsumeIn(ScriptDataEscapedEndTagName)
             }
 

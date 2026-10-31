@@ -36,17 +36,12 @@ internal data object AfterAttributeName : TokenizationState {
         return when {
             codePoint.isWhiteSpace() -> switchTo(this)
 
-            codePoint.IS(Chars.Solidus) -> {
-                tokenizer.addCurrentAttribute()
-                switchTo(SelfClosingStartTag)
-            }
+            codePoint.IS(Chars.Solidus) -> switchTo(SelfClosingStartTag)
 
             codePoint.IS(Chars.Equals) -> switchTo(BeforeAttributeValue)
 
             codePoint.IS(Chars.GreaterThan) -> {
-                tokenizer.addCurrentAttribute()
-                tokenizer.emitCurrentTag()
-                switchTo(Data)
+                tokenizer.switchToDataStateAndEmitCurrentTag()
             }
 
             codePoint == -1 -> {
@@ -56,9 +51,7 @@ internal data object AfterAttributeName : TokenizationState {
             }
 
             else -> {
-                tokenizer.addCurrentAttribute()
-                tokenizer.currentAttributeName.clear()
-                tokenizer.currentAttributeValue.clear()
+                tokenizer.currentTag.startNewAttribute()
                 reconsumeIn(AttributeName)
             }
         }

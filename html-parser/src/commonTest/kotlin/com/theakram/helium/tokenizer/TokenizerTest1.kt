@@ -145,7 +145,7 @@ internal class TokenizerTest1 : TokenizerTestBase() {
         input = "<h></h a='b'>",
         expectedTokens = listOf(
             startTag(name = "h"),
-            endTag("h")
+            endTag("h", attributes = mapOf("a" to "b"))
         )
     )
 

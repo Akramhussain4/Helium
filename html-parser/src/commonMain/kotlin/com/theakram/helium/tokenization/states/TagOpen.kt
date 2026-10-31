@@ -39,8 +39,7 @@ internal data object TagOpen : TokenizationState {
             codePoint.IS(Chars.Solidus) -> switchTo(EndTagOpen)
 
             codePoint.isAsciiAlpha() -> {
-                tokenizer.isCurrentTagStartTag = true
-                tokenizer.startTagBuilder.reset()
+                tokenizer.currentTag.create(isStartTag = true)
                 reconsumeIn(TagName)
             }
 
