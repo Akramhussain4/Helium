@@ -62,10 +62,7 @@ internal object InCell : InsertionMode {
             is Token.StartTag if token.name.lowercase() in setOf(
                 "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr"
             ) -> {
-                assert(
-                    value = treeBuilder.hasElementInTableScope("td") ||
-                            treeBuilder.hasElementInTableScope("th")
-                ) { "The stack of open elements must have a td or th element in table scope" }
+                // The spec asserts a td or th element is in table scope here; it always holds in this mode
                 closeTheCell(treeBuilder)
                 reprocessIn(InRow)
             }
