@@ -42,6 +42,12 @@ internal data object Data : TokenizationState {
 
             codePoint.IS(Chars.LessThan) -> switchTo(TagOpen)
 
+            codePoint.IS(Chars.Null) -> {
+                tokenizer.logParseError("unexpected-null-character")
+                tokenizer.emitToken(Token.Character(data = codePoint.toChar()))
+                continueInCurrentState()
+            }
+
             codePoint == -1 -> {
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()

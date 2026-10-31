@@ -55,6 +55,16 @@ internal fun Int.isNonCharacter() = this in 0xFDD0..0xFDEF
         || this and 0xFFFE == 0xFFFE
         || this and 0xFFFF == 0xFFFF
 
+/**
+ * Spec: https://infra.spec.whatwg.org/#c0-control
+ */
+internal fun Int.isC0Control() = this in 0x0000..0x001F
+
+/**
+ * Spec: https://infra.spec.whatwg.org/#control
+ */
+internal fun Int.isControl() = isC0Control() || this in 0x007F..0x009F
+
 internal fun Int.isAsciiWhitespace() = this == Chars.Space.char.code
         || isWhiteSpace()
         || this == Chars.CarriageReturn.char.code

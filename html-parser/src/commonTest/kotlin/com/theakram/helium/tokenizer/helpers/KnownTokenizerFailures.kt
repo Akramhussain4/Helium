@@ -53,15 +53,6 @@ internal object KnownTokenizerFailures {
     private const val ERROR_ORDER =
         "Input stream errors are all reported before tokenizing, not as each character is consumed"
 
-    private const val NULL_CHARACTER_REFERENCE =
-        "A character reference to U+0000 also reports control-character-reference"
-
-    private const val NULL_IN_DATA =
-        "The data state doesn't report unexpected-null-character"
-
-    private const val EOF_IN_TAG =
-        "The attribute value states report eof-in-attribute-value instead of eof-in-tag"
-
     private const val DUPLICATE_ATTRIBUTE =
         "duplicate-attribute is not reported"
 
@@ -84,28 +75,12 @@ internal object KnownTokenizerFailures {
             STALE_QUESTION_MARK,
             listOf("invalid-first-character-of-processing-instruction-target")
         ),
-        "numericEntities.test: Invalid numeric entity character U+0000 (Data state)" to KnownFailure(
-            NULL_CHARACTER_REFERENCE,
-            listOf("null-character-reference", "control-character-reference")
-        ),
         "test1.test: End Tag w/attribute (Data state)" to KnownFailure(
             END_TAG_WITH_ATTRIBUTES,
             listOf()
         ),
         "test1.test: Repeated attr (Data state)" to KnownFailure(
             DUPLICATE_ATTRIBUTE,
-            listOf()
-        ),
-        "test2.test: Numeric entity representing the NUL character (Data state)" to KnownFailure(
-            NULL_CHARACTER_REFERENCE,
-            listOf("null-character-reference", "control-character-reference")
-        ),
-        "test2.test: Hexadecimal entity representing the NUL character (Data state)" to KnownFailure(
-            NULL_CHARACTER_REFERENCE,
-            listOf("null-character-reference", "control-character-reference")
-        ),
-        "test2.test: Null Byte Replacement (Data state)" to KnownFailure(
-            NULL_IN_DATA,
             listOf()
         ),
         "test3.test: \\u000B [1] (Data state)" to KnownFailure(
@@ -155,10 +130,6 @@ internal object KnownTokenizerFailures {
         "test3.test: ;\\uDBC0\\uDC00 [2] (CDATA section state)" to KnownFailure(
             SURROGATE_PAIR,
             listOf("surrogate-in-input-stream", "surrogate-in-input-stream", "eof-in-cdata")
-        ),
-        "test3.test: <\\u0000 (Data state)" to KnownFailure(
-            NULL_IN_DATA,
-            listOf("invalid-first-character-of-tag-name")
         ),
         "test3.test: <\\u000B (Data state)" to KnownFailure(
             CONTROL_CHARACTER,
@@ -712,14 +683,6 @@ internal object KnownTokenizerFailures {
             SURROGATE_PAIR,
             listOf("surrogate-in-input-stream", "surrogate-in-input-stream", "eof-in-cdata")
         ),
-        "test4.test: Zero hex numeric entity (Data state)" to KnownFailure(
-            NULL_CHARACTER_REFERENCE,
-            listOf("missing-semicolon-after-character-reference", "null-character-reference", "control-character-reference")
-        ),
-        "test4.test: Zero decimal numeric entity (Data state)" to KnownFailure(
-            NULL_CHARACTER_REFERENCE,
-            listOf("missing-semicolon-after-character-reference", "null-character-reference", "control-character-reference")
-        ),
         "test4.test: Duplicate different-case attributes (Data state)" to KnownFailure(
             DUPLICATE_ATTRIBUTE,
             listOf()
@@ -736,10 +699,6 @@ internal object KnownTokenizerFailures {
             END_TAG_WITH_TRAILING_SOLIDUS,
             listOf()
         ),
-        "test4.test: U+0000 in lookahead region after non-matching character (Data state)" to KnownFailure(
-            NULL_IN_DATA,
-            listOf("incorrectly-opened-comment")
-        ),
         "test4.test: U+0080 in lookahead region (Data state)" to KnownFailure(
             CONTROL_CHARACTER + "; " + ERROR_ORDER,
             listOf("incorrectly-opened-comment")
@@ -751,22 +710,6 @@ internal object KnownTokenizerFailures {
         "test4.test: U+1FFFF in lookahead region (Data state)" to KnownFailure(
             ASTRAL_NONCHARACTER + "; " + ERROR_ORDER,
             listOf("surrogate-in-input-stream", "surrogate-in-input-stream", "incorrectly-opened-comment")
-        ),
-        "test4.test: EOF in before attribute value state (Data state)" to KnownFailure(
-            EOF_IN_TAG,
-            listOf("eof-in-attribute-value")
-        ),
-        "test4.test: EOF in attribute value (double quoted) state (Data state)" to KnownFailure(
-            EOF_IN_TAG,
-            listOf("eof-in-attribute-value")
-        ),
-        "test4.test: EOF in attribute value (single quoted) state (Data state)" to KnownFailure(
-            EOF_IN_TAG,
-            listOf("eof-in-attribute-value")
-        ),
-        "test4.test: EOF in attribute value (unquoted) state (Data state)" to KnownFailure(
-            EOF_IN_TAG,
-            listOf("eof-in-attribute-value")
         ),
         "unicodeChars.test: Invalid Unicode character U+0001 (Data state)" to KnownFailure(
             CONTROL_CHARACTER,
@@ -1135,10 +1078,6 @@ internal object KnownTokenizerFailures {
         "unicodeChars.test: Valid Unicode character U+10FFFD (Data state)" to KnownFailure(
             SURROGATE_PAIR,
             listOf("surrogate-in-input-stream", "surrogate-in-input-stream")
-        ),
-        "unicodeCharsProblematic.test: CR followed by U+0000 (Data state)" to KnownFailure(
-            NULL_IN_DATA,
-            listOf()
         ),
     )
 
