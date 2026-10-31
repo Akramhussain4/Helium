@@ -34,8 +34,9 @@ object DatFileParser {
     private val ERROR_REGEX_OLD = """\((\d+),(\d+)\):\s*(.+)""".toRegex()
     private val ERROR_REGEX_NEW = """\((\d+):(\d+)\)\s+(.+)""".toRegex()
 
+    // Split on LF only: lines() also splits on CR, which some test data contains literally
     fun parse(content: String): List<Html5LibTest> =
-        content.lines()
+        content.split('\n')
             .let { lines -> LineIterator(lines).parseAllTests() }
 
     private class LineIterator(private val lines: List<String>) {
