@@ -5,7 +5,7 @@ public final class com/theakram/helium/HTMLParser {
 	public final fun getDocument ()Lcom/theakram/helium/tree/TreeNode;
 	public final fun getErrors ()Ljava/util/List;
 	public final fun parse (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
-	public final fun parseFragment (Ljava/lang/String;Lcom/theakram/helium/tree/TreeNode;)Ljava/util/List;
+	public final fun parseFragment (Ljava/lang/String;Lcom/theakram/helium/tree/TreeNode;)Lcom/theakram/helium/tree/TreeNode;
 }
 
 public final class com/theakram/helium/ParseError {

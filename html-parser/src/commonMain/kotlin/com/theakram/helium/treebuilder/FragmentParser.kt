@@ -33,25 +33,48 @@ import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.modes.InTemplate
 
 /**
- * Parses [input] as the contents of a context element, as setting innerHTML does.
+ * Parses [input] as the contents of a target element, as setting innerHTML does. The parser has no sanitizer
+ * configuration and doesn't allow declarative shadow roots, as for innerHTML.
  *
- * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-fragment-parsing-algorithm
  */
 internal object FragmentParser {
 
+    /**
+     * @param target the element, or a document fragment whose host is the element, to parse the contents of
+     * @param isContextDocumentScriptingDisabled whether scripting is disabled for the context's node document
+     * @return a document fragment holding the parsed nodes
+     */
     fun parseFragment(
-        context: TreeNode,
+        target: TreeNode,
         input: String,
         scriptingMode: ScriptingMode = ScriptingMode.INERT,
+        isContextDocumentScriptingDisabled: Boolean = false,
         onParseError: (String, Int) -> Unit = { _, _ -> }
-    ): List<TreeNode> {
-        // Step 6:
+    ): TreeNode {
+        // Step 1:
+        check(scriptingMode == ScriptingMode.INERT || scriptingMode == ScriptingMode.FRAGMENT) {
+            "The fragment parsing scripting mode must be Inert or Fragment"
+        }
+
+        // Steps 2-3:
+        val context = checkNotNull(if (target.type == NodeType.ELEMENT) target else target.host) {
+            "The target must be an element or a document fragment with a host"
+        }
+
+        // Step 5:
+        val contextDocument = getNodeDocument(context)
+
+        // Step 8:
+        val parserScriptingMode = if (isContextDocumentScriptingDisabled) ScriptingMode.DISABLED else scriptingMode
+
+        // Step 9:
         lateinit var tokenizer: Tokenizer
         val treeBuilder = TreeBuilder(
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
             },
-            scriptingMode = scriptingMode
+            scriptingMode = parserScriptingMode
         )
         treeBuilder.contextElement = context
         tokenizer = Tokenizer(
@@ -62,56 +85,63 @@ internal object FragmentParser {
             hasForeignAdjustedCurrentNode = treeBuilder::hasForeignAdjustedCurrentNode
         )
 
-        // Step 2:
+        // Step 4:
         val document = treeBuilder.document
 
-        // Steps 3-4:
-        val contextQuirksMode = getNodeDocument(context)?.quirksMode
+        // Steps 6-7:
+        val contextQuirksMode = contextDocument?.quirksMode
         if (contextQuirksMode == QuirksMode.QUIRKS || contextQuirksMode == QuirksMode.LIMITED_QUIRKS) {
             document.quirksMode = contextQuirksMode
         }
 
-        // Step 7:
-        tokenizer.switchState(getInitialTokenizerState(context, scriptingMode))
+        // Step 10:
+        tokenizer.switchState(getInitialTokenizerState(context, parserScriptingMode))
 
-        // Step 8:
+        // Step 11:
         val root = TreeNode.createElement(
             localName = "html",
             namespace = Namespaces.HTML,
             attributes = emptyList()
         )
 
-        // Step 9:
+        // Step 12:
         document.appendChild(root)
 
-        // Step 10:
+        // Step 13:
         treeBuilder.pushElement(root)
 
-        // Step 11:
+        // Step 14:
+        val fragment = TreeNode.createDocumentFragment()
+
+        // Step 15:
+        treeBuilder.insertionTargetRedirectionMap[root] = InsertionLocation(fragment, null)
+
+        // Step 16:
         if (context.namespace == Namespaces.HTML && context.localName == "template") {
             treeBuilder.pushTemplateInsertionMode(InTemplate)
         }
 
-        // Step 12: The context's attributes are read from the context element itself, e.g. for
+        // Step 17: The context's start tag token is read from the context element itself, e.g. for
         // annotation-xml HTML integration points
 
-        // Step 13:
+        // Step 18:
         treeBuilder.resetInsertionModeAppropriately()
 
-        // Step 14:
+        // Step 19:
         setFormElementPointer(treeBuilder, context)
 
-        // Steps 15-16:
+        // Steps 20-21:
         tokenizer.tokenize(input)
 
-        // Step 17:
-        return root.children.toList()
+        // Steps 22-23: The fragment has no node document to adopt it into
+        return fragment
     }
 
+    // A node inside template contents belongs to a document with the same mode as its template's
     private fun getNodeDocument(node: TreeNode): TreeNode? {
         var current = node
         while (true) {
-            current = current.parent ?: break
+            current = current.parent ?: current.host ?: break
         }
         return current.takeIf { it.type == NodeType.DOCUMENT }
     }

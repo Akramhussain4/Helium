@@ -36,7 +36,7 @@ internal class FragmentParserTest {
     fun `list items in a ul context are returned without html head or body`() {
         val context = TreeNode.createElement(localName = "ul")
 
-        val nodes = FragmentParser.parseFragment(context, "<li>One<li>Two")
+        val nodes = FragmentParser.parseFragment(context, "<li>One<li>Two").children
 
         assertEquals(listOf("li", "li"), nodes.map { it.localName })
         assertEquals(listOf("One", "Two"), nodes.map { it.children.single().data })
@@ -46,7 +46,7 @@ internal class FragmentParserTest {
     fun `table rows in a tbody context are parsed in table body mode`() {
         val context = TreeNode.createElement(localName = "tbody")
 
-        val nodes = FragmentParser.parseFragment(context, "<tr><td>cell")
+        val nodes = FragmentParser.parseFragment(context, "<tr><td>cell").children
 
         assertEquals("tr", nodes.single().localName)
         assertEquals("td", nodes.single().children.single().localName)
@@ -56,7 +56,7 @@ internal class FragmentParserTest {
     fun `content of an svg context is parsed as svg`() {
         val context = TreeNode.createElement(localName = "svg", namespace = Namespaces.SVG)
 
-        val nodes = FragmentParser.parseFragment(context, "<lineargradient/><![CDATA[text]]>")
+        val nodes = FragmentParser.parseFragment(context, "<lineargradient/><![CDATA[text]]>").children
 
         assertEquals(Namespaces.SVG, nodes.first().namespace)
         assertEquals("linearGradient", nodes.first().localName)

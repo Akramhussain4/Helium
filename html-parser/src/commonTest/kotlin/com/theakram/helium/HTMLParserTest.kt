@@ -125,15 +125,15 @@ internal class HTMLParserTest {
     }
 
     @Test
-    fun `parseFragment parses markup as the contents of the context element`() {
+    fun `parseFragment parses markup as the contents of the target into a document fragment`() {
         val parser = HTMLParser()
-        val context = TreeNode.createElement(localName = "tr")
+        val target = TreeNode.createElement(localName = "tr")
 
-        val nodes = parser.parseFragment("<td>a<td>b&notit;", context)
+        val fragment = parser.parseFragment("<td>a<td>b&notit;", target)
 
-        assertEquals(listOf("td", "td"), nodes.map { it.localName })
-        assertEquals(listOf(null, null), nodes.map { it.parent })
-        assertEquals(emptyList(), context.children)
+        assertEquals(NodeType.DOCUMENT_FRAGMENT, fragment.type)
+        assertEquals(listOf("td", "td"), fragment.children.map { it.localName })
+        assertEquals(emptyList(), target.children)
         assertEquals(listOf("missing-semicolon-after-character-reference"), parser.errors.map { it.code })
     }
 
