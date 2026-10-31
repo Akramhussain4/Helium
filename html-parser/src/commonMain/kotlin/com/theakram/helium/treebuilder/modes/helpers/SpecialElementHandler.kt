@@ -76,7 +76,11 @@ internal object SpecialElementHandler {
     }
 
     fun handleSelectStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        // TODO: Implement fragment case detection
+        if (InBodyHelpers.isSelectContext(treeBuilder)) {
+            // Parse error. Ignore the token.
+            return continueInCurrentMode()
+        }
+
         if (treeBuilder.hasElementInScope("select")) {
             treeBuilder.popUntil("select")
             return continueInCurrentMode()

@@ -26,9 +26,10 @@ internal object MediaElementHandler {
     }
 
     fun handleInputStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        // If fragment case AND context element is select:
-        //   Parse error, ignore, return
-        // TODO: Implement fragment case detection
+        if (InBodyHelpers.isSelectContext(treeBuilder)) {
+            // Parse error. Ignore the token.
+            return continueInCurrentMode()
+        }
 
         // If select in scope:
         if (treeBuilder.hasElementInScope("select")) {

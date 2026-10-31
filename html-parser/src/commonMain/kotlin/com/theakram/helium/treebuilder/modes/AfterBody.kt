@@ -52,9 +52,12 @@ internal object AfterBody : InsertionMode {
             )
 
             is Token.EndTag if token.name.equals(other = "html", ignoreCase = true) -> {
-                // TODO: Implement proper fragment case detection
-                // For now, we assume we're not in a fragment case and switch to AfterAfterBody
-                switchTo(AfterAfterBody)
+                if (treeBuilder.isFragmentCase) {
+                    // Parse error. Ignore the token.
+                    continueInCurrentMode()
+                } else {
+                    switchTo(AfterAfterBody)
+                }
             }
 
             is Token.EOF -> stopParsing()
