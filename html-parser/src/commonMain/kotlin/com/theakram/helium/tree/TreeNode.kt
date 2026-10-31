@@ -204,15 +204,18 @@ public class TreeNode(
         result.append(indent + nodeRepr)
 
         if (type == NodeType.ELEMENT && attributes.isNotEmpty()) {
-            val sortedAttrs = attributes.sortedBy { it.name }
-            for (attr in sortedAttrs) {
-                result.append("\n")
-                val attrIndent = "| " + "  ".repeat(depth + 1)
+            // Sorted by the printed name, as html5lib-tests expects
+            val namedAttrs = attributes.map { attr ->
                 val attrName = if (attr.prefix != null) {
                     "${attr.prefix} ${attr.localName}"
                 } else {
                     attr.localName
                 }
+                attrName to attr
+            }.sortedBy { it.first }
+            for ((attrName, attr) in namedAttrs) {
+                result.append("\n")
+                val attrIndent = "| " + "  ".repeat(depth + 1)
                 result.append("$attrIndent$attrName=\"${attr.value}\"")
             }
         }

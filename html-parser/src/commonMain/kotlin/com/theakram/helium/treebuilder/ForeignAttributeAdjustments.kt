@@ -117,7 +117,6 @@ internal object ForeignAttributeAdjustments {
         "xlink:show" to ForeignAttrSpec("http://www.w3.org/1999/xlink", "xlink", "show"),
         "xlink:title" to ForeignAttrSpec("http://www.w3.org/1999/xlink", "xlink", "title"),
         "xlink:type" to ForeignAttrSpec("http://www.w3.org/1999/xlink", "xlink", "type"),
-        "xml:base" to ForeignAttrSpec("http://www.w3.org/XML/1998/namespace", "xml", "base"),
         "xml:lang" to ForeignAttrSpec("http://www.w3.org/XML/1998/namespace", "xml", "lang"),
         "xml:space" to ForeignAttrSpec("http://www.w3.org/XML/1998/namespace", "xml", "space"),
         "xmlns" to ForeignAttrSpec("http://www.w3.org/2000/xmlns/", null, "xmlns"),
