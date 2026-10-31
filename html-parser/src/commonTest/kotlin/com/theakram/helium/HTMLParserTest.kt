@@ -58,4 +58,14 @@ internal class HTMLParserTest {
 
         assertEquals(second, parser.document)
     }
+
+    @Test
+    fun `newline at the start of pre listing and textarea is dropped`() {
+        val body = HTMLParser()
+            .parse("<pre>\nA</pre><listing>\nB</listing><textarea>\nC</textarea><pre>\n\nD</pre>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+
+        assertEquals(listOf("A", "B", "C", "\nD"), body.children.map { it.children.single().data })
+    }
 }

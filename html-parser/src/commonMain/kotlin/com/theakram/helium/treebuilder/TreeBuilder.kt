@@ -73,6 +73,7 @@ internal class TreeBuilder(
     private var originalInsertionMode: InsertionMode? = null
     private val templateInsertionModes = mutableListOf<InsertionMode>()
     private var framesetOk: Boolean = true
+    private var ignoreNextLineFeed: Boolean = false
 
     internal val pendingTableCharacterTokens = mutableListOf<Token.Character>()
     internal val currentNode: TreeNode get() = stack.currentNode ?: document
@@ -80,6 +81,11 @@ internal class TreeBuilder(
     internal val currentMode: InsertionMode get() = insertionMode
 
     internal fun process(token: Token) {
+        if (ignoreNextLineFeed) {
+            ignoreNextLineFeed = false
+            if (token is Token.Character && token.data == '\n') return
+        }
+
         while (true) {
             val transition = insertionMode.process(token, this)
 
@@ -171,6 +177,14 @@ internal class TreeBuilder(
 
     internal fun isFramesetOk(): Boolean = framesetOk
 
+    /**
+     * Drops the next token if it is a line feed, as pre, listing and textarea require.
+     * Newlines at the start of those elements are ignored as an authoring convenience.
+     */
+    internal fun ignoreNextLineFeed() {
+        ignoreNextLineFeed = true
+    }
+
     internal fun saveOriginalInsertionMode() {
         originalInsertionMode = insertionMode
     }
@@ -214,6 +228,7 @@ internal class TreeBuilder(
         originalInsertionMode = null
         templateInsertionModes.clear()
         framesetOk = true
+        ignoreNextLineFeed = false
         fosterParenting.disable()
         pendingTableCharacterTokens.clear()
     }

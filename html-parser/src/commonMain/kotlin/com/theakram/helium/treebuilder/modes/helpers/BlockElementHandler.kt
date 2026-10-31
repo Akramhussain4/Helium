@@ -40,8 +40,7 @@ internal object BlockElementHandler {
 
         treeBuilder.insertElement(tagName, attributes = attributes)
 
-        // TODO: If the next token is a U+000A LINE FEED (LF) character token, then ignore that token
-        // This requires peeking at the next token, which is not currently supported
+        treeBuilder.ignoreNextLineFeed()
 
         treeBuilder.setFramesetNotOk()
         return continueInCurrentMode()
