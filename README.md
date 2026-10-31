@@ -84,6 +84,9 @@ parser.errors // [ParseError(missing-semicolon-after-character-reference at posi
 
 A parser can be reused: every call to `parse` returns a new, independent document. Instances aren't thread-safe.
 
+By default, Helium parses like a browser with JavaScript enabled, so `<noscript>` content is raw text. To parse it
+as markup instead, as a browser with JavaScript disabled does, create the parser with `HTMLParser(scriptingEnabled = false)`.
+
 ## Status
 
 Helium is pre-1.0 and its API may change between minor versions.
@@ -93,15 +96,14 @@ suite for HTML parsers:
 
 - **Tokenization:** produces the expected tokens for the html5lib tokenizer tests. The reported parse errors aren't
   checked against the suite yet.
-- **Tree construction:** passes 1,542 of the 1,563 html5lib document tests that are run (99%). Fragment and
-  scripting-disabled tests aren't run yet.
+- **Tree construction:** passes 1,576 of the 1,590 html5lib document tests (99%). Fragment tests aren't run
+  yet.
 
 Not supported yet:
 
 - Fragment parsing (the algorithm behind `innerHTML`)
 - Complete error reporting: `errors` only contains tokenizer errors, and not all of those yet
 - Serializing a tree back to HTML
-- Parsing with scripting disabled
 
 ## Building
 

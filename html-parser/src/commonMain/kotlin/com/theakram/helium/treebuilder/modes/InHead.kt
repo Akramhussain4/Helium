@@ -86,9 +86,7 @@ internal object InHead : InsertionMode {
             }
 
             is Token.StartTag if token.name.equals("noscript", ignoreCase = true) -> {
-                // TODO: Check scripting flag (assuming scripting is disabled for now)
-                val scriptingEnabled = false
-                if (scriptingEnabled) {
+                if (treeBuilder.scriptingEnabled) {
                     InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
                 } else {
                     val attributes = InHeadHelpers.toAttributeList(token.attributes)

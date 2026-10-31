@@ -136,7 +136,7 @@ final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/Tree
 }
 
 final class com.theakram.helium/HTMLParser { // com.theakram.helium/HTMLParser|null[0]
-    constructor <init>() // com.theakram.helium/HTMLParser.<init>|<init>(){}[0]
+    constructor <init>(kotlin/Boolean = ...) // com.theakram.helium/HTMLParser.<init>|<init>(kotlin.Boolean){}[0]
 
     final val document // com.theakram.helium/HTMLParser.document|{}document[0]
         final fun <get-document>(): com.theakram.helium.tree/TreeNode // com.theakram.helium/HTMLParser.document.<get-document>|<get-document>(){}[0]

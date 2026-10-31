@@ -183,7 +183,10 @@ internal object InBody : InsertionMode {
 
             "iframe" -> SpecialElementHandler.handleIframeStartTag(treeBuilder, attributes)
 
-            in setOf("noembed", "noscript") -> {
+            "noembed" -> SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
+
+            // With scripting disabled, noscript is parsed like any other element
+            "noscript" if treeBuilder.scriptingEnabled -> {
                 SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
             }
 
