@@ -80,6 +80,13 @@ internal class TreeBuilder(
     internal var contextElement: TreeNode? = null
     internal val isFragmentCase: Boolean get() = contextElement != null
 
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-template-contents
+     */
+    internal val isParsingTemplateContents: Boolean
+        get() = stack.any { it.namespace == Namespaces.HTML && it.localName == "template" } ||
+                (contextElement?.namespace == Namespaces.HTML && contextElement?.localName == "template")
+
     internal var headElement: TreeNode? = null
     internal var formElement: TreeNode? = null
     private var originalInsertionMode: InsertionMode? = null

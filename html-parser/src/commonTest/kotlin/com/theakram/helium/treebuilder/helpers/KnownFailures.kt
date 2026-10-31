@@ -34,9 +34,6 @@ internal object KnownFailures {
     private const val PROCESSING_INSTRUCTIONS =
         "Processing instructions aren't supported yet (https://github.com/whatwg/html/commit/320c05f)"
 
-    private const val FORM_POINTER_IN_TEMPLATE =
-        "The form element pointer isn't ignored inside template contents (https://github.com/whatwg/html/commit/9ed7f27)"
-
     private const val SELECTEDCONTENT =
         "selectedcontent is kept up to date by DOM insertion steps, which a parser without a DOM doesn't run"
 
@@ -132,9 +129,6 @@ internal object KnownFailures {
         "processing-instructions.dat:1080" to PROCESSING_INSTRUCTIONS,
         "processing-instructions.dat:1111" to PROCESSING_INSTRUCTIONS,
         "processing-instructions.dat:1122" to PROCESSING_INSTRUCTIONS,
-        "template.dat:1724" to FORM_POINTER_IN_TEMPLATE,
-        "template.dat:1764" to FORM_POINTER_IN_TEMPLATE,
-        "template.dat:1817" to FORM_POINTER_IN_TEMPLATE,
         "webkit02.dat:692" to SELECTEDCONTENT,
         "webkit02.dat:706" to SELECTEDCONTENT,
         "webkit02.dat:732" to SELECTEDCONTENT,
