@@ -15,7 +15,9 @@ import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 internal object MediaElementHandler {
 
-    fun handleAreaStartTag(treeBuilder: TreeBuilder,
+    /** A start tag whose tag name, [tagName], is one of: "area", "br", "embed", "img", "keygen", "wbr". */
+    fun handleAreaBrEmbedImgKeygenWbrStartTag(
+        treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
     ): InsertionModeTransition {
@@ -27,15 +29,15 @@ internal object MediaElementHandler {
         return continueInCurrentMode()
     }
 
+    /** A start tag whose tag name is "input". */
     fun handleInputStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         if (InBodyHelpers.isSelectContext(treeBuilder)) {
-            // Parse error. Ignore the token.
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
-        // An input closes an open select, then is inserted after it
         if (treeBuilder.hasElementInScope("select")) {
-            // Parse error
+            treeBuilder.parseError()
             treeBuilder.popUntil("select")
         }
 
@@ -44,7 +46,6 @@ internal object MediaElementHandler {
         treeBuilder.popCurrentElement()
         treeBuilder.acknowledgeSelfClosingFlag()
 
-        // If NOT type="hidden": set frameset-ok
         val typeAttr = attributes.find { it.localName == "type" }
         if (typeAttr == null || !typeAttr.value.equalsAsciiCaseInsensitive("hidden")) {
             treeBuilder.setFramesetNotOk()
@@ -52,7 +53,9 @@ internal object MediaElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handleParamStartTag(treeBuilder: TreeBuilder,
+    /** A start tag whose tag name, [tagName], is one of: "param", "source", "track". */
+    fun handleParamSourceTrackStartTag(
+        treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
     ): InsertionModeTransition {
@@ -62,13 +65,10 @@ internal object MediaElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handleImageStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        // Parse error
-        return handleAreaStartTag(treeBuilder, "img", attributes)
-    }
-
+    /** An end tag whose tag name is "br". */
     fun handleBrEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
-        // Parse error
-        return handleAreaStartTag(treeBuilder, "br", emptyList())
+        treeBuilder.parseError()
+        // Drop the attributes from the token, and act as if this was a "br" start tag token with no attributes
+        return handleAreaBrEmbedImgKeygenWbrStartTag(treeBuilder, "br", emptyList())
     }
 }

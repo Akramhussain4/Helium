@@ -46,12 +46,52 @@ import com.theakram.helium.util.isAsciiWhitespace
  */
 internal object InBody : InsertionMode {
 
+    private val IN_HEAD_START_TAGS = setOf(
+        "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
+    )
+
+    private val BLOCK_START_TAGS = setOf(
+        "address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div", "dl", "fieldset",
+        "figcaption", "figure", "footer", "header", "hgroup", "main", "menu", "nav", "ol", "p", "search", "section",
+        "summary", "ul"
+    )
+
+    private val PRE_LISTING = setOf("pre", "listing")
+
+    private val DD_DT = setOf("dd", "dt")
+
+    private val FORMATTING_START_TAGS = setOf(
+        "b", "big", "code", "em", "font", "i", "s", "small", "strike", "strong", "tt", "u"
+    )
+
+    private val APPLET_MARQUEE_OBJECT = setOf("applet", "marquee", "object")
+
+    private val AREA_BR_EMBED_IMG_KEYGEN_WBR = setOf("area", "br", "embed", "img", "keygen", "wbr")
+
+    private val PARAM_SOURCE_TRACK = setOf("param", "source", "track")
+
+    private val RB_RTC = setOf("rb", "rtc")
+
+    private val RP_RT = setOf("rp", "rt")
+
+    private val RTC_RUBY = setOf("rtc", "ruby")
+
+    private val IGNORED_START_TAGS = setOf(
+        "caption", "col", "colgroup", "frame", "head", "tbody", "td", "tfoot", "th", "thead", "tr"
+    )
+
+    private val BLOCK_END_TAGS = setOf(
+        "address", "article", "aside", "blockquote", "button", "center", "details", "dialog", "dir", "div", "dl",
+        "fieldset", "figcaption", "figure", "footer", "header", "hgroup", "listing", "main", "menu", "nav", "ol",
+        "pre", "search", "section", "select", "summary", "ul"
+    )
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.Character -> {
                 when {
                     token.codePoint == 0x0000 -> {
-                        // Parse error: unexpected null character
+                        treeBuilder.parseError()
                         continueInCurrentMode()
                     }
 
@@ -81,7 +121,7 @@ internal object InBody : InsertionMode {
             }
 
             is Token.DocType -> {
-                // Parse error: unexpected DOCTYPE in body
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -92,7 +132,13 @@ internal object InBody : InsertionMode {
                 if (treeBuilder.currentTemplateInsertionMode() != null) {
                     return InTemplate.process(token, treeBuilder)
                 }
-                // Otherwise, stop parsing.
+
+                // Step 1:
+                if (InBodyHelpers.hasNodeNotAllowedAtEndOfBody(treeBuilder)) {
+                    treeBuilder.parseError()
+                }
+
+                // Step 2:
                 stopParsing()
             }
         }
@@ -103,59 +149,48 @@ internal object InBody : InsertionMode {
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
         val tagName = token.name
-        val attributes = InBodyHelpers.toAttributeList(token.attributes)
 
         return when (tagName) {
             "html" -> processHtmlStartTag(token, treeBuilder)
 
-            in setOf(
-                "base", "basefont", "bgsound", "link", "meta", "noframes",
-                "script", "style", "template", "title"
-            ) -> InHead.process(token, treeBuilder)
+            in IN_HEAD_START_TAGS -> InHead.process(token, treeBuilder)
 
             "body" -> processBodyStartTag(token, treeBuilder)
 
             "frameset" -> processFramesetStartTag(token, treeBuilder)
 
-            in setOf(
-                "address", "article", "aside", "blockquote", "center", "details",
-                "dialog", "dir", "div", "dl", "fieldset", "figcaption", "figure",
-                "footer", "header", "hgroup", "main", "menu", "nav", "ol", "p",
-                "search", "section", "summary", "ul"
-            ) -> {
-                BlockElementHandler.handleBlockElement(treeBuilder, tagName, attributes)
+            in BLOCK_START_TAGS -> {
+                BlockElementHandler.handleBlockStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
             in TreeConstructionConstants.HEADING_ELEMENTS -> {
-                HeadingHandler.handleHeadingStartTag(treeBuilder, tagName, attributes)
+                HeadingHandler.handleHeadingStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
-            in setOf("pre", "listing") -> {
-                BlockElementHandler.handlePreElement(treeBuilder, tagName, attributes)
+            in PRE_LISTING -> {
+                BlockElementHandler.handlePreListingStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
-            "form" -> FormElementHandler.handleFormStartTag(treeBuilder, attributes)
+            "form" -> FormElementHandler.handleFormStartTag(treeBuilder, token.htmlAttributes())
 
-            "li" -> ListElementHandler.handleLiStartTag(treeBuilder, attributes)
+            "li" -> ListElementHandler.handleLiStartTag(treeBuilder, token.htmlAttributes())
 
-            in setOf("dd", "dt") -> {
-                ListElementHandler.handleDdDtStartTag(treeBuilder, tagName, attributes)
+            in DD_DT -> ListElementHandler.handleDdDtStartTag(treeBuilder, tagName, token.htmlAttributes())
+
+            "plaintext" -> BlockElementHandler.handlePlaintextStartTag(treeBuilder, token.htmlAttributes())
+
+            "button" -> SpecialElementHandler.handleButtonStartTag(treeBuilder, token.htmlAttributes())
+
+            "a" -> FormattingElementHandler.handleAStartTag(treeBuilder, token.htmlAttributes())
+
+            in FORMATTING_START_TAGS -> {
+                FormattingElementHandler.handleFormattingElementStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
-            "plaintext" -> BlockElementHandler.handlePlaintextElement(treeBuilder, attributes)
+            "nobr" -> FormattingElementHandler.handleNobrStartTag(treeBuilder, token.htmlAttributes())
 
-            "button" -> SpecialElementHandler.handleButtonStartTag(treeBuilder, attributes)
-
-            "a" -> FormattingElementHandler.handleAStartTag(treeBuilder, attributes)
-
-            in TreeConstructionConstants.FORMATTING_ELEMENTS - setOf("a", "nobr") -> {
-                FormattingElementHandler.handleFormattingElementStartTag(treeBuilder, tagName, attributes)
-            }
-
-            "nobr" -> FormattingElementHandler.handleNobrStartTag(treeBuilder, attributes)
-
-            in setOf("applet", "marquee", "object") -> {
-                SpecialElementHandler.handleAppletStartTag(treeBuilder, tagName, attributes)
+            in APPLET_MARQUEE_OBJECT -> {
+                SpecialElementHandler.handleAppletMarqueeObjectStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
             "table" -> {
@@ -164,68 +199,71 @@ internal object InBody : InsertionMode {
                 ) {
                     InBodyHelpers.closePElement(treeBuilder)
                 }
-                treeBuilder.insertElement("table", attributes = attributes)
+                treeBuilder.insertElement("table", attributes = token.htmlAttributes())
                 treeBuilder.setFramesetNotOk()
                 switchTo(InTable)
             }
 
-            in setOf("area", "br", "embed", "img", "keygen", "wbr") -> {
-                MediaElementHandler.handleAreaStartTag(treeBuilder, tagName, attributes)
+            in AREA_BR_EMBED_IMG_KEYGEN_WBR -> {
+                MediaElementHandler.handleAreaBrEmbedImgKeygenWbrStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
-            "input" -> MediaElementHandler.handleInputStartTag(treeBuilder, attributes)
+            "input" -> MediaElementHandler.handleInputStartTag(treeBuilder, token.htmlAttributes())
 
-            in setOf("param", "source", "track") -> {
-                MediaElementHandler.handleParamStartTag(treeBuilder, tagName, attributes)
+            in PARAM_SOURCE_TRACK -> {
+                MediaElementHandler.handleParamSourceTrackStartTag(treeBuilder, tagName, token.htmlAttributes())
             }
 
-            "hr" -> BlockElementHandler.handleHrElement(treeBuilder, attributes)
+            "hr" -> BlockElementHandler.handleHrStartTag(treeBuilder, token.htmlAttributes())
 
-            "image" -> MediaElementHandler.handleImageStartTag(treeBuilder, attributes)
+            "image" -> {
+                treeBuilder.parseError()
+                // "Change the token's tag name to "img" and reprocess it", in the current insertion mode, which is not
+                // "in body" when a table mode processes the token using the "in body" rules
+                treeBuilder.currentMode.process(token.copy(name = "img"), treeBuilder)
+            }
 
-            "textarea" -> SpecialElementHandler.handleTextareaStartTag(treeBuilder, attributes)
+            "textarea" -> SpecialElementHandler.handleTextareaStartTag(treeBuilder, token.htmlAttributes())
 
-            "xmp" -> SpecialElementHandler.handleXmpStartTag(treeBuilder, attributes)
+            "xmp" -> SpecialElementHandler.handleXmpStartTag(treeBuilder, token)
 
-            "iframe" -> SpecialElementHandler.handleIframeStartTag(treeBuilder, attributes)
+            "iframe" -> SpecialElementHandler.handleIframeStartTag(treeBuilder, token)
 
-            "noembed" -> SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
+            "noembed" -> {
+                SpecialElementHandler.handleNoembedNoscriptStartTag(treeBuilder, token)
+            }
 
             // With scripting disabled, noscript is parsed like any other element
             "noscript" if treeBuilder.scriptingMode != ScriptingMode.DISABLED -> {
-                SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
+                SpecialElementHandler.handleNoembedNoscriptStartTag(treeBuilder, token)
             }
 
-            "select" -> SpecialElementHandler.handleSelectStartTag(treeBuilder, attributes)
+            "select" -> SpecialElementHandler.handleSelectStartTag(treeBuilder, token.htmlAttributes())
 
-            "option" -> SpecialElementHandler.handleOptionStartTag(treeBuilder, attributes)
+            "option" -> SpecialElementHandler.handleOptionStartTag(treeBuilder, token.htmlAttributes())
 
-            "optgroup" -> SpecialElementHandler.handleOptgroupStartTag(treeBuilder, attributes)
+            "optgroup" -> SpecialElementHandler.handleOptgroupStartTag(treeBuilder, token.htmlAttributes())
 
-            in setOf("rb", "rtc") -> {
+            in RB_RTC -> {
                 if (treeBuilder.hasElementInScope("ruby")) {
                     InBodyHelpers.generateImpliedEndTags(treeBuilder)
-                    if (treeBuilder.currentNode.localName != "ruby" ||
-                        treeBuilder.currentNode.namespace != Namespaces.HTML
-                    ) {
-                        // Parse error
+                    if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "ruby")) {
+                        treeBuilder.parseError()
                     }
                 }
-                treeBuilder.insertElement(tagName, attributes = attributes)
+                treeBuilder.insertElement(tagName, attributes = token.htmlAttributes())
                 continueInCurrentMode()
             }
 
-            in setOf("rp", "rt") -> {
+            in RP_RT -> {
                 if (treeBuilder.hasElementInScope("ruby")) {
                     InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "rtc")
                     val currentNode = treeBuilder.currentNode
-                    if (currentNode.namespace == Namespaces.HTML &&
-                        currentNode.localName !in setOf("rtc", "ruby")
-                    ) {
-                        // Parse error
+                    if (currentNode.namespace != Namespaces.HTML || currentNode.localName !in RTC_RUBY) {
+                        treeBuilder.parseError()
                     }
                 }
-                treeBuilder.insertElement(tagName, attributes = attributes)
+                treeBuilder.insertElement(tagName, attributes = token.htmlAttributes())
                 continueInCurrentMode()
             }
 
@@ -251,12 +289,16 @@ internal object InBody : InsertionMode {
                 continueInCurrentMode()
             }
 
-            in setOf(
-                "caption", "col", "colgroup", "frame", "head", "tbody",
-                "td", "tfoot", "th", "thead", "tr"
-            ) -> continueInCurrentMode()
+            in IGNORED_START_TAGS -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
-            else -> processAnyOtherStartTag(tagName, attributes, treeBuilder)
+            else -> {
+                treeBuilder.reconstructActiveFormattingElements()
+                treeBuilder.insertElement(tagName, attributes = token.htmlAttributes())
+                continueInCurrentMode()
+            }
         }
     }
 
@@ -267,16 +309,13 @@ internal object InBody : InsertionMode {
         val tagName = token.name
 
         return when (tagName) {
+            "template" -> InHead.process(token, treeBuilder)
+
             "body" -> EndTagHandler.handleBodyEndTag(treeBuilder)
 
             "html" -> EndTagHandler.handleHtmlEndTag(treeBuilder)
 
-            in setOf(
-                "address", "article", "aside", "blockquote", "button", "center",
-                "details", "dialog", "dir", "div", "dl", "fieldset", "figcaption",
-                "figure", "footer", "header", "hgroup", "listing", "main", "menu",
-                "nav", "ol", "pre", "search", "section", "select", "summary", "ul"
-            ) -> BlockElementHandler.handleBlockEndTag(treeBuilder, tagName)
+            in BLOCK_END_TAGS -> BlockElementHandler.handleBlockEndTag(treeBuilder, tagName)
 
             "form" -> FormElementHandler.handleFormEndTag(treeBuilder)
 
@@ -284,21 +323,17 @@ internal object InBody : InsertionMode {
 
             "li" -> ListElementHandler.handleLiEndTag(treeBuilder)
 
-            in setOf("dd", "dt") -> ListElementHandler.handleDdDtEndTag(treeBuilder, tagName)
+            in DD_DT -> ListElementHandler.handleDdDtEndTag(treeBuilder, tagName)
 
-            in TreeConstructionConstants.HEADING_ELEMENTS -> HeadingHandler.handleHeadingEndTag(treeBuilder)
+            in TreeConstructionConstants.HEADING_ELEMENTS -> HeadingHandler.handleHeadingEndTag(treeBuilder, tagName)
 
             in TreeConstructionConstants.FORMATTING_ELEMENTS -> {
                 FormattingElementHandler.handleFormattingElementEndTag(treeBuilder, tagName)
             }
 
-            in setOf("applet", "marquee", "object") -> {
-                SpecialElementHandler.handleAppletEndTag(treeBuilder, tagName)
-            }
+            in APPLET_MARQUEE_OBJECT -> SpecialElementHandler.handleAppletMarqueeObjectEndTag(treeBuilder, tagName)
 
             "br" -> MediaElementHandler.handleBrEndTag(treeBuilder)
-
-            "template" -> InHead.process(token, treeBuilder)
 
             else -> EndTagHandler.handleAnyOtherEndTag(treeBuilder, tagName)
         }
@@ -308,21 +343,19 @@ internal object InBody : InsertionMode {
         token: Token.StartTag,
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
-        // Parse error
+        treeBuilder.parseError()
 
-        if (treeBuilder.elementStack.any { it.localName == "template" && it.namespace == Namespaces.HTML }) {
+        val stack = treeBuilder.elementStack
+        if (stack.any { InBodyHelpers.isHtmlElement(it, "template") }) {
             return continueInCurrentMode()
         }
 
-        val htmlElement = treeBuilder.elementStack.firstOrNull()
-        if (htmlElement != null && htmlElement.localName == "html") {
-            token.attributes.forEach { (name, value) ->
-                if (!htmlElement.hasAttribute(name)) {
-                    htmlElement.setAttribute(name, value)
-                }
+        val htmlElement = stack.first()
+        token.attributes.forEach { (name, value) ->
+            if (!htmlElement.hasAttribute(name)) {
+                htmlElement.setAttribute(name, value)
             }
         }
-
         return continueInCurrentMode()
     }
 
@@ -330,25 +363,22 @@ internal object InBody : InsertionMode {
         token: Token.StartTag,
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
-        // Parse error
+        treeBuilder.parseError()
 
+        // The fragment case, or there is a template element on the stack
         val stack = treeBuilder.elementStack
-
-        if (stack.size <= 1) return continueInCurrentMode()
-
-        val secondElement = stack[1]
-        if (secondElement.localName != "body" || secondElement.namespace != Namespaces.HTML) {
-            return continueInCurrentMode()
-        }
-
-        if (stack.any { it.localName == "template" && it.namespace == Namespaces.HTML }) {
+        if (stack.size == 1 ||
+            !InBodyHelpers.isHtmlElement(stack[1], "body") ||
+            stack.any { InBodyHelpers.isHtmlElement(it, "template") }
+        ) {
             return continueInCurrentMode()
         }
 
         treeBuilder.setFramesetNotOk()
+        val bodyElement = stack[1]
         token.attributes.forEach { (name, value) ->
-            if (!secondElement.hasAttribute(name)) {
-                secondElement.setAttribute(name, value)
+            if (!bodyElement.hasAttribute(name)) {
+                bodyElement.setAttribute(name, value)
             }
         }
         return continueInCurrentMode()
@@ -358,36 +388,34 @@ internal object InBody : InsertionMode {
         token: Token.StartTag,
         treeBuilder: TreeBuilder
     ): InsertionModeTransition {
-        // Parse error
+        treeBuilder.parseError()
 
+        // The fragment case, or there is a template element on the stack
         val stack = treeBuilder.elementStack
-
-        if (stack.size <= 1) return continueInCurrentMode()
-
-        val secondElement = stack[1]
-        if (secondElement.localName != "body" || secondElement.namespace != Namespaces.HTML) {
+        if (stack.size == 1 || !InBodyHelpers.isHtmlElement(stack[1], "body")) {
             return continueInCurrentMode()
         }
 
         if (!treeBuilder.isFramesetOk()) {
             return continueInCurrentMode()
         }
+
+        // Step 1:
+        val secondElement = stack[1]
         secondElement.parent?.removeChild(secondElement)
-        while (treeBuilder.elementStack.size > 1) {
+
+        // Step 2:
+        val htmlElement = stack.first()
+        while (treeBuilder.currentNode !== htmlElement) {
             treeBuilder.popCurrentElement()
         }
 
-        treeBuilder.insertElement("frameset", attributes = InBodyHelpers.toAttributeList(token.attributes))
+        // Step 3:
+        treeBuilder.insertElement("frameset", attributes = token.htmlAttributes())
+
+        // Step 4:
         return switchTo(InFrameSet)
     }
 
-    private fun processAnyOtherStartTag(
-        tagName: String,
-        attributes: List<Attribute>,
-        treeBuilder: TreeBuilder
-    ): InsertionModeTransition {
-        treeBuilder.reconstructActiveFormattingElements()
-        treeBuilder.insertElement(tagName, attributes = attributes)
-        return continueInCurrentMode()
-    }
+    private fun Token.StartTag.htmlAttributes(): List<Attribute> = InHeadHelpers.toAttributeList(attributes)
 }

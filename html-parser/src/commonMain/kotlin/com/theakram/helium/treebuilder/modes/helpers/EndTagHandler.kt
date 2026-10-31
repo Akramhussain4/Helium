@@ -7,7 +7,6 @@
 
 package com.theakram.helium.treebuilder.modes.helpers
 
-import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
@@ -18,72 +17,59 @@ import com.theakram.helium.treebuilder.switchTo
 
 internal object EndTagHandler {
 
+    /** An end tag whose tag name is "body". */
     fun handleBodyEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
         if (!treeBuilder.hasElementInScope("body")) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
-
-        val allowedElements = setOf(
-            "dd", "dt", "li", "optgroup", "option", "p", "rb", "rp", "rt", "rtc",
-            "tbody", "td", "tfoot", "th", "thead", "tr", "body", "html"
-        )
-
-        val hasInvalidElement = treeBuilder.elementStack.any { node ->
-            node.namespace == Namespaces.HTML && node.localName !in allowedElements
-        }
-
-        if (hasInvalidElement) {
-            // Parse error
+        if (InBodyHelpers.hasNodeNotAllowedAtEndOfBody(treeBuilder)) {
+            treeBuilder.parseError()
         }
         return switchTo(AfterBody)
     }
 
+    /** An end tag whose tag name is "html". */
     fun handleHtmlEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
         if (!treeBuilder.hasElementInScope("body")) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
-
-        val allowedElements = setOf(
-            "dd", "dt", "li", "optgroup", "option", "p", "rb", "rp", "rt", "rtc",
-            "tbody", "td", "tfoot", "th", "thead", "tr", "body", "html"
-        )
-
-        val hasInvalidElement = treeBuilder.elementStack.any { node ->
-            node.namespace == Namespaces.HTML && node.localName !in allowedElements
-        }
-
-        if (hasInvalidElement) {
-            // Parse error
+        if (InBodyHelpers.hasNodeNotAllowedAtEndOfBody(treeBuilder)) {
+            treeBuilder.parseError()
         }
         return reprocessIn(AfterBody)
     }
 
+    /**
+     * Any other end tag, whose tag name is [tagName]. The adoption agency algorithm acts as described here too.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
+     */
     fun handleAnyOtherEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
-        val stack = treeBuilder.elementStack
-        for (i in stack.lastIndex downTo 0) {
-            val node = stack[i]
-            if (node.namespace == Namespaces.HTML &&
-                node.localName == tagName) {
+        // Steps 1, 3 and 4:
+        for (node in treeBuilder.elementStack.asReversed()) {
+            // Step 2:
+            if (InBodyHelpers.isHtmlElement(node, tagName)) {
+                // Step 2.1:
                 InBodyHelpers.generateImpliedEndTags(treeBuilder, except = tagName)
-                if (treeBuilder.currentNode !== node) {
-                    // Parse error
+
+                // Step 2.2:
+                if (node !== treeBuilder.currentNode) {
+                    treeBuilder.parseError()
                 }
-                while (treeBuilder.currentNode !== node && treeBuilder.elementStack.isNotEmpty()) {
-                    treeBuilder.popCurrentElement()
-                }
-                if (treeBuilder.elementStack.isNotEmpty()) {
-                    treeBuilder.popCurrentElement()
-                }
+
+                // Step 2.3:
+                treeBuilder.popUntilElement(node)
                 return continueInCurrentMode()
             }
 
+            // Step 3:
             if (TreeConstructionConstants.isSpecialElement(node)) {
-                // Parse error
+                treeBuilder.parseError()
                 return continueInCurrentMode()
             }
         }
-        return continueInCurrentMode()
+        error("The html element at the top of the stack of open elements is in the special category")
     }
 }

@@ -292,8 +292,8 @@ internal class TreeBuilder(
     internal fun hasElementInTableScope(tagName: String): Boolean =
         scopeChecker.hasElementInTableScope(tagName)
 
-    internal fun hasElementInSelectScope(tagName: String): Boolean =
-        scopeChecker.hasElementInSelectScope(tagName)
+    internal fun hasElementInScopeMatching(matches: (TreeNode) -> Boolean): Boolean =
+        scopeChecker.hasElementInScopeMatching(matches)
 
     internal fun enableFosterParenting() = fosterParenting.enable()
 

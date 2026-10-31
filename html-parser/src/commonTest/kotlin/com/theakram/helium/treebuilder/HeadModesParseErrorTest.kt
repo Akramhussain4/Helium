@@ -379,8 +379,8 @@ internal class HeadModesParseErrorTest {
 
     @Test
     fun `a br end tag in head noscript is handled as anything else`() {
-        // The noscript's own error; the br end tag then reaches the "in body" rules
-        assertEquals(1, parse("<!DOCTYPE html><head><noscript></br>", scriptingEnabled = false).treeErrors)
+        // The noscript's own error, then "in body"'s for the br end tag it reaches
+        assertEquals(2, parse("<!DOCTYPE html><head><noscript></br>", scriptingEnabled = false).treeErrors)
     }
 
     @Test

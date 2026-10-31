@@ -28,10 +28,12 @@ package com.theakram.helium.treebuilder
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
-import com.theakram.helium.treebuilder.modes.helpers.EndTagHandler
 
 /**
  * The parser has no sanitizer configuration, so every sanitizer action is "Keep", and pendingRedirects stays empty.
+ *
+ * [run] returns false where step 4.3 says to act as described in the "any other end tag" entry of the "in body"
+ * insertion mode, which its caller then does.
  *
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#adoption-agency-algorithm
  */
@@ -42,7 +44,7 @@ internal class AdoptionAgencyAlgorithm(
     private val treeBuilder: TreeBuilder
 ) {
 
-    fun run(tagName: String) {
+    fun run(tagName: String): Boolean {
         // Step 1:
         val subject = tagName
 
@@ -54,7 +56,7 @@ internal class AdoptionAgencyAlgorithm(
             !activeFormattingElements.contains(currentNode)
         ) {
             stack.pop()
-            return
+            return true
         }
 
         // Step 3:
@@ -64,7 +66,7 @@ internal class AdoptionAgencyAlgorithm(
         while (true) {
             // Step 4.1:
             if (outerLoopCounter >= 8) {
-                return
+                return true
             }
 
             // Step 4.2:
@@ -73,26 +75,25 @@ internal class AdoptionAgencyAlgorithm(
             // Step 4.3:
             val formattingElement = activeFormattingElements.findLastElementByTagName(subject)
             if (formattingElement == null) {
-                EndTagHandler.handleAnyOtherEndTag(treeBuilder, subject)
-                return
+                return false
             }
 
             // Step 4.4:
             if (!stack.contains(formattingElement)) {
-                // Parse error
+                treeBuilder.parseError()
                 activeFormattingElements.remove(formattingElement)
-                return
+                return true
             }
 
             // Step 4.5:
             if (!scopeChecker.isElementInScope(formattingElement)) {
-                // Parse error
-                return
+                treeBuilder.parseError()
+                return true
             }
 
             // Step 4.6:
             if (stack.currentNode !== formattingElement) {
-                // Parse error
+                treeBuilder.parseError()
             }
 
             // Step 4.7:
@@ -102,7 +103,7 @@ internal class AdoptionAgencyAlgorithm(
             if (furthestBlock == null) {
                 stack.popUntilElement(formattingElement)
                 activeFormattingElements.remove(formattingElement)
-                return
+                return true
             }
 
             // Step 4.9:
@@ -151,7 +152,7 @@ internal class AdoptionAgencyAlgorithm(
                 }
 
                 // Step 4.16.6:
-                val newElement = createElementLike(node)
+                val newElement = createElementForTokenOf(node)
                 activeFormattingElements.replace(node, newElement)
                 stack.replace(node, newElement)
                 node = newElement
@@ -188,14 +189,15 @@ internal class AdoptionAgencyAlgorithm(
             }
 
             // Step 4.22:
-            val newElement = createElementLike(formattingElement)
+            val newElement = createElementForTokenOf(formattingElement)
 
             // Step 4.23:
             if (bookmarkAfter == null) {
                 activeFormattingElements.replace(formattingElement, newElement)
             } else {
+                val tokenAttributes = activeFormattingElements.tokenAttributesOf(formattingElement)
                 activeFormattingElements.remove(formattingElement)
-                activeFormattingElements.insertAfter(bookmarkAfter, newElement)
+                activeFormattingElements.insertAfter(bookmarkAfter, newElement, tokenAttributes)
             }
 
             // Step 4.24:
@@ -228,10 +230,11 @@ internal class AdoptionAgencyAlgorithm(
         return null
     }
 
-    // Creates an element for the token for which element was created
-    private fun createElementLike(element: TreeNode): TreeNode = TreeNode.createElement(
-        localName = element.localName!!,
+    // Creates an element for the token for which element, an element in the list of active formatting elements, was
+    // created, in the HTML namespace
+    private fun createElementForTokenOf(element: TreeNode): TreeNode = TreeNode.createElement(
+        localName = checkNotNull(element.localName),
         namespace = Namespaces.HTML,
-        attributes = element.attributes.toList()
+        attributes = activeFormattingElements.tokenAttributesOf(element)
     )
 }
