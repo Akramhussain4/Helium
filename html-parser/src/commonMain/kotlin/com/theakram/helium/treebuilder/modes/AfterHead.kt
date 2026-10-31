@@ -98,6 +98,7 @@ internal object AfterHead : InsertionMode {
 
     private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
         treeBuilder.createImplicitElement("body")
+        treeBuilder.setFramesetOk()
         return reprocessIn(InBody)
     }
 }
