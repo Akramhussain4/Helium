@@ -34,15 +34,11 @@ internal object KnownFailures {
     private const val SELECTEDCONTENT =
         "selectedcontent is kept up to date by DOM insertion steps, which a parser without a DOM doesn't run"
 
-    private const val ADOPTION_AGENCY_MARKER =
-        "The adoption agency algorithm doesn't match the expected tree when a closed marquee's marker remains"
-
     private val failures = mapOf(
         "webkit02.dat:692" to SELECTEDCONTENT,
         "webkit02.dat:706" to SELECTEDCONTENT,
         "webkit02.dat:732" to SELECTEDCONTENT,
-        "webkit02.dat:748" to SELECTEDCONTENT,
-        "adoption02.dat:41" to ADOPTION_AGENCY_MARKER
+        "webkit02.dat:748" to SELECTEDCONTENT
     )
 
     fun reasonFor(filename: String, lineNumber: Int): String? = failures["$filename:$lineNumber"]

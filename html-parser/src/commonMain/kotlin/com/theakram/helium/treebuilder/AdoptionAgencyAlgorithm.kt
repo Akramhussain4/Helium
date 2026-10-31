@@ -26,9 +26,13 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.modes.helpers.EndTagHandler
 
 /**
+ * The parser has no sanitizer configuration, so every sanitizer action is "Keep", and pendingRedirects stays empty.
+ *
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#adoption-agency-algorithm
  */
 internal class AdoptionAgencyAlgorithm(
@@ -47,7 +51,8 @@ internal class AdoptionAgencyAlgorithm(
         if (currentNode != null &&
             currentNode.namespace == Namespaces.HTML &&
             currentNode.localName == subject &&
-            !activeFormattingElements.contains(currentNode)) {
+            !activeFormattingElements.contains(currentNode)
+        ) {
             stack.pop()
             return
         }
@@ -66,25 +71,28 @@ internal class AdoptionAgencyAlgorithm(
             outerLoopCounter++
 
             // Step 4.3:
-            val formattingElement = activeFormattingElements.findLastElementByTagName(subject) ?: return
+            val formattingElement = activeFormattingElements.findLastElementByTagName(subject)
+            if (formattingElement == null) {
+                EndTagHandler.handleAnyOtherEndTag(treeBuilder, subject)
+                return
+            }
 
             // Step 4.4:
             if (!stack.contains(formattingElement)) {
-                // Parse error: formatting element not in stack
+                // Parse error
                 activeFormattingElements.remove(formattingElement)
                 return
             }
 
             // Step 4.5:
             if (!scopeChecker.isElementInScope(formattingElement)) {
-                // Parse error:
+                // Parse error
                 return
             }
 
             // Step 4.6:
-            @Suppress("ControlFlowWithEmptyBody")
             if (stack.currentNode !== formattingElement) {
-                // Parse error would be reported here in a full implementation
+                // Parse error
             }
 
             // Step 4.7:
@@ -98,129 +106,132 @@ internal class AdoptionAgencyAlgorithm(
             }
 
             // Step 4.9:
-            val formattingElementIndex = stack.indexOf(formattingElement)
-            if (formattingElementIndex <= 0) {
-                // This shouldn't happen in a well-formed document, but if it does,
-                // we cannot proceed with this iteration
-                return
-            }
-            val commonAncestor = stack[formattingElementIndex - 1]
+            val commonAncestor = stack[stack.indexOf(formattingElement) - 1]
 
-            // Step 4.10:
-            var bookmark = formattingElement
+            // Step 4.10: The bookmark is at formattingElement's position until it is moved after a new node
+            var bookmarkAfter: TreeNode? = null
 
             // Step 4.11:
             var node: TreeNode = furthestBlock
             var lastNode: TreeNode = furthestBlock
+            // Removing node from the stack doesn't move the elements above it, so its index keeps finding them
+            var nodeIndex = stack.indexOf(furthestBlock)
 
-            // Step 4.12:
+            // Steps 4.12-4.13: pendingRedirects stays empty without a sanitizer configuration
+
+            // Step 4.14:
             var innerLoopCounter = 0
-            var removedNodeIndex: Int? = null
 
-            // Step 4.13:
+            // Step 4.15:
+            var bookmarkMoved = false
+
+            // Step 4.16:
             while (true) {
-                // Step 4.13.1:
+                // Step 4.16.1:
                 innerLoopCounter++
 
-                // Step 4.13.2:
-                val nodeIndex = stack.indexOf(node)
-                when {
-                    nodeIndex > 0 -> {
-                        node = stack[nodeIndex - 1]
-                        removedNodeIndex = null
-                    }
-                    nodeIndex == 0 -> break
-                    else -> {
-                        // Node was removed - use an element that was above it before removal
-                        val prevIndex = removedNodeIndex?.takeIf { it > 0 }?.dec()
-                        if (prevIndex == null || prevIndex >= stack.size) break
-                        node = stack[prevIndex]
-                        removedNodeIndex = null
-                    }
-                }
+                // Step 4.16.2:
+                nodeIndex--
+                node = stack[nodeIndex]
 
-                // Step 4.13.3:
+                // Step 4.16.3:
                 if (node === formattingElement) {
                     break
                 }
 
-                // Step 4.13.4:
+                // Step 4.16.4:
                 if (innerLoopCounter > 3 && activeFormattingElements.contains(node)) {
                     activeFormattingElements.remove(node)
                 }
 
-                // Step 4.13.5:
+                // Step 4.16.5:
                 if (!activeFormattingElements.contains(node)) {
-                    removedNodeIndex = stack.indexOf(node)
                     stack.remove(node)
                     continue
                 }
 
-                // Step 4.13.6:
-                val newElement = TreeNode.createElement(
-                    localName = node.localName ?: "",
-                    namespace = node.namespace ?: Namespaces.HTML,
-                    attributes = node.attributes.toList()
-                )
+                // Step 4.16.6:
+                val newElement = createElementLike(node)
                 activeFormattingElements.replace(node, newElement)
                 stack.replace(node, newElement)
                 node = newElement
 
-                // Step 4.13.7:
-                if (lastNode === furthestBlock) {
-                    bookmark = node
+                // Step 4.16.7:
+                if (!bookmarkMoved) {
+                    bookmarkAfter = node
+                    bookmarkMoved = true
                 }
 
-                // Step 4.13.8:
-                lastNode.parent?.removeChild(lastNode)
+                // Steps 4.16.8-4.16.11: With nodeAction "Keep", append lastNode to node
                 node.appendChild(lastNode)
-
-                // Step 4.13.9:
                 lastNode = node
             }
 
-            // Step 4.14:
-            lastNode.parent?.removeChild(lastNode)
-            treeBuilder.insertAtAppropriatePlace(lastNode, commonAncestor)
-
-            // Step 4.15:
-            val newFormattingElement = TreeNode.createElement(
-                localName = formattingElement.localName ?: "",
-                namespace = formattingElement.namespace ?: Namespaces.HTML,
-                attributes = formattingElement.attributes.toList()
-            )
-
-            // Step 4.16:
-            val childrenToMove = furthestBlock.children.toList()
-            childrenToMove.forEach { child ->
-                furthestBlock.removeChild(child)
-                newFormattingElement.appendChild(child)
-            }
-
             // Step 4.17:
-            furthestBlock.appendChild(newFormattingElement)
+            val insertionLocation = treeBuilder.appropriatePlaceForInsertingNode(commonAncestor)
 
             // Step 4.18:
-            activeFormattingElements.remove(formattingElement)
-            activeFormattingElements.insertAfter(bookmark, newFormattingElement)
+            val (target, refNode) = treeBuilder.adjustedInsertionLocation(insertionLocation)
 
-            // Step 4.19:
+            // Step 4.19: pendingRedirects is empty
+
+            // Step 4.20:
+            lastNode.parent?.removeChild(lastNode)
+
+            // Step 4.21:
+            if (lastNode.parent == null &&
+                !lastNode.isHostIncludingInclusiveAncestorOf(target) &&
+                (target.type != NodeType.DOCUMENT || target.children.none { it.type == NodeType.ELEMENT }) &&
+                (refNode == null || refNode.parent === target)
+            ) {
+                target.insertBefore(lastNode, refNode)
+            }
+
+            // Step 4.22:
+            val newElement = createElementLike(formattingElement)
+
+            // Step 4.23:
+            if (bookmarkAfter == null) {
+                activeFormattingElements.replace(formattingElement, newElement)
+            } else {
+                activeFormattingElements.remove(formattingElement)
+                activeFormattingElements.insertAfter(bookmarkAfter, newElement)
+            }
+
+            // Step 4.24:
             stack.remove(formattingElement)
-            stack.insertAfter(furthestBlock, newFormattingElement)
+            stack.insertAfter(furthestBlock, newElement)
+
+            // Steps 4.25-4.27: With sanitizerAction "Keep", move furthestBlock's children into newElement
+            furthestBlock.children.toList().forEach { child -> newElement.appendChild(child) }
+            val (newElementParent, newElementRefNode) =
+                treeBuilder.adjustedInsertionLocation(InsertionLocation(furthestBlock, null))
+            newElementParent.insertBefore(newElement, newElementRefNode)
+
+            // Steps 4.28-4.29:
+            var belowIndex = stack.indexOf(newElement) + 1
+            while (belowIndex < stack.size && treeBuilder.insertionTargetRedirectionMap.containsKey(stack[belowIndex])) {
+                treeBuilder.insertionTargetRedirectionMap[stack[belowIndex]] =
+                    treeBuilder.adjustedInsertionLocation(InsertionLocation(newElement, null))
+                belowIndex++
+            }
         }
     }
 
+    // The topmost node lower in the stack than formattingElement that is in the special category
     private fun findFurthestBlock(formattingElement: TreeNode): TreeNode? {
-        val formattingIndex = stack.indexOf(formattingElement)
-        if (formattingIndex < 0) return null
-
-        // Look for special elements above the formatting element in the stack
-        for (i in (formattingIndex + 1) until stack.size) {
-            val element = stack[i]
-            if (TreeConstructionConstants.isSpecialElement(element)) {
-                return element
+        for (i in (stack.indexOf(formattingElement) + 1) until stack.size) {
+            if (TreeConstructionConstants.isSpecialElement(stack[i])) {
+                return stack[i]
             }
         }
         return null
     }
+
+    // Creates an element for the token for which element was created
+    private fun createElementLike(element: TreeNode): TreeNode = TreeNode.createElement(
+        localName = element.localName!!,
+        namespace = Namespaces.HTML,
+        attributes = element.attributes.toList()
+    )
 }

@@ -122,7 +122,7 @@ internal class NodeInsertion(
         val (targetParent, referenceChild) = adjustedInsertionLocation(overrideLocation)
         // Step 2:
         if (element.parent != null ||
-            isHostIncludingInclusiveAncestor(element, targetParent) ||
+            element.isHostIncludingInclusiveAncestorOf(targetParent) ||
             (targetParent.type == NodeType.DOCUMENT && targetParent.children.any { it.type == NodeType.ELEMENT })
         ) {
             return
@@ -170,17 +170,5 @@ internal class NodeInsertion(
         val (targetParent, referenceChild) = adjustedInsertionLocation(insertionLocation)
         // Steps 5-6:
         targetParent.insertBefore(TreeNode.createProcessingInstruction(target, data), referenceChild)
-    }
-
-    /**
-     * Spec: https://dom.spec.whatwg.org/#concept-tree-host-including-inclusive-ancestor
-     */
-    private fun isHostIncludingInclusiveAncestor(node: TreeNode, of: TreeNode): Boolean {
-        var current: TreeNode? = of
-        while (current != null) {
-            if (current === node) return true
-            current = current.parent ?: current.host
-        }
-        return false
     }
 }

@@ -240,11 +240,6 @@ internal class TreeBuilder(
 
     internal fun runAdoptionAgency(tagName: String) = adoptionAgency.run(tagName)
 
-    internal fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
-        val (targetParent, referenceChild) = adjustedInsertionLocation(appropriatePlaceForInsertingNode(overrideTarget))
-        targetParent.insertBefore(node, referenceChild)
-    }
-
     internal fun reconstructActiveFormattingElements() {
         formattingElementReconstructor.reconstruct()
     }
