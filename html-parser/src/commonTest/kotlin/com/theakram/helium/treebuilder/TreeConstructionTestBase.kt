@@ -41,7 +41,7 @@ internal abstract class TreeConstructionTestBase {
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
             },
-            scriptingEnabled = scriptingEnabled
+            scriptingMode = if (scriptingEnabled) ScriptingMode.NORMAL else ScriptingMode.DISABLED
         )
         tokenizer = Tokenizer(
             onTokenEmitted = { token ->
@@ -66,7 +66,11 @@ internal abstract class TreeConstructionTestBase {
             else -> Namespaces.HTML to context
         }
         val contextElement = TreeNode.createElement(localName = localName, namespace = namespace)
-        return FragmentParser.parseFragment(contextElement, input, scriptingEnabled)
+        return FragmentParser.parseFragment(
+            contextElement,
+            input,
+            if (scriptingEnabled) ScriptingMode.INERT else ScriptingMode.DISABLED
+        )
             .joinToString("\n") { it.toTreeString() }
             .trim()
     }

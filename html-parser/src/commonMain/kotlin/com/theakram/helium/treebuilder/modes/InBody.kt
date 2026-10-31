@@ -32,6 +32,7 @@ import com.theakram.helium.tree.QuirksMode
 import com.theakram.helium.treebuilder.ForeignAttributeAdjustments
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.ScriptingMode
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
 import com.theakram.helium.treebuilder.continueInCurrentMode
@@ -186,7 +187,7 @@ internal object InBody : InsertionMode {
             "noembed" -> SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
 
             // With scripting disabled, noscript is parsed like any other element
-            "noscript" if treeBuilder.scriptingEnabled -> {
+            "noscript" if treeBuilder.scriptingMode != ScriptingMode.DISABLED -> {
                 SpecialElementHandler.handleNoembedStartTag(treeBuilder, tagName, attributes)
             }
 
