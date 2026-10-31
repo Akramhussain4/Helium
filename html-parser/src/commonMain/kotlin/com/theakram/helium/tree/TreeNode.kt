@@ -53,6 +53,22 @@ public class TreeNode(
 ) {
 
     /**
+     * The template element whose template contents this document fragment is.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-documentfragment-host
+     */
+    internal var host: TreeNode? = null
+
+    /**
+     * Where a template element with a for attribute inserts its contents, and the markers around them.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/scripting.html#insertion-target
+     */
+    internal var insertionTarget: TreeNode? = null
+    internal var insertionStartMarker: TreeNode? = null
+    internal var insertionEndMarker: TreeNode? = null
+
+    /**
      * Returns true if this is a template element with content.
      */
     public val isTemplate: Boolean
@@ -263,7 +279,7 @@ public class TreeNode(
             )
             // Per spec, template elements have a content property that is a DocumentFragment
             if (namespace == Namespaces.HTML && localName == "template") {
-                element.templateContent = createDocumentFragment()
+                element.templateContent = createDocumentFragment().also { it.host = element }
             }
             return element
         }

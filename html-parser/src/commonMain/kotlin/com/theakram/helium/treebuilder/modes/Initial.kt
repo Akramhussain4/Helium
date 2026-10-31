@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder.modes
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.QuirksMode
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.InsertionLocation
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -47,20 +48,20 @@ internal object Initial : InsertionMode {
             is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.Comment -> {
-                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
             is Token.ProcessingInstruction -> {
-                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                treeBuilder.insertProcessingInstruction(token.target, token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
             is Token.DocType -> {
                 treeBuilder.insertDoctype(
                     name = token.name ?: "",
-                    publicId = token.publicId,
-                    systemId = token.systemId
+                    publicId = token.publicId ?: "",
+                    systemId = token.systemId ?: ""
                 )
 
                 if (!treeBuilder.document.isIframeSrcdoc && !treeBuilder.document.parserCannotChangeMode) {

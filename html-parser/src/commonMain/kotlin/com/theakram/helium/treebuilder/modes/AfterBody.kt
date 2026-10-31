@@ -39,14 +39,16 @@ internal object AfterBody : InsertionMode {
             is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
 
             is Token.Comment -> {
-                val htmlElement = treeBuilder.elementStack.firstOrNull()
-                htmlElement?.appendChild(TreeNode.createComment(token.data))
+                treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.elementStack.first(), null))
                 continueInCurrentMode()
             }
 
             is Token.ProcessingInstruction -> {
-                val htmlElement = treeBuilder.elementStack.firstOrNull()
-                htmlElement?.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                treeBuilder.insertProcessingInstruction(
+                    token.target,
+                    token.data,
+                    InsertionLocation(treeBuilder.elementStack.first(), null)
+                )
                 continueInCurrentMode()
             }
 

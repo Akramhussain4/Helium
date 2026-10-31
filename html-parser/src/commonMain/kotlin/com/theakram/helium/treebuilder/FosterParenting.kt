@@ -25,13 +25,12 @@
 
 package com.theakram.helium.treebuilder
 
-import com.theakram.helium.tree.NodeType
-import com.theakram.helium.tree.TreeNode
-
 /**
+ * Whether foster parenting is enabled. The appropriate place for inserting a node reads it.
+ *
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#foster-parent
  */
-internal class FosterParenting(private val stack: StackOfOpenElements) {
+internal class FosterParenting {
 
     var isEnabled: Boolean = false
         private set
@@ -42,93 +41,5 @@ internal class FosterParenting(private val stack: StackOfOpenElements) {
 
     fun disable() {
         isEnabled = false
-    }
-
-    fun fosterParentElement(element: TreeNode) {
-        // Find the last table element in the stack of open elements
-        val lastTableIndex = stack.indexOfLastTagName("table")
-
-        if (lastTableIndex == -1) {
-            // No table element - insert into the current node
-            // This shouldn't happen in normal parsing but handle gracefully
-            val current = stack.currentNode
-            requireNotNull(current) { "No current node available for foster parenting" }
-            current.appendChild(element)
-            return
-        }
-
-        val lastTable = stack[lastTableIndex]
-        val tableParent = lastTable.parent
-
-        if (tableParent != null) {
-            // Table has a parent - insert element before the table
-            tableParent.insertBefore(element, lastTable)
-        } else {
-            // Table has no parent - insert into the element immediately before the table in the stack
-            if (lastTableIndex > 0) {
-                val previousElement = stack[lastTableIndex - 1]
-                previousElement.appendChild(element)
-            } else {
-                // Table is at the root of the stack - insert into it as a last resort
-                // This shouldn't happen in practice
-                lastTable.appendChild(element)
-            }
-        }
-    }
-
-    fun fosterParentText(data: String) {
-        // Find the last table element in the stack of open elements
-        val lastTableIndex = stack.indexOfLastTagName("table")
-
-        if (lastTableIndex == -1) {
-            // No table element - insert into current node
-            insertTextIntoCurrentNode(data)
-            return
-        }
-
-        val lastTable = stack[lastTableIndex]
-        val tableParent = lastTable.parent
-
-        if (tableParent != null) {
-            // Table has a parent - insert before the table, merging with the previous text if possible
-            val previousSibling = lastTable.previousSibling
-            if (previousSibling?.type == NodeType.TEXT) {
-                // Merge with existing text node
-                previousSibling.data = (previousSibling.data ?: "") + data
-            } else {
-                // Create a new text node before the table
-                val textNode = TreeNode.createText(data)
-                tableParent.insertBefore(textNode, lastTable)
-            }
-        } else {
-            // Table has no parent - insert into the element immediately before the table
-            if (lastTableIndex > 0) {
-                val previousElement = stack[lastTableIndex - 1]
-                appendOrMergeText(previousElement, data)
-            } else {
-                // Table is at the root - insert into the table as a last resort
-                val textNode = TreeNode.createText(data)
-                lastTable.appendChild(textNode)
-            }
-        }
-    }
-
-    private fun insertTextIntoCurrentNode(data: String) {
-        val currentNode = stack.currentNode
-        requireNotNull(currentNode) { "No current node available for text insertion" }
-        appendOrMergeText(currentNode, data)
-    }
-
-    private fun appendOrMergeText(parent: TreeNode, data: String) {
-        val lastChild = parent.lastChild
-
-        if (lastChild?.type == NodeType.TEXT) {
-            // Merge with existing text node
-            lastChild.data = (lastChild.data ?: "") + data
-        } else {
-            // Create a new text node
-            val textNode = TreeNode.createText(data)
-            parent.appendChild(textNode)
-        }
     }
 }

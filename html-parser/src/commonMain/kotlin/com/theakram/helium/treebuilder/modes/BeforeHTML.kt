@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder.modes
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.InsertionLocation
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -45,12 +46,12 @@ internal object BeforeHTML : InsertionMode {
             is Token.DocType -> continueInCurrentMode()
 
             is Token.Comment -> {
-                treeBuilder.document.appendChild(TreeNode.createComment(token.data))
+                treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
             is Token.ProcessingInstruction -> {
-                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                treeBuilder.insertProcessingInstruction(token.target, token.data, InsertionLocation(treeBuilder.document, null))
                 continueInCurrentMode()
             }
 
@@ -60,7 +61,9 @@ internal object BeforeHTML : InsertionMode {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
-                treeBuilder.insertElement("html", attributes = attributes)
+                val element = TreeNode.createElement(localName = "html", attributes = attributes)
+                treeBuilder.insertElementAtAdjustedInsertionLocation(element, InsertionLocation(treeBuilder.document, null))
+                treeBuilder.pushElement(element)
 
                 switchTo(BeforeHead)
             }
@@ -76,7 +79,9 @@ internal object BeforeHTML : InsertionMode {
     }
 
     private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
-        treeBuilder.insertElement("html")
+        val element = TreeNode.createElement(localName = "html")
+        treeBuilder.insertElementAtAdjustedInsertionLocation(element, InsertionLocation(treeBuilder.document, null))
+        treeBuilder.pushElement(element)
         return reprocessIn(BeforeHead)
     }
 }

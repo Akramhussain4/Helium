@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.modes.InForeignContent
 import com.theakram.helium.treebuilder.modes.Initial
@@ -46,13 +47,12 @@ internal class TreeBuilder(
 
     private val stack = StackOfOpenElements()
     private val scopeChecker = ScopeChecker(stack)
-    private val fosterParenting = FosterParenting(stack)
+    private val fosterParenting = FosterParenting()
     internal val activeFormattingElements = ActiveFormattingElements()
-    private val insertionLocation = InsertionLocation(
+    private val nodeInsertion = NodeInsertion(
         stack = stack,
         fosterParenting = fosterParenting,
-        getCurrentNode = { currentNode },
-        getDocument = { document }
+        getCurrentNode = { currentNode }
     )
     private val formattingElementReconstructor = FormattingElementReconstructor(
         stack = stack,
@@ -166,33 +166,47 @@ internal class TreeBuilder(
         namespace: String = Namespaces.HTML,
         attributes: List<Attribute> = emptyList()
     ): TreeNode {
+        // Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-foreign-element
         val element = TreeNode.createElement(
             localName = tagName,
             namespace = namespace,
             attributes = attributes
         )
 
-        insertAtAppropriatePlace(element)
+        insertElementAtAdjustedInsertionLocation(element)
         stack.push(element)
         return element
     }
 
-    /**
-     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-comment
-     */
-    internal fun insertComment(data: String) {
-        insertAtAppropriatePlace(TreeNode.createComment(data))
+    internal fun insertElementAtAdjustedInsertionLocation(element: TreeNode, overrideLocation: InsertionLocation? = null) {
+        nodeInsertion.insertElementAtAdjustedInsertionLocation(element, overrideLocation)
+    }
+
+    internal fun appropriatePlaceForInsertingNode(overrideTarget: TreeNode? = null): InsertionLocation =
+        nodeInsertion.appropriatePlaceForInsertingNode(overrideTarget)
+
+    internal fun adjustedInsertionLocation(insertionLocation: InsertionLocation? = null): InsertionLocation =
+        nodeInsertion.adjustedInsertionLocation(insertionLocation)
+
+    internal val insertionTargetRedirectionMap: MutableMap<TreeNode, InsertionLocation>
+        get() = nodeInsertion.insertionTargetRedirectionMap
+
+    internal fun insertComment(data: String, insertionLocation: InsertionLocation? = null) {
+        nodeInsertion.insertComment(data, insertionLocation)
+    }
+
+    internal fun insertProcessingInstruction(target: String, data: String, insertionLocation: InsertionLocation? = null) {
+        nodeInsertion.insertProcessingInstruction(target, data, insertionLocation)
     }
 
     /**
-     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-processing-instruction
+     * Appends a doctype to the Document unless it already has a doctype or element child, as the
+     * DOCTYPE token's entry in the "initial" insertion mode says.
      */
-    internal fun insertProcessingInstruction(target: String, data: String) {
-        insertAtAppropriatePlace(TreeNode.createProcessingInstruction(target, data))
-    }
-
-    internal fun insertDoctype(name: String, publicId: String? = null, systemId: String? = null) {
-        document.appendChild(TreeNode.createDocumentType(name, publicId, systemId))
+    internal fun insertDoctype(name: String, publicId: String, systemId: String) {
+        if (document.children.none { it.type == NodeType.DOCUMENT_TYPE || it.type == NodeType.ELEMENT }) {
+            document.appendChild(TreeNode.createDocumentType(name, publicId, systemId))
+        }
     }
 
     internal fun popCurrentElement(): TreeNode? = stack.pop()
@@ -227,7 +241,8 @@ internal class TreeBuilder(
     internal fun runAdoptionAgency(tagName: String) = adoptionAgency.run(tagName)
 
     internal fun insertAtAppropriatePlace(node: TreeNode, overrideTarget: TreeNode? = null) {
-        insertionLocation.insertAtAppropriatePlace(node, overrideTarget)
+        val (targetParent, referenceChild) = adjustedInsertionLocation(appropriatePlaceForInsertingNode(overrideTarget))
+        targetParent.insertBefore(node, referenceChild)
     }
 
     internal fun reconstructActiveFormattingElements() {
@@ -281,7 +296,7 @@ internal class TreeBuilder(
 
     internal fun insertCharacter(char: Char) {
         val data = char.toString()
-        insertionLocation.insertCharacter(data)
+        nodeInsertion.insertCharacter(data)
     }
 
     internal fun reset() {
@@ -298,6 +313,7 @@ internal class TreeBuilder(
         framesetOk = true
         ignoreNextLineFeed = false
         fosterParenting.disable()
+        nodeInsertion.insertionTargetRedirectionMap.clear()
         pendingTableCharacterTokens.clear()
     }
 
