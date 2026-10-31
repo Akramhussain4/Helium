@@ -154,4 +154,13 @@ internal class HTMLParserTest {
         assertEquals(emptyList(), template.children)
         assertEquals("comment", template.templateContent!!.children.single().data)
     }
+
+    @Test
+    fun `input closes an open select and is inserted after it`() {
+        val body = HTMLParser().parse("<select><input>X")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+
+        assertEquals(listOf("select", "input", null), body.children.map { it.localName })
+    }
 }
