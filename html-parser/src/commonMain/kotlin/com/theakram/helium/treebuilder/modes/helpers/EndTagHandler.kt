@@ -65,7 +65,7 @@ internal object EndTagHandler {
         for (i in stack.lastIndex downTo 0) {
             val node = stack[i]
             if (node.namespace == Namespaces.HTML &&
-                node.localName?.equals(tagName, ignoreCase = true) == true) {
+                node.localName == tagName) {
                 InBodyHelpers.generateImpliedEndTags(treeBuilder, except = tagName)
                 if (treeBuilder.currentNode !== node) {
                     // Parse error

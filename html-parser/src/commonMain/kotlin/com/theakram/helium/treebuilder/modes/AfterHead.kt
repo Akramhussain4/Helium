@@ -53,9 +53,9 @@ internal object AfterHead : InsertionMode {
 
             is Token.DocType -> continueInCurrentMode()
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.equals("body", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "body" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -64,7 +64,7 @@ internal object AfterHead : InsertionMode {
                 switchTo(InBody)
             }
 
-            is Token.StartTag if token.name.equals("frameset", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "frameset" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -72,7 +72,7 @@ internal object AfterHead : InsertionMode {
                 switchTo(InFrameSet)
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf(
+            is Token.StartTag if token.name in setOf(
                 "base", "basefont", "bgsound", "link", "meta",
                 "noframes", "script", "style", "template", "title"
             ) -> {
@@ -84,11 +84,11 @@ internal object AfterHead : InsertionMode {
                 result
             }
 
-            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.EndTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
-            is Token.EndTag if token.name.lowercase() in setOf("body", "html", "br") -> handleAnythingElse(treeBuilder)
+            is Token.EndTag if token.name in setOf("body", "html", "br") -> handleAnythingElse(treeBuilder)
 
-            is Token.StartTag if token.name.equals("head", ignoreCase = true) -> continueInCurrentMode()
+            is Token.StartTag if token.name == "head" -> continueInCurrentMode()
 
             is Token.EndTag -> continueInCurrentMode()
 

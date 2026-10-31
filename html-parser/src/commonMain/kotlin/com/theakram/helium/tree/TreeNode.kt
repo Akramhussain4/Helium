@@ -25,6 +25,8 @@
 
 package com.theakram.helium.tree
 
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
+
 /**
  * Tree node for HTML5 tree construction phase.
  *
@@ -121,7 +123,7 @@ public class TreeNode(
     public fun findChildElement(tagName: String): TreeNode? {
         return children.find {
             it.type == NodeType.ELEMENT &&
-            it.localName?.equals(tagName, ignoreCase = true) == true
+            it.localName?.equalsAsciiCaseInsensitive(tagName) == true
         }
     }
 
@@ -129,38 +131,38 @@ public class TreeNode(
         get() = children.filter { it.type == NodeType.ELEMENT }
 
     public fun setAttribute(name: String, value: String) {
-        attributes.removeAll { it.namespace == null && it.localName.equals(name, ignoreCase = true) }
+        attributes.removeAll { it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name) }
         attributes.add(Attribute(namespace = null, prefix = null, localName = name, value = value))
     }
 
     public fun setAttributeNS(namespace: String?, prefix: String?, localName: String, value: String) {
         attributes.removeAll {
-            it.namespace == namespace && it.localName.equals(localName, ignoreCase = true)
+            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
         }
         attributes.add(Attribute(namespace = namespace, prefix = prefix, localName = localName, value = value))
     }
 
     public fun getAttribute(name: String): String? {
         return attributes.find {
-            it.namespace == null && it.localName.equals(name, ignoreCase = true)
+            it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name)
         }?.value
     }
 
     public fun getAttributeNS(namespace: String?, localName: String): String? {
         return attributes.find {
-            it.namespace == namespace && it.localName.equals(localName, ignoreCase = true)
+            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
         }?.value
     }
 
     public fun hasAttribute(name: String): Boolean {
         return attributes.any {
-            it.namespace == null && it.localName.equals(name, ignoreCase = true)
+            it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name)
         }
     }
 
     public fun hasAttributeNS(namespace: String?, localName: String): Boolean {
         return attributes.any {
-            it.namespace == namespace && it.localName.equals(localName, ignoreCase = true)
+            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
         }
     }
 

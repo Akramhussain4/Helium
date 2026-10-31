@@ -41,21 +41,21 @@ internal object InCaption : InsertionMode {
 
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.EndTag if token.name.equals("caption", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "caption" -> {
                 closeCaptionAndSwitchMode(treeBuilder, reprocess = false)
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf(
+            is Token.StartTag if token.name in setOf(
                 "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr"
             ) -> {
                 closeCaptionAndSwitchMode(treeBuilder, reprocess = true)
             }
 
-            is Token.EndTag if token.name.equals("table", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "table" -> {
                 closeCaptionAndSwitchMode(treeBuilder, reprocess = true)
             }
 
-            is Token.EndTag if token.name.lowercase() in setOf(
+            is Token.EndTag if token.name in setOf(
                 "body", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr"
             ) -> {
                 // Parse error. Ignore the token.

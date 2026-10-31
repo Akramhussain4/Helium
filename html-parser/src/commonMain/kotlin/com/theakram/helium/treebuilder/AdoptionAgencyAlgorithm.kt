@@ -46,7 +46,7 @@ internal class AdoptionAgencyAlgorithm(
         val currentNode = stack.currentNode
         if (currentNode != null &&
             currentNode.namespace == Namespaces.HTML &&
-            currentNode.localName?.equals(subject, ignoreCase = true) == true &&
+            currentNode.localName == subject &&
             !activeFormattingElements.contains(currentNode)) {
             stack.pop()
             return

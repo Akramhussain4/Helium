@@ -53,9 +53,9 @@ internal object InFrameSet : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.equals("frameset", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "frameset" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -63,7 +63,7 @@ internal object InFrameSet : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.EndTag if token.name.equals("frameset", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "frameset" -> {
                 if (treeBuilder.currentNode.localName == "html" &&
                     treeBuilder.currentNode.namespace == Namespaces.HTML &&
                     treeBuilder.elementStack.size == 1
@@ -83,7 +83,7 @@ internal object InFrameSet : InsertionMode {
                 }
             }
 
-            is Token.StartTag if token.name.equals("frame", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "frame" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }
@@ -93,7 +93,7 @@ internal object InFrameSet : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("noframes", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name == "noframes" -> InHead.process(token, treeBuilder)
 
             is Token.EOF -> {
                 if (treeBuilder.currentNode.localName != "html" ||

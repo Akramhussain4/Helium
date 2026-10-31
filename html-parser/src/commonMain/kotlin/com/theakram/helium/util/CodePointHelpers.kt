@@ -87,3 +87,15 @@ internal fun String.asciiLowercase(): String = buildString(length) {
         append(if (char.code.isAsciiUpperAlpha()) char + 0x20 else char)
     }
 }
+
+/**
+ * Spec: https://infra.spec.whatwg.org/#ascii-case-insensitive
+ */
+internal fun String.equalsAsciiCaseInsensitive(other: String): Boolean =
+    length == other.length && asciiLowercase() == other.asciiLowercase()
+
+/**
+ * Whether this string starts with [prefix], comparing ASCII case-insensitively.
+ */
+internal fun String.startsWithAsciiCaseInsensitive(prefix: String): Boolean =
+    length >= prefix.length && substring(0, prefix.length).equalsAsciiCaseInsensitive(prefix)
