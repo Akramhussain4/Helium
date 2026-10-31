@@ -42,7 +42,8 @@ internal object FragmentParser {
     fun parseFragment(
         context: TreeNode,
         input: String,
-        scriptingEnabled: Boolean = true
+        scriptingEnabled: Boolean = true,
+        onParseError: (String, Int) -> Unit = { _, _ -> }
     ): List<TreeNode> {
         // Step 6:
         lateinit var tokenizer: Tokenizer
@@ -57,7 +58,7 @@ internal object FragmentParser {
             onTokenEmitted = { token ->
                 treeBuilder.process(token)
             },
-            onParseError = { _, _ -> },
+            onParseError = onParseError,
             hasForeignAdjustedCurrentNode = treeBuilder::hasForeignAdjustedCurrentNode
         )
 

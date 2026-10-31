@@ -84,6 +84,14 @@ parser.errors // [ParseError(missing-semicolon-after-character-reference at posi
 
 A parser can be reused: every call to `parse` returns a new, independent document. Instances aren't thread-safe.
 
+To parse markup as the contents of an element, the way setting `innerHTML` does, use `parseFragment` with that
+element as the context. The context decides how the markup is read, so table rows parse inside a `<tbody>`:
+
+```kotlin
+val context = TreeNode.createElement(localName = "tbody")
+val rows = parser.parseFragment("<tr><td>1<td>2", context) // [<tr>]
+```
+
 By default, Helium parses like a browser with JavaScript enabled, so `<noscript>` content is raw text. To parse it
 as markup instead, as a browser with JavaScript disabled does, create the parser with `HTMLParser(scriptingEnabled = false)`.
 
@@ -101,7 +109,6 @@ suite for HTML parsers:
 
 Not supported yet:
 
-- Fragment parsing (the algorithm behind `innerHTML`)
 - Complete error reporting: `errors` only contains tokenizer errors, and not all of those yet
 - Serializing a tree back to HTML
 

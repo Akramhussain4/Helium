@@ -28,6 +28,7 @@ package com.theakram.helium
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.QuirksMode
+import com.theakram.helium.tree.TreeNode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
@@ -121,5 +122,18 @@ internal class HTMLParserTest {
         assertEquals("<b>off</b>", enabled.findChildElement("noscript")!!.children.single().data)
         assertEquals("noscript", disabled.children.single().localName)
         assertEquals(emptyList(), disabled.findChildElement("noscript")!!.children)
+    }
+
+    @Test
+    fun `parseFragment parses markup as the contents of the context element`() {
+        val parser = HTMLParser()
+        val context = TreeNode.createElement(localName = "tr")
+
+        val nodes = parser.parseFragment("<td>a<td>b&notit;", context)
+
+        assertEquals(listOf("td", "td"), nodes.map { it.localName })
+        assertEquals(listOf(null, null), nodes.map { it.parent })
+        assertEquals(emptyList(), context.children)
+        assertEquals(listOf("missing-semicolon-after-character-reference"), parser.errors.map { it.code })
     }
 }
