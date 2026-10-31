@@ -59,7 +59,7 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
             val element = stack[i]
             val elementName = element.localName
 
-            if (element.namespace == Namespaces.HTML && elementName?.equals(tagName, ignoreCase = true) == true) {
+            if (element.namespace == Namespaces.HTML && elementName == tagName) {
                 return true
             }
 
@@ -94,7 +94,7 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
             val namespace = element.namespace
 
             // If we found an HTML element with the target tag name
-            if (namespace == Namespaces.HTML && elementName?.equals(tagName, ignoreCase = true) == true) {
+            if (namespace == Namespaces.HTML && elementName == tagName) {
                 return true
             }
 

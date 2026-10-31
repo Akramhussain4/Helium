@@ -27,6 +27,7 @@ package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
@@ -52,7 +53,7 @@ internal data object MarkupDeclarationOpen : TokenizationState {
                 switchTo(CommentStart)
             }
 
-            next7.equals("DOCTYPE", ignoreCase = true) -> {
+            next7.equalsAsciiCaseInsensitive("DOCTYPE") -> {
                 tokenizer.currentPosition += 6
                 switchTo(DOCTYPE)
             }

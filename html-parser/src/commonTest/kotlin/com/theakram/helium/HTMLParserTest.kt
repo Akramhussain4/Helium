@@ -163,4 +163,42 @@ internal class HTMLParserTest {
 
         assertEquals(listOf("select", "input", null), body.children.map { it.localName })
     }
+
+    // U+0131 (dotless i) and U+017F (long s) uppercase to ASCII I and S, so Unicode case folding
+    // would make them match ASCII keywords; the spec only ever folds ASCII letters
+
+    @Test
+    fun `tag names with non-ASCII letters do not match ASCII tag names`() {
+        val head = HTMLParser().parse("<head><t\u0131tle>a<b>")
+            .findChildElement("html")!!
+            .findChildElement("head")!!
+
+        assertEquals(emptyList(), head.children)
+    }
+
+    @Test
+    fun `doctype keywords and identifiers compare ASCII case-insensitively`() {
+        val publicKeyword = HTMLParser().parse("<!DOCTYPE html PUBL\u0131C \"-//W3O//DTD W3 HTML Strict 3.0//EN//\">")
+        val identifier = HTMLParser().parse("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Trans\u0131t\u0131onal//\">")
+
+        assertEquals(null, publicKeyword.children.first().publicId)
+        assertEquals(QuirksMode.NO_QUIRKS, identifier.quirksMode)
+    }
+
+    @Test
+    fun `input type compares ASCII case-insensitively with hidden`() {
+        val html = HTMLParser().parse("<p><input type=h\u0131dden><frameset>").findChildElement("html")!!
+
+        assertEquals(listOf("head", "body"), html.children.map { it.localName })
+    }
+
+    @Test
+    fun `attribute names are only ASCII lowercased`() {
+        val element = HTMLParser().parse("<a \u0130D=1>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+            .findChildElement("a")!!
+
+        assertEquals("\u0130d", element.attributes.single().localName)
+    }
 }

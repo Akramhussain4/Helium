@@ -41,7 +41,7 @@ internal object Text : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.EndTag if token.name.equals("script", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "script" -> {
                 // TODO: If the active speculative HTML parser is null and the JavaScript execution context stack is empty,
 
                 treeBuilder.popCurrentElement()

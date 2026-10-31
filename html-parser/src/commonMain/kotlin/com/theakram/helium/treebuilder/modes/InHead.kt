@@ -58,9 +58,9 @@ internal object InHead : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.lowercase() in setOf("base", "basefont", "bgsound", "link") -> {
+            is Token.StartTag if token.name in setOf("base", "basefont", "bgsound", "link") -> {
                 val attributes = InHeadHelpers.toAttributeList(token.attributes)
                 treeBuilder.insertElement(token.name, attributes = attributes)
                 treeBuilder.popCurrentElement()
@@ -68,7 +68,7 @@ internal object InHead : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("meta", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "meta" -> {
                 val attributes = InHeadHelpers.toAttributeList(token.attributes)
                 treeBuilder.insertElement(token.name, attributes = attributes)
                 treeBuilder.popCurrentElement()
@@ -77,15 +77,15 @@ internal object InHead : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.StartTag if token.name.equals("title", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "title" -> {
                 InHeadHelpers.followGenericRCDATAElementParsingAlgorithm(token, treeBuilder)
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf("noframes", "style") -> {
+            is Token.StartTag if token.name in setOf("noframes", "style") -> {
                 InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
             }
 
-            is Token.StartTag if token.name.equals("noscript", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "noscript" -> {
                 if (treeBuilder.scriptingEnabled) {
                     InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
                 } else {
@@ -95,7 +95,7 @@ internal object InHead : InsertionMode {
                 }
             }
 
-            is Token.StartTag if token.name.equals("script", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "script" -> {
                 val attributes = InHeadHelpers.toAttributeList(token.attributes)
                 // Steps 1-2, 6-7:
                 val scriptElement = treeBuilder.insertElement(token.name, attributes = attributes)
@@ -114,17 +114,17 @@ internal object InHead : InsertionMode {
                 return switchTo(Text)
             }
 
-            is Token.EndTag if token.name.equals("head", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "head" -> {
                 treeBuilder.popCurrentElement()
                 switchTo(AfterHead)
             }
 
-            is Token.EndTag if token.name.lowercase() in setOf("body", "html", "br") -> {
+            is Token.EndTag if token.name in setOf("body", "html", "br") -> {
                 treeBuilder.popCurrentElement()
                 reprocessIn(AfterHead)
             }
 
-            is Token.StartTag if token.name.equals("template", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "template" -> {
                 // Step 1:
                 treeBuilder.activeFormattingElements.insertMarker()
                 // Step 2:
@@ -139,7 +139,7 @@ internal object InHead : InsertionMode {
                 switchTo(InTemplate)
             }
 
-            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "template" -> {
                 val hasTemplateInStack = treeBuilder.elementStack.any {
                     it.localName == "template" && it.namespace == com.theakram.helium.tree.Namespaces.HTML
                 }
@@ -170,7 +170,7 @@ internal object InHead : InsertionMode {
                 switchTo(treeBuilder.currentMode)
             }
 
-            is Token.StartTag if token.name.equals("head", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "head" -> {
                 // Parse error
                 continueInCurrentMode()
             }

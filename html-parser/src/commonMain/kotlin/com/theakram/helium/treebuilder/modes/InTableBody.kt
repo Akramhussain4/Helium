@@ -42,7 +42,7 @@ internal object InTableBody : InsertionMode {
 
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.StartTag if token.name.equals("tr", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "tr" -> {
                 clearStackBackToTableBodyContext(treeBuilder)
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
@@ -51,14 +51,14 @@ internal object InTableBody : InsertionMode {
                 switchTo(InRow)
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf("th", "td") -> {
+            is Token.StartTag if token.name in setOf("th", "td") -> {
                 clearStackBackToTableBodyContext(treeBuilder)
                 treeBuilder.insertElement("tr", attributes = emptyList())
                 reprocessIn(InRow)
             }
 
-            is Token.EndTag if token.name.lowercase() in setOf("tbody", "tfoot", "thead") -> {
-                val tagName = token.name.lowercase()
+            is Token.EndTag if token.name in setOf("tbody", "tfoot", "thead") -> {
+                val tagName = token.name
                 if (!treeBuilder.hasElementInTableScope(tagName)) {
                     // Parse error. Ignore the token.
                     continueInCurrentMode()
@@ -69,7 +69,7 @@ internal object InTableBody : InsertionMode {
                 }
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf(
+            is Token.StartTag if token.name in setOf(
                 "caption", "col", "colgroup", "tbody", "tfoot", "thead"
             ) -> {
                 if (!hasTableBodyElementInScope(treeBuilder)) {
@@ -82,7 +82,7 @@ internal object InTableBody : InsertionMode {
                 }
             }
 
-            is Token.EndTag if token.name.equals("table", ignoreCase = true) -> {
+            is Token.EndTag if token.name == "table" -> {
                 if (!hasTableBodyElementInScope(treeBuilder)) {
                     // Parse error. Ignore the token.
                     continueInCurrentMode()
@@ -93,7 +93,7 @@ internal object InTableBody : InsertionMode {
                 }
             }
 
-            is Token.EndTag if token.name.lowercase() in setOf(
+            is Token.EndTag if token.name in setOf(
                 "body", "caption", "col", "colgroup", "html", "td", "th", "tr"
             ) -> {
                 // Parse error. Ignore the token.

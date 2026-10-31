@@ -29,6 +29,7 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
+import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#after-doctype-name-state
@@ -62,11 +63,11 @@ internal data object AfterDOCTYPEName : TokenizationState {
                 val keyword = codePoint.toChar() + next6
 
                 when {
-                    keyword.equals("PUBLIC", ignoreCase = true) -> {
+                    keyword.equalsAsciiCaseInsensitive("PUBLIC") -> {
                         tokenizer.currentPosition += 5
                         switchTo(AfterDOCTYPEPublicKeyword)
                     }
-                    keyword.equals("SYSTEM", ignoreCase = true) -> {
+                    keyword.equalsAsciiCaseInsensitive("SYSTEM") -> {
                         tokenizer.currentPosition += 5
                         switchTo(AfterDOCTYPESystemKeyword)
                     }

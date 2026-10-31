@@ -51,7 +51,7 @@ internal object BeforeHTML : InsertionMode {
 
             is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
 
-            is Token.StartTag if token.name.equals("html", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "html" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(namespace = null, prefix = null, localName = name, value = value)
                 }

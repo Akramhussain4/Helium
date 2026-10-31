@@ -51,15 +51,9 @@ internal object BeforeHead : InsertionMode {
 
             is Token.DocType -> continueInCurrentMode()
 
-            is Token.StartTag if token.name.equals(
-                other = "html",
-                ignoreCase = true
-            ) -> InBody.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.equals(
-                other = "head",
-                ignoreCase = true
-            ) -> {
+            is Token.StartTag if token.name == "head" -> {
                 val attributes = token.attributes.map { (name, value) ->
                     Attribute(
                         namespace = null,
@@ -75,7 +69,7 @@ internal object BeforeHead : InsertionMode {
 
             is Token.EndTag -> {
                 when {
-                    token.name.lowercase() in setOf("head", "body", "html", "br") -> {
+                    token.name in setOf("head", "body", "html", "br") -> {
                         createHeadElement(treeBuilder)
                         reprocessIn(InHead)
                     }

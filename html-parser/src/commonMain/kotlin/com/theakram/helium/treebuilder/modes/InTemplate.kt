@@ -45,13 +45,13 @@ internal object InTemplate : InsertionMode {
             is Token.Comment,
             is Token.DocType -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.lowercase() in setOf(
+            is Token.StartTag if token.name in setOf(
                 "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
             ) -> InHead.process(token, treeBuilder)
 
-            is Token.EndTag if token.name.equals("template", ignoreCase = true) -> InHead.process(token, treeBuilder)
+            is Token.EndTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.lowercase() in setOf(
+            is Token.StartTag if token.name in setOf(
                 "caption", "colgroup", "tbody", "tfoot", "thead"
             ) -> {
                 treeBuilder.popTemplateInsertionMode()
@@ -59,19 +59,19 @@ internal object InTemplate : InsertionMode {
                 reprocessIn(InTable)
             }
 
-            is Token.StartTag if token.name.equals("col", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "col" -> {
                 treeBuilder.popTemplateInsertionMode()
                 treeBuilder.pushTemplateInsertionMode(InColumnGroup)
                 reprocessIn(InColumnGroup)
             }
 
-            is Token.StartTag if token.name.equals("tr", ignoreCase = true) -> {
+            is Token.StartTag if token.name == "tr" -> {
                 treeBuilder.popTemplateInsertionMode()
                 treeBuilder.pushTemplateInsertionMode(InTableBody)
                 reprocessIn(InTableBody)
             }
 
-            is Token.StartTag if token.name.lowercase() in setOf("td", "th") -> {
+            is Token.StartTag if token.name in setOf("td", "th") -> {
                 treeBuilder.popTemplateInsertionMode()
                 treeBuilder.pushTemplateInsertionMode(InRow)
                 reprocessIn(InRow)
