@@ -72,10 +72,9 @@ internal object InFrameSet : InsertionMode {
                     continueInCurrentMode()
                 } else {
                     treeBuilder.popCurrentElement()
-                    // TODO: Implement proper fragment case detection
-                    // For now, we check if current node is no longer a frameset element
-                    if (treeBuilder.currentNode.localName != "frameset" ||
-                        treeBuilder.currentNode.namespace != Namespaces.HTML
+                    if (!treeBuilder.isFragmentCase &&
+                        (treeBuilder.currentNode.localName != "frameset" ||
+                                treeBuilder.currentNode.namespace != Namespaces.HTML)
                     ) {
                         switchTo(AfterFrameSet)
                     } else {

@@ -24,6 +24,12 @@ internal object InBodyHelpers {
         treeBuilder.popUntil("p")
     }
 
+    /** Whether this is the fragment case with a select context element, where select and input are ignored. */
+    fun isSelectContext(treeBuilder: TreeBuilder): Boolean {
+        val context = treeBuilder.contextElement ?: return false
+        return context.namespace == Namespaces.HTML && context.localName == "select"
+    }
+
     fun generateImpliedEndTags(treeBuilder: TreeBuilder, except: String? = null) {
         while (treeBuilder.elementStack.isNotEmpty()) {
             val currentNode = treeBuilder.currentNode

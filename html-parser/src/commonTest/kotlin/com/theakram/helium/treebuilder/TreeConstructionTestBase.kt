@@ -26,6 +26,8 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Tokenizer
+import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.TreeNode
 
 /**
  * Base class for tree construction tests.
@@ -54,10 +56,35 @@ internal abstract class TreeConstructionTestBase {
     }
 
     /**
-     * Assert that HTML input produces the expected tree structure.
+     * Parses [input] as the contents of [context], given in html5lib's format: a tag name, optionally
+     * prefixed with "svg " or "math " for foreign elements (e.g. "td", "svg path").
      */
-    protected fun assertTreeConstruction(input: String, expectedTree: String, scriptingEnabled: Boolean = true) {
-        val actualTree = parseTree(input, scriptingEnabled)
+    protected fun parseFragmentTree(input: String, context: String, scriptingEnabled: Boolean = true): String {
+        val (namespace, localName) = when {
+            context.startsWith("svg ") -> Namespaces.SVG to context.removePrefix("svg ")
+            context.startsWith("math ") -> Namespaces.MATHML to context.removePrefix("math ")
+            else -> Namespaces.HTML to context
+        }
+        val contextElement = TreeNode.createElement(localName = localName, namespace = namespace)
+        return FragmentParser.parseFragment(contextElement, input, scriptingEnabled)
+            .joinToString("\n") { it.toTreeString() }
+            .trim()
+    }
+
+    /**
+     * Assert that HTML input produces the expected tree structure, parsed as a fragment when [context] is given.
+     */
+    protected fun assertTreeConstruction(
+        input: String,
+        expectedTree: String,
+        scriptingEnabled: Boolean = true,
+        context: String? = null
+    ) {
+        val actualTree = if (context != null) {
+            parseFragmentTree(input, context, scriptingEnabled)
+        } else {
+            parseTree(input, scriptingEnabled)
+        }
         if (actualTree != expectedTree.trim()) {
             throw AssertionError(formatTreeMismatchError(input, expectedTree.trim(), actualTree))
         }

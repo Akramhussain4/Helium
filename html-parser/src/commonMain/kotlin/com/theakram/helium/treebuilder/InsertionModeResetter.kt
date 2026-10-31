@@ -34,17 +34,17 @@ import com.theakram.helium.treebuilder.modes.*
  */
 internal class InsertionModeResetter(
     private val stack: StackOfOpenElements,
+    private val getContextElement: () -> TreeNode?,
     private val getHeadElement: () -> TreeNode?,
     private val getCurrentTemplateInsertionMode: () -> InsertionMode?
 ) {
 
     fun reset(): InsertionMode {
         for (nodeIndex in (stack.size - 1) downTo 0) {
-            val node = stack[nodeIndex]
             val last = nodeIndex == 0
+            // In the fragment case, the root html element stands in for the context element
+            val node = getContextElement()?.takeIf { last } ?: stack[nodeIndex]
 
-            // Fragment case: when last is true, node would be set to context element
-            // (not implemented yet, so we continue with the first node)
             if (!last && node.namespace == Namespaces.HTML && node.localName in setOf("td", "th")) {
                 return InCell
             }

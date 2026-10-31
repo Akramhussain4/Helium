@@ -27,13 +27,15 @@ package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
+import com.theakram.helium.tree.QuirksMode
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.treebuilder.modes.InTemplate
 
 /**
- * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+ * Parses [input] as the contents of a context element, as setting innerHTML does.
  *
- * Internal until the tree builder supports the fragment case (the context element in step 4); the
- * html5lib fragment tests are skipped until then.
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
  */
 internal object FragmentParser {
 
@@ -42,15 +44,7 @@ internal object FragmentParser {
         input: String,
         scriptingEnabled: Boolean = true
     ): List<TreeNode> {
-        // Step 1:
-        val document = TreeNode.createDocument()
-
-        // Steps 2-3:
-        context.quirksMode?.let { document.quirksMode = it }
-
-        // Step 4: Not yet implemented
-
-        // Step 5:
+        // Step 6:
         lateinit var tokenizer: Tokenizer
         val treeBuilder = TreeBuilder(
             onSwitchTokenizerState = { stateType ->
@@ -58,6 +52,7 @@ internal object FragmentParser {
             },
             scriptingEnabled = scriptingEnabled
         )
+        treeBuilder.contextElement = context
         tokenizer = Tokenizer(
             onTokenEmitted = { token ->
                 treeBuilder.process(token)
@@ -66,42 +61,58 @@ internal object FragmentParser {
             hasForeignAdjustedCurrentNode = treeBuilder::hasForeignAdjustedCurrentNode
         )
 
-        // Step 6:
-        val tokenizerState = getInitialTokenizerState(context, scriptingEnabled)
-        tokenizer.switchState(tokenizerState)
+        // Step 2:
+        val document = treeBuilder.document
+
+        // Steps 3-4:
+        val contextQuirksMode = getNodeDocument(context)?.quirksMode
+        if (contextQuirksMode == QuirksMode.QUIRKS || contextQuirksMode == QuirksMode.LIMITED_QUIRKS) {
+            document.quirksMode = contextQuirksMode
+        }
 
         // Step 7:
+        tokenizer.switchState(getInitialTokenizerState(context, scriptingEnabled))
+
+        // Step 8:
         val root = TreeNode.createElement(
             localName = "html",
             namespace = Namespaces.HTML,
             attributes = emptyList()
         )
 
-        // Step 8:
+        // Step 9:
         document.appendChild(root)
 
-        // Step 9:
+        // Step 10:
         treeBuilder.pushElement(root)
 
-        // Step 10:
+        // Step 11:
         if (context.namespace == Namespaces.HTML && context.localName == "template") {
-            // TODO Implement when InTemplate mode is added
-            // treeBuilder.pushTemplateInsertionMode(InTemplate)
+            treeBuilder.pushTemplateInsertionMode(InTemplate)
         }
 
-        // Step 11:
-
-        // Step 12:
-        treeBuilder.resetInsertionModeAppropriately()
+        // Step 12: The context's attributes are read from the context element itself, e.g. for
+        // annotation-xml HTML integration points
 
         // Step 13:
+        treeBuilder.resetInsertionModeAppropriately()
+
+        // Step 14:
         setFormElementPointer(treeBuilder, context)
 
-        // Step 14-15:
+        // Steps 15-16:
         tokenizer.tokenize(input)
 
-        // Step 16:
+        // Step 17:
         return root.children.toList()
+    }
+
+    private fun getNodeDocument(node: TreeNode): TreeNode? {
+        var current = node
+        while (true) {
+            current = current.parent ?: break
+        }
+        return current.takeIf { it.type == NodeType.DOCUMENT }
     }
 
     private fun getInitialTokenizerState(context: TreeNode, scriptingEnabled: Boolean): TokenizerStateType {

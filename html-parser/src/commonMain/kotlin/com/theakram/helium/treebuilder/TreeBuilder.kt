@@ -67,9 +67,18 @@ internal class TreeBuilder(
     )
     private val insertionModeResetter = InsertionModeResetter(
         stack = stack,
+        getContextElement = { contextElement },
         getHeadElement = { headElement },
         getCurrentTemplateInsertionMode = { currentTemplateInsertionMode() }
     )
+
+    /**
+     * The element whose contents are being parsed in the fragment case, or null when parsing a document.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#concept-frag-parse-context
+     */
+    internal var contextElement: TreeNode? = null
+    internal val isFragmentCase: Boolean get() = contextElement != null
 
     internal var headElement: TreeNode? = null
     internal var formElement: TreeNode? = null
@@ -84,7 +93,8 @@ internal class TreeBuilder(
     /**
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#adjusted-current-node
      */
-    internal val adjustedCurrentNode: TreeNode get() = currentNode
+    internal val adjustedCurrentNode: TreeNode
+        get() = contextElement?.takeIf { stack.size == 1 } ?: currentNode
 
     internal fun hasForeignAdjustedCurrentNode(): Boolean =
         stack.isNotEmpty() && adjustedCurrentNode.namespace != Namespaces.HTML
@@ -258,6 +268,7 @@ internal class TreeBuilder(
         stack.clear()
         // A new document per parse, so trees returned by earlier parses stay intact
         document = TreeNode.createDocument()
+        contextElement = null
         headElement = null
         formElement = null
         activeFormattingElements.clear()
