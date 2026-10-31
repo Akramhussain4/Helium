@@ -67,3 +67,11 @@ internal fun Int.isWhiteSpace(): Boolean {
 }
 
 internal fun Int.isNull() = this == Chars.Null.char.code
+
+/** Appends [codePoint] as UTF-16, writing a surrogate pair for supplementary code points. */
+internal fun StringBuilder.appendUnicode(codePoint: Int): StringBuilder {
+    if (codePoint < 0x10000) return append(codePoint.toChar())
+    val offset = codePoint - 0x10000
+    append((0xD800 + (offset shr 10)).toChar())
+    return append((0xDC00 + (offset and 0x3FF)).toChar())
+}

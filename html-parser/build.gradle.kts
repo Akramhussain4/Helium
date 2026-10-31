@@ -1,8 +1,29 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+}
+
+// Test working directories differ per platform (Node runs from build/js), so tests locate their
+// resources through an absolute path baked in at build time
+val generateTestResourcesPath = tasks.register("generateTestResourcesPath") {
+    val resourcesDir = layout.projectDirectory.dir("src/commonTest/resources").asFile.invariantSeparatorsPath
+    val outputDir = layout.buildDirectory.dir("generated/testResourcesPath")
+    inputs.property("resourcesDir", resourcesDir)
+    outputs.dir(outputDir)
+    doLast {
+        val file = outputDir.get().file("com/theakram/helium/TestResources.kt").asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            |package com.theakram.helium
+            |
+            |internal const val TEST_RESOURCES_DIR: String = "$resourcesDir"
+            |""".trimMargin()
+        )
+    }
 }
 
 kotlin {
@@ -20,13 +41,45 @@ kotlin {
         }
     }
 
+    // Tests read the html5lib-tests files from disk, which only Node can do, so browser test runs are disabled
+    js {
+        browser { testTask { enabled = false } }
+        nodejs()
+    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser { testTask { enabled = false } }
+        nodejs()
+    }
+
+    iosArm64()
+    iosSimulatorArm64()
+    macosArm64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosDeviceArm64()
+    watchosSimulatorArm64()
+    linuxX64()
+    linuxArm64()
+    mingwX64()
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX86()
+    androidNativeX64()
+
     // Fails `check` when the public API changes without an updated dump in api/ (run updateKotlinAbi)
     @OptIn(ExperimentalAbiValidation::class)
     abiValidation()
 
     sourceSets {
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+        commonTest {
+            kotlin.srcDir(generateTestResourcesPath)
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlinx.io.core)
+            }
         }
         jvmTest.dependencies {
             // kotlin-test-junit5 brings an old JUnit by default; the BOM aligns it to the latest release

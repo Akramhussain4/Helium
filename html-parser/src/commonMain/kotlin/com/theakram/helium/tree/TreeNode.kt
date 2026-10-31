@@ -235,10 +235,6 @@ public class TreeNode(
         return result.toString()
     }
 
-    override fun equals(other: Any?): Boolean = this === other
-
-    override fun hashCode(): Int = System.identityHashCode(this)
-
     public companion object {
         public fun createDocument(quirksMode: QuirksMode = QuirksMode.NO_QUIRKS): TreeNode {
             return TreeNode(

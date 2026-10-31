@@ -38,6 +38,8 @@ import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
 
+private const val INITIAL_BUFFER_CAPACITY = 64
+
 internal class Tokenizer(
     private val onTokenEmitted: (Token) -> Unit,
     private val onParseError: (String, Int) -> Unit
@@ -47,15 +49,15 @@ internal class Tokenizer(
     private var currentState: TokenizationState = Data
 
     var characterReferenceCode = 0L
-    val tempBuffer = StringBuilder(DEFAULT_BUFFER_SIZE)
+    val tempBuffer = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
-    var currentAttributeName = StringBuilder(DEFAULT_BUFFER_SIZE)
-    var currentAttributeValue = StringBuilder(DEFAULT_BUFFER_SIZE)
+    var currentAttributeName = StringBuilder(INITIAL_BUFFER_CAPACITY)
+    var currentAttributeValue = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
     val docTypeBuilder = DocTypeBuilder()
     val startTagBuilder = StartTagBuilder()
-    var currentEndTagName = StringBuilder(DEFAULT_BUFFER_SIZE)
-    var currentCommentData = StringBuilder(DEFAULT_BUFFER_SIZE)
+    var currentEndTagName = StringBuilder(INITIAL_BUFFER_CAPACITY)
+    var currentCommentData = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
     var isCurrentTagStartTag: Boolean = true
     var lastStartTagName: String = ""

@@ -14,8 +14,8 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
+// Project repositories stay allowed: the Kotlin/JS and Wasm plugins add their own for Node.js, Yarn and Binaryen downloads
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
     }

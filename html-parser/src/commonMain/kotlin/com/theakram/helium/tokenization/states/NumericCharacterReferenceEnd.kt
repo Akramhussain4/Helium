@@ -28,6 +28,7 @@ package com.theakram.helium.tokenization.states
 import com.theakram.helium.tokenization.util.NumCharRef
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.flushCodePoints
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.isAsciiWhitespace
 import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
@@ -68,7 +69,7 @@ internal class NumericCharacterReferenceEnd(
             }
         }
         tokenizer.tempBuffer.clear()
-        tokenizer.tempBuffer.appendCodePoint(tokenizer.characterReferenceCode.toInt())
+        tokenizer.tempBuffer.appendUnicode(tokenizer.characterReferenceCode.toInt())
         returnState.flushCodePoints(tokenizer)
         return reconsumeIn(returnState)
     }

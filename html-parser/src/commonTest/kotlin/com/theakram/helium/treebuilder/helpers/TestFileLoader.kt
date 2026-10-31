@@ -25,29 +25,26 @@
 
 package com.theakram.helium.treebuilder.helpers
 
-import java.io.File
+import com.theakram.helium.TEST_RESOURCES_DIR
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readString
 
 object TestFileLoader {
     private const val TEST_DIR = "html5lib-tests/tree-construction"
-
-    private val searchPaths = listOf(
-        "html-parser/src/commonTest/resources",
-        "src/commonTest/resources",
-        "../src/commonTest/resources"
-    )
 
     fun loadTests(filename: String): List<Html5LibTest> =
         loadFileContent("$TEST_DIR/$filename")
             .let { DatFileParser.parse(it) }
 
+    // Test working directories differ per platform, so files are resolved against an absolute path from the build
     private fun loadFileContent(path: String): String {
-        for (searchPath in searchPaths) {
-            val file = File("$searchPath/$path")
-            if (file.exists() && file.isFile) {
-                return file.readText()
-            }
+        val file = Path(TEST_RESOURCES_DIR, path)
+        if (!SystemFileSystem.exists(file)) {
+            throw IllegalArgumentException("Resource not found: $file")
         }
-        throw IllegalArgumentException("Resource not found: $path")
+        return SystemFileSystem.source(file).buffered().use { it.readString() }
     }
 
     val allTestFiles = listOf(

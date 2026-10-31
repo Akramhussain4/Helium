@@ -1,0 +1,203 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, js, linuxArm64, linuxX64, macosArm64, mingwX64, tvosArm64, tvosSimulatorArm64, wasmJs, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <Helium:html-parser>
+final enum class com.theakram.helium.tree/NodeType : kotlin/Enum<com.theakram.helium.tree/NodeType> { // com.theakram.helium.tree/NodeType|null[0]
+    enum entry CDATA_SECTION // com.theakram.helium.tree/NodeType.CDATA_SECTION|null[0]
+    enum entry COMMENT // com.theakram.helium.tree/NodeType.COMMENT|null[0]
+    enum entry DOCUMENT // com.theakram.helium.tree/NodeType.DOCUMENT|null[0]
+    enum entry DOCUMENT_FRAGMENT // com.theakram.helium.tree/NodeType.DOCUMENT_FRAGMENT|null[0]
+    enum entry DOCUMENT_TYPE // com.theakram.helium.tree/NodeType.DOCUMENT_TYPE|null[0]
+    enum entry ELEMENT // com.theakram.helium.tree/NodeType.ELEMENT|null[0]
+    enum entry PROCESSING_INSTRUCTION // com.theakram.helium.tree/NodeType.PROCESSING_INSTRUCTION|null[0]
+    enum entry TEXT // com.theakram.helium.tree/NodeType.TEXT|null[0]
+
+    final val entries // com.theakram.helium.tree/NodeType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.theakram.helium.tree/NodeType> // com.theakram.helium.tree/NodeType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.theakram.helium.tree/NodeType // com.theakram.helium.tree/NodeType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.theakram.helium.tree/NodeType> // com.theakram.helium.tree/NodeType.values|values#static(){}[0]
+}
+
+final enum class com.theakram.helium.tree/QuirksMode : kotlin/Enum<com.theakram.helium.tree/QuirksMode> { // com.theakram.helium.tree/QuirksMode|null[0]
+    enum entry LIMITED_QUIRKS // com.theakram.helium.tree/QuirksMode.LIMITED_QUIRKS|null[0]
+    enum entry NO_QUIRKS // com.theakram.helium.tree/QuirksMode.NO_QUIRKS|null[0]
+    enum entry QUIRKS // com.theakram.helium.tree/QuirksMode.QUIRKS|null[0]
+
+    final val entries // com.theakram.helium.tree/QuirksMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.theakram.helium.tree/QuirksMode> // com.theakram.helium.tree/QuirksMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.theakram.helium.tree/QuirksMode // com.theakram.helium.tree/QuirksMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.theakram.helium.tree/QuirksMode> // com.theakram.helium.tree/QuirksMode.values|values#static(){}[0]
+}
+
+final enum class com.theakram.helium.treebuilder/TokenizerStateType : kotlin/Enum<com.theakram.helium.treebuilder/TokenizerStateType> { // com.theakram.helium.treebuilder/TokenizerStateType|null[0]
+    enum entry DATA // com.theakram.helium.treebuilder/TokenizerStateType.DATA|null[0]
+    enum entry PLAINTEXT // com.theakram.helium.treebuilder/TokenizerStateType.PLAINTEXT|null[0]
+    enum entry RAWTEXT // com.theakram.helium.treebuilder/TokenizerStateType.RAWTEXT|null[0]
+    enum entry RCDATA // com.theakram.helium.treebuilder/TokenizerStateType.RCDATA|null[0]
+    enum entry SCRIPT_DATA // com.theakram.helium.treebuilder/TokenizerStateType.SCRIPT_DATA|null[0]
+
+    final val entries // com.theakram.helium.treebuilder/TokenizerStateType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.theakram.helium.treebuilder/TokenizerStateType> // com.theakram.helium.treebuilder/TokenizerStateType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.theakram.helium.treebuilder/TokenizerStateType // com.theakram.helium.treebuilder/TokenizerStateType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.theakram.helium.treebuilder/TokenizerStateType> // com.theakram.helium.treebuilder/TokenizerStateType.values|values#static(){}[0]
+}
+
+final class com.theakram.helium.tree/Attribute { // com.theakram.helium.tree/Attribute|null[0]
+    constructor <init>(kotlin/String? = ..., kotlin/String? = ..., kotlin/String, kotlin/String) // com.theakram.helium.tree/Attribute.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.String;kotlin.String){}[0]
+
+    final val localName // com.theakram.helium.tree/Attribute.localName|{}localName[0]
+        final fun <get-localName>(): kotlin/String // com.theakram.helium.tree/Attribute.localName.<get-localName>|<get-localName>(){}[0]
+    final val name // com.theakram.helium.tree/Attribute.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.theakram.helium.tree/Attribute.name.<get-name>|<get-name>(){}[0]
+    final val namespace // com.theakram.helium.tree/Attribute.namespace|{}namespace[0]
+        final fun <get-namespace>(): kotlin/String? // com.theakram.helium.tree/Attribute.namespace.<get-namespace>|<get-namespace>(){}[0]
+    final val prefix // com.theakram.helium.tree/Attribute.prefix|{}prefix[0]
+        final fun <get-prefix>(): kotlin/String? // com.theakram.helium.tree/Attribute.prefix.<get-prefix>|<get-prefix>(){}[0]
+    final val value // com.theakram.helium.tree/Attribute.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.theakram.helium.tree/Attribute.value.<get-value>|<get-value>(){}[0]
+
+    final fun component1(): kotlin/String? // com.theakram.helium.tree/Attribute.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // com.theakram.helium.tree/Attribute.component2|component2(){}[0]
+    final fun component3(): kotlin/String // com.theakram.helium.tree/Attribute.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.theakram.helium.tree/Attribute.component4|component4(){}[0]
+    final fun copy(kotlin/String? = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String = ...): com.theakram.helium.tree/Attribute // com.theakram.helium.tree/Attribute.copy|copy(kotlin.String?;kotlin.String?;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.theakram.helium.tree/Attribute.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.theakram.helium.tree/Attribute.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.theakram.helium.tree/Attribute.toString|toString(){}[0]
+}
+
+final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/TreeNode|null[0]
+    constructor <init>(com.theakram.helium.tree/NodeType, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/MutableList<com.theakram.helium.tree/Attribute> = ..., kotlin.collections/MutableList<com.theakram.helium.tree/TreeNode> = ..., com.theakram.helium.tree/TreeNode? = ..., com.theakram.helium.tree/QuirksMode? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., com.theakram.helium.tree/TreeNode? = ...) // com.theakram.helium.tree/TreeNode.<init>|<init>(com.theakram.helium.tree.NodeType;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.collections.MutableList<com.theakram.helium.tree.Attribute>;kotlin.collections.MutableList<com.theakram.helium.tree.TreeNode>;com.theakram.helium.tree.TreeNode?;com.theakram.helium.tree.QuirksMode?;kotlin.Boolean;kotlin.Boolean;com.theakram.helium.tree.TreeNode?){}[0]
+
+    final val attributes // com.theakram.helium.tree/TreeNode.attributes|{}attributes[0]
+        final fun <get-attributes>(): kotlin.collections/MutableList<com.theakram.helium.tree/Attribute> // com.theakram.helium.tree/TreeNode.attributes.<get-attributes>|<get-attributes>(){}[0]
+    final val childElements // com.theakram.helium.tree/TreeNode.childElements|{}childElements[0]
+        final fun <get-childElements>(): kotlin.collections/List<com.theakram.helium.tree/TreeNode> // com.theakram.helium.tree/TreeNode.childElements.<get-childElements>|<get-childElements>(){}[0]
+    final val children // com.theakram.helium.tree/TreeNode.children|{}children[0]
+        final fun <get-children>(): kotlin.collections/MutableList<com.theakram.helium.tree/TreeNode> // com.theakram.helium.tree/TreeNode.children.<get-children>|<get-children>(){}[0]
+    final val firstChild // com.theakram.helium.tree/TreeNode.firstChild|{}firstChild[0]
+        final fun <get-firstChild>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.firstChild.<get-firstChild>|<get-firstChild>(){}[0]
+    final val isTemplate // com.theakram.helium.tree/TreeNode.isTemplate|{}isTemplate[0]
+        final fun <get-isTemplate>(): kotlin/Boolean // com.theakram.helium.tree/TreeNode.isTemplate.<get-isTemplate>|<get-isTemplate>(){}[0]
+    final val lastChild // com.theakram.helium.tree/TreeNode.lastChild|{}lastChild[0]
+        final fun <get-lastChild>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.lastChild.<get-lastChild>|<get-lastChild>(){}[0]
+    final val localName // com.theakram.helium.tree/TreeNode.localName|{}localName[0]
+        final fun <get-localName>(): kotlin/String? // com.theakram.helium.tree/TreeNode.localName.<get-localName>|<get-localName>(){}[0]
+    final val name // com.theakram.helium.tree/TreeNode.name|{}name[0]
+        final fun <get-name>(): kotlin/String? // com.theakram.helium.tree/TreeNode.name.<get-name>|<get-name>(){}[0]
+    final val namespace // com.theakram.helium.tree/TreeNode.namespace|{}namespace[0]
+        final fun <get-namespace>(): kotlin/String? // com.theakram.helium.tree/TreeNode.namespace.<get-namespace>|<get-namespace>(){}[0]
+    final val nextSibling // com.theakram.helium.tree/TreeNode.nextSibling|{}nextSibling[0]
+        final fun <get-nextSibling>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.nextSibling.<get-nextSibling>|<get-nextSibling>(){}[0]
+    final val prefix // com.theakram.helium.tree/TreeNode.prefix|{}prefix[0]
+        final fun <get-prefix>(): kotlin/String? // com.theakram.helium.tree/TreeNode.prefix.<get-prefix>|<get-prefix>(){}[0]
+    final val previousSibling // com.theakram.helium.tree/TreeNode.previousSibling|{}previousSibling[0]
+        final fun <get-previousSibling>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.previousSibling.<get-previousSibling>|<get-previousSibling>(){}[0]
+    final val publicId // com.theakram.helium.tree/TreeNode.publicId|{}publicId[0]
+        final fun <get-publicId>(): kotlin/String? // com.theakram.helium.tree/TreeNode.publicId.<get-publicId>|<get-publicId>(){}[0]
+    final val systemId // com.theakram.helium.tree/TreeNode.systemId|{}systemId[0]
+        final fun <get-systemId>(): kotlin/String? // com.theakram.helium.tree/TreeNode.systemId.<get-systemId>|<get-systemId>(){}[0]
+    final val type // com.theakram.helium.tree/TreeNode.type|{}type[0]
+        final fun <get-type>(): com.theakram.helium.tree/NodeType // com.theakram.helium.tree/TreeNode.type.<get-type>|<get-type>(){}[0]
+
+    final var data // com.theakram.helium.tree/TreeNode.data|{}data[0]
+        final fun <get-data>(): kotlin/String? // com.theakram.helium.tree/TreeNode.data.<get-data>|<get-data>(){}[0]
+        final fun <set-data>(kotlin/String?) // com.theakram.helium.tree/TreeNode.data.<set-data>|<set-data>(kotlin.String?){}[0]
+    final var isIframeSrcdoc // com.theakram.helium.tree/TreeNode.isIframeSrcdoc|{}isIframeSrcdoc[0]
+        final fun <get-isIframeSrcdoc>(): kotlin/Boolean // com.theakram.helium.tree/TreeNode.isIframeSrcdoc.<get-isIframeSrcdoc>|<get-isIframeSrcdoc>(){}[0]
+        final fun <set-isIframeSrcdoc>(kotlin/Boolean) // com.theakram.helium.tree/TreeNode.isIframeSrcdoc.<set-isIframeSrcdoc>|<set-isIframeSrcdoc>(kotlin.Boolean){}[0]
+    final var parent // com.theakram.helium.tree/TreeNode.parent|{}parent[0]
+        final fun <get-parent>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.parent.<get-parent>|<get-parent>(){}[0]
+        final fun <set-parent>(com.theakram.helium.tree/TreeNode?) // com.theakram.helium.tree/TreeNode.parent.<set-parent>|<set-parent>(com.theakram.helium.tree.TreeNode?){}[0]
+    final var parserCannotChangeMode // com.theakram.helium.tree/TreeNode.parserCannotChangeMode|{}parserCannotChangeMode[0]
+        final fun <get-parserCannotChangeMode>(): kotlin/Boolean // com.theakram.helium.tree/TreeNode.parserCannotChangeMode.<get-parserCannotChangeMode>|<get-parserCannotChangeMode>(){}[0]
+        final fun <set-parserCannotChangeMode>(kotlin/Boolean) // com.theakram.helium.tree/TreeNode.parserCannotChangeMode.<set-parserCannotChangeMode>|<set-parserCannotChangeMode>(kotlin.Boolean){}[0]
+    final var quirksMode // com.theakram.helium.tree/TreeNode.quirksMode|{}quirksMode[0]
+        final fun <get-quirksMode>(): com.theakram.helium.tree/QuirksMode? // com.theakram.helium.tree/TreeNode.quirksMode.<get-quirksMode>|<get-quirksMode>(){}[0]
+        final fun <set-quirksMode>(com.theakram.helium.tree/QuirksMode?) // com.theakram.helium.tree/TreeNode.quirksMode.<set-quirksMode>|<set-quirksMode>(com.theakram.helium.tree.QuirksMode?){}[0]
+    final var templateContent // com.theakram.helium.tree/TreeNode.templateContent|{}templateContent[0]
+        final fun <get-templateContent>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.templateContent.<get-templateContent>|<get-templateContent>(){}[0]
+        final fun <set-templateContent>(com.theakram.helium.tree/TreeNode?) // com.theakram.helium.tree/TreeNode.templateContent.<set-templateContent>|<set-templateContent>(com.theakram.helium.tree.TreeNode?){}[0]
+
+    final fun appendChild(com.theakram.helium.tree/TreeNode) // com.theakram.helium.tree/TreeNode.appendChild|appendChild(com.theakram.helium.tree.TreeNode){}[0]
+    final fun findChildElement(kotlin/String): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.findChildElement|findChildElement(kotlin.String){}[0]
+    final fun getAttribute(kotlin/String): kotlin/String? // com.theakram.helium.tree/TreeNode.getAttribute|getAttribute(kotlin.String){}[0]
+    final fun getAttributeNS(kotlin/String?, kotlin/String): kotlin/String? // com.theakram.helium.tree/TreeNode.getAttributeNS|getAttributeNS(kotlin.String?;kotlin.String){}[0]
+    final fun hasAttribute(kotlin/String): kotlin/Boolean // com.theakram.helium.tree/TreeNode.hasAttribute|hasAttribute(kotlin.String){}[0]
+    final fun hasAttributeNS(kotlin/String?, kotlin/String): kotlin/Boolean // com.theakram.helium.tree/TreeNode.hasAttributeNS|hasAttributeNS(kotlin.String?;kotlin.String){}[0]
+    final fun hasChildren(): kotlin/Boolean // com.theakram.helium.tree/TreeNode.hasChildren|hasChildren(){}[0]
+    final fun insertBefore(com.theakram.helium.tree/TreeNode, com.theakram.helium.tree/TreeNode?) // com.theakram.helium.tree/TreeNode.insertBefore|insertBefore(com.theakram.helium.tree.TreeNode;com.theakram.helium.tree.TreeNode?){}[0]
+    final fun removeChild(com.theakram.helium.tree/TreeNode) // com.theakram.helium.tree/TreeNode.removeChild|removeChild(com.theakram.helium.tree.TreeNode){}[0]
+    final fun setAttribute(kotlin/String, kotlin/String) // com.theakram.helium.tree/TreeNode.setAttribute|setAttribute(kotlin.String;kotlin.String){}[0]
+    final fun setAttributeNS(kotlin/String?, kotlin/String?, kotlin/String, kotlin/String) // com.theakram.helium.tree/TreeNode.setAttributeNS|setAttributeNS(kotlin.String?;kotlin.String?;kotlin.String;kotlin.String){}[0]
+    final fun toTreeString(kotlin/Int = ...): kotlin/String // com.theakram.helium.tree/TreeNode.toTreeString|toTreeString(kotlin.Int){}[0]
+
+    final object Companion { // com.theakram.helium.tree/TreeNode.Companion|null[0]
+        final fun createComment(kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createComment|createComment(kotlin.String){}[0]
+        final fun createDocument(com.theakram.helium.tree/QuirksMode = ...): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createDocument|createDocument(com.theakram.helium.tree.QuirksMode){}[0]
+        final fun createDocumentFragment(): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createDocumentFragment|createDocumentFragment(){}[0]
+        final fun createDocumentType(kotlin/String, kotlin/String? = ..., kotlin/String? = ...): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createDocumentType|createDocumentType(kotlin.String;kotlin.String?;kotlin.String?){}[0]
+        final fun createElement(kotlin/String, kotlin/String = ..., kotlin/String? = ..., kotlin.collections/List<com.theakram.helium.tree/Attribute> = ...): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createElement|createElement(kotlin.String;kotlin.String;kotlin.String?;kotlin.collections.List<com.theakram.helium.tree.Attribute>){}[0]
+        final fun createText(kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium.tree/TreeNode.Companion.createText|createText(kotlin.String){}[0]
+    }
+}
+
+final class com.theakram.helium.treebuilder/TreeBuilder { // com.theakram.helium.treebuilder/TreeBuilder|null[0]
+    constructor <init>(kotlin/Function1<com.theakram.helium.treebuilder/TokenizerStateType, kotlin/Unit>) // com.theakram.helium.treebuilder/TreeBuilder.<init>|<init>(kotlin.Function1<com.theakram.helium.treebuilder.TokenizerStateType,kotlin.Unit>){}[0]
+
+    final var document // com.theakram.helium.treebuilder/TreeBuilder.document|{}document[0]
+        final fun <get-document>(): com.theakram.helium.tree/TreeNode // com.theakram.helium.treebuilder/TreeBuilder.document.<get-document>|<get-document>(){}[0]
+}
+
+final class com.theakram.helium/HTMLParser { // com.theakram.helium/HTMLParser|null[0]
+    constructor <init>() // com.theakram.helium/HTMLParser.<init>|<init>(){}[0]
+
+    final val document // com.theakram.helium/HTMLParser.document|{}document[0]
+        final fun <get-document>(): com.theakram.helium.tree/TreeNode // com.theakram.helium/HTMLParser.document.<get-document>|<get-document>(){}[0]
+    final val errors // com.theakram.helium/HTMLParser.errors|{}errors[0]
+        final fun <get-errors>(): kotlin.collections/List<com.theakram.helium/ParseError> // com.theakram.helium/HTMLParser.errors.<get-errors>|<get-errors>(){}[0]
+
+    final fun parse(kotlin/String): com.theakram.helium.tree/TreeNode // com.theakram.helium/HTMLParser.parse|parse(kotlin.String){}[0]
+}
+
+final class com.theakram.helium/ParseError { // com.theakram.helium/ParseError|null[0]
+    constructor <init>(kotlin/String, kotlin/Int) // com.theakram.helium/ParseError.<init>|<init>(kotlin.String;kotlin.Int){}[0]
+
+    final val code // com.theakram.helium/ParseError.code|{}code[0]
+        final fun <get-code>(): kotlin/String // com.theakram.helium/ParseError.code.<get-code>|<get-code>(){}[0]
+    final val position // com.theakram.helium/ParseError.position|{}position[0]
+        final fun <get-position>(): kotlin/Int // com.theakram.helium/ParseError.position.<get-position>|<get-position>(){}[0]
+
+    final fun component1(): kotlin/String // com.theakram.helium/ParseError.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.theakram.helium/ParseError.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/Int = ...): com.theakram.helium/ParseError // com.theakram.helium/ParseError.copy|copy(kotlin.String;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.theakram.helium/ParseError.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.theakram.helium/ParseError.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.theakram.helium/ParseError.toString|toString(){}[0]
+}
+
+final object com.theakram.helium.tree/Namespaces { // com.theakram.helium.tree/Namespaces|null[0]
+    final const val HTML // com.theakram.helium.tree/Namespaces.HTML|{}HTML[0]
+        final fun <get-HTML>(): kotlin/String // com.theakram.helium.tree/Namespaces.HTML.<get-HTML>|<get-HTML>(){}[0]
+    final const val MATHML // com.theakram.helium.tree/Namespaces.MATHML|{}MATHML[0]
+        final fun <get-MATHML>(): kotlin/String // com.theakram.helium.tree/Namespaces.MATHML.<get-MATHML>|<get-MATHML>(){}[0]
+    final const val SVG // com.theakram.helium.tree/Namespaces.SVG|{}SVG[0]
+        final fun <get-SVG>(): kotlin/String // com.theakram.helium.tree/Namespaces.SVG.<get-SVG>|<get-SVG>(){}[0]
+    final const val XLINK // com.theakram.helium.tree/Namespaces.XLINK|{}XLINK[0]
+        final fun <get-XLINK>(): kotlin/String // com.theakram.helium.tree/Namespaces.XLINK.<get-XLINK>|<get-XLINK>(){}[0]
+    final const val XML // com.theakram.helium.tree/Namespaces.XML|{}XML[0]
+        final fun <get-XML>(): kotlin/String // com.theakram.helium.tree/Namespaces.XML.<get-XML>|<get-XML>(){}[0]
+    final const val XMLNS // com.theakram.helium.tree/Namespaces.XMLNS|{}XMLNS[0]
+        final fun <get-XMLNS>(): kotlin/String // com.theakram.helium.tree/Namespaces.XMLNS.<get-XMLNS>|<get-XMLNS>(){}[0]
+}
+
+final object com.theakram.helium.treebuilder/FragmentParser { // com.theakram.helium.treebuilder/FragmentParser|null[0]
+    final fun parseFragment(com.theakram.helium.tree/TreeNode, kotlin/String, kotlin/Boolean = ...): kotlin.collections/List<com.theakram.helium.tree/TreeNode> // com.theakram.helium.treebuilder/FragmentParser.parseFragment|parseFragment(com.theakram.helium.tree.TreeNode;kotlin.String;kotlin.Boolean){}[0]
+}
