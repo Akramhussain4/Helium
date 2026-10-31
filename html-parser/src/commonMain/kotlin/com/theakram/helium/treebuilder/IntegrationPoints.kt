@@ -27,6 +27,7 @@ package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.util.asciiLowercase
 
 internal object IntegrationPoints {
 
@@ -47,7 +48,7 @@ internal object IntegrationPoints {
      */
     fun isHTMLIntegrationPoint(node: TreeNode): Boolean = when (node.namespace) {
         Namespaces.MATHML -> node.localName == "annotation-xml" &&
-                node.getAttribute("encoding")?.lowercase() in HTML_ENCODINGS
+                node.getAttribute("encoding")?.asciiLowercase() in HTML_ENCODINGS
 
         Namespaces.SVG -> node.localName in SVG_HTML_INTEGRATION_POINTS
 
