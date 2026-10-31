@@ -143,4 +143,15 @@ internal class HTMLParserTest {
 
         assertEquals(QuirksMode.QUIRKS, document.quirksMode)
     }
+
+    @Test
+    fun `comment in a template goes into its content`() {
+        val template = HTMLParser().parse("<body><template><!--comment--></template>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+            .findChildElement("template")!!
+
+        assertEquals(emptyList(), template.children)
+        assertEquals("comment", template.templateContent!!.children.single().data)
+    }
 }
