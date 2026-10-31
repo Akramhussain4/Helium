@@ -49,25 +49,28 @@ internal object InHeadHelpers {
     /**
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#generic-raw-text-element-parsing-algorithm
      */
-    fun followGenericRCDATAElementParsingAlgorithm(
-        token: Token.StartTag,
-        treeBuilder: TreeBuilder
-    ): InsertionModeTransition {
-        val attributes = toAttributeList(token.attributes)
-        treeBuilder.insertElement(token.name, attributes = attributes)
-        treeBuilder.switchTokenizerState(TokenizerStateType.RCDATA)
-        treeBuilder.saveOriginalInsertionMode()
-        return switchTo(Text)
-    }
+    fun followGenericRawTextElementParsingAlgorithm(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition =
+        followGenericTextElementParsingAlgorithm(token, treeBuilder, TokenizerStateType.RAWTEXT)
 
-    fun followGenericRawTextElementParsingAlgorithm(
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#generic-rcdata-element-parsing-algorithm
+     */
+    fun followGenericRCDATAElementParsingAlgorithm(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition =
+        followGenericTextElementParsingAlgorithm(token, treeBuilder, TokenizerStateType.RCDATA)
+
+    // The spec defines both algorithms with one list of steps, which differ only in the tokenizer state
+    private fun followGenericTextElementParsingAlgorithm(
         token: Token.StartTag,
-        treeBuilder: TreeBuilder
+        treeBuilder: TreeBuilder,
+        tokenizerState: TokenizerStateType
     ): InsertionModeTransition {
-        val attributes = toAttributeList(token.attributes)
-        treeBuilder.insertElement(token.name, attributes = attributes)
-        treeBuilder.switchTokenizerState(TokenizerStateType.RAWTEXT)
+        // Step 1:
+        treeBuilder.insertElement(token.name, attributes = toAttributeList(token.attributes))
+        // Step 2:
+        treeBuilder.switchTokenizerState(tokenizerState)
+        // Step 3:
         treeBuilder.saveOriginalInsertionMode()
+        // Step 4:
         return switchTo(Text)
     }
 }

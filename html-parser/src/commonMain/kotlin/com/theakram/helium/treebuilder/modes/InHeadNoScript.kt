@@ -26,7 +26,12 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -35,7 +40,10 @@ import com.theakram.helium.util.isAsciiWhitespace
 internal object InHeadNoScript : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             is Token.StartTag if token.name == "html" -> InBody.process(
                 token = token,
@@ -50,30 +58,31 @@ internal object InHeadNoScript : InsertionMode {
             is Token.Character if token.codePoint.isAsciiWhitespace() -> InHead.process(token, treeBuilder)
             is Token.Comment -> InHead.process(token, treeBuilder)
             is Token.ProcessingInstruction -> InHead.process(token, treeBuilder)
-            is Token.StartTag if token.name in setOf(
-                "basefont",
-                "bgsound",
-                "link",
-                "meta",
-                "noframes",
-                "style"
-            ) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name in IN_HEAD_START_TAGS -> InHead.process(token, treeBuilder)
 
-            is Token.StartTag if token.name in setOf("head", "noscript") -> continueInCurrentMode()
+            is Token.EndTag if token.name == "br" -> handleAnythingElse(treeBuilder)
 
-            is Token.EndTag -> when {
-                token.name.equals("br", true) -> {
-                    treeBuilder.popCurrentElement()
-                    reprocessIn(InHead)
-                }
-
-                else -> continueInCurrentMode()
+            is Token.StartTag if token.name in IGNORED_START_TAGS -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
             }
 
-            else -> {
-                treeBuilder.popCurrentElement()
-                reprocessIn(InHead)
+            is Token.EndTag -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
             }
+
+            else -> handleAnythingElse(treeBuilder)
         }
     }
+
+    private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
+        treeBuilder.parseError()
+        treeBuilder.popCurrentElement()
+        return reprocessIn(InHead)
+    }
+
+    private val IN_HEAD_START_TAGS = setOf("basefont", "bgsound", "link", "meta", "noframes", "style")
+
+    private val IGNORED_START_TAGS = setOf("head", "noscript")
 }

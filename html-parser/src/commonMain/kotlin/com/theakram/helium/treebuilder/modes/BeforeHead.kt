@@ -26,12 +26,11 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
-import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
@@ -54,44 +53,38 @@ internal object BeforeHead : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.StartTag if token.name == "head" -> {
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(
-                        namespace = null,
-                        prefix = null,
-                        localName = name,
-                        value = value
-                    )
-                }
-                val headElement = treeBuilder.insertElement("head", attributes = attributes)
+                val headElement = treeBuilder.insertElement(
+                    token.name,
+                    attributes = InHeadHelpers.toAttributeList(token.attributes)
+                )
                 treeBuilder.headElement = headElement
                 switchTo(InHead)
             }
 
+            is Token.EndTag if token.name in ANYTHING_ELSE_END_TAGS -> handleAnythingElse(treeBuilder)
+
             is Token.EndTag -> {
-                when {
-                    token.name in setOf("head", "body", "html", "br") -> {
-                        createHeadElement(treeBuilder)
-                        reprocessIn(InHead)
-                    }
-
-                    else -> continueInCurrentMode()
-                }
+                treeBuilder.parseError()
+                continueInCurrentMode()
             }
 
-            else -> {
-                createHeadElement(treeBuilder)
-                reprocessIn(InHead)
-            }
+            else -> handleAnythingElse(treeBuilder)
         }
     }
 
-    private fun createHeadElement(treeBuilder: TreeBuilder) {
+    private fun handleAnythingElse(treeBuilder: TreeBuilder): InsertionModeTransition {
         val headElement = treeBuilder.createImplicitElement("head")
         treeBuilder.headElement = headElement
+        return reprocessIn(InHead)
     }
+
+    private val ANYTHING_ELSE_END_TAGS = setOf("head", "body", "html", "br")
 }
