@@ -214,4 +214,14 @@ internal class HTMLParserTest {
         assertEquals(NodeType.COMMENT, comment.type)
         assertEquals("?xml version=\"1.0\"?", comment.data)
     }
+
+    @Test
+    fun `adoption agency acts as any other end tag when no formatting element follows the last marker`() {
+        // The marquee's marker stays in the list after </table>, hiding the first nobr from the second
+        val body = HTMLParser().parse("<nobr><table><marquee></table><nobr>")
+            .findChildElement("html")!!
+            .findChildElement("body")!!
+
+        assertEquals(listOf("nobr", "nobr"), body.children.map { it.localName })
+    }
 }

@@ -69,6 +69,18 @@ public class TreeNode(
     internal var insertionEndMarker: TreeNode? = null
 
     /**
+     * Spec: https://dom.spec.whatwg.org/#concept-tree-host-including-inclusive-ancestor
+     */
+    internal fun isHostIncludingInclusiveAncestorOf(node: TreeNode): Boolean {
+        var current: TreeNode? = node
+        while (current != null) {
+            if (current === this) return true
+            current = current.parent ?: current.host
+        }
+        return false
+    }
+
+    /**
      * Returns true if this is a template element with content.
      */
     public val isTemplate: Boolean
