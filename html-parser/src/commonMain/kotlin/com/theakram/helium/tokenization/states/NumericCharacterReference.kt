@@ -27,8 +27,13 @@ package com.theakram.helium.tokenization.states
 
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
+import com.theakram.helium.tokenization.util.flushCodePoints
 import com.theakram.helium.util.Chars
+import com.theakram.helium.util.isAsciiDigit
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-state
+ */
 internal class NumericCharacterReference(
     private val returnState: TokenizationState
 ) : TokenizationState {
@@ -44,7 +49,13 @@ internal class NumericCharacterReference(
                 switchTo(HexadecimalCharacterReferenceStart(returnState = returnState))
             }
 
-            else -> reconsumeIn(DecimalCharacterReferenceStart(returnState = returnState))
+            codePoint.isAsciiDigit() -> reconsumeIn(DecimalCharacterReference(returnState = returnState))
+
+            else -> {
+                tokenizer.logParseError("absence-of-digits-in-numeric-character-reference")
+                returnState.flushCodePoints(tokenizer)
+                reconsumeIn(returnState)
+            }
         }
     }
 }
