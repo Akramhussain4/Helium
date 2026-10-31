@@ -42,7 +42,7 @@ data class Html5LibTest(
 ) {
     val isFragmentTest: Boolean get() = documentFragment != null
 
-    fun shouldSkip(): Boolean = isFragmentTest || requiresScriptExecution
+    fun shouldSkip(): Boolean = requiresScriptExecution
 }
 
 data class ParseError(

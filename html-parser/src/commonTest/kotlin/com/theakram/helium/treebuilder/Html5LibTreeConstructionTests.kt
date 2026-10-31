@@ -84,7 +84,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
             when {
                 test.shouldSkip() -> skipped++
                 else -> try {
-                    assertTreeConstruction(test.data, test.document, test.scriptingEnabled)
+                    assertTreeConstruction(test.data, test.document, test.scriptingEnabled, test.documentFragment)
                     passed++
                 } catch (e: Throwable) {
                     failures.add(TestFailure(filename, index + 1, test.lineNumber, test.data, e))
@@ -110,7 +110,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
             when {
                 test.shouldSkip() -> skipped++
                 else -> try {
-                    assertTreeConstruction(test.data, test.document, test.scriptingEnabled)
+                    assertTreeConstruction(test.data, test.document, test.scriptingEnabled, test.documentFragment)
                     passed++
                 } catch (e: Throwable) {
                     failed++
@@ -131,7 +131,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
         println("\nRunning test #$testNumber from $filename (line ${test.lineNumber}):")
         println("Input: ${test.data.replace("\n", "\\n")}\n")
 
-        assertTreeConstruction(test.data, test.document, test.scriptingEnabled)
+        assertTreeConstruction(test.data, test.document, test.scriptingEnabled, test.documentFragment)
 
         println("✓ Test #$testNumber passed")
     }
@@ -151,7 +151,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
         for (i in (startTest - 1) until endTest) {
             val test = tests[i]
             try {
-                assertTreeConstruction(test.data, test.document, test.scriptingEnabled)
+                assertTreeConstruction(test.data, test.document, test.scriptingEnabled, test.documentFragment)
                 passed++
                 println("✓ Test #${i + 1}")
             } catch (e: AssertionError) {
@@ -193,7 +193,7 @@ internal class Html5LibTreeConstructionTests : TreeConstructionTestBase() {
     }
 
     private companion object {
-        const val MIN_PASSING_TESTS = 1576
+        const val MIN_PASSING_TESTS = 1767
     }
 
     private data class TestFailure(
