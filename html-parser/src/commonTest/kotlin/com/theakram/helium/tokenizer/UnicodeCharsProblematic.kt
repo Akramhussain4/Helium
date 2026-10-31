@@ -33,28 +33,29 @@ import kotlin.test.Test
  */
 internal class UnicodeCharsProblematic : TokenizerTestBase() {
 
-    // The source tests are doubleEscaped: their inputs are a lone surrogate, not the text "\\uDFFF"
+    // The source tests are doubleEscaped: their inputs are a lone surrogate, not the text "\\uDFFF". The inputs are
+    // built from chars at run time: incremental Kotlin/JS builds turn a lone surrogate in a string literal into "?".
     @Test
     fun `Invalid Unicode character U+DFFF`() = assertTokenization(
-        input = "\uDFFF",
+        input = charArrayOf('\uDFFF').concatToString(),
         listOf(char('\uDFFF')),
     )
 
     @Test
     fun `Invalid Unicode character U+D800`() = assertTokenization(
-        input = "\uD800",
+        input = charArrayOf('\uD800').concatToString(),
         listOf(char('\uD800')),
     )
 
     @Test
     fun `Invalid Unicode character U+DFFF with valid preceding character`() = assertTokenization(
-        input = "a\uDFFF",
+        input = charArrayOf('a', '\uDFFF').concatToString(),
         listOf(char('a'), char('\uDFFF')),
     )
 
     @Test
     fun `Invalid Unicode character U+D800 with valid following character`() = assertTokenization(
-        input = "\uD800a",
+        input = charArrayOf('\uD800', 'a').concatToString(),
         listOf(char('\uD800'), char('a')),
     )
 
