@@ -37,8 +37,8 @@ import com.theakram.helium.treebuilder.modes.Initial
  */
 internal class TreeBuilder(
     private val onSwitchTokenizerState: (TokenizerStateType) -> Unit,
-    /** Spec: https://html.spec.whatwg.org/multipage/parsing.html#scripting-flag */
-    internal val scriptingEnabled: Boolean = true
+    /** Spec: https://html.spec.whatwg.org/multipage/parsing.html#scripting-mode */
+    internal val scriptingMode: ScriptingMode = ScriptingMode.NORMAL
 ) {
     private var insertionMode: InsertionMode = Initial
     var document: TreeNode = TreeNode.createDocument()

@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder.modes
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.ScriptingMode
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
@@ -86,7 +87,7 @@ internal object InHead : InsertionMode {
             }
 
             is Token.StartTag if token.name == "noscript" -> {
-                if (treeBuilder.scriptingEnabled) {
+                if (treeBuilder.scriptingMode != ScriptingMode.DISABLED) {
                     InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
                 } else {
                     val attributes = InHeadHelpers.toAttributeList(token.attributes)

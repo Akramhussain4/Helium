@@ -42,7 +42,7 @@ internal object FragmentParser {
     fun parseFragment(
         context: TreeNode,
         input: String,
-        scriptingEnabled: Boolean = true,
+        scriptingMode: ScriptingMode = ScriptingMode.INERT,
         onParseError: (String, Int) -> Unit = { _, _ -> }
     ): List<TreeNode> {
         // Step 6:
@@ -51,7 +51,7 @@ internal object FragmentParser {
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
             },
-            scriptingEnabled = scriptingEnabled
+            scriptingMode = scriptingMode
         )
         treeBuilder.contextElement = context
         tokenizer = Tokenizer(
@@ -72,7 +72,7 @@ internal object FragmentParser {
         }
 
         // Step 7:
-        tokenizer.switchState(getInitialTokenizerState(context, scriptingEnabled))
+        tokenizer.switchState(getInitialTokenizerState(context, scriptingMode))
 
         // Step 8:
         val root = TreeNode.createElement(
@@ -116,7 +116,7 @@ internal object FragmentParser {
         return current.takeIf { it.type == NodeType.DOCUMENT }
     }
 
-    private fun getInitialTokenizerState(context: TreeNode, scriptingEnabled: Boolean): TokenizerStateType {
+    private fun getInitialTokenizerState(context: TreeNode, scriptingMode: ScriptingMode): TokenizerStateType {
         if (context.namespace != Namespaces.HTML) {
             return TokenizerStateType.DATA
         }
@@ -125,7 +125,7 @@ internal object FragmentParser {
             "title", "textarea" -> TokenizerStateType.RCDATA
             "style", "xmp", "iframe", "noembed", "noframes" -> TokenizerStateType.RAWTEXT
             "script" -> TokenizerStateType.SCRIPT_DATA
-            "noscript" -> if (scriptingEnabled) TokenizerStateType.RAWTEXT else TokenizerStateType.DATA
+            "noscript" -> if (scriptingMode != ScriptingMode.DISABLED) TokenizerStateType.RAWTEXT else TokenizerStateType.DATA
             "plaintext" -> TokenizerStateType.PLAINTEXT
             else -> TokenizerStateType.DATA
         }
