@@ -30,6 +30,7 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.flushCodePoints
 import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.isAsciiWhitespace
+import com.theakram.helium.util.isControl
 import com.theakram.helium.util.isNonCharacter
 import com.theakram.helium.util.isSurrogate
 
@@ -40,37 +41,40 @@ internal class NumericCharacterReferenceEnd(
     private val returnState: TokenizationState,
 ) : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
-        val number = tokenizer.characterReferenceCode
-        when {
-            number == 0x00L -> {
-                tokenizer.logParseError("null-character-reference")
-                tokenizer.characterReferenceCode = 0xFFFD
-            }
-
-            number > 0x10FFFF -> {
-                tokenizer.logParseError("character-reference-outside-unicode-range")
-                tokenizer.characterReferenceCode = 0xFFFD
-            }
-
-            number.toInt().isSurrogate() -> {
-                tokenizer.logParseError("surrogate-character-reference")
-                tokenizer.characterReferenceCode = 0xFFFD
-            }
-
-            number.toInt().isNonCharacter() -> {
-                tokenizer.logParseError("noncharacter-character-reference")
-            }
+        // Check the character reference code. Each check reads the code as the checks before it left it, so a
+        // null character reference becomes U+FFFD before the control check runs.
+        if (tokenizer.characterReferenceCode == 0x00L) {
+            tokenizer.logParseError("null-character-reference")
+            tokenizer.characterReferenceCode = 0xFFFD
         }
 
-        if (number == 0x0DL || (number <= 0xFFFF && number.toInt().toChar().isISOControl() && !number.toInt().isAsciiWhitespace())) {
+        if (tokenizer.characterReferenceCode > 0x10FFFF) {
+            tokenizer.logParseError("character-reference-outside-unicode-range")
+            tokenizer.characterReferenceCode = 0xFFFD
+        }
+
+        if (tokenizer.characterReferenceCode.toInt().isSurrogate()) {
+            tokenizer.logParseError("surrogate-character-reference")
+            tokenizer.characterReferenceCode = 0xFFFD
+        }
+
+        if (tokenizer.characterReferenceCode.toInt().isNonCharacter()) {
+            tokenizer.logParseError("noncharacter-character-reference")
+        }
+
+        val number = tokenizer.characterReferenceCode.toInt()
+        if (number == 0x0D || (number.isControl() && !number.isAsciiWhitespace())) {
             tokenizer.logParseError("control-character-reference")
-            NumCharRef[number.toInt()]?.let {
+            NumCharRef[number]?.let {
                 tokenizer.characterReferenceCode = it.toLong()
             }
         }
+
         tokenizer.tempBuffer.clear()
         tokenizer.tempBuffer.appendUnicode(tokenizer.characterReferenceCode.toInt())
         returnState.flushCodePoints(tokenizer)
+        // This state consumes no input character, so reconsuming the one it was given in the return state is the
+        // spec's "Switch to the return state"
         return reconsumeIn(returnState)
     }
 }

@@ -44,7 +44,7 @@ internal data object AttributeValueDoubleQuoted : TokenizationState {
             }
 
             codePoint == -1 -> {
-                tokenizer.logParseError("eof-in-attribute-value")
+                tokenizer.logParseError("eof-in-tag")
                 tokenizer.emitToken(Token.EOF)
                 continueInCurrentState()
             }
