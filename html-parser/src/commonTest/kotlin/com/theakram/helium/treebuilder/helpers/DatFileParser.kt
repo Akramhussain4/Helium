@@ -110,12 +110,20 @@ object DatFileParser {
         private fun parseDocument(): String {
             expectSection("#document")
             return buildString {
-                while (currentLine?.let { !it.startsWith("#") && it.isNotBlank() } == true) {
+                while (!isEndOfTest()) {
                     if (isNotEmpty()) append("\n")
                     append(lines[index])
                     index++
                 }
             }
+        }
+
+        // The document is the last section, and its text nodes can contain blank lines, so it only ends at
+        // the blank line before the next test's #data or at the end of the file
+        private fun isEndOfTest(): Boolean {
+            if (currentLine?.isNotBlank() == true) return false
+            val nextContentLine = lines.asSequence().drop(index).firstOrNull { it.isNotBlank() }
+            return nextContentLine == null || nextContentLine.trim() == "#data"
         }
 
         private fun expectSection(section: String) {
