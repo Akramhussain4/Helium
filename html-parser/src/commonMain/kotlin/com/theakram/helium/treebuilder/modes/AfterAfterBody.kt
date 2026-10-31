@@ -41,6 +41,11 @@ internal object AfterAfterBody : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                continueInCurrentMode()
+            }
+
             is Token.DocType -> InBody.process(token, treeBuilder)
 
             is Token.Character if token.data.code.isAsciiWhitespace() -> InBody.process(token, treeBuilder)

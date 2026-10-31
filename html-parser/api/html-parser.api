@@ -128,6 +128,7 @@ public final class com/theakram/helium/tree/TreeNode$Companion {
 	public static synthetic fun createDocumentType$default (Lcom/theakram/helium/tree/TreeNode$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/theakram/helium/tree/TreeNode;
 	public final fun createElement (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/theakram/helium/tree/TreeNode;
 	public static synthetic fun createElement$default (Lcom/theakram/helium/tree/TreeNode$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/theakram/helium/tree/TreeNode;
+	public final fun createProcessingInstruction (Ljava/lang/String;Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
 	public final fun createText (Ljava/lang/String;)Lcom/theakram/helium/tree/TreeNode;
 }
 

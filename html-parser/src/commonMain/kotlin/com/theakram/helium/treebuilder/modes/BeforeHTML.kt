@@ -49,6 +49,11 @@ internal object BeforeHTML : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                continueInCurrentMode()
+            }
+
             is Token.Character if token.data.code.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.StartTag if token.name == "html" -> {

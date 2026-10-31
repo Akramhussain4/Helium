@@ -45,9 +45,8 @@ internal data object TagOpen : TokenizationState {
             }
 
             codePoint.IS(Chars.QuestionMark) -> {
-                tokenizer.logParseError("unexpected-question-mark-instead-of-tag-name")
-                tokenizer.currentCommentData.clear()
-                reconsumeIn(BogusComment)
+                tokenizer.tempBuffer.clear()
+                switchTo(ProcessingInstructionOpen)
             }
 
             codePoint == -1 -> {

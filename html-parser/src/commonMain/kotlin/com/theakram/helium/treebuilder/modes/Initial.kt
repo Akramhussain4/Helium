@@ -51,6 +51,11 @@ internal object Initial : InsertionMode {
                 continueInCurrentMode()
             }
 
+            is Token.ProcessingInstruction -> {
+                treeBuilder.document.appendChild(TreeNode.createProcessingInstruction(token.target, token.data))
+                continueInCurrentMode()
+            }
+
             is Token.DocType -> {
                 treeBuilder.insertDoctype(
                     name = token.name ?: "",

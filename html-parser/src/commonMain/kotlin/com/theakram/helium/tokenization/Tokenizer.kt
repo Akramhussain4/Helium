@@ -61,6 +61,8 @@ internal class Tokenizer(
     val startTagBuilder = StartTagBuilder()
     var currentEndTagName = StringBuilder(INITIAL_BUFFER_CAPACITY)
     var currentCommentData = StringBuilder(INITIAL_BUFFER_CAPACITY)
+    var currentProcessingInstructionTarget: String = ""
+    val currentProcessingInstructionData = StringBuilder(INITIAL_BUFFER_CAPACITY)
 
     var isCurrentTagStartTag: Boolean = true
     var lastStartTagName: String = ""
@@ -156,6 +158,8 @@ internal class Tokenizer(
         startTagBuilder.reset()
         currentEndTagName.clear()
         currentCommentData.clear()
+        currentProcessingInstructionTarget = ""
+        currentProcessingInstructionData.clear()
         isCurrentTagStartTag = true
         lastStartTagName = ""
     }
@@ -180,6 +184,27 @@ internal class Tokenizer(
     fun emitComment() {
         onTokenEmitted(Token.Comment(currentCommentData.toString()))
         currentCommentData.clear()
+    }
+
+    fun createProcessingInstruction(target: String) {
+        currentProcessingInstructionTarget = target
+        currentProcessingInstructionData.clear()
+    }
+
+    fun emitProcessingInstruction() {
+        onTokenEmitted(
+            Token.ProcessingInstruction(currentProcessingInstructionTarget, currentProcessingInstructionData.toString())
+        )
+        currentProcessingInstructionData.clear()
+    }
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#convert-the-temporary-buffer-to-a-comment
+     */
+    fun convertTemporaryBufferToComment() {
+        currentCommentData.clear()
+        currentCommentData.append('?')
+        currentCommentData.append(tempBuffer)
     }
 
     fun emitCurrentTag(selfClosing: Boolean = false) {

@@ -201,4 +201,16 @@ internal class HTMLParserTest {
 
         assertEquals("\u0130d", element.attributes.single().localName)
     }
+
+    @Test
+    fun `processing instructions are parsed except the xml targets`() {
+        val document = HTMLParser().parse("<?php echo 1 ?><?xml version=\"1.0\"?><p>")
+        val (processingInstruction, comment) = document.children
+
+        assertEquals(NodeType.PROCESSING_INSTRUCTION, processingInstruction.type)
+        assertEquals("php", processingInstruction.name)
+        assertEquals("echo 1 ", processingInstruction.data)
+        assertEquals(NodeType.COMMENT, comment.type)
+        assertEquals("?xml version=\"1.0\"?", comment.data)
+    }
 }
