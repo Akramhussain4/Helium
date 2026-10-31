@@ -136,4 +136,11 @@ internal class HTMLParserTest {
         assertEquals(emptyList(), context.children)
         assertEquals(listOf("missing-semicolon-after-character-reference"), parser.errors.map { it.code })
     }
+
+    @Test
+    fun `quirks mode public identifiers match case-insensitively`() {
+        val document = HTMLParser().parse("<!DOCTYPE html PUBLIC \"html\"><p>")
+
+        assertEquals(QuirksMode.QUIRKS, document.quirksMode)
+    }
 }
