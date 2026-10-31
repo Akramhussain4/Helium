@@ -33,62 +33,29 @@ import kotlin.test.Test
  */
 internal class UnicodeCharsProblematic : TokenizerTestBase() {
 
+    // The source tests are doubleEscaped: their inputs are a lone surrogate, not the text "\\uDFFF"
     @Test
     fun `Invalid Unicode character U+DFFF`() = assertTokenization(
-        input = """\\uDFFF""",
-        listOf(
-            char('\\'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
-        ),
+        input = "\uDFFF",
+        listOf(char('\uDFFF')),
     )
 
     @Test
     fun `Invalid Unicode character U+D800`() = assertTokenization(
-        input = """\\uD800""",
-        listOf(
-            char('\\'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('0'),
-            char('0'),
-        ),
+        input = "\uD800",
+        listOf(char('\uD800')),
     )
 
     @Test
     fun `Invalid Unicode character U+DFFF with valid preceding character`() = assertTokenization(
-        input = """a\\uDFFF""",
-        listOf(
-            char('a'),
-            char('\\'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('F'),
-            char('F'),
-            char('F'),
-        ),
+        input = "a\uDFFF",
+        listOf(char('a'), char('\uDFFF')),
     )
 
     @Test
     fun `Invalid Unicode character U+D800 with valid following character`() = assertTokenization(
-        input = """\\uD800a""",
-        listOf(
-            char('\\'),
-            char('\\'),
-            char('u'),
-            char('D'),
-            char('8'),
-            char('0'),
-            char('0'),
-            char('a'),
-        ),
+        input = "\uD800a",
+        listOf(char('\uD800'), char('a')),
     )
 
     @Test
