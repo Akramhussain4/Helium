@@ -26,8 +26,12 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.TreeNode
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionLocation
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.stopParsing
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -50,13 +54,17 @@ internal object AfterAfterFrameSet : InsertionMode {
 
             is Token.Character if token.codePoint.isAsciiWhitespace() -> InBody.process(token, treeBuilder)
 
-            is Token.StartTag if token.name.equals("html", true) -> InBody.process(token, treeBuilder)
-
-            is Token.StartTag if token.name.equals("noframes", true) -> InHead.process(token, treeBuilder)
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.EOF -> stopParsing()
 
-            else -> continueInCurrentMode()
+            is Token.StartTag if token.name == "noframes" -> InHead.process(token, treeBuilder)
+
+            else -> {
+                // Parse error. Ignore the token.
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
         }
     }
 }

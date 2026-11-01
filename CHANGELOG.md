@@ -13,6 +13,7 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- `TreeNode.createElement` accepts a null namespace, for elements in no namespace
 - `ParseError.code` is nullable (breaking): the spec gives most tree construction parse errors no dedicated code, so
   theirs is null
 

@@ -28,7 +28,12 @@ package com.theakram.helium.treebuilder.modes
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.stopParsing
+import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -55,6 +60,7 @@ internal object InFrameSet : InsertionMode {
 
             is Token.DocType -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -69,11 +75,9 @@ internal object InFrameSet : InsertionMode {
             }
 
             is Token.EndTag if token.name == "frameset" -> {
-                if (treeBuilder.currentNode.localName == "html" &&
-                    treeBuilder.currentNode.namespace == Namespaces.HTML &&
-                    treeBuilder.elementStack.size == 1
-                ) {
-                    // Parse error. Ignore the token.
+                if (isCurrentNodeRootHtmlElement(treeBuilder)) {
+                    // Parse error; ignore the token. (fragment case)
+                    treeBuilder.parseError()
                     continueInCurrentMode()
                 } else {
                     treeBuilder.popCurrentElement()
@@ -101,19 +105,24 @@ internal object InFrameSet : InsertionMode {
             is Token.StartTag if token.name == "noframes" -> InHead.process(token, treeBuilder)
 
             is Token.EOF -> {
-                if (treeBuilder.currentNode.localName != "html" ||
-                    treeBuilder.currentNode.namespace != Namespaces.HTML ||
-                    treeBuilder.elementStack.size != 1
-                ) {
-                    // Parse error
+                // The current node can only be the root html element in the fragment case
+                if (!isCurrentNodeRootHtmlElement(treeBuilder)) {
+                    treeBuilder.parseError()
                 }
                 stopParsing()
             }
 
             else -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
         }
     }
+
+    // The root html element is the first element on the stack of open elements
+    private fun isCurrentNodeRootHtmlElement(treeBuilder: TreeBuilder): Boolean =
+        treeBuilder.openElementCount == 1 &&
+                treeBuilder.currentNode.namespace == Namespaces.HTML &&
+                treeBuilder.currentNode.localName == "html"
 }

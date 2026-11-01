@@ -26,8 +26,14 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.TreeNode
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionLocation
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.stopParsing
+import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -52,16 +58,18 @@ internal object AfterBody : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                // Parse error. Ignore the token.
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
-            is Token.StartTag if token.name == "html" -> InBody.process(
-                token = token,
-                treeBuilder = treeBuilder
-            )
+            is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.EndTag if token.name == "html" -> {
                 if (treeBuilder.isFragmentCase) {
-                    // Parse error. Ignore the token.
+                    // Parse error; ignore the token. (fragment case)
+                    treeBuilder.parseError()
                     continueInCurrentMode()
                 } else {
                     switchTo(AfterAfterBody)
@@ -71,7 +79,8 @@ internal object AfterBody : InsertionMode {
             is Token.EOF -> stopParsing()
 
             else -> {
-                // Parse error.
+                // Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                treeBuilder.parseError()
                 reprocessIn(InBody)
             }
         }

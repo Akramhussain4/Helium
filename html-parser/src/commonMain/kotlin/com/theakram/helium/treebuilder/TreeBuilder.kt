@@ -116,6 +116,9 @@ internal class TreeBuilder(
     internal fun hasForeignAdjustedCurrentNode(): Boolean =
         stack.isNotEmpty() && adjustedCurrentNode.namespace != Namespaces.HTML
     internal val elementStack: List<TreeNode> get() = stack.toList()
+
+    /** The number of elements on the stack of open elements, without copying it as [elementStack] does. */
+    internal val openElementCount: Int get() = stack.size
     internal val currentMode: InsertionMode get() = insertionMode
 
     // Whether tree construction has acknowledged the self-closing flag of the start tag token being processed
@@ -205,15 +208,28 @@ internal class TreeBuilder(
 
     internal fun insertElement(
         tagName: String,
-        namespace: String = Namespaces.HTML,
+        namespace: String? = Namespaces.HTML,
         attributes: List<Attribute> = emptyList()
     ): TreeNode {
         // Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-foreign-element
+        // Spec: https://html.spec.whatwg.org/multipage/parsing.html#create-an-element-for-the-token
         val element = TreeNode.createElement(
             localName = tagName,
             namespace = namespace,
             attributes = attributes
         )
+
+        // "If element has an xmlns attribute in the XMLNS namespace whose value is not exactly the same as the
+        // element's namespace, that is a parse error. Similarly, if element has an xmlns:xlink attribute in the XMLNS
+        // namespace whose value is not the XLink namespace, that is a parse error."
+        for (attribute in element.attributes) {
+            if (attribute.namespace != Namespaces.XMLNS) continue
+            if ((attribute.prefix == null && attribute.localName == "xmlns" && attribute.value != namespace) ||
+                (attribute.prefix == "xmlns" && attribute.localName == "xlink" && attribute.value != Namespaces.XLINK)
+            ) {
+                parseError()
+            }
+        }
 
         insertElementAtAdjustedInsertionLocation(element)
         stack.push(element)

@@ -27,6 +27,7 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.ForeignAttributeAdjustments
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
@@ -57,7 +58,8 @@ internal object InForeignContent : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.Character if token.codePoint == 0x0000 -> {
-                // Parse error: unexpected null character
+                // Parse error. Insert a U+FFFD REPLACEMENT CHARACTER character.
+                treeBuilder.parseError()
                 treeBuilder.insertCharacter(0xFFFD)
                 continueInCurrentMode()
             }
@@ -84,7 +86,8 @@ internal object InForeignContent : InsertionMode {
             }
 
             is Token.DocType -> {
-                // Parse error
+                // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -97,25 +100,25 @@ internal object InForeignContent : InsertionMode {
                 breakOutOfForeignContent(token, treeBuilder)
             }
 
-            is Token.StartTag -> insertForeignElement(token, treeBuilder)
+            is Token.StartTag -> processAnyOtherStartTag(token, treeBuilder)
 
-            is Token.EndTag if token.name == "script" &&
-                    treeBuilder.currentNode.namespace == Namespaces.SVG &&
-                    treeBuilder.currentNode.localName == "script" -> {
-                // Scripts aren't executed, so this only pops the element
-                treeBuilder.popCurrentElement()
+            is Token.EndTag if token.name == "script" && treeBuilder.currentNode.isSVGScript() -> {
+                processSVGScriptEndTag(treeBuilder)
                 continueInCurrentMode()
             }
 
             is Token.EndTag -> processAnyOtherEndTag(token, treeBuilder)
 
-            // The dispatcher sends end-of-file to the current insertion mode
-            is Token.EOF -> treeBuilder.currentMode.process(token, treeBuilder)
+            is Token.EOF -> error("The tree construction dispatcher processes end-of-file tokens in HTML content")
         }
     }
 
     private fun breakOutOfForeignContent(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // Parse error
+        // Parse error.
+        treeBuilder.parseError()
+
+        // While the current node is not a MathML text integration point, an HTML integration point, or an element
+        // in the HTML namespace, pop elements from the stack of open elements.
         while (true) {
             val node = treeBuilder.currentNode
             if (node.namespace == Namespaces.HTML ||
@@ -126,25 +129,65 @@ internal object InForeignContent : InsertionMode {
             }
             treeBuilder.popCurrentElement()
         }
+
+        // Reprocess the token according to the rules given in the section corresponding to the current insertion
+        // mode in HTML content.
         return treeBuilder.currentMode.process(token, treeBuilder)
     }
 
-    private fun insertForeignElement(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition {
-        val namespace = treeBuilder.adjustedCurrentNode.namespace ?: Namespaces.HTML
+    private fun processAnyOtherStartTag(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition {
+        // An element created through the DOM can be in no namespace; its elements then are too
+        val namespace = treeBuilder.adjustedCurrentNode.namespace
+
+        // Adjust MathML attributes (MathML), change the tag name and adjust SVG attributes (SVG), then adjust
+        // foreign attributes for the token.
         val (tagName, attributes) = when (namespace) {
             Namespaces.MATHML -> token.name to ForeignAttributeAdjustments.adjustMathMLAttributesFull(token.attributes)
             Namespaces.SVG -> SVGTagNameAdjustments.adjustSVGTagName(token.name) to
                     ForeignAttributeAdjustments.adjustSVGAttributesFull(token.attributes)
             else -> token.name to ForeignAttributeAdjustments.adjustForeignAttributes(token.attributes)
         }
+
+        // Insert a foreign element for the token, with the adjusted current node's namespace.
         treeBuilder.insertElement(tagName, namespace, attributes)
 
-        // A self-closing SVG script is handled like its end tag, which also just pops it
+        // If the token has its self-closing flag set, then run the appropriate steps from the following list:
         if (token.selfClosing) {
-            treeBuilder.popCurrentElement()
-            treeBuilder.acknowledgeSelfClosingFlag()
+            if (token.name == "script" && treeBuilder.currentNode.namespace == Namespaces.SVG) {
+                // Acknowledge the token's self-closing flag, and then act as described in the steps for a "script"
+                // end tag below.
+                treeBuilder.acknowledgeSelfClosingFlag()
+                processSVGScriptEndTag(treeBuilder)
+            } else {
+                // Pop the current node off the stack of open elements and acknowledge the token's self-closing flag.
+                treeBuilder.popCurrentElement()
+                treeBuilder.acknowledgeSelfClosingFlag()
+            }
         }
         return continueInCurrentMode()
+    }
+
+    /**
+     * The steps for an end tag whose tag name is "script", if the current node is an SVG script element. Helium
+     * doesn't support scripting, so only the first step, which pops the element, affects the tree.
+     */
+    private fun processSVGScriptEndTag(treeBuilder: TreeBuilder) {
+        // Pop the current node off the stack of open elements.
+        treeBuilder.popCurrentElement()
+
+        // Not applicable without scripting: let the old insertion point have the same value as the current insertion
+        // point, and let the insertion point be just before the next input character.
+
+        // Not applicable without scripting: increment the parser's script nesting level by one and set the parser
+        // pause flag to true.
+
+        // Not applicable without scripting: if the active speculative HTML parser is null and the user agent supports
+        // SVG, then process the SVG script element according to the SVG rules.
+
+        // Not applicable without scripting: decrement the parser's script nesting level by one, and if it is zero,
+        // set the parser pause flag to false.
+
+        // Not applicable without scripting: let the insertion point have the value of the old insertion point.
     }
 
     private fun processAnyOtherEndTag(token: Token.EndTag, treeBuilder: TreeBuilder): InsertionModeTransition {
@@ -155,8 +198,8 @@ internal object InForeignContent : InsertionMode {
         var node = stack[index]
 
         // Step 2:
-        if (node.localName?.asciiLowercase() != token.name) {
-            // Parse error
+        if (!node.hasTagNameOf(token)) {
+            treeBuilder.parseError()
         }
 
         while (true) {
@@ -164,7 +207,7 @@ internal object InForeignContent : InsertionMode {
             if (index == 0) return continueInCurrentMode()
 
             // Step 4:
-            if (node.localName?.asciiLowercase() == token.name) {
+            if (node.hasTagNameOf(token)) {
                 treeBuilder.popUntilElement(node)
                 return continueInCurrentMode()
             }
@@ -173,10 +216,16 @@ internal object InForeignContent : InsertionMode {
             index--
             node = stack[index]
 
-            // Step 6-7:
+            // Steps 6-7:
             if (node.namespace == Namespaces.HTML) {
                 return treeBuilder.currentMode.process(token, treeBuilder)
             }
         }
     }
+
+    private fun TreeNode.isSVGScript(): Boolean = namespace == Namespaces.SVG && localName == "script"
+
+    // Whether the element's tag name, converted to ASCII lowercase, is the same as the tag name of the token
+    private fun TreeNode.hasTagNameOf(token: Token.EndTag): Boolean =
+        checkNotNull(localName) { "The stack of open elements only holds elements" }.asciiLowercase() == token.name
 }

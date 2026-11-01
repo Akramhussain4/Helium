@@ -26,7 +26,12 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.stopParsing
+import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
 
 /**
@@ -52,6 +57,7 @@ internal object AfterFrameSet : InsertionMode {
 
             is Token.DocType -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -65,6 +71,7 @@ internal object AfterFrameSet : InsertionMode {
 
             else -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
         }

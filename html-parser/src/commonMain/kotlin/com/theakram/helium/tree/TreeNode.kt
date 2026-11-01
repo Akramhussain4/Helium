@@ -334,7 +334,7 @@ public class TreeNode(
 
         public fun createElement(
             localName: String,
-            namespace: String = Namespaces.HTML,
+            namespace: String? = Namespaces.HTML,
             prefix: String? = null,
             attributes: List<Attribute> = emptyList()
         ): TreeNode {
