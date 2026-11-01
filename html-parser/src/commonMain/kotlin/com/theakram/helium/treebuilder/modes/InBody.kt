@@ -351,9 +351,11 @@ internal object InBody : InsertionMode {
         }
 
         val htmlElement = stack.first()
+        // "Check to see if the attribute is already present on" it; "if it is not, add the attribute and its
+        // corresponding value". Token attributes have no namespace, and their names are lowercase already.
         token.attributes.forEach { (name, value) ->
-            if (!htmlElement.hasAttribute(name)) {
-                htmlElement.setAttribute(name, value)
+            if (htmlElement.attributes.none { it.namespace == null && it.localName == name }) {
+                htmlElement.attributes.add(Attribute(localName = name, value = value))
             }
         }
         return continueInCurrentMode()
@@ -376,9 +378,11 @@ internal object InBody : InsertionMode {
 
         treeBuilder.setFramesetNotOk()
         val bodyElement = stack[1]
+        // "Check to see if the attribute is already present on" it; "if it is not, add the attribute and its
+        // corresponding value". Token attributes have no namespace, and their names are lowercase already.
         token.attributes.forEach { (name, value) ->
-            if (!bodyElement.hasAttribute(name)) {
-                bodyElement.setAttribute(name, value)
+            if (bodyElement.attributes.none { it.namespace == null && it.localName == name }) {
+                bodyElement.attributes.add(Attribute(localName = name, value = value))
             }
         }
         return continueInCurrentMode()

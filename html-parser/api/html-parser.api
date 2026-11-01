@@ -108,6 +108,7 @@ public final class com/theakram/helium/tree/TreeNode {
 	public final fun isTemplate ()Z
 	public final fun removeChild (Lcom/theakram/helium/tree/TreeNode;)V
 	public final fun setAttribute (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun setAttributeNS (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setAttributeNS (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setData (Ljava/lang/String;)V
 	public final fun setIframeSrcdoc (Z)V

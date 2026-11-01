@@ -122,6 +122,7 @@ final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/Tree
     final fun insertBefore(com.theakram.helium.tree/TreeNode, com.theakram.helium.tree/TreeNode?) // com.theakram.helium.tree/TreeNode.insertBefore|insertBefore(com.theakram.helium.tree.TreeNode;com.theakram.helium.tree.TreeNode?){}[0]
     final fun removeChild(com.theakram.helium.tree/TreeNode) // com.theakram.helium.tree/TreeNode.removeChild|removeChild(com.theakram.helium.tree.TreeNode){}[0]
     final fun setAttribute(kotlin/String, kotlin/String) // com.theakram.helium.tree/TreeNode.setAttribute|setAttribute(kotlin.String;kotlin.String){}[0]
+    final fun setAttributeNS(kotlin/String?, kotlin/String, kotlin/String) // com.theakram.helium.tree/TreeNode.setAttributeNS|setAttributeNS(kotlin.String?;kotlin.String;kotlin.String){}[0]
     final fun setAttributeNS(kotlin/String?, kotlin/String?, kotlin/String, kotlin/String) // com.theakram.helium.tree/TreeNode.setAttributeNS|setAttributeNS(kotlin.String?;kotlin.String?;kotlin.String;kotlin.String){}[0]
     final fun toTreeString(kotlin/Int = ...): kotlin/String // com.theakram.helium.tree/TreeNode.toTreeString|toTreeString(kotlin.Int){}[0]
 
