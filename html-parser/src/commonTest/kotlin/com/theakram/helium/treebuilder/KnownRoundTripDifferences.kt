@@ -25,62 +25,123 @@
 
 package com.theakram.helium.treebuilder
 
+import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.NodeType
+import com.theakram.helium.tree.TreeNode
+
 // The HTML fragment serialization algorithm's note: "It is possible that the output of this algorithm, if parsed with
 // an HTML parser, will not return the original tree structure." These are the ways it doesn't in the tree
-// construction tests, each with the spec text that makes it so.
+// construction tests, each with the spec text that makes it so, and a check that the run's difference is that one.
 
-private const val PLAINTEXT_END_TAG =
+/**
+ * Why a run's tree is different after a round trip. [appliesTo] checks that the difference is this one, given the
+ * first tree, the serialized HTML and the reparsed tree, so that an entry can't hide a different difference.
+ */
+internal class RoundTripDifference(
+    val reason: String,
+    val appliesTo: (first: TreeNode, serialized: String, second: TreeNode) -> Boolean
+)
+
+private val PLAINTEXT_END_TAG = RoundTripDifference(
     "The serializer appends an end tag to every element that doesn't serialize as void (\"followed by \"</\", " +
         "tagname, and U+003E (>)\"), but nothing ends the PLAINTEXT state, which a plaintext start tag switches the " +
-        "tokenizer to (\"Anything else: Emit the current input character as a character token.\"). Reparsed, the " +
-        "</plaintext> end tag and everything after it are the plaintext element's text."
+        "tokenizer to (\"Anything else: Emit the current input character as a character token.\"). Reparsed, " +
+        "everything in the serialized plaintext element that isn't text, the </plaintext> end tag and everything " +
+        "after it are the plaintext element's text."
+) { _, _, second -> second.hasTextContaining("</plaintext>") }
 
-private const val SCRIPT_DOUBLE_ESCAPED =
-    "The script's text, which the parser ended at EOF, leaves the tokenizer in the script data double escaped " +
-        "state (\"<!--<script\"), and the serializer appends it literally followed by \"</script>\". Reparsed, " +
-        "that end tag only leaves the double escaped state (script data double escape end state: \"If the " +
-        "temporary buffer is \"script\", then switch to the script data escaped state.\"), so it and the rest of the " +
-        "markup become the script's text."
+private val SCRIPT_DOUBLE_ESCAPED = RoundTripDifference(
+    "The script's text, which the parser ended at EOF, contains \"<!--<script\", which leaves the tokenizer in the " +
+        "script data double escaped state or one of its dash and end states, and the serializer appends it " +
+        "literally followed by \"</script>\". Reparsed, that end tag only ends the double escape (script data " +
+        "double escape end state: \"If the temporary buffer is \"script\", then switch to the script data escaped " +
+        "state.\"), so it and the rest of the markup become the script's text."
+) { _, _, second -> second.hasTextContaining("</script>") }
 
-private const val DOCTYPE_IDENTIFIERS =
+private val DOCTYPE_IDENTIFIERS = RoundTripDifference(
     "The serializer writes a doctype's name only (\"Append \"<!DOCTYPE \", followed by the value of current " +
-        "node's name and U+003E (>).\"), so its public and system identifiers are lost, and with them the quirks " +
-        "or limited-quirks mode they gave the document, which changes how a p element followed by a table parses."
+        "node's name and U+003E (>).\"), so its public and system identifiers are lost. Where they put the document " +
+        "in quirks mode, so is that, which changes how a p element followed by a table parses: \"If the Document is " +
+        "not set to quirks mode, and the stack of open elements has a p element in button scope, then close a p " +
+        "element.\""
+) { first, _, second -> first.doctypeHasIdentifiers() && !second.doctypeHasIdentifiers() }
 
-private const val LEADING_NEWLINE =
+private val LEADING_NEWLINE = RoundTripDifference(
     "\"For historical reasons, this algorithm does not roundtrip an initial U+000A (LF) character in pre, " +
         "textarea, or listing elements\": the element's text starts with a newline the parser kept because a " +
         "first one was dropped, and reparsing drops that one too."
+) { _, serialized, _ -> Regex("<(pre|textarea|listing)[^>]*>\n").containsMatchIn(serialized) }
 
-private const val NESTED_FORMATTING =
-    "Foster parenting or the adoption agency algorithm nested an a element in another a element, or a nobr " +
-        "element in another nobr element. Reparsed, the inner start tag closes the outer element first: in body's " +
-        "\"If the list of active formatting elements contains an a element between the end of the list and the " +
-        "last marker on the list (...), then this is a parse error; run the adoption agency algorithm for the " +
-        "token\" and \"If the stack of open elements has a nobr element in scope, then this is a parse error; run " +
-        "the adoption agency algorithm for the token\". The spec's own example is \"<a><table><a>\"."
+private val NESTED_FORMATTING = RoundTripDifference(
+    "The parser's error handling nested an a element in another a element, or a nobr element in another nobr " +
+        "element: foster parenting, an adoption agency run that stopped early, or a marker that a foster parented " +
+        "marquee left in the list of active formatting elements. Reparsed, the inner start tag closes the outer " +
+        "element first: in body's \"If the list of active formatting elements contains an a element between the " +
+        "end of the list and the last marker on the list (...), then this is a parse error; run the adoption agency " +
+        "algorithm for the token\" and \"If the stack of open elements has a nobr element in scope, then this is a " +
+        "parse error; run the adoption agency algorithm for the token\". The spec's own example is \"<a><table><a>\"."
+) { first, _, _ -> first.hasElementInSameNamedElement("a") || first.hasElementInSameNamedElement("nobr") }
 
-private const val NESTED_FORM =
-    "A form element in a table in another form, which the form element pointer allowed because the first form " +
-        "had been popped. Reparsed, the outer form is open when the inner start tag comes, so in body ignores it: " +
-        "\"If the form element pointer is not null, and the parser is not parsing template contents, then this " +
-        "is a parse error; ignore the token.\" The spec's own example is a form in a div in another form."
+private val NESTED_FORM = RoundTripDifference(
+    "The </form> in the table cleared the form element pointer but left the form open, since a table bounds its " +
+        "scope (\"If node is null or if the stack of open elements does not have node in scope, then this is a parse " +
+        "error; return and ignore the token.\"), so the second form start tag made a form in the table in the form. " +
+        "Reparsed, the outer form sets the pointer, so in table ignores the inner start tag: \"Parse error. If the " +
+        "form element pointer is not null, and the parser is not parsing template contents, then ignore the " +
+        "token.\" The spec's own example is a form in a div in another form."
+) { first, _, _ -> first.hasElementInSameNamedElement("form") }
 
-private const val NESTED_P =
+private val NESTED_P = RoundTripDifference(
     "The </p> in the table inserted a p element in the outer p element, before the table, which quirks mode " +
         "left inside the p. Reparsed, the inner p's start tag closes the outer one: \"If the stack of open " +
         "elements has a p element in button scope, then close a p element.\" The spec's note gives a p element " +
         "containing a ul element as an example."
+) { first, _, _ -> first.hasElementInSameNamedElement("p") }
 
-private const val CARRIAGE_RETURN =
+private val CARRIAGE_RETURN = RoundTripDifference(
     "A character reference put a U+000D CR in the text, which the serializer writes as is, and reparsing " +
         "normalizes it to U+000A LF: \"Before the tokenization stage, the input stream must be preprocessed by " +
         "normalizing newlines. Thus, newlines in HTML DOMs are represented by U+000A LF characters, and there are " +
         "never any U+000D CR characters in the input to the tokenization stage.\""
+) { _, serialized, _ -> '\r' in serialized }
+
+/** Calls [action] with each node in this tree, template contents included, without recursing. */
+private fun TreeNode.forEachNode(action: (TreeNode) -> Unit) {
+    val pending = ArrayDeque(listOf(this))
+    while (pending.isNotEmpty()) {
+        val node = pending.removeLast()
+        action(node)
+        pending.addAll(node.children)
+        node.templateContent?.let { pending.add(it) }
+    }
+}
+
+private fun TreeNode.hasTextContaining(text: String): Boolean {
+    var found = false
+    forEachNode { if (it.type == NodeType.TEXT && it.data.orEmpty().contains(text)) found = true }
+    return found
+}
+
+private fun TreeNode.doctypeHasIdentifiers(): Boolean =
+    children.any { it.type == NodeType.DOCUMENT_TYPE && (!it.publicId.isNullOrEmpty() || !it.systemId.isNullOrEmpty()) }
+
+/** Whether an HTML element named [localName] has an ancestor with the same name. */
+private fun TreeNode.hasElementInSameNamedElement(localName: String): Boolean {
+    fun TreeNode.isNamed() = type == NodeType.ELEMENT && namespace == Namespaces.HTML && this.localName == localName
+    var found = false
+    forEachNode { node ->
+        if (node.isNamed()) {
+            var ancestor = node.parent
+            while (ancestor != null && !ancestor.isNamed()) ancestor = ancestor.parent
+            if (ancestor != null) found = true
+        }
+    }
+    return found
+}
 
 /**
  * The tree construction test runs whose tree is different after serializing it and parsing the result, with the
- * reason the spec gives for each, keyed by file, line and scripting mode. See [SerializationRoundTripTests].
+ * reason for each, keyed by file, line and scripting mode. See [SerializationRoundTripTests].
  */
 internal object KnownRoundTripDifferences {
 
@@ -264,5 +325,5 @@ internal object KnownRoundTripDifferences {
 
     val ids: Set<String> get() = differences.keys
 
-    operator fun get(id: String): String? = differences[id]
+    operator fun get(id: String): RoundTripDifference? = differences[id]
 }

@@ -96,10 +96,10 @@ val rows = parser.parseFragment("<tr><td>1<td>2", target).children // [<tr>]
 By default, Helium parses like a browser with JavaScript enabled, so `<noscript>` content is raw text. To parse it
 as markup instead, as a browser with JavaScript disabled does, create the parser with `HTMLParser(scriptingEnabled = false)`.
 
-To turn a tree back into HTML, use `innerHtml()` for a node's contents and `outerHtml()` for the node itself, as the
-DOM's `innerHTML` and `outerHTML` give them. They follow the spec's
-[serialization algorithm](https://html.spec.whatwg.org/multipage/parsing.html#serialising-html-fragments), so text is
-escaped, void elements like `<br>` get no end tag and a template's contents are written out:
+To turn a tree back into HTML, use `innerHtml()` for a node's contents and `outerHtml()` for the node itself. For
+elements, these give what the DOM's `innerHTML` and `outerHTML` give. They follow the spec's
+[serialization algorithm](https://html.spec.whatwg.org/multipage/parsing.html#serialising-html-fragments): text is
+escaped, void elements like `<br>` get no end tag, and a template's contents are written out:
 
 ```kotlin
 val paragraph = parser.parseFragment("<p class=greeting>Fish &amp; chips<br>", TreeNode.createElement("div")).firstChild!!
@@ -107,9 +107,12 @@ paragraph.outerHtml() // <p class="greeting">Fish &amp; chips<br></p>
 paragraph.innerHtml() // Fish &amp; chips<br>
 ```
 
-Missing tags that the parser inserted are written out too, so `parser.parse("<p>Hi").innerHtml()` gives
-`<html><head></head><body><p>Hi</p></body></html>`. Pass `scriptingEnabled = false` if the tree was parsed that way,
-so that `<noscript>` text is escaped as the markup it was parsed from.
+The serializer also writes out the tags the parser inserted, so `parser.parse("<p>Hi").innerHtml()` gives
+`<html><head></head><body><p>Hi</p></body></html>`.
+
+If you parsed with `HTMLParser(scriptingEnabled = false)`, serialize with `innerHtml(scriptingEnabled = false)` too.
+The tree doesn't record the flag. With the default `true`, `<noscript>` text is written unescaped, and text that the
+parser decoded from character references, such as `&lt;img onerror=...&gt;`, becomes live markup in the output.
 
 ## Status
 
@@ -125,9 +128,11 @@ Conformance is measured against the standard conformance suite for HTML parsers,
   scripting enabled and disabled where the test allows both. The rest are listed with their reasons in
   [`KnownFailures`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/helpers/KnownFailures.kt).
   The `scripted_*` tests aren't run, since they need a JavaScript engine.
-- **Serialization:** serializing the tree of each tree construction test run and parsing the result gives the same
-  tree in 3,729 of the 3,904 runs. The other 175 are the cases where the spec says serializing doesn't round-trip,
-  such as misnested `<a>` elements, `<plaintext>` and doctype identifiers, listed with the spec's reasons in
+- **Serialization:** serializing the tree that Helium parses for each tree construction test run and parsing the
+  result gives the same tree in 3,729 of the 3,904 runs. These runs include the `scripted_*` tests and the known
+  failures, since the round trip only compares Helium's own trees. The other 175 runs don't round-trip, and the spec's
+  rules say why: misnested `<a>` elements, `<plaintext>`, doctype identifiers and a few others. Each is listed with
+  its reason in
   [`KnownRoundTripDifferences`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/KnownRoundTripDifferences.kt).
 
 Not supported yet:

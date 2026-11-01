@@ -108,7 +108,8 @@ internal class HtmlSerializer(private val scriptingEnabled: Boolean) {
         // element's template contents (a DocumentFragment node)."
         // Step 4 is for shadow hosts, which Helium doesn't have.
         val container = node.contents()
-        frames.add(Frame(null, container, container, node.isInInertTemplateDocument() || node.isTemplate))
+        val parent = if (node.type == NodeType.ELEMENT) container else node.asDomParent()
+        frames.add(Frame(null, container, parent, node.isInInertTemplateDocument() || node.isTemplate))
 
         // Steps 5-6:
         serializeFrames()
@@ -126,8 +127,8 @@ internal class HtmlSerializer(private val scriptingEnabled: Boolean) {
      */
     fun serializeNode(node: TreeNode): String {
         val inTemplateContents = node.isInInertTemplateDocument()
-        if (appendChild(node, node.parent, inTemplateContents)) {
-            pushFrame(node, node, inTemplateContents)
+        if (appendChild(node, node.parent?.asDomParent(), inTemplateContents)) {
+            pushFrame(node, node.asDomParent(), inTemplateContents)
             serializeFrames()
         }
         return output.toString()
@@ -223,8 +224,9 @@ internal class HtmlSerializer(private val scriptingEnabled: Boolean) {
      * "An attribute's serialized name for the purposes of the previous paragraph must be determined as follows:"
      */
     private fun appendSerializedName(attribute: Attribute) {
-        when (attribute.namespace) {
-            // "If the attribute has no namespace: The attribute's serialized name is the attribute's local name."
+        when (attribute.namespace?.ifEmpty { null }) {
+            // "If the attribute has no namespace: The attribute's serialized name is the attribute's local name." The
+            // DOM's attribute methods take the empty string for no namespace, so it is taken as none here too.
             null -> output.append(attribute.localName)
             // "If the attribute is in the XML namespace: The attribute's serialized name is "xml:" followed by the
             // attribute's local name."
@@ -282,6 +284,18 @@ internal class HtmlSerializer(private val scriptingEnabled: Boolean) {
         fun TreeNode.tagName(): String = when (namespace) {
             Namespaces.HTML, Namespaces.MATHML, Namespaces.SVG -> localName.orEmpty()
             else -> name.orEmpty()
+        }
+
+        /**
+         * The node the DOM would make the parent of this node's children: the node itself, unless it is a document
+         * fragment Helium inserted as a node, whose children the DOM would have inserted in its place.
+         */
+        fun TreeNode.asDomParent(): TreeNode {
+            var node = this
+            while (node.type == NodeType.DOCUMENT_FRAGMENT || node.type == NodeType.DOCUMENT) {
+                node = node.parent ?: break
+            }
+            return node
         }
 
         /** The node whose children are serialized as [this] node's: a template's contents, or the node itself. */
