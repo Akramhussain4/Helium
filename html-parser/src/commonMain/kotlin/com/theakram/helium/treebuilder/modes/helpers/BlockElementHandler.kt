@@ -8,7 +8,6 @@
 package com.theakram.helium.treebuilder.modes.helpers
 
 import com.theakram.helium.tree.Attribute
-import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -16,7 +15,12 @@ import com.theakram.helium.treebuilder.continueInCurrentMode
 
 internal object BlockElementHandler {
 
-    fun handleBlockElement(
+    /**
+     * A start tag whose tag name is one of: "address", "article", "aside", "blockquote", "center", "details",
+     * "dialog", "dir", "div", "dl", "fieldset", "figcaption", "figure", "footer", "header", "hgroup", "main", "menu",
+     * "nav", "ol", "p", "search", "section", "summary", "ul".
+     */
+    fun handleBlockStartTag(
         treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
@@ -29,7 +33,8 @@ internal object BlockElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handlePreElement(
+    /** A start tag whose tag name is one of: "pre", "listing". */
+    fun handlePreListingStartTag(
         treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
@@ -46,7 +51,8 @@ internal object BlockElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handlePlaintextElement(
+    /** A start tag whose tag name is "plaintext". */
+    fun handlePlaintextStartTag(
         treeBuilder: TreeBuilder,
         attributes: List<Attribute>
     ): InsertionModeTransition {
@@ -58,7 +64,8 @@ internal object BlockElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handleHrElement(
+    /** A start tag whose tag name is "hr". */
+    fun handleHrStartTag(
         treeBuilder: TreeBuilder,
         attributes: List<Attribute>
     ): InsertionModeTransition {
@@ -66,14 +73,10 @@ internal object BlockElementHandler {
             InBodyHelpers.closePElement(treeBuilder)
         }
 
-        // If select in scope:
         if (treeBuilder.hasElementInScope("select")) {
-            // Generate implied end tags
             InBodyHelpers.generateImpliedEndTags(treeBuilder)
-
-            // If option or optgroup in scope: parse error
             if (treeBuilder.hasElementInScope("option") || treeBuilder.hasElementInScope("optgroup")) {
-                // Parse error
+                treeBuilder.parseError()
             }
         }
 
@@ -84,24 +87,29 @@ internal object BlockElementHandler {
         return continueInCurrentMode()
     }
 
+    /** An end tag whose tag name is "p". */
     fun handlePEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
         if (!treeBuilder.hasElementInButtonScope("p")) {
-            // Parse error
+            treeBuilder.parseError()
             treeBuilder.insertElement("p", attributes = emptyList())
         }
         InBodyHelpers.closePElement(treeBuilder)
         return continueInCurrentMode()
     }
 
+    /**
+     * An end tag whose tag name is one of: "address", "article", "aside", "blockquote", "button", "center",
+     * "details", "dialog", "dir", "div", "dl", "fieldset", "figcaption", "figure", "footer", "header", "hgroup",
+     * "listing", "main", "menu", "nav", "ol", "pre", "search", "section", "select", "summary", "ul".
+     */
     fun handleBlockEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
         if (!treeBuilder.hasElementInScope(tagName)) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
         InBodyHelpers.generateImpliedEndTags(treeBuilder)
-        if (treeBuilder.currentNode.localName != tagName ||
-            treeBuilder.currentNode.namespace != Namespaces.HTML) {
-            // Parse error
+        if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, tagName)) {
+            treeBuilder.parseError()
         }
         treeBuilder.popUntil(tagName)
         return continueInCurrentMode()

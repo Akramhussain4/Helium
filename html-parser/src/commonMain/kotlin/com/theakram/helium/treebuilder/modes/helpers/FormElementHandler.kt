@@ -8,16 +8,16 @@
 package com.theakram.helium.treebuilder.modes.helpers
 
 import com.theakram.helium.tree.Attribute
-import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
 
 internal object FormElementHandler {
 
+    /** A start tag whose tag name is "form". */
     fun handleFormStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         if (treeBuilder.formElement != null && !treeBuilder.isParsingTemplateContents) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
@@ -32,28 +32,28 @@ internal object FormElementHandler {
         return continueInCurrentMode()
     }
 
+    /** An end tag whose tag name is "form". */
     fun handleFormEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
         if (!treeBuilder.isParsingTemplateContents) {
             val node = treeBuilder.formElement
             treeBuilder.formElement = null
             if (node == null || !treeBuilder.hasElementInScope(node)) {
-                // Parse error
+                treeBuilder.parseError()
                 return continueInCurrentMode()
             }
             InBodyHelpers.generateImpliedEndTags(treeBuilder)
             if (treeBuilder.currentNode !== node) {
-                // Parse error
+                treeBuilder.parseError()
             }
             treeBuilder.removeElement(node)
         } else {
             if (!treeBuilder.hasElementInScope("form")) {
-                // Parse error
+                treeBuilder.parseError()
                 return continueInCurrentMode()
             }
             InBodyHelpers.generateImpliedEndTags(treeBuilder)
-            if (treeBuilder.currentNode.localName != "form" ||
-                treeBuilder.currentNode.namespace != Namespaces.HTML) {
-                // Parse error
+            if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "form")) {
+                treeBuilder.parseError()
             }
             treeBuilder.popUntil("form")
         }

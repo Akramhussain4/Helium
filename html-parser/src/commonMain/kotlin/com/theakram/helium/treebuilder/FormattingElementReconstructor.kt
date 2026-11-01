@@ -26,7 +26,6 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tree.Namespaces
-import com.theakram.helium.tree.TreeNode
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#reconstruct-the-active-formatting-elements
@@ -42,57 +41,45 @@ internal class FormattingElementReconstructor(
         if (activeFormattingElements.isEmpty) return
 
         // Step 2:
-        if (activeFormattingElements.isLastEntryMarker()) return
-        val lastElement = activeFormattingElements.getLastElement()
-        if (lastElement != null && stack.contains(lastElement)) return
+        var index = activeFormattingElements.size - 1
+        val lastElement = activeFormattingElements.elementAt(index)
+        if (lastElement == null || lastElement in stack) return
 
-        // Step 3:
-        val entries = activeFormattingElements.getEntriesForReconstruction()
-        var entryIndex = entries.lastIndex
+        // Step 3: entry is the element at index
 
-        // Step 4-6:
-        while (entryIndex > 0) {
-            val previousEntry = entries[entryIndex - 1]
+        // Step 4: rewind, unless there are no entries before entry
+        while (index > 0) {
+            // Step 5:
+            index--
 
-            // Step 6:
-            if (previousEntry == null) {
-                break
-            } else if (stack.contains(previousEntry)) {
+            // Step 6: if entry is neither a marker nor an element in the stack, rewind again
+            val entry = activeFormattingElements.elementAt(index)
+            if (entry == null || entry in stack) {
+                // Step 7:
+                index++
                 break
             }
-
-            // Step 5:
-            entryIndex--
         }
 
-        // Step 7-10:
-        while (entryIndex < entries.size) {
-            val entry = entries[entryIndex]
-
-            // Skip markers (shouldn't happen in practice after rewind, but be safe)
-            if (entry == null) {
-                entryIndex++
-                continue
+        while (true) {
+            // Step 8: insert an HTML element for the token for which entry was created
+            val entry = checkNotNull(activeFormattingElements.elementAt(index)) {
+                "Only elements follow the entry that reconstruction advances from"
             }
-
-            val localName = entry.localName ?: run {
-                entryIndex++
-                continue
-            }
-            val namespace = entry.namespace ?: Namespaces.HTML
-
-            // Step 8:
             val newElement = treeBuilder.insertElement(
-                tagName = localName,
-                namespace = namespace,
-                attributes = entry.attributes.toList()
+                tagName = checkNotNull(entry.localName),
+                namespace = Namespaces.HTML,
+                attributes = activeFormattingElements.tokenAttributesAt(index)
             )
 
-            // Step 9: Replace the entry for entry in the list with an entry for newElement.
-            activeFormattingElements.replace(entry, newElement)
+            // Step 9:
+            activeFormattingElements.replaceAt(index, newElement)
 
             // Step 10:
-            entryIndex++
+            if (index == activeFormattingElements.size - 1) break
+
+            // Step 7:
+            index++
         }
     }
 }

@@ -49,42 +49,23 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
         return hasTagNameInScopeWithBoundaries(tagName, TABLE_SCOPE_BOUNDARIES)
     }
 
-    /**
-     * Check if ANY element with the given tag name is in the select scope.
-     * Select scope is special: all elements EXCEPT optgroup and option act as boundaries.
-     * @param tagName The tag name to search for
-     */
-    fun hasElementInSelectScope(tagName: String): Boolean {
-        for (i in stack.lastIndex downTo 0) {
-            val element = stack[i]
-            val elementName = element.localName
+    fun isElementInScope(element: TreeNode): Boolean = hasElementInScopeMatching { it === element }
 
-            if (element.namespace == Namespaces.HTML && elementName == tagName) {
+    /**
+     * Whether the stack of open elements has an element in scope that [matches], for the steps that ask for "an
+     * element in scope that is an HTML element and whose tag name is one of" a list of tag names.
+     */
+    fun hasElementInScopeMatching(matches: (TreeNode) -> Boolean): Boolean {
+        for (i in stack.lastIndex downTo 0) {
+            val node = stack[i]
+            if (matches(node)) {
                 return true
             }
-
-            // In select scope, everything EXCEPT optgroup and option acts as boundary
-            if (elementName != "optgroup" && elementName != "option") {
+            if (isScopeBoundary(node.localName, node.namespace, DEFAULT_SCOPE_BOUNDARIES)) {
                 return false
             }
         }
         return false
-    }
-
-    fun isElementInScope(element: TreeNode): Boolean {
-        return isElementInScopeWithBoundaries(element, DEFAULT_SCOPE_BOUNDARIES)
-    }
-
-    fun isElementInButtonScope(element: TreeNode): Boolean {
-        return isElementInScopeWithBoundaries(element, BUTTON_SCOPE_BOUNDARIES)
-    }
-
-    fun isElementInListItemScope(element: TreeNode): Boolean {
-        return isElementInScopeWithBoundaries(element, LIST_ITEM_SCOPE_BOUNDARIES)
-    }
-
-    fun isElementInTableScope(element: TreeNode): Boolean {
-        return isElementInScopeWithBoundaries(element, TABLE_SCOPE_BOUNDARIES)
     }
 
     private fun hasTagNameInScopeWithBoundaries(tagName: String, boundaries: Set<String>): Boolean {
@@ -100,23 +81,6 @@ internal class ScopeChecker(private val stack: StackOfOpenElements) {
 
             // Check if this is a scope boundary
             if (isScopeBoundary(elementName, namespace, boundaries)) {
-                return false
-            }
-        }
-        return false
-    }
-
-    private fun isElementInScopeWithBoundaries(element: TreeNode, boundaries: Set<String>): Boolean {
-        for (i in stack.lastIndex downTo 0) {
-            val node = stack[i]
-
-            // If we found the target element (by reference)
-            if (node === element) {
-                return true
-            }
-
-            // Check if this is a scope boundary
-            if (isScopeBoundary(node.localName, node.namespace, boundaries)) {
                 return false
             }
         }

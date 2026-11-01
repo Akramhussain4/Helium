@@ -7,8 +7,8 @@
 
 package com.theakram.helium.treebuilder.modes.helpers
 
+import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Attribute
-import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TokenizerStateType
 import com.theakram.helium.treebuilder.TreeBuilder
@@ -18,9 +18,10 @@ import com.theakram.helium.treebuilder.switchTo
 
 internal object SpecialElementHandler {
 
+    /** A start tag whose tag name is "button". */
     fun handleButtonStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
-        if (treeBuilder.hasElementInButtonScope("button")) {
-            // Parse error
+        if (treeBuilder.hasElementInScope("button")) {
+            treeBuilder.parseError()
             InBodyHelpers.generateImpliedEndTags(treeBuilder)
             treeBuilder.popUntil("button")
         }
@@ -31,7 +32,9 @@ internal object SpecialElementHandler {
         return continueInCurrentMode()
     }
 
-    fun handleAppletStartTag(treeBuilder: TreeBuilder,
+    /** A start tag whose tag name, [tagName], is one of: "applet", "marquee", "object". */
+    fun handleAppletMarqueeObjectStartTag(
+        treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
     ): InsertionModeTransition {
@@ -42,6 +45,7 @@ internal object SpecialElementHandler {
         return continueInCurrentMode()
     }
 
+    /** A start tag whose tag name is "textarea". */
     fun handleTextareaStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         treeBuilder.insertElement("textarea", attributes = attributes)
         treeBuilder.ignoreNextLineFeed()
@@ -51,37 +55,35 @@ internal object SpecialElementHandler {
         return switchTo(Text)
     }
 
-    fun handleXmpStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+    /** A start tag whose tag name is "xmp". */
+    fun handleXmpStartTag(treeBuilder: TreeBuilder, token: Token.StartTag): InsertionModeTransition {
         if (treeBuilder.hasElementInButtonScope("p")) {
             InBodyHelpers.closePElement(treeBuilder)
         }
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.setFramesetNotOk()
-        InBodyHelpers.parseGenericRawTextElement("xmp", attributes, treeBuilder)
-        return switchTo(Text)
+        return InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
     }
 
-    fun handleIframeStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+    /** A start tag whose tag name is "iframe". */
+    fun handleIframeStartTag(treeBuilder: TreeBuilder, token: Token.StartTag): InsertionModeTransition {
         treeBuilder.setFramesetNotOk()
-        InBodyHelpers.parseGenericRawTextElement("iframe", attributes, treeBuilder)
-        return switchTo(Text)
+        return InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
     }
 
-    fun handleNoembedStartTag(treeBuilder: TreeBuilder,
-        tagName: String,
-        attributes: List<Attribute>
-    ): InsertionModeTransition {
-        InBodyHelpers.parseGenericRawTextElement(tagName, attributes, treeBuilder)
-        return switchTo(Text)
-    }
+    /** A start tag whose tag name is "noembed", or "noscript" if scripting mode is not Disabled. */
+    fun handleNoembedNoscriptStartTag(treeBuilder: TreeBuilder, token: Token.StartTag): InsertionModeTransition =
+        InHeadHelpers.followGenericRawTextElementParsingAlgorithm(token, treeBuilder)
 
+    /** A start tag whose tag name is "select". */
     fun handleSelectStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         if (InBodyHelpers.isSelectContext(treeBuilder)) {
-            // Parse error. Ignore the token.
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
         if (treeBuilder.hasElementInScope("select")) {
+            treeBuilder.parseError()
             treeBuilder.popUntil("select")
             return continueInCurrentMode()
         }
@@ -92,51 +94,47 @@ internal object SpecialElementHandler {
         return continueInCurrentMode()
     }
 
+    /** A start tag whose tag name is "option". */
     fun handleOptionStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         if (treeBuilder.hasElementInScope("select")) {
             InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "optgroup")
             if (treeBuilder.hasElementInScope("option")) {
-                // Parse error
+                treeBuilder.parseError()
             }
-        } else {
-            if (treeBuilder.currentNode.localName == "option" &&
-                treeBuilder.currentNode.namespace == Namespaces.HTML) {
-                treeBuilder.popCurrentElement()
-            }
+        } else if (InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "option")) {
+            treeBuilder.popCurrentElement()
         }
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement("option", attributes = attributes)
         return continueInCurrentMode()
     }
 
+    /** A start tag whose tag name is "optgroup". */
     fun handleOptgroupStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
         if (treeBuilder.hasElementInScope("select")) {
             InBodyHelpers.generateImpliedEndTags(treeBuilder)
             if (treeBuilder.hasElementInScope("option") || treeBuilder.hasElementInScope("optgroup")) {
-                // Parse error
+                treeBuilder.parseError()
             }
-        } else {
-            if (treeBuilder.currentNode.localName == "option" &&
-                treeBuilder.currentNode.namespace == Namespaces.HTML) {
-                treeBuilder.popCurrentElement()
-            }
+        } else if (InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "option")) {
+            treeBuilder.popCurrentElement()
         }
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement("optgroup", attributes = attributes)
         return continueInCurrentMode()
     }
 
-    fun handleAppletEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
+    /** An end tag whose tag name, [tagName], is one of: "applet", "marquee", "object". */
+    fun handleAppletMarqueeObjectEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
         if (!treeBuilder.hasElementInScope(tagName)) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
         InBodyHelpers.generateImpliedEndTags(treeBuilder)
 
-        if (treeBuilder.currentNode.localName != tagName ||
-            treeBuilder.currentNode.namespace != Namespaces.HTML) {
-            // Parse error
+        if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, tagName)) {
+            treeBuilder.parseError()
         }
 
         treeBuilder.popUntil(tagName)

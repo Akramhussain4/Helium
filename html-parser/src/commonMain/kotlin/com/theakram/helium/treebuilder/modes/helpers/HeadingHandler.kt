@@ -9,6 +9,7 @@ package com.theakram.helium.treebuilder.modes.helpers
 
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
@@ -16,6 +17,7 @@ import com.theakram.helium.treebuilder.continueInCurrentMode
 
 internal object HeadingHandler {
 
+    /** A start tag whose tag name is one of: "h1", "h2", "h3", "h4", "h5", "h6". */
     fun handleHeadingStartTag(
         treeBuilder: TreeBuilder,
         tagName: String,
@@ -25,10 +27,8 @@ internal object HeadingHandler {
             InBodyHelpers.closePElement(treeBuilder)
         }
 
-        val currentNode = treeBuilder.currentNode
-        if (currentNode.namespace == Namespaces.HTML &&
-            currentNode.localName in TreeConstructionConstants.HEADING_ELEMENTS) {
-            // Parse error
+        if (isHtmlHeading(treeBuilder.currentNode)) {
+            treeBuilder.parseError()
             treeBuilder.popCurrentElement()
         }
 
@@ -36,29 +36,25 @@ internal object HeadingHandler {
         return continueInCurrentMode()
     }
 
-    fun handleHeadingEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
-        val hasHeadingInScope = TreeConstructionConstants.HEADING_ELEMENTS.any {
-            treeBuilder.hasElementInScope(it)
-        }
-
-        if (!hasHeadingInScope) {
-            // Parse error
+    /** An end tag whose tag name, [tagName], is one of: "h1", "h2", "h3", "h4", "h5", "h6". */
+    fun handleHeadingEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
+        if (!treeBuilder.hasElementInScopeMatching(::isHtmlHeading)) {
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
         InBodyHelpers.generateImpliedEndTags(treeBuilder)
-        val currentNode = treeBuilder.currentNode
-        if (currentNode.namespace != Namespaces.HTML ||
-            currentNode.localName !in TreeConstructionConstants.HEADING_ELEMENTS) {
-            // Parse error
+        if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, tagName)) {
+            treeBuilder.parseError()
         }
-        while (treeBuilder.elementStack.isNotEmpty()) {
-            val popped = treeBuilder.popCurrentElement()
-            if (popped?.namespace == Namespaces.HTML &&
-                popped.localName in TreeConstructionConstants.HEADING_ELEMENTS) {
-                break
-            }
+        while (true) {
+            val popped = checkNotNull(treeBuilder.popCurrentElement()) { "A heading in scope is on the stack" }
+            if (isHtmlHeading(popped)) break
         }
         return continueInCurrentMode()
     }
+
+    // An HTML element whose tag name is one of "h1", "h2", "h3", "h4", "h5", or "h6"
+    private fun isHtmlHeading(node: TreeNode): Boolean =
+        node.namespace == Namespaces.HTML && node.localName in TreeConstructionConstants.HEADING_ELEMENTS
 }

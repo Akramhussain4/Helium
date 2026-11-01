@@ -9,6 +9,7 @@ package com.theakram.helium.treebuilder.modes.helpers
 
 import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
+import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.TreeConstructionConstants
@@ -16,110 +17,107 @@ import com.theakram.helium.treebuilder.continueInCurrentMode
 
 internal object ListElementHandler {
 
+    private val ADDRESS_DIV_P = setOf("address", "div", "p")
+
+    /** A start tag whose tag name is "li". */
     fun handleLiStartTag(treeBuilder: TreeBuilder, attributes: List<Attribute>): InsertionModeTransition {
+        // Step 1:
         treeBuilder.setFramesetNotOk()
 
-        val stack = treeBuilder.elementStack
-        for (i in stack.lastIndex downTo 0) {
-            val node = stack[i]
-            if (node.namespace == Namespaces.HTML && node.localName == "li") {
-                InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "li")
-                if (treeBuilder.currentNode.localName != "li") {
-                    // Parse error
-                }
-                treeBuilder.popUntil("li")
+        // Steps 2-5:
+        for (node in treeBuilder.elementStack.asReversed()) {
+            // Step 3: Loop
+            if (InBodyHelpers.isHtmlElement(node, "li")) {
+                closeListItem(treeBuilder, "li")
                 break
             }
 
-            if (TreeConstructionConstants.isSpecialElement(node) &&
-                node.localName !in setOf("address", "div", "p")) {
-                break
-            }
+            // Step 4:
+            if (isSpecialButNotAddressDivOrP(node)) break
         }
 
+        // Step 6: Done
         if (treeBuilder.hasElementInButtonScope("p")) {
             InBodyHelpers.closePElement(treeBuilder)
         }
 
+        // Step 7:
         treeBuilder.insertElement("li", attributes = attributes)
         return continueInCurrentMode()
     }
 
+    /** A start tag whose tag name, [tagName], is one of: "dd", "dt". */
     fun handleDdDtStartTag(
         treeBuilder: TreeBuilder,
         tagName: String,
         attributes: List<Attribute>
     ): InsertionModeTransition {
+        // Step 1:
         treeBuilder.setFramesetNotOk()
 
-        val stack = treeBuilder.elementStack
-        for (i in stack.lastIndex downTo 0) {
-            val node = stack[i]
-            val nodeName = node.localName
-
-            if (node.namespace == Namespaces.HTML && nodeName == "dd") {
-                InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "dd")
-                if (treeBuilder.currentNode.localName != "dd") {
-                    // Parse error
-                }
-                treeBuilder.popUntil("dd")
+        // Steps 2-6:
+        for (node in treeBuilder.elementStack.asReversed()) {
+            // Step 3: Loop
+            if (InBodyHelpers.isHtmlElement(node, "dd")) {
+                closeListItem(treeBuilder, "dd")
                 break
             }
 
-            if (node.namespace == Namespaces.HTML && nodeName == "dt") {
-                InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "dt")
-                if (treeBuilder.currentNode.localName != "dt") {
-                    // Parse error
-                }
-                treeBuilder.popUntil("dt")
+            // Step 4:
+            if (InBodyHelpers.isHtmlElement(node, "dt")) {
+                closeListItem(treeBuilder, "dt")
                 break
             }
 
-            if (TreeConstructionConstants.isSpecialElement(node) &&
-                nodeName !in setOf("address", "div", "p")) {
-                break
-            }
+            // Step 5:
+            if (isSpecialButNotAddressDivOrP(node)) break
         }
 
+        // Step 7: Done
         if (treeBuilder.hasElementInButtonScope("p")) {
             InBodyHelpers.closePElement(treeBuilder)
         }
 
+        // Step 8:
         treeBuilder.insertElement(tagName, attributes = attributes)
         return continueInCurrentMode()
     }
 
+    /** An end tag whose tag name is "li". */
     fun handleLiEndTag(treeBuilder: TreeBuilder): InsertionModeTransition {
         if (!treeBuilder.hasElementInListItemScope("li")) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
-        InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "li")
-
-        if (treeBuilder.currentNode.localName != "li" ||
-            treeBuilder.currentNode.namespace != Namespaces.HTML) {
-            // Parse error
-        }
-
-        treeBuilder.popUntil("li")
+        closeListItem(treeBuilder, "li")
         return continueInCurrentMode()
     }
 
+    /** An end tag whose tag name, [tagName], is one of: "dd", "dt". */
     fun handleDdDtEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
         if (!treeBuilder.hasElementInScope(tagName)) {
-            // Parse error
+            treeBuilder.parseError()
             return continueInCurrentMode()
         }
 
-        InBodyHelpers.generateImpliedEndTags(treeBuilder, except = tagName)
-
-        if (treeBuilder.currentNode.localName != tagName ||
-            treeBuilder.currentNode.namespace != Namespaces.HTML) {
-            // Parse error
-        }
-
-        treeBuilder.popUntil(tagName)
+        closeListItem(treeBuilder, tagName)
         return continueInCurrentMode()
     }
+
+    // The substeps shared by the li, dd and dt start and end tags: generate implied end tags, except for HTML
+    // elements with the tag name; if the current node is not such an element, this is a parse error; pop elements
+    // until one has been popped
+    private fun closeListItem(treeBuilder: TreeBuilder, tagName: String) {
+        InBodyHelpers.generateImpliedEndTags(treeBuilder, except = tagName)
+        if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, tagName)) {
+            treeBuilder.parseError()
+        }
+        treeBuilder.popUntil(tagName)
+    }
+
+    // In the special category, but not an address, div, or p element
+    private fun isSpecialButNotAddressDivOrP(node: TreeNode): Boolean =
+        TreeConstructionConstants.isSpecialElement(node) &&
+            !(node.namespace == Namespaces.HTML && node.localName in ADDRESS_DIV_P)
 }
