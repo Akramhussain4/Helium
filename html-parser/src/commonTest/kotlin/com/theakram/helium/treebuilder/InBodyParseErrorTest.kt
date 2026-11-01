@@ -233,6 +233,18 @@ internal class InBodyParseErrorTest {
     }
 
     @Test
+    fun `ruby annotation start tags without a ruby element in scope are parse errors`() {
+        // The current node is the body, which is neither a ruby nor an rtc element
+        assertEquals(listOf(null), errors("<rb>"))
+        assertEquals(listOf(null), errors("<rtc>"))
+        assertEquals(listOf(null), errors("<rp>"))
+        assertEquals(listOf(null), errors("<rt>"))
+        // A ruby element outside the default scope doesn't count, but an rtc current node still allows rt
+        assertEquals(listOf(null), errors("<ruby><table><tr><td><rt></table></ruby>"))
+        assertEquals(listOf(null), errors("<rtc><rt>"))
+    }
+
+    @Test
     fun `any other end tag reports closing other elements and a special element in the way`() {
         assertEquals(emptyList(), errors("<span><em></em></span>"))
         assertEquals(listOf(null), errors("<div><span><em></span></div>"))
