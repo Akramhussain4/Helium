@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tree
 
+import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.asciiLowercase
 import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
@@ -43,7 +44,7 @@ public class TreeNode(
     public val prefix: String? = null,
     public val publicId: String? = null,
     public val systemId: String? = null,
-    public var data: String? = null,
+    data: String? = null,
     public val attributes: MutableList<Attribute> = mutableListOf(),
     public val children: MutableList<TreeNode> = mutableListOf(),
     public var parent: TreeNode? = null,
@@ -52,6 +53,50 @@ public class TreeNode(
     public var isIframeSrcdoc: Boolean = false,
     public var templateContent: TreeNode? = null
 ) {
+
+    /**
+     * The data while [appendData] appends to it, so that appending doesn't copy what is there each time. Only one of
+     * [dataBuilder] and [dataString] holds the data: a builder is kept only until the data is read or
+     * [finishAppendingData] is called, so a parsed tree holds no builders and their spare capacity.
+     */
+    private var dataBuilder: StringBuilder? = null
+
+    /** The data as a string, or null while [dataBuilder] holds it. */
+    private var dataString: String? = data
+
+    /** The data of a text, comment or processing instruction node. */
+    public var data: String?
+        get() {
+            finishAppendingData()
+            return dataString
+        }
+        set(value) {
+            dataString = value
+            dataBuilder = null
+        }
+
+    /** Whether [appendData] has appended to the data since it was last read or set. */
+    internal val isAppendingData: Boolean
+        get() = dataBuilder != null
+
+    /**
+     * Appends [codePoint] to [data], in amortized constant time: the parser appends each character of a text run to
+     * its Text node, and a new string each time would make that quadratic.
+     */
+    internal fun appendData(codePoint: Int) {
+        val builder = dataBuilder ?: StringBuilder(dataString.orEmpty()).also {
+            dataBuilder = it
+            dataString = null
+        }
+        builder.appendUnicode(codePoint)
+    }
+
+    /** Turns the data that [appendData] appended into a string, letting go of the builder. */
+    internal fun finishAppendingData() {
+        val builder = dataBuilder ?: return
+        dataString = builder.toString()
+        dataBuilder = null
+    }
 
     /**
      * The template element whose template contents this document fragment is.

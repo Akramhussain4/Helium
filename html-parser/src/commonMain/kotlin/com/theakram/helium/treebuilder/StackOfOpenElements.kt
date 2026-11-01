@@ -106,6 +106,8 @@ internal class StackOfOpenElements {
 
     inline fun any(predicate: (TreeNode) -> Boolean): Boolean = elements.any(predicate)
 
+    inline fun indexOfLast(predicate: (TreeNode) -> Boolean): Int = elements.indexOfLast(predicate)
+
     operator fun get(index: Int): TreeNode = elements[index]
 
     operator fun set(index: Int, element: TreeNode) {
@@ -114,7 +116,12 @@ internal class StackOfOpenElements {
 
     fun remove(element: TreeNode): Boolean = elements.remove(element)
 
-    fun toList(): List<TreeNode> = elements.toList()
+    /**
+     * The stack as a read-only list, from the topmost element (the html element) to the current node, without copying
+     * it. It is a view, so pushing or popping changes it: a loop over it that changes the stack must stop iterating
+     * right after.
+     */
+    fun asList(): List<TreeNode> = elements
 
     val lastIndex: Int
         get() = elements.lastIndex

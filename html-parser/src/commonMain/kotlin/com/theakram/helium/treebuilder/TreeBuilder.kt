@@ -33,7 +33,6 @@ import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.tree.formContentAttributeValue
 import com.theakram.helium.tree.isFormAssociated
 import com.theakram.helium.tree.isListed
-import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.treebuilder.modes.InForeignContent
 import com.theakram.helium.treebuilder.modes.Initial
 
@@ -132,9 +131,13 @@ internal class TreeBuilder(
 
     internal fun hasForeignAdjustedCurrentNode(): Boolean =
         stack.isNotEmpty() && adjustedCurrentNode.namespace != Namespaces.HTML
-    internal val elementStack: List<TreeNode> get() = stack.toList()
+    /**
+     * The stack of open elements, from the topmost element to the current node. It is a view, not a copy: a loop over
+     * it that pushes or pops must stop iterating right after.
+     */
+    internal val elementStack: List<TreeNode> get() = stack.asList()
 
-    /** The number of elements on the stack of open elements, without copying it as [elementStack] does. */
+    /** The number of elements on the stack of open elements. */
     internal val openElementCount: Int get() = stack.size
     internal val currentMode: InsertionMode get() = insertionMode
 
@@ -201,6 +204,7 @@ internal class TreeBuilder(
                     while (stack.size > 0) {
                         popCurrentElement()
                     }
+                    nodeInsertion.finishAppendingText()
                     break
                 }
             }
@@ -417,7 +421,7 @@ internal class TreeBuilder(
         insertElement(tagName = tagName, namespace = Namespaces.HTML, attributes = emptyList())
 
     internal fun insertCharacter(codePoint: Int) {
-        nodeInsertion.insertCharacter(StringBuilder(2).appendUnicode(codePoint).toString())
+        nodeInsertion.insertCharacter(codePoint)
     }
 
     internal fun reset() {
@@ -436,6 +440,7 @@ internal class TreeBuilder(
         ignoreNextLineFeed = false
         fosterParenting.disable()
         nodeInsertion.insertionTargetRedirectionMap.clear()
+        nodeInsertion.finishAppendingText()
         pendingTableCharacterTokens.clear()
     }
 

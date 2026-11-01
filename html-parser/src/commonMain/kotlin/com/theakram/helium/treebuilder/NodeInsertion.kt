@@ -28,6 +28,7 @@ package com.theakram.helium.treebuilder
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.util.appendUnicode
 
 /**
  * The parser has no sanitizer configuration, so the steps that apply one are not implemented.
@@ -45,6 +46,16 @@ internal class NodeInsertion(
      */
     val insertionTargetRedirectionMap: MutableMap<TreeNode, InsertionLocation> = mutableMapOf()
 
+    /** The text nodes that [insertCharacter] has appended to and that still hold their data in a builder. */
+    private val textNodesAppendedTo = mutableListOf<TreeNode>()
+
+    /**
+     * The reference child that [insertCharacter] last looked up among its parent's children, and the index it found
+     * it at, so that each character of a run inserted before the same reference child finds it in constant time.
+     */
+    private var lastReferenceChild: TreeNode? = null
+    private var lastReferenceChildIndex = -1
+
     /**
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#appropriate-place-for-inserting-a-node
      */
@@ -57,7 +68,7 @@ internal class NodeInsertion(
         // Step 3:
         if (fosterParenting.isEnabled && TreeConstructionConstants.requiresFosterParenting(targetParent)) {
             // Step 3.1:
-            val lastTemplateOrTableIndex = stack.toList().indexOfLast {
+            val lastTemplateOrTableIndex = stack.indexOfLast {
                 it.namespace == Namespaces.HTML && (it.localName == "template" || it.localName == "table")
             }
             // Step 3.2:
@@ -138,8 +149,8 @@ internal class NodeInsertion(
     /**
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-character
      */
-    fun insertCharacter(data: String) {
-        // Step 1: data is passed in
+    fun insertCharacter(codePoint: Int) {
+        // Step 1: The data is the one character passed in, codePoint
         // Step 2:
         val (targetParent, referenceChild) = adjustedInsertionLocation()
         // Step 3:
@@ -147,13 +158,48 @@ internal class NodeInsertion(
             return
         }
         // Step 4:
-        val previousSibling = if (referenceChild != null) referenceChild.previousSibling else targetParent.lastChild
+        val previousSibling = if (referenceChild != null) {
+            targetParent.children.getOrNull(indexOfReferenceChild(targetParent, referenceChild) - 1)
+        } else {
+            targetParent.lastChild
+        }
         // Step 5:
         if (previousSibling?.type == NodeType.TEXT) {
-            previousSibling.data = (previousSibling.data ?: "") + data
+            if (!previousSibling.isAppendingData) {
+                textNodesAppendedTo += previousSibling
+            }
+            previousSibling.appendData(codePoint)
         } else {
-            targetParent.insertBefore(TreeNode.createText(data), referenceChild)
+            val text = TreeNode.createText(StringBuilder(2).appendUnicode(codePoint).toString())
+            targetParent.insertBefore(text, referenceChild)
+            if (referenceChild != null && referenceChild === lastReferenceChild) {
+                lastReferenceChildIndex++
+            }
         }
+    }
+
+    /**
+     * The index of [referenceChild] among the children of [parent]. The reference child that a run of characters is
+     * inserted before, a table they are foster parented before or the end of a template's patch, can have any number of
+     * siblings on either side, so looking it up each time, as TreeNode.previousSibling does, would make the run
+     * quadratic. Each lookup checks where the last one found it first.
+     */
+    private fun indexOfReferenceChild(parent: TreeNode, referenceChild: TreeNode): Int {
+        val siblings = parent.children
+        if (referenceChild === lastReferenceChild && siblings.getOrNull(lastReferenceChildIndex) === referenceChild) {
+            return lastReferenceChildIndex
+        }
+        lastReferenceChild = referenceChild
+        lastReferenceChildIndex = siblings.indexOf(referenceChild)
+        return lastReferenceChildIndex
+    }
+
+    /** Turns the data of every text node that [insertCharacter] appended to into a string, once parsing has stopped. */
+    fun finishAppendingText() {
+        textNodesAppendedTo.forEach { it.finishAppendingData() }
+        textNodesAppendedTo.clear()
+        lastReferenceChild = null
+        lastReferenceChildIndex = -1
     }
 
     /**
