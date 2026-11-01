@@ -40,7 +40,11 @@ import com.theakram.helium.util.isNull
 internal object InTableText : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if token.codePoint.isNull() -> continueInCurrentMode()
+            is Token.Character if token.codePoint.isNull() -> {
+                // Parse error. Ignore the token.
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             is Token.Character -> {
                 treeBuilder.pendingTableCharacterTokens.add(token)
@@ -48,26 +52,27 @@ internal object InTableText : InsertionMode {
             }
 
             else -> {
-                val hasNonWhitespace = treeBuilder.pendingTableCharacterTokens.any {
-                    !it.codePoint.isAsciiWhitespace()
-                }
-
-                if (hasNonWhitespace) {
-                    treeBuilder.enableFosterParenting()
-                    for (characterToken in treeBuilder.pendingTableCharacterTokens) {
-                        InBody.process(characterToken, treeBuilder)
+                val pendingTokens = treeBuilder.pendingTableCharacterTokens
+                if (pendingTokens.any { !it.codePoint.isAsciiWhitespace() }) {
+                    // This is a parse error: reprocess the character tokens in the pending table character tokens
+                    // list using the rules given in the "anything else" entry in the "in table" insertion mode.
+                    // That entry reports its own parse error and foster parents each token separately.
+                    treeBuilder.parseError()
+                    for (characterToken in pendingTokens) {
+                        InTable.processUsingAnythingElseRules(characterToken, treeBuilder)
                     }
-                    treeBuilder.disableFosterParenting()
                 } else {
-                    for (characterToken in treeBuilder.pendingTableCharacterTokens) {
+                    // Otherwise, insert the characters given by the pending table character tokens list.
+                    for (characterToken in pendingTokens) {
                         treeBuilder.insertCharacter(characterToken.codePoint)
                     }
                 }
+                pendingTokens.clear()
 
-                treeBuilder.pendingTableCharacterTokens.clear()
-
-                val originalMode = treeBuilder.getOriginalInsertionMode()
-                    ?: error("Original insertion mode should be set when entering InTableText")
+                // Switch the insertion mode to the original insertion mode and reprocess the token.
+                val originalMode = checkNotNull(treeBuilder.getOriginalInsertionMode()) {
+                    "The original insertion mode is set when entering \"in table text\""
+                }
                 reprocessIn(originalMode)
             }
         }

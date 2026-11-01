@@ -26,12 +26,12 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.equalsAsciiCaseInsensitive
@@ -41,12 +41,21 @@ import com.theakram.helium.util.equalsAsciiCaseInsensitive
  */
 internal object InTable : InsertionMode {
 
+    /** The current nodes for which a character token switches to "in table text". */
+    private val TABLE_TEXT_PARENTS = setOf("table", "tbody", "template", "tfoot", "thead", "tr")
+
+    /** Spec: "while the current node is not a table, template, or html element, pop elements" */
+    private val TABLE_CONTEXT = setOf("table", "template", "html")
+
+    private val IGNORED_END_TAGS = setOf(
+        "body", "caption", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr"
+    )
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.Character if (treeBuilder.currentNode.namespace == Namespaces.HTML &&
-                    treeBuilder.currentNode.localName in setOf(
-                "table", "tbody", "template", "tfoot", "thead", "tr"
-            )) -> {
+            is Token.Character if treeBuilder.currentNode.let {
+                it.namespace == Namespaces.HTML && it.localName in TABLE_TEXT_PARENTS
+            } -> {
                 treeBuilder.pendingTableCharacterTokens.clear()
                 treeBuilder.saveOriginalInsertionMode()
                 reprocessIn(InTableText)
@@ -64,143 +73,134 @@ internal object InTable : InsertionMode {
 
             is Token.DocType -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
-            is Token.StartTag -> {
-                val tagName = token.name
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
+            is Token.StartTag -> processStartTag(token, treeBuilder)
+
+            is Token.EndTag -> when (token.name) {
+                "table" -> {
+                    if (!treeBuilder.hasElementInTableScope("table")) {
+                        // This is a parse error; ignore the token.
+                        treeBuilder.parseError()
+                    } else {
+                        treeBuilder.popUntil("table")
+                        // The reset switches the insertion mode itself, which ends the processing of this token
+                        treeBuilder.resetInsertionModeAppropriately()
+                    }
+                    continueInCurrentMode()
                 }
 
-                when (tagName) {
-                    "caption" -> {
-                        clearStackBackToTableContext(treeBuilder)
-                        treeBuilder.activeFormattingElements.insertMarker()
-                        treeBuilder.insertElement("caption", attributes = attributes)
-                        switchTo(InCaption)
-                    }
-
-                    "colgroup" -> {
-                        clearStackBackToTableContext(treeBuilder)
-                        treeBuilder.insertElement("colgroup", attributes = attributes)
-                        switchTo(InColumnGroup)
-                    }
-
-                    "col" -> {
-                        clearStackBackToTableContext(treeBuilder)
-                        treeBuilder.insertElement("colgroup", attributes = emptyList())
-                        reprocessIn(InColumnGroup)
-                    }
-
-                    "tbody", "tfoot", "thead" -> {
-                        clearStackBackToTableContext(treeBuilder)
-                        treeBuilder.insertElement(tagName, attributes = attributes)
-                        switchTo(InTableBody)
-                    }
-
-                    "td", "th", "tr" -> {
-                        clearStackBackToTableContext(treeBuilder)
-                        treeBuilder.insertElement("tbody", attributes = emptyList())
-                        reprocessIn(InTableBody)
-                    }
-
-                    "table" -> {
-                        // Parse error
-                        if (!treeBuilder.hasElementInTableScope("table")) {
-                            continueInCurrentMode()
-                        } else {
-                            treeBuilder.popUntil("table")
-                            // Reset the insertion mode appropriately
-                            treeBuilder.resetInsertionModeAppropriately()
-                            reprocessIn(treeBuilder.currentMode)
-                        }
-                    }
-
-                    "style", "script", "template" -> InHead.process(token, treeBuilder)
-
-                    "input" -> {
-                        val typeAttr = attributes.find { it.localName == "type" }
-                        val isHidden = typeAttr?.value?.equalsAsciiCaseInsensitive("hidden") == true
-                        if (!isHidden) {
-                            handleAnythingElse(token, treeBuilder)
-                        } else {
-                            // Parse error
-                            treeBuilder.insertElement("input", attributes = attributes)
-                            treeBuilder.popCurrentElement()
-                            treeBuilder.acknowledgeSelfClosingFlag()
-                            continueInCurrentMode()
-                        }
-                    }
-
-                    "form" -> {
-                        // Parse error
-                        if (treeBuilder.formElement != null && !treeBuilder.isParsingTemplateContents) {
-                            continueInCurrentMode()
-                        } else {
-                            val formElement = treeBuilder.insertElement("form", attributes = attributes)
-                            if (!treeBuilder.isParsingTemplateContents) {
-                                treeBuilder.formElement = formElement
-                            }
-                            treeBuilder.popCurrentElement()
-                            continueInCurrentMode()
-                        }
-                    }
-
-                    else -> handleAnythingElse(token, treeBuilder)
+                in IGNORED_END_TAGS -> {
+                    // Parse error. Ignore the token.
+                    treeBuilder.parseError()
+                    continueInCurrentMode()
                 }
-            }
 
-            is Token.EndTag -> {
-                val tagName = token.name
+                "template" -> InHead.process(token, treeBuilder)
 
-                when (tagName) {
-                    "table" -> {
-                        if (!treeBuilder.hasElementInTableScope("table")) {
-                            // Parse error
-                            continueInCurrentMode()
-                        } else {
-                            treeBuilder.popUntil("table")
-                            // Reset the insertion mode appropriately
-                            treeBuilder.resetInsertionModeAppropriately()
-                            switchTo(treeBuilder.currentMode)
-                        }
-                    }
-
-                    "body", "caption", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr" -> {
-                        // Parse error. Ignore the token.
-                        continueInCurrentMode()
-                    }
-
-                    "template" -> InHead.process(token, treeBuilder)
-
-                    else -> handleAnythingElse(token, treeBuilder)
-                }
+                else -> processUsingAnythingElseRules(token, treeBuilder)
             }
 
             is Token.EOF -> InBody.process(token, treeBuilder)
 
-            else -> handleAnythingElse(token, treeBuilder)
+            else -> processUsingAnythingElseRules(token, treeBuilder)
         }
     }
 
-    private fun handleAnythingElse(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
-        // Parse error
-        treeBuilder.enableFosterParenting()
-        val result = InBody.process(token, treeBuilder)
-        treeBuilder.disableFosterParenting()
-        return result
-    }
-
-    private fun clearStackBackToTableContext(treeBuilder: TreeBuilder) {
-        while (treeBuilder.elementStack.isNotEmpty()) {
-            val currentNode = treeBuilder.currentNode
-            if (currentNode.namespace == Namespaces.HTML &&
-                currentNode.localName in setOf("table", "template", "html")
-            ) {
-                break
+    private fun processStartTag(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition {
+        return when (token.name) {
+            "caption" -> {
+                treeBuilder.clearStackBackTo(TABLE_CONTEXT)
+                treeBuilder.activeFormattingElements.insertMarker()
+                treeBuilder.insertElement("caption", attributes = InHeadHelpers.toAttributeList(token.attributes))
+                switchTo(InCaption)
             }
-            treeBuilder.popCurrentElement()
+
+            "colgroup" -> {
+                treeBuilder.clearStackBackTo(TABLE_CONTEXT)
+                treeBuilder.insertElement("colgroup", attributes = InHeadHelpers.toAttributeList(token.attributes))
+                switchTo(InColumnGroup)
+            }
+
+            "col" -> {
+                treeBuilder.clearStackBackTo(TABLE_CONTEXT)
+                treeBuilder.insertElement("colgroup")
+                reprocessIn(InColumnGroup)
+            }
+
+            "tbody", "tfoot", "thead" -> {
+                treeBuilder.clearStackBackTo(TABLE_CONTEXT)
+                treeBuilder.insertElement(token.name, attributes = InHeadHelpers.toAttributeList(token.attributes))
+                switchTo(InTableBody)
+            }
+
+            "td", "th", "tr" -> {
+                treeBuilder.clearStackBackTo(TABLE_CONTEXT)
+                treeBuilder.insertElement("tbody")
+                reprocessIn(InTableBody)
+            }
+
+            "table" -> {
+                // Parse error.
+                treeBuilder.parseError()
+                if (!treeBuilder.hasElementInTableScope("table")) {
+                    continueInCurrentMode()
+                } else {
+                    treeBuilder.popUntil("table")
+                    treeBuilder.resetInsertionModeAndReprocess()
+                }
+            }
+
+            "style", "script", "template" -> InHead.process(token, treeBuilder)
+
+            "input" -> {
+                val type = token.attributes["type"]
+                if (type == null || !type.equalsAsciiCaseInsensitive("hidden")) {
+                    processUsingAnythingElseRules(token, treeBuilder)
+                } else {
+                    // Parse error.
+                    treeBuilder.parseError()
+                    treeBuilder.insertElement("input", attributes = InHeadHelpers.toAttributeList(token.attributes))
+                    treeBuilder.popCurrentElement()
+                    treeBuilder.acknowledgeSelfClosingFlag()
+                    continueInCurrentMode()
+                }
+            }
+
+            "form" -> {
+                // Parse error.
+                treeBuilder.parseError()
+                if (treeBuilder.formElement != null && !treeBuilder.isParsingTemplateContents) {
+                    continueInCurrentMode()
+                } else {
+                    val formElement = treeBuilder.insertElement(
+                        "form",
+                        attributes = InHeadHelpers.toAttributeList(token.attributes)
+                    )
+                    if (!treeBuilder.isParsingTemplateContents) {
+                        treeBuilder.formElement = formElement
+                    }
+                    treeBuilder.popCurrentElement()
+                    continueInCurrentMode()
+                }
+            }
+
+            else -> processUsingAnythingElseRules(token, treeBuilder)
         }
+    }
+
+    /**
+     * The "anything else" entry, which "in table text" also uses for each of its pending character tokens:
+     * "Parse error. Enable foster parenting, process the token using the rules for the "in body" insertion mode,
+     * and then disable foster parenting."
+     */
+    internal fun processUsingAnythingElseRules(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
+        treeBuilder.parseError()
+        treeBuilder.enableFosterParenting()
+        val transition = InBody.process(token, treeBuilder)
+        treeBuilder.disableFosterParenting()
+        return transition
     }
 }

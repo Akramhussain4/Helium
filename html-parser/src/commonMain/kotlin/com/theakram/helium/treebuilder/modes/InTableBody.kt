@@ -26,12 +26,11 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
-import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 
@@ -40,63 +39,52 @@ import com.theakram.helium.treebuilder.switchTo
  */
 internal object InTableBody : InsertionMode {
 
+    private val CELL_START_TAGS = setOf("th", "td")
+
+    private val TABLE_SECTIONS = setOf("tbody", "tfoot", "thead")
+
+    private val TABLE_BODY_CLOSING_START_TAGS = setOf("caption", "col", "colgroup", "tbody", "tfoot", "thead")
+
+    private val IGNORED_END_TAGS = setOf("body", "caption", "col", "colgroup", "html", "td", "th", "tr")
+
+    /** Spec: "while the current node is not a tbody, tfoot, thead, template, or html element, pop elements" */
+    private val TABLE_BODY_CONTEXT = setOf("tbody", "tfoot", "thead", "template", "html")
+
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
             is Token.StartTag if token.name == "tr" -> {
-                clearStackBackToTableBodyContext(treeBuilder)
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
-                }
-                treeBuilder.insertElement("tr", attributes = attributes)
+                treeBuilder.clearStackBackTo(TABLE_BODY_CONTEXT)
+                treeBuilder.insertElement("tr", attributes = InHeadHelpers.toAttributeList(token.attributes))
                 switchTo(InRow)
             }
 
-            is Token.StartTag if token.name in setOf("th", "td") -> {
-                clearStackBackToTableBodyContext(treeBuilder)
-                treeBuilder.insertElement("tr", attributes = emptyList())
+            is Token.StartTag if token.name in CELL_START_TAGS -> {
+                // Parse error.
+                treeBuilder.parseError()
+                treeBuilder.clearStackBackTo(TABLE_BODY_CONTEXT)
+                treeBuilder.insertElement("tr")
                 reprocessIn(InRow)
             }
 
-            is Token.EndTag if token.name in setOf("tbody", "tfoot", "thead") -> {
-                val tagName = token.name
-                if (!treeBuilder.hasElementInTableScope(tagName)) {
-                    // Parse error. Ignore the token.
+            is Token.EndTag if token.name in TABLE_SECTIONS -> {
+                if (!treeBuilder.hasElementInTableScope(token.name)) {
+                    // This is a parse error; ignore the token.
+                    treeBuilder.parseError()
                     continueInCurrentMode()
                 } else {
-                    clearStackBackToTableBodyContext(treeBuilder)
+                    treeBuilder.clearStackBackTo(TABLE_BODY_CONTEXT)
                     treeBuilder.popCurrentElement()
                     switchTo(InTable)
                 }
             }
 
-            is Token.StartTag if token.name in setOf(
-                "caption", "col", "colgroup", "tbody", "tfoot", "thead"
-            ) -> {
-                if (!hasTableBodyElementInScope(treeBuilder)) {
-                    // Parse error. Ignore the token.
-                    continueInCurrentMode()
-                } else {
-                    clearStackBackToTableBodyContext(treeBuilder)
-                    treeBuilder.popCurrentElement()
-                    reprocessIn(InTable)
-                }
-            }
+            is Token.StartTag if token.name in TABLE_BODY_CLOSING_START_TAGS -> closeTheTableBody(treeBuilder)
 
-            is Token.EndTag if token.name == "table" -> {
-                if (!hasTableBodyElementInScope(treeBuilder)) {
-                    // Parse error. Ignore the token.
-                    continueInCurrentMode()
-                } else {
-                    clearStackBackToTableBodyContext(treeBuilder)
-                    treeBuilder.popCurrentElement()
-                    reprocessIn(InTable)
-                }
-            }
+            is Token.EndTag if token.name == "table" -> closeTheTableBody(treeBuilder)
 
-            is Token.EndTag if token.name in setOf(
-                "body", "caption", "col", "colgroup", "html", "td", "th", "tr"
-            ) -> {
+            is Token.EndTag if token.name in IGNORED_END_TAGS -> {
                 // Parse error. Ignore the token.
+                treeBuilder.parseError()
                 continueInCurrentMode()
             }
 
@@ -104,21 +92,25 @@ internal object InTableBody : InsertionMode {
         }
     }
 
-    private fun clearStackBackToTableBodyContext(treeBuilder: TreeBuilder) {
-        while (treeBuilder.elementStack.isNotEmpty()) {
-            val currentNode = treeBuilder.currentNode
-            if (currentNode.namespace == Namespaces.HTML &&
-                currentNode.localName in setOf("tbody", "tfoot", "thead", "template", "html")
-            ) {
-                break
-            }
-            treeBuilder.popCurrentElement()
+    /**
+     * The steps for the start tags that close the table body, and for the table end tag.
+     */
+    private fun closeTheTableBody(treeBuilder: TreeBuilder): InsertionModeTransition {
+        // A tbody, thead, or tfoot element in table scope: none of them is a table scope boundary, so checking
+        // each name on its own gives the same answer as one walk looking for any of them
+        val hasTableSection = TABLE_SECTIONS.any { treeBuilder.hasElementInTableScope(it) }
+        if (!hasTableSection) {
+            // This is a parse error; ignore the token.
+            treeBuilder.parseError()
+            return continueInCurrentMode()
         }
-    }
+        // Step 1: Clear the stack back to a table body context.
+        treeBuilder.clearStackBackTo(TABLE_BODY_CONTEXT)
 
-    private fun hasTableBodyElementInScope(treeBuilder: TreeBuilder): Boolean {
-        return treeBuilder.hasElementInTableScope("tbody") ||
-                treeBuilder.hasElementInTableScope("thead") ||
-                treeBuilder.hasElementInTableScope("tfoot")
+        // Step 2: Pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+        treeBuilder.popCurrentElement()
+
+        // Step 3: Reprocess the token.
+        return reprocessIn(InTable)
     }
 }
