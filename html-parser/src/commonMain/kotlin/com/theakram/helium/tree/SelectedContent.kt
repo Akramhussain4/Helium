@@ -66,8 +66,11 @@ internal fun TreeNode.updateDescendantSelectedcontents() {
     // Step 2:
     val descendantSelectedcontents = descendantEnabledSelectedcontents()
 
-    // Step 3:
-    for (selectedcontent in descendantSelectedcontents) updateSelectedcontent(selectedcontent)
+    // Step 3, with the updates that removing the selectedcontent elements' children queues waiting for it, as their
+    // microtasks would, also when an attribute change or the parser starts it
+    withMutationScope {
+        for (selectedcontent in descendantSelectedcontents) updateSelectedcontent(selectedcontent)
+    }
 }
 
 /**

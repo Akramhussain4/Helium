@@ -233,6 +233,18 @@ internal class SelectedContentTest {
     }
 
     @Test
+    fun `updates queued by an update that an attribute started run after it`() {
+        val body = body("<select><button><selectedcontent></button><option>o0</option><selectedcontent></select>")
+        val selectedcontents = body.descendants().filter { it.localName == "selectedcontent" }.toList()
+        val option = option("y")
+        selectedcontents[1].appendChild(option)
+        // Selecting y copies it into both, which removes it, and the update that removal queues copies o0 into both
+        option.setAttribute("selected", "")
+
+        assertEquals(listOf("o0", "o0"), selectedcontents.map { it.contents() })
+    }
+
+    @Test
     fun `cloning deeply nested template contents doesn't recurse`() {
         val html = "<select><button><selectedcontent></button><option>" + "<template>".repeat(20_000) + "x"
         val body = body(html)

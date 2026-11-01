@@ -336,6 +336,20 @@ public class TreeNode(
     }
 
     /**
+     * Runs [block], which changes the tree this node is in, with the selectedcontent updates it queues waiting for it
+     * to finish, as an insertion or removal does.
+     */
+    internal fun withMutationScope(block: () -> Unit) {
+        val scope = root
+        scope.mutationDepth++
+        try {
+            block()
+        } finally {
+            scope.endMutation()
+        }
+    }
+
+    /**
      * Clones this node, and if [subtree] is true its descendants and a template's contents, as the DOM's clone does,
      * appending the copy to [parent] if it isn't null. Only the state Helium models is copied.
      *
