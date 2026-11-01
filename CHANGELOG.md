@@ -14,6 +14,9 @@ All notable changes to this project are documented here. The format is based on
 - `TreeNode.formOwner`: a form-associated element's form owner. The parser associates elements with the form element
   pointer as it creates them, and inserting or removing nodes and changing the `form` attribute reset it, as the HTML
   spec says. A `form` attribute naming a form that appears later is not tracked
+- `TreeNode.innerHtml()` and `TreeNode.outerHtml()` serialize a tree back to HTML, with the spec's HTML fragment
+  serialization algorithm, as the DOM's `innerHTML` and `outerHTML` getters do. They take a `scriptingEnabled` flag,
+  `true` by default as for `HTMLParser`, which decides whether `<noscript>` text is escaped
 
 ### Changed
 

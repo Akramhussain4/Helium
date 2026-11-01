@@ -407,6 +407,34 @@ public class TreeNode(
         attributeIndexByNamespace(namespace, localName) != -1
 
     /**
+     * This node's children serialized as HTML, as the DOM's innerHTML getter gives them: the HTML fragment
+     * serialization algorithm's output. A template element's contents are serialized in place of its children, and a
+     * void element, such as img, gives the empty string.
+     *
+     * [scriptingEnabled] says whether scripting is enabled, as for [com.theakram.helium.HTMLParser]: when it is, the
+     * text in a noscript element is written as is, since the parser then reads noscript's contents as raw text, and
+     * when it isn't, the text is escaped. Pass the value the tree was parsed with. Template contents are serialized
+     * as if scripting were disabled, as the spec says for them.
+     *
+     * Helium has no shadow DOM, so no shadow roots are serialized.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-fragment-serialisation-algorithm
+     */
+    public fun innerHtml(scriptingEnabled: Boolean = true): String =
+        HtmlSerializer(scriptingEnabled).serializeChildren(this)
+
+    /**
+     * This node serialized as HTML. For an element, its start tag, its contents as [innerHtml] gives them, and its end
+     * tag, as the DOM's outerHTML getter gives them; a void element has no contents or end tag. A text, comment,
+     * processing instruction or doctype node is serialized as [innerHtml] serializes it in its parent, and a document
+     * or document fragment as its children, since it has no markup of its own.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#dom-element-outerhtml
+     */
+    public fun outerHtml(scriptingEnabled: Boolean = true): String =
+        HtmlSerializer(scriptingEnabled).serializeNode(this)
+
+    /**
      * Serialize to html5lib tree format for testing.
      * Format: "| " + "  " per nesting level + node representation
      */
