@@ -32,36 +32,52 @@ import com.theakram.helium.treebuilder.helpers.TestFileLoader
 import kotlin.test.Test
 
 /**
- * Compares how many parse errors Helium reports for each tree construction test with the number its #errors and
- * #new-errors sections list. The descriptions and positions in those sections are html5lib's own, so only the count
- * is compared.
+ * Compares how many parse errors Helium reports for each tree construction test with the number its #errors section
+ * lists. The descriptions and positions in those sections are html5lib's own, so only the count is compared.
+ * #new-errors lists the tokenizer's errors again by their current codes, so it counts only when #errors is empty.
+ *
+ * html5lib's lists are not always the spec's, so the runs whose count differs are recorded in
+ * [KnownErrorCountDifferences] with the reason and the count Helium reports. Every other run must match, and a
+ * recorded run must report exactly its recorded count, so a lost or extra parse error fails the build either way.
  */
 internal class TreeConstructionErrorCountTests {
 
     @Test
     fun errorCounts() {
         var matched = 0
-        val mismatches = mutableListOf<String>()
+        val unexpected = mutableListOf<String>()
+        val seenIds = mutableSetOf<String>()
         for (file in TestFileLoader.allTestFiles) {
+            if (file in KnownErrorCountDifferences.filesWithoutErrorLists) continue
             for (test in TestFileLoader.loadTests(file)) {
                 if (test.shouldSkip()) continue
+                val id = "$file:${test.lineNumber} (script ${if (test.scriptingEnabled) "on" else "off"})"
+                seenIds += id
+                val expected = (test.errors.ifEmpty { test.newErrors }).size
                 val actual = errorsOf(test)
-                if (actual.size == test.errors.size) {
-                    matched++
-                } else {
-                    mismatches += "$file:${test.lineNumber} (script ${if (test.scriptingEnabled) "on" else "off"}): " +
-                        "expected ${test.errors.size}, got ${actual.size}\n  input: ${test.data.replace("\n", "\\n")}\n" +
-                        "  expected: ${test.errors.map { it.code }}\n  actual:   ${actual}"
+                val known = KnownErrorCountDifferences[id]
+                when {
+                    known == null && actual.size == expected -> matched++
+                    known != null && actual.size == known.actualCount && actual.size != expected -> Unit
+                    else -> unexpected += "$id: html5lib lists $expected, Helium reports ${actual.size}" +
+                        (known?.let { ", recorded ${it.actualCount}" } ?: "") +
+                        "\n  input:  ${test.data.replace("\n", "\\n")}" +
+                        "\n  html5lib: ${test.errors.ifEmpty { test.newErrors }.map { it.code }}" +
+                        "\n  Helium:   $actual"
                 }
             }
         }
-        println("Tree construction error counts: $matched match, ${mismatches.size} differ")
-        println(mismatches.take(MAX_SHOWN).joinToString("\n"))
-        if (mismatches.size > MAX_SHOWN) println("... and ${mismatches.size - MAX_SHOWN} more")
-    }
-
-    private companion object {
-        const val MAX_SHOWN = 100
+        val stale = KnownErrorCountDifferences.ids - seenIds
+        println("Tree construction error counts: $matched match, ${KnownErrorCountDifferences.ids.size} known differences")
+        check(unexpected.isEmpty() && stale.isEmpty()) {
+            buildString {
+                if (unexpected.isNotEmpty()) {
+                    append("${unexpected.size} error counts differ from html5lib's or from KnownErrorCountDifferences:\n\n")
+                    append(unexpected.joinToString("\n\n"))
+                }
+                if (stale.isNotEmpty()) append("\n\nKnownErrorCountDifferences entries match no test:\n" + stale.joinToString("\n"))
+            }
+        }
     }
 
     private fun errorsOf(test: Html5LibTest): List<String?> {

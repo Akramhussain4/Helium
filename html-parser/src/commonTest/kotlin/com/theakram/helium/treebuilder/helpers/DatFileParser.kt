@@ -60,7 +60,8 @@ object DatFileParser {
             expectSection("#data")
 
             val data = parseContent()
-            val errors = parseErrors()
+            val errors = parseErrorSection("#errors", ERROR_REGEX_OLD)
+            val newErrors = parseErrorSection("#new-errors", ERROR_REGEX_NEW)
             val documentFragment = parseDocumentFragment()
             val scriptingEnabled = parseScriptingDirective()
             val document = parseDocument()
@@ -71,6 +72,7 @@ object DatFileParser {
                     lineNumber = lineNumber,
                     data = data,
                     errors = errors,
+                    newErrors = newErrors,
                     documentFragment = documentFragment,
                     scriptingEnabled = it,
                     document = document
@@ -86,15 +88,10 @@ object DatFileParser {
             }
         }
 
-        private fun parseErrors(): List<ParseError> = buildList {
-            if (currentLine?.trim() == "#errors") {
-                index++
-                addAll(parseErrorLines(ERROR_REGEX_OLD))
-            }
-            if (currentLine?.trim() == "#new-errors") {
-                index++
-                addAll(parseErrorLines(ERROR_REGEX_NEW))
-            }
+        private fun parseErrorSection(header: String, regex: Regex): List<ParseError> {
+            if (currentLine?.trim() != header) return emptyList()
+            index++
+            return parseErrorLines(regex)
         }
 
         private fun parseErrorLines(regex: Regex): List<ParseError> = buildList {
