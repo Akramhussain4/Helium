@@ -34,6 +34,8 @@ data class Html5LibTest(
     val lineNumber: Int,
     val data: String,
     val errors: List<ParseError> = emptyList(),
+    // The #new-errors section, which lists the tokenizer's errors again by their current codes
+    val newErrors: List<ParseError> = emptyList(),
     val document: String,
     val documentFragment: String? = null,
     val scriptingEnabled: Boolean = true,
