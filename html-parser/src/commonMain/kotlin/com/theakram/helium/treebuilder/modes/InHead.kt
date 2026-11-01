@@ -139,9 +139,11 @@ internal object InHead : InsertionMode {
 
     private fun processScriptStartTag(token: Token.StartTag, treeBuilder: TreeBuilder): InsertionModeTransition {
         // Step 1:
-        val scriptElement = TreeNode.createElement(
-            localName = token.name,
-            attributes = InHeadHelpers.toAttributeList(token.attributes)
+        val scriptElement = treeBuilder.createElementForToken(
+            token.name,
+            Namespaces.HTML,
+            InHeadHelpers.toAttributeList(token.attributes),
+            intendedParent = treeBuilder.appropriatePlaceForInsertingNode().targetParent
         )
         // Step 2: N/A. Helium doesn't execute scripts, so script elements have no parser document or force async.
         // Step 3: N/A. Likewise, script elements have no already started to set when the scripting mode is Inert.
@@ -176,9 +178,11 @@ internal object InHead : InsertionMode {
         // Step 7:
         val hostIsRoot = treeBuilder.elementStack.firstOrNull() === declarativeShadowHostElement
         // Step 8:
-        val template = TreeNode.createElement(
-            localName = templateStartTag.name,
-            attributes = InHeadHelpers.toAttributeList(templateStartTag.attributes)
+        val template = treeBuilder.createElementForToken(
+            templateStartTag.name,
+            Namespaces.HTML,
+            InHeadHelpers.toAttributeList(templateStartTag.attributes),
+            intendedParent = treeBuilder.appropriatePlaceForInsertingNode().targetParent
         )
         // Step 9:
         val insertionLocation = treeBuilder.appropriatePlaceForInsertingNode()

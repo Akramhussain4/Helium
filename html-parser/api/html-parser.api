@@ -86,6 +86,7 @@ public final class com/theakram/helium/tree/TreeNode {
 	public final fun getChildren ()Ljava/util/List;
 	public final fun getData ()Ljava/lang/String;
 	public final fun getFirstChild ()Lcom/theakram/helium/tree/TreeNode;
+	public final fun getFormOwner ()Lcom/theakram/helium/tree/TreeNode;
 	public final fun getLastChild ()Lcom/theakram/helium/tree/TreeNode;
 	public final fun getLocalName ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;

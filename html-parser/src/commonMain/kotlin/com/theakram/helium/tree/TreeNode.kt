@@ -95,19 +95,49 @@ public class TreeNode(
      * Spec: https://dom.spec.whatwg.org/#concept-node-document
      */
     internal val nodeDocument: TreeNode?
+        get() = nodeDocumentOfRoot(root)
+
+    private fun nodeDocumentOfRoot(root: TreeNode): TreeNode? {
+        val host = root.host
+        return when {
+            root.type == NodeType.DOCUMENT -> root
+            root.rootNodeDocument != null -> root.rootNodeDocument
+            // Template contents keep the document they were created for, even if the template is given new ones
+            host != null -> appropriateTemplateContentsOwnerDocument(host.nodeDocument)
+            else -> null
+        }
+    }
+
+    /**
+     * The form element this form-associated element is associated with, or null. The parser associates elements with
+     * the form element pointer as it creates them, and inserting and removing nodes, changing a form attribute and
+     * changing IDs reset it, as the HTML spec says, when made through TreeNode's methods rather than by changing
+     * [children], [attributes] or [parent] directly or passing children to the constructor.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-owner
+     */
+    public var formOwner: TreeNode? = null
+        internal set
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#parser-inserted-flag
+     */
+    internal var parserInserted: Boolean = false
+
+    // Set once this node or a descendant is a form-associated element, so form owner updates can skip the rest. It
+    // isn't cleared when such an element is removed, which only costs a needless look.
+    internal var mayContainFormAssociatedElement: Boolean = false
+
+    // For a Document, what resetting form owners looks up, once it has a listed element with a form attribute
+    internal var formOwnerIndex: FormOwnerIndex? = null
+
+    /**
+     * Spec: https://dom.spec.whatwg.org/#concept-tree-root
+     */
+    internal val root: TreeNode
         get() {
             var root = this
-            while (true) {
-                root = root.parent ?: break
-            }
-            val host = root.host
-            return when {
-                root.type == NodeType.DOCUMENT -> root
-                root.rootNodeDocument != null -> root.rootNodeDocument
-                // Template contents keep the document they were created for, even if the template is given new ones
-                host != null -> appropriateTemplateContentsOwnerDocument(host.nodeDocument)
-                else -> null
-            }
+            while (true) root = root.parent ?: return root
         }
 
     /**
@@ -152,33 +182,44 @@ public class TreeNode(
 
 
     public fun appendChild(child: TreeNode) {
-        // Remove from previous parent if moving between parents
-        child.parent?.children?.remove(child)
-        children.add(child)
-        child.parent = this
+        insertBefore(child, null)
     }
 
+    /**
+     * Inserts [newChild] before [referenceChild], or last if it is null, first removing it from its parent, as the
+     * DOM's insert does, and running the insertion and removing steps that Helium models: those that keep form owners
+     * up to date. Unlike the DOM, a document fragment is inserted as a node, not by moving its children.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-node-pre-insert
+     */
     public fun insertBefore(newChild: TreeNode, referenceChild: TreeNode?) {
-        // Remove from previous parent if moving between parents
-        newChild.parent?.children?.remove(newChild)
-        if (referenceChild == null) {
-            appendChild(newChild)
+        // "If node is a host-including inclusive ancestor of parent, then throw a HierarchyRequestError". A node with
+        // no children or template contents can only be an ancestor of itself, which spares the walk up for every new
+        // element the parser inserts.
+        if (newChild.children.isEmpty() && newChild.templateContent == null) {
+            require(newChild !== this) { HIERARCHY_REQUEST_ERROR }
         } else {
-            val index = children.indexOf(referenceChild)
-            if (index != -1) {
-                children.add(index, newChild)
-                newChild.parent = this
-            } else {
-                throw IllegalArgumentException("Reference child is not a child of this node")
-            }
+            require(!newChild.isHostIncludingInclusiveAncestorOf(this)) { HIERARCHY_REQUEST_ERROR }
         }
+        require(referenceChild == null || referenceChild.parent === this) {
+            "Reference child is not a child of this node"
+        }
+        // "If referenceChild is node, then set referenceChild to node's next sibling"
+        val reference = if (referenceChild === newChild) newChild.nextSibling else referenceChild
+        newChild.parent?.removeChild(newChild)
+        val index = if (reference == null) children.size else children.indexOf(reference)
+        children.add(index, newChild)
+        newChild.parent = this
+        formOwnerNodeInserted(newChild)
     }
 
     public fun removeChild(child: TreeNode) {
-        val document = nodeDocument
+        val oldRoot = root
+        val document = nodeDocumentOfRoot(oldRoot)
         if (children.remove(child)) {
             child.parent = null
             child.rootNodeDocument = document
+            formOwnerNodeRemoved(child, oldRoot)
         } else {
             throw IllegalArgumentException("Node is not a child of this node")
         }
@@ -241,11 +282,13 @@ public class TreeNode(
         }
         val index = attributeIndexByName(qualifiedName)
         if (index != -1) {
-            attributes[index] = attributes[index].copy(value = value)
+            val old = attributes[index]
+            attributes[index] = old.copy(value = value)
+            formOwnerAttributeChanged(old.namespace, old.localName, old.value, value)
             return
         }
         val localName = normalizedQualifiedName(qualifiedName)
-        attributes.add(Attribute(namespace = null, prefix = null, localName = localName, value = value))
+        appendAttribute(Attribute(namespace = null, prefix = null, localName = localName, value = value))
     }
 
     /**
@@ -272,11 +315,25 @@ public class TreeNode(
     public fun setAttributeNS(namespace: String?, prefix: String?, localName: String, value: String) {
         val index = attributeIndexByNamespace(namespace, localName)
         if (index != -1) {
-            attributes[index] = attributes[index].copy(value = value)
-            return
+            val old = attributes[index]
+            attributes[index] = old.copy(value = value)
+            formOwnerAttributeChanged(old.namespace, old.localName, old.value, value)
+        } else {
+            val attributeNamespace = namespace?.ifEmpty { null }
+            appendAttribute(
+                Attribute(namespace = attributeNamespace, prefix = prefix, localName = localName, value = value)
+            )
         }
-        val attributeNamespace = namespace?.ifEmpty { null }
-        attributes.add(Attribute(namespace = attributeNamespace, prefix = prefix, localName = localName, value = value))
+    }
+
+    /**
+     * Appends [attribute], as the DOM's "append an attribute" does, with the attribute change steps Helium models.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-element-attributes-append
+     */
+    internal fun appendAttribute(attribute: Attribute) {
+        attributes.add(attribute)
+        formOwnerAttributeChanged(attribute.namespace, attribute.localName, null, attribute.value)
     }
 
     /**
@@ -379,6 +436,9 @@ public class TreeNode(
     }
 
     public companion object {
+        private const val HIERARCHY_REQUEST_ERROR =
+            "HierarchyRequestError: a node can't be inserted into itself or its descendants"
+
         /**
          * Spec: https://html.spec.whatwg.org/multipage/scripting.html#appropriate-template-contents-owner-document
          *

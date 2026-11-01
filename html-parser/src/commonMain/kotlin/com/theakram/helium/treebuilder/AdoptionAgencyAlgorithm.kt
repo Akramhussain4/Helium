@@ -152,7 +152,7 @@ internal class AdoptionAgencyAlgorithm(
                 }
 
                 // Step 4.16.6:
-                val newElement = createElementForTokenOf(node)
+                val newElement = createElementForTokenOf(node, intendedParent = commonAncestor)
                 activeFormattingElements.replace(node, newElement)
                 stack.replace(node, newElement)
                 node = newElement
@@ -189,7 +189,7 @@ internal class AdoptionAgencyAlgorithm(
             }
 
             // Step 4.22:
-            val newElement = createElementForTokenOf(formattingElement)
+            val newElement = createElementForTokenOf(formattingElement, intendedParent = furthestBlock)
 
             // Step 4.23:
             if (bookmarkAfter == null) {
@@ -232,9 +232,13 @@ internal class AdoptionAgencyAlgorithm(
 
     // Creates an element for the token for which element, an element in the list of active formatting elements, was
     // created, in the HTML namespace
-    private fun createElementForTokenOf(element: TreeNode): TreeNode = TreeNode.createElement(
-        localName = checkNotNull(element.localName),
-        namespace = Namespaces.HTML,
-        attributes = activeFormattingElements.tokenAttributesOf(element)
-    )
+    // "Create an element for the token for which" the element "was created, in the HTML namespace, with" the given
+    // node "as the intended parent"
+    private fun createElementForTokenOf(element: TreeNode, intendedParent: TreeNode): TreeNode =
+        treeBuilder.createElementForToken(
+            checkNotNull(element.localName),
+            Namespaces.HTML,
+            activeFormattingElements.tokenAttributesOf(element),
+            intendedParent
+        )
 }

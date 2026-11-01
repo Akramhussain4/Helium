@@ -355,7 +355,7 @@ internal object InBody : InsertionMode {
         // corresponding value". Token attributes have no namespace, and their names are lowercase already.
         token.attributes.forEach { (name, value) ->
             if (htmlElement.attributes.none { it.namespace == null && it.localName == name }) {
-                htmlElement.attributes.add(Attribute(localName = name, value = value))
+                htmlElement.appendAttribute(Attribute(localName = name, value = value))
             }
         }
         return continueInCurrentMode()
@@ -382,7 +382,7 @@ internal object InBody : InsertionMode {
         // corresponding value". Token attributes have no namespace, and their names are lowercase already.
         token.attributes.forEach { (name, value) ->
             if (bodyElement.attributes.none { it.namespace == null && it.localName == name }) {
-                bodyElement.attributes.add(Attribute(localName = name, value = value))
+                bodyElement.appendAttribute(Attribute(localName = name, value = value))
             }
         }
         return continueInCurrentMode()
