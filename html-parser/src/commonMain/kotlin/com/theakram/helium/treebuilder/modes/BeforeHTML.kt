@@ -26,6 +26,7 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
+import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionLocation
 import com.theakram.helium.treebuilder.InsertionMode
@@ -61,9 +62,12 @@ internal object BeforeHTML : InsertionMode {
             is Token.Character if token.codePoint.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.StartTag if token.name == "html" -> {
-                val element = TreeNode.createElement(
-                    localName = "html",
-                    attributes = InHeadHelpers.toAttributeList(token.attributes)
+                // "Create an element for the token in the HTML namespace, with the Document as the intended parent"
+                val element = treeBuilder.createElementForToken(
+                    "html",
+                    Namespaces.HTML,
+                    InHeadHelpers.toAttributeList(token.attributes),
+                    intendedParent = treeBuilder.document
                 )
                 treeBuilder.insertElementAtAdjustedInsertionLocation(element, InsertionLocation(treeBuilder.document, null))
                 treeBuilder.pushElement(element)

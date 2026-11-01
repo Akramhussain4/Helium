@@ -96,6 +96,8 @@ final class com.theakram.helium.tree/TreeNode { // com.theakram.helium.tree/Tree
     final var data // com.theakram.helium.tree/TreeNode.data|{}data[0]
         final fun <get-data>(): kotlin/String? // com.theakram.helium.tree/TreeNode.data.<get-data>|<get-data>(){}[0]
         final fun <set-data>(kotlin/String?) // com.theakram.helium.tree/TreeNode.data.<set-data>|<set-data>(kotlin.String?){}[0]
+    final var formOwner // com.theakram.helium.tree/TreeNode.formOwner|{}formOwner[0]
+        final fun <get-formOwner>(): com.theakram.helium.tree/TreeNode? // com.theakram.helium.tree/TreeNode.formOwner.<get-formOwner>|<get-formOwner>(){}[0]
     final var isIframeSrcdoc // com.theakram.helium.tree/TreeNode.isIframeSrcdoc|{}isIframeSrcdoc[0]
         final fun <get-isIframeSrcdoc>(): kotlin/Boolean // com.theakram.helium.tree/TreeNode.isIframeSrcdoc.<get-isIframeSrcdoc>|<get-isIframeSrcdoc>(){}[0]
         final fun <set-isIframeSrcdoc>(kotlin/Boolean) // com.theakram.helium.tree/TreeNode.isIframeSrcdoc.<set-isIframeSrcdoc>|<set-isIframeSrcdoc>(kotlin.Boolean){}[0]

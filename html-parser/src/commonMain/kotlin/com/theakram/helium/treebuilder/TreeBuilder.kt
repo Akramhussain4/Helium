@@ -30,6 +30,9 @@ import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.tree.formContentAttributeValue
+import com.theakram.helium.tree.isFormAssociated
+import com.theakram.helium.tree.isListed
 import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.treebuilder.modes.InForeignContent
 import com.theakram.helium.treebuilder.modes.Initial
@@ -206,18 +209,45 @@ internal class TreeBuilder(
                 token is Token.EOF
     }
 
+    /**
+     * Inserts a foreign element for a token with [tagName] and [attributes] (already adjusted), in [namespace]: the
+     * HTML namespace for "insert an HTML element".
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-foreign-element
+     */
     internal fun insertElement(
         tagName: String,
         namespace: String? = Namespaces.HTML,
         attributes: List<Attribute> = emptyList()
     ): TreeNode {
-        // Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-foreign-element
-        // Spec: https://html.spec.whatwg.org/multipage/parsing.html#create-an-element-for-the-token
-        val element = TreeNode.createElement(
-            localName = tagName,
-            namespace = namespace,
-            attributes = attributes
+        // Step 1:
+        val element = createElementForToken(
+            tagName,
+            namespace,
+            attributes,
+            intendedParent = appropriatePlaceForInsertingNode().targetParent
         )
+        // Step 2:
+        insertElementAtAdjustedInsertionLocation(element)
+        // Step 3:
+        stack.push(element)
+        // Step 4:
+        return element
+    }
+
+    /**
+     * Without speculative parsing, a sanitizer, custom elements or scripts, only the element's creation, its
+     * attributes, the xmlns parse errors and the form owner association apply.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#create-an-element-for-the-token
+     */
+    internal fun createElementForToken(
+        tagName: String,
+        namespace: String?,
+        attributes: List<Attribute>,
+        intendedParent: TreeNode
+    ): TreeNode {
+        val element = TreeNode.createElement(localName = tagName, namespace = namespace, attributes = attributes)
 
         // "If element has an xmlns attribute in the XMLNS namespace whose value is not exactly the same as the
         // element's namespace, that is a parse error. Similarly, if element has an xmlns:xlink attribute in the XMLNS
@@ -231,8 +261,27 @@ internal class TreeBuilder(
             }
         }
 
-        insertElementAtAdjustedInsertionLocation(element)
-        stack.push(element)
+        // Resettable elements' reset algorithm initializes their value and checkedness, which Helium doesn't model
+
+        // "If element is a form-associated element and not a form-associated custom element, the form element
+        // pointer is not null, the parser is not parsing template contents, the parser's fragment context element is
+        // null, element is either not listed or doesn't have a form attribute, the intendedParent is in the same tree
+        // as the element pointed to by the form element pointer, and the parser's insertion target redirection
+        // map[the element pointed to by the form element pointer] does not exist, then associate element with the
+        // form element pointed to by the form element pointer and set element's parser inserted flag."
+        val form = formElement
+        if (form != null &&
+            element.isFormAssociated &&
+            !isParsingTemplateContents &&
+            contextElement == null &&
+            (!element.isListed || element.formContentAttributeValue == null) &&
+            intendedParent.root === form.root &&
+            form !in insertionTargetRedirectionMap
+        ) {
+            element.formOwner = form
+            element.parserInserted = true
+        }
+
         return element
     }
 

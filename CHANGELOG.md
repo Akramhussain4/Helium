@@ -11,6 +11,9 @@ All notable changes to this project are documented here. The format is based on
 - `HTMLParser.errors` also reports the parse errors of tree construction, including
   `non-void-html-element-start-tag-with-trailing-solidus`
 - `TreeNode.setAttributeNS(namespace, qualifiedName, value)`, as the DOM defines it
+- `TreeNode.formOwner`: a form-associated element's form owner. The parser associates elements with the form element
+  pointer as it creates them, and inserting or removing nodes and changing the `form` attribute reset it, as the HTML
+  spec says. A `form` attribute naming a form that appears later is not tracked
 
 ### Changed
 
