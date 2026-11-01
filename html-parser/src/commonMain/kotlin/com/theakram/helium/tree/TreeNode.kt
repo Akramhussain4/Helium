@@ -201,9 +201,19 @@ public class TreeNode(
     internal var hasRunSelectednessSettingAlgorithm: Boolean = false
     internal var selectedOptionAfterLastRun: TreeNode? = null
 
-    // Set once this node or a descendant is an option element, so that inserting and removing nodes can skip the
-    // subtrees without one. Like mayContainFormAssociatedElement, it isn't cleared.
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#selectedcontent-disabled
+     */
+    internal var selectedcontentDisabled: Boolean = false
+
+    // For a select element, the selectedcontent elements whose disabledness was last recalculated with it as their
+    // nearest select ancestor, which updating its selectedcontent elements narrows down to those still in it
+    internal var registeredSelectedcontents: MutableList<TreeNode>? = null
+
+    // Set once this node or a descendant is an option or selectedcontent element, so that inserting and removing nodes
+    // can skip the subtrees without one. Like mayContainFormAssociatedElement, they aren't cleared.
     internal var mayContainOption: Boolean = false
+    internal var mayContainSelectedcontent: Boolean = false
 
     /**
      * Spec: https://dom.spec.whatwg.org/#concept-tree-root
@@ -261,9 +271,9 @@ public class TreeNode(
 
     /**
      * Inserts [newChild] before [referenceChild], or last if it is null, first removing it from its parent, as the
-     * DOM's insert does, and running the insertion and removing steps that Helium models: those that keep form owners
-     * and the selectedness of option elements up to date. Unlike the DOM, a document fragment is inserted as a node,
-     * not by moving its children.
+     * DOM's insert does, and running the insertion, post-connection and removing steps that Helium models: those that
+     * keep form owners, the selectedness of option elements and selectedcontent elements up to date. Unlike the DOM, a
+     * document fragment is inserted as a node, not by moving its children.
      *
      * Spec: https://dom.spec.whatwg.org/#concept-node-pre-insert
      */
@@ -286,7 +296,7 @@ public class TreeNode(
         children.add(index, newChild)
         newChild.parent = this
         formOwnerNodeInserted(newChild)
-        optionNodeInserted(newChild)
+        selectNodeInserted(newChild)
     }
 
     public fun removeChild(child: TreeNode) {
@@ -296,10 +306,61 @@ public class TreeNode(
             child.parent = null
             child.rootNodeDocument = document
             formOwnerNodeRemoved(child, oldRoot)
-            optionNodeRemoved(child)
+            selectNodeRemoved(child)
         } else {
             throw IllegalArgumentException("Node is not a child of this node")
         }
+    }
+
+    /**
+     * Clones this node, and if [subtree] is true its descendants and a template's contents, as the DOM's clone does,
+     * appending the copy to [parent] if it isn't null. Only the state Helium models is copied.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-node-clone
+     */
+    internal fun cloneNode(subtree: Boolean, parent: TreeNode? = null): TreeNode {
+        // Each node to clone, with the copy its copy is appended to, so that deep trees don't recurse
+        val pending = ArrayDeque<Pair<TreeNode, TreeNode?>>()
+        pending.addLast(this to parent)
+        var result: TreeNode? = null
+        while (pending.isNotEmpty()) {
+            val (node, copyParent) = pending.removeLast()
+            // Step 1:
+            val copy = node.cloneSingleNode()
+            if (result == null) result = copy
+
+            // Step 2: the template element's cloning steps, "For each child of node's template contents's children, in
+            // tree order: clone a node given child with document set to copy's template contents's node document,
+            // subtree set to true, and parent set to copy's template contents."
+            val contents = node.templateContent
+            val copyContents = copy.templateContent
+            if (subtree && contents != null && copyContents != null) {
+                for (child in contents.children) child.cloneNode(subtree = true, parent = copyContents)
+            }
+
+            // Step 3:
+            copyParent?.appendChild(copy)
+
+            // Step 4:
+            if (subtree) {
+                for (index in node.children.indices.reversed()) pending.addLast(node.children[index] to copy)
+            }
+        }
+        return result!!
+    }
+
+    /**
+     * Spec: https://dom.spec.whatwg.org/#clone-a-single-node
+     */
+    private fun cloneSingleNode(): TreeNode = when (type) {
+        NodeType.ELEMENT -> createElement(localName!!, namespace, prefix, attributes)
+        NodeType.TEXT -> createText(data.orEmpty())
+        NodeType.COMMENT -> createComment(data.orEmpty())
+        NodeType.PROCESSING_INSTRUCTION -> createProcessingInstruction(localName!!, data.orEmpty())
+        NodeType.CDATA_SECTION -> TreeNode(type = NodeType.CDATA_SECTION, data = data)
+        NodeType.DOCUMENT_TYPE -> createDocumentType(localName!!, publicId, systemId)
+        NodeType.DOCUMENT -> createDocument(quirksMode ?: QuirksMode.NO_QUIRKS)
+        NodeType.DOCUMENT_FRAGMENT -> createDocumentFragment()
     }
 
     public val firstChild: TreeNode?

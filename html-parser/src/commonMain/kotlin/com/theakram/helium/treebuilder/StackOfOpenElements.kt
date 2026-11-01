@@ -27,6 +27,8 @@ package com.theakram.helium.treebuilder
 
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
+import com.theakram.helium.tree.isHtmlElement
+import com.theakram.helium.tree.updateDescendantSelectedcontentsForOption
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#the-stack-of-open-elements
@@ -49,7 +51,12 @@ internal class StackOfOpenElements {
         elements.add(element)
     }
 
-    fun pop(): TreeNode? = elements.removeLastOrNull()
+    fun pop(): TreeNode? = elements.removeLastOrNull()?.also { popped ->
+        // "When an option element option is popped off the stack of open elements of an HTML parser or XML parser,
+        // update descendant selectedcontent elements for an option given option."
+        // (https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element)
+        if (popped.isHtmlElement("option")) popped.updateDescendantSelectedcontentsForOption()
+    }
 
     fun popUntil(tagName: String) {
         while (elements.isNotEmpty()) {

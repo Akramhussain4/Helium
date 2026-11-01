@@ -11,6 +11,10 @@ All notable changes to this project are documented here. The format is based on
 - `HTMLParser.errors` also reports the parse errors of tree construction, including
   `non-void-html-element-start-tag-with-trailing-solidus`
 - `TreeNode.setAttributeNS(namespace, qualifiedName, value)`, as the DOM defines it
+- `selectedcontent` elements reflect their select element's selected option, as the HTML spec says: the parser
+  copies the option's contents into them, and inserting or removing options and adding their `selected` or
+  `disabled` attributes, or the select's `size` or `multiple`, through `TreeNode`'s methods keeps them up to date.
+  Tree construction now passes every test in the conformance suite that doesn't need a JavaScript engine
 - `TreeNode.formOwner`: a form-associated element's form owner. The parser associates elements with the form element
   pointer as it creates them, and inserting or removing nodes and changing the `form` attribute reset it, as the HTML
   spec says. A `form` attribute naming a form that appears later is not tracked

@@ -218,6 +218,14 @@ internal object KnownErrorCountDifferences {
         "html5test-com.dat:193 (script off)" to KnownDifference(NO_ERRORS_LISTED, 2),
         "html5test-com.dat:204 (script on)" to KnownDifference(NO_ERRORS_LISTED, 3),
         "html5test-com.dat:204 (script off)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:692 (script on)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:692 (script off)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:706 (script on)" to KnownDifference(NO_ERRORS_LISTED, 4),
+        "webkit02.dat:706 (script off)" to KnownDifference(NO_ERRORS_LISTED, 4),
+        "webkit02.dat:732 (script on)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:732 (script off)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:748 (script on)" to KnownDifference(NO_ERRORS_LISTED, 3),
+        "webkit02.dat:748 (script off)" to KnownDifference(NO_ERRORS_LISTED, 3),
         "webkit02.dat:765 (script on)" to KnownDifference(NO_ERRORS_LISTED, 3),
         "webkit02.dat:765 (script off)" to KnownDifference(NO_ERRORS_LISTED, 3)
     )
