@@ -46,23 +46,35 @@ private fun TreeNode.endsListOfOptionsSearch(): Boolean =
  * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#concept-select-option-list
  */
 internal inline fun TreeNode.forEachInListOfOptions(action: (TreeNode) -> Unit) {
-    // Each pending node with whether it is inside an optgroup, whose optgroup descendants' descendants are skipped
-    val pending = ArrayDeque<TreeNode>()
-    val pendingInOptgroup = ArrayDeque<Boolean>()
-    for (index in children.indices.reversed()) {
-        pending.addLast(children[index])
-        pendingInOptgroup.addLast(false)
-    }
-    while (pending.isNotEmpty()) {
-        val node = pending.removeLast()
-        val inOptgroup = pendingInOptgroup.removeLast()
-        if (node.isHtmlElement("option")) action(node)
-        val isOptgroup = node.isHtmlElement("optgroup")
-        if (node.endsListOfOptionsSearch() || (isOptgroup && inOptgroup)) continue
-        for (index in node.children.indices.reversed()) {
-            pending.addLast(node.children[index])
-            pendingInOptgroup.addLast(inOptgroup || isOptgroup)
+    // The nodes whose children are being gone through, each with the index of its next child and whether it is or is
+    // in an optgroup, whose optgroup descendants' descendants are skipped. Going through children one at a time,
+    // instead of putting them all on a stack first, lets a caller that returns at the first option it wants skip the
+    // rest of a long list.
+    val parents = ArrayList<TreeNode>()
+    val nextIndices = ArrayList<Int>()
+    val parentsInOptgroup = ArrayList<Boolean>()
+    parents.add(this)
+    nextIndices.add(0)
+    parentsInOptgroup.add(false)
+    while (parents.isNotEmpty()) {
+        val level = parents.lastIndex
+        val parent = parents[level]
+        val index = nextIndices[level]
+        if (index >= parent.children.size) {
+            parents.removeAt(level)
+            nextIndices.removeAt(level)
+            parentsInOptgroup.removeAt(level)
+            continue
         }
+        nextIndices[level] = index + 1
+        val node = parent.children[index]
+        if (node.isHtmlElement("option")) action(node)
+        val inOptgroup = parentsInOptgroup[level]
+        val isOptgroup = node.isHtmlElement("optgroup")
+        if (node.endsListOfOptionsSearch() || (isOptgroup && inOptgroup) || node.children.isEmpty()) continue
+        parents.add(node)
+        nextIndices.add(0)
+        parentsInOptgroup.add(inOptgroup || isOptgroup)
     }
 }
 
@@ -159,30 +171,57 @@ internal fun TreeNode.runSelectednessSettingAlgorithm(): Boolean {
 }
 
 /**
- * Runs the selectedness setting algorithm for this select element after [option] joined its list of options, without
- * going through the list when [option] is the last option in it.
+ * Whether the option the selectedness setting algorithm left selected the last time it ran for this select element,
+ * [selectedOptionAfterLastRun], can stand in for going through its list of options.
  *
- * After the algorithm runs, at most one option in the list is selected, and if none is and the display size is 1, none
- * is enabled. That still holds when the next run starts, since every change that could break it runs the algorithm,
- * so with [option] last in tree order the run only has to compare it with the option selected after the last run.
+ * After the algorithm runs, at most one option in the list is selected, that one, and if none is and the display
+ * size is 1, none is enabled. That still holds when the next run starts: every change to an option's selectedness or
+ * to whether it is enabled, and to the display size, runs the algorithm, and so does every option joining or leaving
+ * the list, which the shortcuts below handle by comparing the option with the one left selected. The insertion steps
+ * run for an inserted subtree's options in tree order, so the options that join the list with an option and haven't
+ * been compared yet all come after it, and an option that a run for an earlier one already went through is left as
+ * that run left it.
  */
-private fun TreeNode.runSelectednessSettingAlgorithmFor(option: TreeNode): Boolean {
+private fun TreeNode.canUseSelectedOptionAfterLastRun(): Boolean {
+    if (!hasRunSelectednessSettingAlgorithm) return false
+    // The option left selected may have left the list in the same removal, before its removing steps ran
+    val selected = selectedOptionAfterLastRun
+    return selected == null || isAncestorOf(selected)
+}
+
+/**
+ * Runs the selectedness setting algorithm for this select element after [option] joined its list of options, as one
+ * of the options in [inserted], the node whose insertion runs the steps.
+ */
+private fun TreeNode.runSelectednessSettingAlgorithmAfterInserting(option: TreeNode, inserted: TreeNode): Boolean {
     if (hasContentAttribute("multiple")) return false
-    if (!hasRunSelectednessSettingAlgorithm || !option.isLastInListOfOptionsOf(this)) {
-        return runSelectednessSettingAlgorithm()
-    }
+    if (!canUseSelectedOptionAfterLastRun()) return runSelectednessSettingAlgorithm()
     val selected = selectedOptionAfterLastRun
     return when {
-        option.selectedness -> {
+        // An earlier option inserted with it already ran the whole algorithm, which left this one selected
+        option === selected -> false
+
+        // Of two selected options, the one later in tree order stays selected
+        option.selectedness && selected == null -> {
             selectedOptionAfterLastRun = option
-            if (selected != null && selected !== option) {
-                selected.selectedness = false
-                true
-            } else {
-                false
-            }
+            false
         }
 
+        option.selectedness -> {
+            // An option left selected that was inserted with this one had its steps run first, so it comes before
+            val optionIsLater = option.isLastInListOfOptionsOf(this) ||
+                inserted === selected || inserted.isAncestorOf(selected!!) ||
+                compareTreeOrder(option, selected) > 0
+            if (optionIsLater) {
+                selected!!.selectedness = false
+                selectedOptionAfterLastRun = option
+            } else {
+                option.selectedness = false
+            }
+            true
+        }
+
+        // With no option selected and none enabled, an enabled option is the first enabled option
         selected == null && hasDisplaySizeOne() && !option.isDisabledOption() -> {
             option.selectedness = true
             selectedOptionAfterLastRun = option
@@ -191,6 +230,29 @@ private fun TreeNode.runSelectednessSettingAlgorithmFor(option: TreeNode): Boole
 
         else -> false
     }
+}
+
+/**
+ * Runs the selectedness setting algorithm for this select element after [option] left its list of options. Unless it
+ * was the selected option, the one selected stays selected, and if none was, none is enabled still. If it was, no
+ * option in the list is selected any more, so the algorithm selects the first enabled one if the display size is 1.
+ */
+private fun TreeNode.runSelectednessSettingAlgorithmAfterRemoving(option: TreeNode): Boolean {
+    if (hasContentAttribute("multiple")) return false
+    if (hasRunSelectednessSettingAlgorithm && option === selectedOptionAfterLastRun) {
+        selectedOptionAfterLastRun = null
+        if (!hasDisplaySizeOne()) return false
+        forEachInListOfOptions { listed ->
+            if (!listed.isDisabledOption()) {
+                listed.selectedness = true
+                selectedOptionAfterLastRun = listed
+                return true
+            }
+        }
+        return false
+    }
+    if (!canUseSelectedOptionAfterLastRun()) return runSelectednessSettingAlgorithm()
+    return false
 }
 
 /** Whether nothing follows this node in [select] in tree order but its own descendants. */
@@ -202,6 +264,15 @@ private fun TreeNode.isLastInListOfOptionsOf(select: TreeNode): Boolean {
         node = parent
     }
     return true
+}
+
+internal fun TreeNode.isAncestorOf(node: TreeNode): Boolean {
+    var ancestor = node.parent
+    while (ancestor != null) {
+        if (ancestor === this) return true
+        ancestor = ancestor.parent
+    }
+    return false
 }
 
 /**
@@ -219,9 +290,11 @@ internal fun TreeNode.resetSelectedness(hasChanged: Boolean) {
  * Updates this option element's cached nearest ancestor select element, and returns the select elements whose
  * selectedcontent elements need updating.
  *
+ * [inserted] is the node whose insertion runs the steps, if it is an insertion.
+ *
  * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#update-an-option's-nearest-ancestor-select
  */
-internal fun TreeNode.updateNearestAncestorSelect(): List<TreeNode> {
+internal fun TreeNode.updateNearestAncestorSelect(inserted: TreeNode? = null): List<TreeNode> {
     // Steps 1-3:
     val oldSelect = cachedNearestAncestorSelect
     val newSelect = nearestAncestorSelect()
@@ -235,8 +308,9 @@ internal fun TreeNode.updateNearestAncestorSelect(): List<TreeNode> {
     for (select in listOf(oldSelect, newSelect)) {
         if (select == null) continue
         val hasChanged =
-            if (select === newSelect) select.runSelectednessSettingAlgorithmFor(this)
-            else select.runSelectednessSettingAlgorithm()
+            if (select === newSelect && inserted != null) select.runSelectednessSettingAlgorithmAfterInserting(this, inserted)
+            else if (select === newSelect) select.runSelectednessSettingAlgorithm()
+            else select.runSelectednessSettingAlgorithmAfterRemoving(this)
         if (selectedness || hasChanged) result += select
     }
 
@@ -278,7 +352,7 @@ private inline fun TreeNode.forEachOptionInclusiveDescendant(action: (TreeNode) 
  */
 internal fun optionNodeInserted(inserted: TreeNode) {
     markMayContainOption(inserted)
-    inserted.forEachOptionInclusiveDescendant { it.updateNearestAncestorSelect() }
+    inserted.forEachOptionInclusiveDescendant { it.updateNearestAncestorSelect(inserted) }
 }
 
 /**

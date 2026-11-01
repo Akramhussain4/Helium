@@ -57,6 +57,38 @@ private val TreeNode.id: String?
     get() = if (type != NodeType.ELEMENT) null else
         attributes.firstOrNull { it.namespace == null && it.localName == "id" }?.value?.ifEmpty { null }
 
+/**
+ * Compares [a] and [b] by tree order: negative if [a] comes first. They must be in the same tree.
+ *
+ * Spec: https://dom.spec.whatwg.org/#concept-tree-order
+ */
+internal fun compareTreeOrder(a: TreeNode, b: TreeNode): Int {
+    if (a === b) return 0
+    val aChain = generateSequence(a) { it.parent }.toList().asReversed()
+    val bChain = generateSequence(b) { it.parent }.toList().asReversed()
+    var depth = 0
+    while (depth < aChain.size && depth < bChain.size && aChain[depth] === bChain[depth]) depth++
+    // An ancestor comes before its descendants
+    if (depth == aChain.size) return -1
+    if (depth == bChain.size) return 1
+    // Look for the two siblings from both ends of their parent's children at once, which tells which comes first in
+    // time proportional to how far the nearer of them is from an end, rather than to where they are
+    val aChild = aChain[depth]
+    val bChild = bChain[depth]
+    val siblings = aChain[depth - 1].children
+    var front = 0
+    var back = siblings.lastIndex
+    while (front <= back) {
+        val first = siblings[front++]
+        if (first === aChild) return -1
+        if (first === bChild) return 1
+        val last = siblings[back--]
+        if (last === aChild) return 1
+        if (last === bChild) return -1
+    }
+    throw IllegalStateException("Nodes are not siblings of their common ancestor's children")
+}
+
 /** Calls [action] with this node and each of its descendants, in tree order, without recursing. */
 private inline fun TreeNode.forEachInclusiveDescendant(action: (TreeNode) -> Unit) {
     val pending = ArrayDeque<TreeNode>()
@@ -128,19 +160,6 @@ internal class FormOwnerIndex(private val document: TreeNode) {
         }
         if (id in firstElementById) return firstElementById[id]
         return byId[id]?.minWithOrNull(::compareTreeOrder).also { firstElementById[id] = it }
-    }
-
-    private fun compareTreeOrder(a: TreeNode, b: TreeNode): Int {
-        if (a === b) return 0
-        val aChain = generateSequence(a) { it.parent }.toList().asReversed()
-        val bChain = generateSequence(b) { it.parent }.toList().asReversed()
-        var depth = 0
-        while (depth < aChain.size && depth < bChain.size && aChain[depth] === bChain[depth]) depth++
-        // An ancestor comes before its descendants
-        if (depth == aChain.size) return -1
-        if (depth == bChain.size) return 1
-        val parent = aChain[depth - 1]
-        return parent.children.indexOf(aChain[depth]).compareTo(parent.children.indexOf(bChain[depth]))
     }
 }
 

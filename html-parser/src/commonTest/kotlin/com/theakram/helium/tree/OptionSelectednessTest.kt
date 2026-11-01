@@ -221,6 +221,48 @@ internal class OptionSelectednessTest {
     }
 
     @Test
+    fun `a selected option inserted before the selected option is deselected`() {
+        val select = body("<select><option>a<option selected>b</select>").first("select")
+        select.insertBefore(option("c", "selected" to ""), select.firstChild)
+
+        assertEquals("c a b*", select.options())
+    }
+
+    @Test
+    fun `the last of the selected options in an inserted subtree is selected`() {
+        val select = body("<select><option selected>a</select>").first("select")
+        val group = TreeNode.createElement("optgroup")
+        group.appendChild(option("b", "selected" to ""))
+        group.appendChild(option("c", "selected" to ""))
+        group.appendChild(option("d"))
+        select.insertBefore(group, select.firstChild)
+
+        assertEquals("b c d a*", select.options())
+        select.removeChild(select.children.last())
+
+        // Taking a out leaves none selected, since b and c were deselected, so the first enabled option is
+        assertEquals("b* c d", select.options())
+    }
+
+    @Test
+    fun `removing the selected option each time selects the next one`() {
+        val select = body("<select><option disabled>a<option>b<option>c<option>d</select>").first("select")
+        select.removeChild(select.children[1])
+        assertEquals("a c* d", select.options())
+        select.removeChild(select.children[1])
+        assertEquals("a d*", select.options())
+    }
+
+    @Test
+    fun `options moved by the adoption agency algorithm end up as the spec says`() {
+        // The moves out of the div select each option in turn, and a removed option stays selected, so they all come
+        // back selected, and the last of them wins
+        val body = body("<select><b><div><option>a<option>b<option>c</b></select>")
+
+        assertEquals("a b c*", body.first("select").options())
+    }
+
+    @Test
     fun `appending options gives the same selectedness as running the whole algorithm`() {
         val random = Random(42)
         repeat(500) { round ->
