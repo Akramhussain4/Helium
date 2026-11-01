@@ -245,24 +245,33 @@ internal object InBody : InsertionMode {
             "optgroup" -> SpecialElementHandler.handleOptgroupStartTag(treeBuilder, token.htmlAttributes())
 
             in RB_RTC -> {
+                // "If the stack of open elements has a ruby element in scope, then generate implied end tags."
                 if (treeBuilder.hasElementInScope("ruby")) {
                     InBodyHelpers.generateImpliedEndTags(treeBuilder)
-                    if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "ruby")) {
-                        treeBuilder.parseError()
-                    }
                 }
+                // "If the current node is not now a ruby element, this is a parse error." This is a sentence of
+                // its own, so it applies whether or not a ruby element is in scope.
+                if (!InBodyHelpers.isHtmlElement(treeBuilder.currentNode, "ruby")) {
+                    treeBuilder.parseError()
+                }
+                // "Insert an HTML element for the token."
                 treeBuilder.insertElement(tagName, attributes = token.htmlAttributes())
                 continueInCurrentMode()
             }
 
             in RP_RT -> {
+                // "If the stack of open elements has a ruby element in scope, then generate implied end tags,
+                // except for rtc elements."
                 if (treeBuilder.hasElementInScope("ruby")) {
                     InBodyHelpers.generateImpliedEndTags(treeBuilder, except = "rtc")
-                    val currentNode = treeBuilder.currentNode
-                    if (currentNode.namespace != Namespaces.HTML || currentNode.localName !in RTC_RUBY) {
-                        treeBuilder.parseError()
-                    }
                 }
+                // "If the current node is not now a rtc element or a ruby element, this is a parse error." This is
+                // a sentence of its own, so it applies whether or not a ruby element is in scope.
+                val currentNode = treeBuilder.currentNode
+                if (currentNode.namespace != Namespaces.HTML || currentNode.localName !in RTC_RUBY) {
+                    treeBuilder.parseError()
+                }
+                // "Insert an HTML element for the token."
                 treeBuilder.insertElement(tagName, attributes = token.htmlAttributes())
                 continueInCurrentMode()
             }
