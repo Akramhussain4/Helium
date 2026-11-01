@@ -342,7 +342,7 @@ internal class TableModesParseErrorTest {
     }
 
     @Test
-    fun `characters after a colgroup are reprocessed in table, without an error of their own`() {
+    fun `characters after a colgroup are reprocessed in table without an error of their own`() {
         // The colgroup's "anything else" pops it without an error; the pending x then gives in table text's error
         // and in table's "anything else" error
         val result = parse("<table><colgroup>x</table>")
@@ -363,7 +363,7 @@ internal class TableModesParseErrorTest {
     }
 
     @Test
-    fun `col, tr and cell start tags in template contents switch to their table modes`() {
+    fun `col and tr and cell start tags in template contents switch to their table modes`() {
         assertEquals("| <template>\n|   content\n|     <col>", parse("<template><col></template>").head)
         assertEquals("| <template>\n|   content\n|     <tr>", parse("<template><tr></template>").head)
         assertEquals("| <template>\n|   content\n|     <td>", parse("<template><td></template>").head)
