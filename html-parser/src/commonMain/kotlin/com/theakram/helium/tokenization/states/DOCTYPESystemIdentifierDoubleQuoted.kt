@@ -31,6 +31,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#doctype-system-identifier-(double-quoted)-state
+ */
 internal data object DOCTYPESystemIdentifierDoubleQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         val builder = tokenizer.docTypeBuilder

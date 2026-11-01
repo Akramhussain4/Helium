@@ -29,6 +29,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.flushCodePoints
 import com.theakram.helium.util.isAsciiHexDigit
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#hexadecimal-character-reference-start-state
+ */
 internal data object HexadecimalCharacterReferenceStart : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

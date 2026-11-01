@@ -30,6 +30,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#before-doctype-public-identifier-state
+ */
 internal data object BeforeDOCTYPEPublicIdentifier : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         val builder = tokenizer.docTypeBuilder

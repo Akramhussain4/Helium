@@ -33,6 +33,9 @@ import com.theakram.helium.util.isAsciiUpperAlpha
 import com.theakram.helium.util.appendUnicode
 import com.theakram.helium.util.isWhiteSpace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tag-name-state
+ */
 internal data object TagName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

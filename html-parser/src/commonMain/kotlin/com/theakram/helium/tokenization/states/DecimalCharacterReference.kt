@@ -30,6 +30,9 @@ import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isAsciiDigit
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#decimal-character-reference-state
+ */
 internal data object DecimalCharacterReference : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

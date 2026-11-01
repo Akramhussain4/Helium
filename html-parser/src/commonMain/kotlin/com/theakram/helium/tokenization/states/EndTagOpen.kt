@@ -31,6 +31,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isAsciiAlpha
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#end-tag-open-state
+ */
 internal data object EndTagOpen : TokenizationState {
 
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {

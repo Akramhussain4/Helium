@@ -31,6 +31,9 @@ import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#attribute-value-(single-quoted)-state
+ */
 internal data object AttributeValueSingleQuoted : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

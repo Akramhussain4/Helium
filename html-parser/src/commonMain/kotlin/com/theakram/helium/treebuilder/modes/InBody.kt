@@ -359,9 +359,13 @@ internal object InBody : InsertionMode {
             return continueInCurrentMode()
         }
 
+        // Otherwise, step 1: "Let htmlElement be the top element of the stack of open elements."
         val htmlElement = stack.first()
-        // "Check to see if the attribute is already present on" it; "if it is not, add the attribute and its
-        // corresponding value". Token attributes have no namespace, and their names are lowercase already.
+        // Otherwise, step 2: "For each attribute on the token:"
+        // Step 2.1: Helium has no parser sanitizer configuration, so no attribute is skipped
+        // Step 2.2: "If htmlElement does not have an attribute whose name is attribute's name, then add attribute's
+        // name and its corresponding value to htmlElement." Token attributes have no namespace or prefix, so their
+        // name is their local name.
         token.attributes.forEach { (name, value) ->
             if (htmlElement.attributes.none { it.namespace == null && it.localName == name }) {
                 htmlElement.appendAttribute(Attribute(localName = name, value = value))
@@ -385,10 +389,15 @@ internal object InBody : InsertionMode {
             return continueInCurrentMode()
         }
 
+        // Otherwise, step 1:
         treeBuilder.setFramesetNotOk()
+        // Otherwise, step 2: "Let bodyElement be the body element (the second element) on the stack of open elements."
         val bodyElement = stack[1]
-        // "Check to see if the attribute is already present on" it; "if it is not, add the attribute and its
-        // corresponding value". Token attributes have no namespace, and their names are lowercase already.
+        // Otherwise, step 3: "For each attribute on the token:"
+        // Step 3.1: Helium has no parser sanitizer configuration, so no attribute is skipped
+        // Step 3.2: "If bodyElement does not have an attribute whose name is attribute's name, then add attribute's
+        // name and its corresponding value to bodyElement." Token attributes have no namespace or prefix, so their
+        // name is their local name.
         token.attributes.forEach { (name, value) ->
             if (bodyElement.attributes.none { it.namespace == null && it.localName == name }) {
                 bodyElement.appendAttribute(Attribute(localName = name, value = value))

@@ -116,8 +116,10 @@ internal class Tokenizer(
      * noncharacter-in-input-stream parse errors and any occurrences of controls other than ASCII whitespace and
      * U+0000 NULL characters are control-character-in-input-stream parse errors."
      *
-     * Each one is reported when the tokenizer first reaches it, so the errors come in the order of the input, and a
-     * character that a state only looks ahead at is reported once it is consumed.
+     * Each one is reported when the tokenizer's position first reaches it, before the state there runs, so the errors
+     * come in the order of the input. A character that a state only looks ahead at is reported when the position
+     * reaches it, or, if the state skips past it, once the position passes it. The errors of a state that doesn't
+     * consume its character, such as the numeric character reference end state, come after that character's.
      *
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#preprocessing-the-input-stream
      */

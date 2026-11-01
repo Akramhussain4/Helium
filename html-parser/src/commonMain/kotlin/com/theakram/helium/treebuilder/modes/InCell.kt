@@ -37,7 +37,7 @@ import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 
 /**
- * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-incell
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intd
  */
 internal object InCell : InsertionMode {
 

@@ -32,8 +32,7 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 
 /**
- * The data state is the state when the parser is not in any special state.
- * https://html.spec.whatwg.org/multipage/parsing.html#data-state
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#data-state
  */
 internal data object Data : TokenizationState {
 
