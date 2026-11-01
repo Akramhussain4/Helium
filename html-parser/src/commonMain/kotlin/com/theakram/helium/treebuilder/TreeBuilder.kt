@@ -413,8 +413,21 @@ internal class TreeBuilder(
         onSwitchTokenizerState(stateType)
     }
 
+    /**
+     * The insertion mode that "reset the insertion mode appropriately" switches to. An insertion mode that resets it
+     * returns [switchTo] or [reprocessIn] with this mode, so that every change of insertion mode while processing a
+     * token goes through the transition that the dispatcher applies.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#reset-the-insertion-mode-appropriately
+     */
+    internal fun appropriateInsertionMode(): InsertionMode = insertionModeResetter.reset()
+
+    /**
+     * "Reset the insertion mode appropriately" outside of processing a token, as the fragment parsing algorithm does
+     * before it starts tokenizing. Insertion modes return a transition to [appropriateInsertionMode] instead.
+     */
     internal fun resetInsertionModeAppropriately() {
-        insertionMode = insertionModeResetter.reset()
+        insertionMode = appropriateInsertionMode()
     }
 
     internal fun createImplicitElement(tagName: String): TreeNode =
