@@ -108,8 +108,7 @@ class WptSerializationTest {
         )
         for ((namespace, qualifiedName, expected) in cases) {
             val svg = element("svg")
-            val prefix = qualifiedName.substringBefore(':', "").ifEmpty { null }
-            svg.setAttributeNS(namespace, prefix, qualifiedName.substringAfter(':'), "test")
+            svg.setAttributeNS(namespace, qualifiedName, "test")
             val span = element("span", svg)
             assertEquals(expected, span.innerHtml(), qualifiedName)
             assertEquals("<span>$expected</span>", span.outerHtml(), qualifiedName)
@@ -165,7 +164,10 @@ class WptSerializationTest {
         }
     }
 
-    /** outerHTML.html: an element made with createElement has an end tag unless it is void. */
+    /**
+     * outerHTML.html: an element made with createElement has an end tag unless it is void. The lists are common.js's
+     * HTML5_ELEMENTS, without and with HTML5_VOID_ELEMENTS.
+     */
     @Test
     fun `outer html of created elements`() {
         val voids = listOf(
@@ -175,11 +177,11 @@ class WptSerializationTest {
         val nonVoids = listOf(
             "a", "abbr", "address", "article", "aside", "audio", "b", "bdi", "bdo", "blockquote", "body", "button",
             "canvas", "caption", "cite", "code", "colgroup", "data", "datalist", "dd", "del", "details", "dfn",
-            "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "head",
-            "header", "html", "i", "iframe", "ins", "kbd", "label", "legend", "li", "main", "map", "mark", "menu",
-            "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "picture", "pre",
-            "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "search", "section", "select", "slot",
-            "small", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template",
+            "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3",
+            "h4", "h5", "h6", "head", "header", "html", "i", "iframe", "ins", "kbd", "label", "legend", "li", "main",
+            "map", "mark", "menu", "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p",
+            "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "search", "section", "select", "slot",
+            "small", "span", "strong", "style", "sub", "sup", "summary", "table", "tbody", "td", "template",
             "textarea", "tfoot", "th", "thead", "time", "title", "tr", "u", "ul", "var", "video"
         )
         for (name in voids) assertEquals("<$name>", element(name).outerHtml(), name)
@@ -194,7 +196,10 @@ class WptSerializationTest {
         assertEquals("<span id=\"test\"><a b=\"&lt;&gt;\"></a></span>", span.outerHtml())
     }
 
-    /** processing-instructions.html */
+    /**
+     * processing-instructions.html. Its third case moves a processing instruction from an XML document, which is the
+     * second case here, since Helium has no XML documents.
+     */
     @Test
     fun `processing instructions`() {
         assertEquals("<?target ?>", element("div", TreeNode.createProcessingInstruction("target", "")).innerHtml())
@@ -213,7 +218,10 @@ class WptSerializationTest {
         assertEquals("<svg xmlns=\"http://www.w3.org/2000/svg\">&lt;img&gt;</svg>", svg.outerHtml())
     }
 
-    /** template.html */
+    /**
+     * template.html. Its second case also adopts the template contents into a new document, which the DOM doesn't
+     * do for a fragment with a host, so that step is left out.
+     */
     @Test
     fun `template contents are serialized`() {
         val template = div("<div><template><table><td></table></template></div>").firstChild!!.firstChild!!
@@ -249,8 +257,11 @@ class WptSerializationTest {
 
     /**
      * escaping.html: noscript's text is escaped unless scripting is enabled for it, which needs a document with a
-     * browsing context. A browser's main document has one, and a template's contents, a DOMParser document and a
-     * createHTMLDocument document don't, which [HTMLParser] models with scriptingEnabled set to false.
+     * browsing context. A browser's main document has one, which [HTMLParser]'s default models. A DOMParser or
+     * createHTMLDocument document has none, which `scriptingEnabled = false` models, and template contents have none
+     * either, which the serializer knows by itself. insertAdjacentHTML, createContextualFragment, a
+     * createHTMLDocument document's document.write and XMLHttpRequest are other ways into the same parses, so they
+     * aren't repeated.
      */
     @Test
     fun `noscript text is escaped where scripting is disabled`() {
@@ -262,9 +273,9 @@ class WptSerializationTest {
         assertEquals(unescaped, div.firstChild!!.firstChild!!.data)
         assertEquals(unescaped, div.firstChild!!.innerHtml())
 
-        // template.innerHTML. The test expects the markup to be parsed with scripting disabled, as browsers parse
-        // into a template's contents, while Helium's fragment parser, like the spec's, takes the scripting mode from
-        // the template's own document. That is the parser's business, so the markup is parsed the way the test
+        // template.innerHTML. The test expects the markup to be parsed with scripting disabled. The spec, which
+        // Helium follows, takes the scripting mode from the template element's node document, not from the inert
+        // document its contents belong to. That is the parser's business, so the markup is parsed the way the test
         // expects, and what is checked is that serializing escapes the text even with scripting enabled.
         val template = TreeNode.createElement("template")
         val parsed = HTMLParser(scriptingEnabled = false).parseFragment("<noscript>$escaped</noscript>", template)
@@ -272,6 +283,19 @@ class WptSerializationTest {
         val noscript = template.templateContent!!.firstChild!!
         assertEquals(unescaped, noscript.firstChild!!.data)
         assertEquals(escaped, noscript.innerHtml())
+
+        // document.write on the main document, a document parse with scripting enabled
+        val written = HTMLParser().parse("<div style=\"display:none\"><noscript>$unescaped</noscript></div>")
+        val writtenNoscript = written.findChildElement("html")!!.findChildElement("body")!!.firstChild!!.firstChild!!
+        assertEquals(unescaped, writtenNoscript.firstChild!!.data)
+        assertEquals(unescaped, writtenNoscript.innerHtml())
+
+        // document.implementation.createHTMLDocument and innerHTML, in a document with no browsing context
+        val created = HTMLParser(scriptingEnabled = false)
+            .parseFragment("<pre><noscript>$escaped</noscript></pre>", TreeNode.createElement("body"))
+        val pre = created.firstChild!!
+        assertEquals(unescaped, pre.firstChild!!.firstChild!!.data)
+        assertEquals("<noscript>$escaped</noscript>", pre.innerHtml(scriptingEnabled = false))
 
         // DOMParser.parseFromString, whose document has no browsing context
         val document = HTMLParser(scriptingEnabled = false).parse("<body><noscript>$escaped</noscript></body>")
