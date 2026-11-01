@@ -52,7 +52,7 @@ internal object FragmentParser {
         input: String,
         scriptingMode: ScriptingMode = ScriptingMode.INERT,
         isContextDocumentScriptingDisabled: Boolean = false,
-        onParseError: (String, Int) -> Unit = { _, _ -> }
+        onParseError: (code: String?, position: Int) -> Unit = { _, _ -> }
     ): TreeNode {
         // Step 1:
         check(scriptingMode == ScriptingMode.INERT || scriptingMode == ScriptingMode.FRAGMENT) {
@@ -79,7 +79,8 @@ internal object FragmentParser {
             onSwitchTokenizerState = { stateType ->
                 tokenizer.switchState(stateType)
             },
-            scriptingMode = parserScriptingMode
+            scriptingMode = parserScriptingMode,
+            onParseError = { code -> onParseError(code, tokenizer.currentPosition) }
         )
         treeBuilder.contextElement = context
         tokenizer = Tokenizer(

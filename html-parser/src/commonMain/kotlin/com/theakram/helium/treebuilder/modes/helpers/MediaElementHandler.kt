@@ -22,6 +22,7 @@ internal object MediaElementHandler {
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement(tagName, attributes = attributes)
         treeBuilder.popCurrentElement()
+        treeBuilder.acknowledgeSelfClosingFlag()
         treeBuilder.setFramesetNotOk()
         return continueInCurrentMode()
     }
@@ -41,6 +42,7 @@ internal object MediaElementHandler {
         treeBuilder.reconstructActiveFormattingElements()
         treeBuilder.insertElement("input", attributes = attributes)
         treeBuilder.popCurrentElement()
+        treeBuilder.acknowledgeSelfClosingFlag()
 
         // If NOT type="hidden": set frameset-ok
         val typeAttr = attributes.find { it.localName == "type" }
@@ -56,6 +58,7 @@ internal object MediaElementHandler {
     ): InsertionModeTransition {
         treeBuilder.insertElement(tagName, attributes = attributes)
         treeBuilder.popCurrentElement()
+        treeBuilder.acknowledgeSelfClosingFlag()
         return continueInCurrentMode()
     }
 

@@ -76,7 +76,7 @@ internal object InHead : InsertionMode {
                 val attributes = InHeadHelpers.toAttributeList(token.attributes)
                 treeBuilder.insertElement(token.name, attributes = attributes)
                 treeBuilder.popCurrentElement()
-                // TODO: Acknowledge the token's self-closing flag, if it is set
+                treeBuilder.acknowledgeSelfClosingFlag()
                 continueInCurrentMode()
             }
 
@@ -84,7 +84,7 @@ internal object InHead : InsertionMode {
                 val attributes = InHeadHelpers.toAttributeList(token.attributes)
                 treeBuilder.insertElement(token.name, attributes = attributes)
                 treeBuilder.popCurrentElement()
-                // TODO: Acknowledge the token's self-closing flag, if it is set
+                treeBuilder.acknowledgeSelfClosingFlag()
                 // TODO: Handle character encoding detection (if active speculative HTML parser is null)
                 continueInCurrentMode()
             }

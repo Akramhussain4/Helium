@@ -71,7 +71,7 @@ internal object InColumnGroup : InsertionMode {
                 }
                 treeBuilder.insertElement("col", attributes = attributes)
                 treeBuilder.popCurrentElement()
-                // TODO: Acknowledge the token's self-closing flag, if it is set
+                treeBuilder.acknowledgeSelfClosingFlag()
                 continueInCurrentMode()
             }
 

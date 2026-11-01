@@ -53,7 +53,8 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
     )
     private val treeBuilder = TreeBuilder(
         onSwitchTokenizerState = ::switchTokenizerState,
-        scriptingMode = if (scriptingEnabled) ScriptingMode.NORMAL else ScriptingMode.DISABLED
+        scriptingMode = if (scriptingEnabled) ScriptingMode.NORMAL else ScriptingMode.DISABLED,
+        onParseError = { code -> handleParseError(code, tokenizer.currentPosition) }
     )
 
     /** The document produced by the most recent call to [parse]. */
@@ -61,9 +62,8 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
         get() = treeBuilder.document
 
     /**
-     * Parse errors reported by the tokenizer during the most recent call to [parse] or [parseFragment].
-     *
-     * Tree construction errors are not reported yet.
+     * The parse errors of the most recent call to [parse] or [parseFragment], in the order they occurred: both the
+     * tokenizer's and those of tree construction.
      */
     public val errors: List<ParseError>
         get() = _errors.toList()
@@ -72,7 +72,7 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
      * Parses [html] into a document tree.
      *
      * Like a browser, the parser recovers from malformed markup instead of rejecting it, recording a
-     * [ParseError] in [errors] where the tokenizer detects one.
+     * [ParseError] in [errors] for each parse error.
      */
     public fun parse(html: String): TreeNode {
         _errors.clear()
@@ -100,7 +100,7 @@ public class HTMLParser(private val scriptingEnabled: Boolean = true) {
         )
     }
 
-    private fun handleParseError(code: String, position: Int) {
+    private fun handleParseError(code: String?, position: Int) {
         _errors.add(ParseError(code, position))
     }
 

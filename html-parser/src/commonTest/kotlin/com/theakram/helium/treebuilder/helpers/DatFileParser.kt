@@ -148,11 +148,13 @@ object DatFileParser {
         }
     }
 
+    // Each line is one parse error. Some aren't in the "(line,col): description" form, such as validator.nu messages
+    // or ranges; those still count, with no position.
     private fun parseErrorLine(line: String, regex: Regex): ParseError? {
         val trimmed = line.trim()
         if (trimmed.isEmpty()) return null
 
-        val match = regex.find(trimmed) ?: return null
+        val match = regex.find(trimmed) ?: return ParseError(line = 0, column = 0, code = trimmed)
         return ParseError(
             line = match.groupValues[1].toInt(),
             column = match.groupValues[2].toInt(),

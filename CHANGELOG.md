@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Added
+
+- `HTMLParser.errors` also reports the parse errors of tree construction, including
+  `non-void-html-element-start-tag-with-trailing-solidus`
+
+### Changed
+
+- `ParseError.code` is nullable (breaking): the spec gives most tree construction parse errors no dedicated code, so
+  theirs is null
+
 ## [0.1.0]
 
 First release.

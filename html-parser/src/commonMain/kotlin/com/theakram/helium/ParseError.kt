@@ -26,15 +26,18 @@
 package com.theakram.helium
 
 /**
- * Represents a parse error encountered during HTML parsing.
+ * A parse error encountered during HTML parsing.
  *
- * @property code The error code as defined by the HTML5 specification
+ * @property code The error's code from the spec's table of parse errors, such as "eof-in-tag", or null for a parse
+ * error the spec gives no dedicated code, as for most of those of tree construction
  * @property position Where the parser was in the input when it reported the error: an index into the input, in UTF-16
  * units, after its newlines are normalized
+ *
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parse-errors
  */
 public data class ParseError(
-    val code: String,
+    val code: String?,
     val position: Int
 ) {
-    override fun toString(): String = "ParseError($code at position $position)"
+    override fun toString(): String = "ParseError(${code ?: "tree construction error"} at position $position)"
 }
