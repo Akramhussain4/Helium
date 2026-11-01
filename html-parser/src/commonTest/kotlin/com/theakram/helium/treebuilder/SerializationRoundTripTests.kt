@@ -38,8 +38,10 @@ import kotlin.test.Test
  *
  * The spec says that this doesn't always hold ("It is possible that the output of this algorithm, if parsed with an
  * HTML parser, will not return the original tree structure"), so the runs whose trees differ are recorded in
- * [KnownRoundTripDifferences] with the reason. Every other run must give the same tree, and a recorded run must give
- * a different one, so that an entry that no longer applies fails the build too.
+ * [KnownRoundTripDifferences] with the reason. Every other run must give the same tree. A recorded run must give a
+ * different one, for the recorded reason as its check sees it, so that an entry that no longer applies fails the build
+ * too. Every test run is included, the scripted ones and the known tree construction failures too: the round trip
+ * compares Helium's trees with each other, not with the expected ones.
  */
 internal class SerializationRoundTripTests {
 
@@ -58,11 +60,15 @@ internal class SerializationRoundTripTests {
                 val firstTree = first.treeString()
                 val secondTree = second.treeString()
                 val known = KnownRoundTripDifferences[id]
-                when {
-                    known == null && firstTree == secondTree -> roundTripped++
-                    known != null && firstTree != secondTree -> Unit
-                    else -> unexpected += "$id: " +
-                        (if (known == null) "the tree differs after a round trip" else "recorded, but round trips") +
+                val problem = when {
+                    known == null && firstTree == secondTree -> null.also { roundTripped++ }
+                    known == null -> "the tree differs after a round trip"
+                    firstTree == secondTree -> "recorded, but round trips"
+                    !known.appliesTo(first, serialized, second) -> "the tree differs, but not for the recorded reason"
+                    else -> null
+                }
+                if (problem != null) {
+                    unexpected += "$id: $problem" +
                         "\n  input:      ${test.data.escaped()}" +
                         "\n  serialized: ${serialized.escaped()}" +
                         "\n  parsed:\n$firstTree" +

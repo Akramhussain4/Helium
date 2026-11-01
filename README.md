@@ -128,9 +128,11 @@ Conformance is measured against the standard conformance suite for HTML parsers,
   scripting enabled and disabled where the test allows both. The rest are listed with their reasons in
   [`KnownFailures`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/helpers/KnownFailures.kt).
   The `scripted_*` tests aren't run, since they need a JavaScript engine.
-- **Serialization:** serializing the tree of each tree construction test run and parsing the result gives the same
-  tree in 3,729 of the 3,904 runs. The other 175 are the cases where the spec says serializing doesn't round-trip,
-  such as misnested `<a>` elements, `<plaintext>` and doctype identifiers, listed with the spec's reasons in
+- **Serialization:** serializing the tree that Helium parses for each tree construction test run and parsing the
+  result gives the same tree in 3,729 of the 3,904 runs. These runs include the `scripted_*` tests and the known
+  failures, since the round trip only compares Helium's own trees. The other 175 runs don't round-trip, and the spec's
+  rules say why: misnested `<a>` elements, `<plaintext>`, doctype identifiers and a few others. Each is listed with
+  its reason in
   [`KnownRoundTripDifferences`](html-parser/src/commonTest/kotlin/com/theakram/helium/treebuilder/KnownRoundTripDifferences.kt).
 
 Not supported yet:
