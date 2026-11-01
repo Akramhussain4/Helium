@@ -51,6 +51,20 @@ class SerializationTest {
     }
 
     @Test
+    fun `whitespace and other quotes in attribute values are written as is`() {
+        val p = element("p")
+        p.setAttribute("title", "a=b c\td\ne\rf\u000Cg\u000Bh'i")
+        assertEquals("<p title=\"a=b c\td\ne\rf\u000Cg\u000Bh'i\"></p>", p.outerHtml())
+    }
+
+    @Test
+    fun `a doctype keeps the case of its name`() {
+        val document = TreeNode.createDocument()
+        document.appendChild(TreeNode.createDocumentType("HTML"))
+        assertEquals("<!DOCTYPE HTML>", document.innerHtml())
+    }
+
+    @Test
     fun `escaping keeps the text between the characters it replaces`() {
         assertEquals("&amp;&amp;x&lt;&lt;", element("p", Namespaces.HTML, TreeNode.createText("&&x<<")).innerHtml())
         assertEquals("", element("p", Namespaces.HTML, TreeNode.createText("")).innerHtml())
@@ -228,8 +242,31 @@ class SerializationTest {
         val fragment = TreeNode.createDocumentFragment()
         fragment.appendChild(TreeNode.createText("a<b"))
         fragment.appendChild(element("i"))
-        assertEquals("a<b<i></i>", element("script", Namespaces.HTML, fragment).innerHtml())
+        val script = element("script", Namespaces.HTML, fragment)
+        assertEquals("a<b<i></i>", script.innerHtml())
+        assertEquals("a<b<i></i>", fragment.innerHtml())
+        assertEquals("a<b<i></i>", fragment.outerHtml())
+        assertEquals("a<b", fragment.children[0].outerHtml())
         assertEquals("<div>a&lt;b<i></i></div>", element("div", Namespaces.HTML, fragment).outerHtml())
+        assertEquals("a&lt;b", fragment.children[0].outerHtml())
+    }
+
+    @Test
+    fun `noscript in template contents set by hand is escaped from every node`() {
+        val template = TreeNode.createElement("template")
+        template.templateContent = TreeNode.createDocumentFragment()
+        val noscript = element("noscript", Namespaces.HTML, TreeNode.createText("<b>"))
+        template.templateContent!!.appendChild(noscript)
+        assertEquals("<noscript>&lt;b&gt;</noscript>", template.innerHtml())
+        assertEquals("&lt;b&gt;", noscript.innerHtml())
+        assertEquals("<noscript>&lt;b&gt;</noscript>", noscript.outerHtml())
+    }
+
+    @Test
+    fun `an attribute in the empty namespace has no namespace`() {
+        val p = element("p")
+        p.attributes.add(Attribute(namespace = "", prefix = "q", localName = "x", value = "1"))
+        assertEquals("<p x=\"1\"></p>", p.outerHtml())
     }
 
     @Test
