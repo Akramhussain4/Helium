@@ -2,3 +2,7 @@
 gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
+
+# Test data is compared byte for byte and some cases contain a literal CR, so never convert
+# its line endings (Windows checkouts would otherwise add a CR to every line)
+*.dat -text diff
