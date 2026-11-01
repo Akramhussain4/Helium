@@ -51,8 +51,26 @@ public class TreeNode(
     public var quirksMode: QuirksMode? = null,
     public var parserCannotChangeMode: Boolean = false,
     public var isIframeSrcdoc: Boolean = false,
-    public var templateContent: TreeNode? = null
+    templateContent: TreeNode? = null
 ) {
+
+    /**
+     * A template element's template contents, the document fragment its parsed children go in. Setting it makes this
+     * node the fragment's host, so the fragment's nodes belong to an inert template document, as those of the
+     * contents [createElement] gives a template do.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/scripting.html#template-contents
+     */
+    public var templateContent: TreeNode? = null
+        set(value) {
+            field?.let { if (it.host === this) it.host = null }
+            field = value
+            value?.host = this
+        }
+
+    init {
+        this.templateContent = templateContent
+    }
 
     /**
      * The data while [appendData] appends to it, so that appending doesn't copy what is there each time. Only one of
@@ -407,6 +425,41 @@ public class TreeNode(
         attributeIndexByNamespace(namespace, localName) != -1
 
     /**
+     * This node's children serialized as HTML, as the DOM's innerHTML getter gives them: the HTML fragment
+     * serialization algorithm's output. A template element's contents are serialized in place of its children. A void
+     * element, such as img, gives the empty string, and so do nodes that have no children, such as text.
+     *
+     * [scriptingEnabled] says whether scripting is enabled, which decides whether text in a noscript element is
+     * written as is or escaped. Pass the value the tree was parsed with, [com.theakram.helium.HTMLParser]'s
+     * `scriptingEnabled`. The default `true` matches the parser's default. The tree doesn't record the flag, and
+     * passing `true` for a tree parsed with `false` is unsafe: the parser then decoded the noscript's text as
+     * markup, so text such as `</noscript><img onerror=...>` is written unescaped, and a browser parsing the output
+     * creates the img element.
+     *
+     * Template contents are always serialized as if scripting were disabled. The spec enables scripting only for a
+     * node whose node document has a browsing context, and template contents belong to an inert document that has
+     * none. Helium has no shadow DOM, so no shadow roots are serialized.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-fragment-serialisation-algorithm
+     */
+    public fun innerHtml(scriptingEnabled: Boolean = true): String =
+        HtmlSerializer(scriptingEnabled).serializeChildren(this)
+
+    /**
+     * This node serialized as HTML. For an element, that is its start tag, its contents as [innerHtml] gives them,
+     * and its end tag, as the DOM's outerHTML getter gives them. A void element has no contents or end tag.
+     *
+     * The DOM defines outerHTML only for elements. Here a text, CDATA section, comment, processing instruction or
+     * doctype node is serialized as [innerHtml] serializes it in its parent, so text in a script element is written
+     * as is. A document or document fragment has no markup of its own, so it is serialized as its children.
+     * [scriptingEnabled] is as for [innerHtml].
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#dom-element-outerhtml
+     */
+    public fun outerHtml(scriptingEnabled: Boolean = true): String =
+        HtmlSerializer(scriptingEnabled).serializeNode(this)
+
+    /**
      * Serialize to html5lib tree format for testing.
      * Format: "| " + "  " per nesting level + node representation
      */
@@ -519,7 +572,7 @@ public class TreeNode(
             )
             // Per spec, template elements have a content property that is a DocumentFragment
             if (namespace == Namespaces.HTML && localName == "template") {
-                element.templateContent = createDocumentFragment().also { it.host = element }
+                element.templateContent = createDocumentFragment()
             }
             return element
         }
