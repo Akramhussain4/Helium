@@ -177,6 +177,35 @@ public class TreeNode(
     internal var formOwnerIndex: FormOwnerIndex? = null
 
     /**
+     * Whether this option element is selected. Helium keeps it up to date as the HTML spec says when nodes are
+     * inserted and removed and attributes added through TreeNode's methods, as it does [formOwner].
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#concept-option-selectedness
+     */
+    internal var selectedness: Boolean = false
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#concept-option-dirtiness
+     */
+    internal var dirtiness: Boolean = false
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#cached-nearest-ancestor-select-element
+     */
+    internal var cachedNearestAncestorSelect: TreeNode? = null
+
+    /**
+     * For a select element, whether the selectedness setting algorithm has run for it, and the option it left
+     * selected, so that an option appended to it needn't go through its whole list of options.
+     */
+    internal var hasRunSelectednessSettingAlgorithm: Boolean = false
+    internal var selectedOptionAfterLastRun: TreeNode? = null
+
+    // Set once this node or a descendant is an option element, so that inserting and removing nodes can skip the
+    // subtrees without one. Like mayContainFormAssociatedElement, it isn't cleared.
+    internal var mayContainOption: Boolean = false
+
+    /**
      * Spec: https://dom.spec.whatwg.org/#concept-tree-root
      */
     internal val root: TreeNode
@@ -233,7 +262,8 @@ public class TreeNode(
     /**
      * Inserts [newChild] before [referenceChild], or last if it is null, first removing it from its parent, as the
      * DOM's insert does, and running the insertion and removing steps that Helium models: those that keep form owners
-     * up to date. Unlike the DOM, a document fragment is inserted as a node, not by moving its children.
+     * and the selectedness of option elements up to date. Unlike the DOM, a document fragment is inserted as a node,
+     * not by moving its children.
      *
      * Spec: https://dom.spec.whatwg.org/#concept-node-pre-insert
      */
@@ -256,6 +286,7 @@ public class TreeNode(
         children.add(index, newChild)
         newChild.parent = this
         formOwnerNodeInserted(newChild)
+        optionNodeInserted(newChild)
     }
 
     public fun removeChild(child: TreeNode) {
@@ -265,6 +296,7 @@ public class TreeNode(
             child.parent = null
             child.rootNodeDocument = document
             formOwnerNodeRemoved(child, oldRoot)
+            optionNodeRemoved(child)
         } else {
             throw IllegalArgumentException("Node is not a child of this node")
         }
@@ -329,7 +361,7 @@ public class TreeNode(
         if (index != -1) {
             val old = attributes[index]
             attributes[index] = old.copy(value = value)
-            formOwnerAttributeChanged(old.namespace, old.localName, old.value, value)
+            attributeChanged(old.namespace, old.localName, old.value, value)
             return
         }
         val localName = normalizedQualifiedName(qualifiedName)
@@ -362,7 +394,7 @@ public class TreeNode(
         if (index != -1) {
             val old = attributes[index]
             attributes[index] = old.copy(value = value)
-            formOwnerAttributeChanged(old.namespace, old.localName, old.value, value)
+            attributeChanged(old.namespace, old.localName, old.value, value)
         } else {
             val attributeNamespace = namespace?.ifEmpty { null }
             appendAttribute(
@@ -378,7 +410,13 @@ public class TreeNode(
      */
     internal fun appendAttribute(attribute: Attribute) {
         attributes.add(attribute)
-        formOwnerAttributeChanged(attribute.namespace, attribute.localName, null, attribute.value)
+        attributeChanged(attribute.namespace, attribute.localName, null, attribute.value)
+    }
+
+    /** The attribute change steps Helium models. */
+    private fun attributeChanged(namespace: String?, localName: String, oldValue: String?, newValue: String?) {
+        formOwnerAttributeChanged(namespace, localName, oldValue, newValue)
+        selectednessAttributeChanged(namespace, localName, oldValue, newValue)
     }
 
     /**
@@ -520,6 +558,13 @@ public class TreeNode(
             // Per spec, template elements have a content property that is a DocumentFragment
             if (namespace == Namespaces.HTML && localName == "template") {
                 element.templateContent = createDocumentFragment().also { it.host = element }
+            }
+            // "Except where otherwise specified, when the element is created, its selectedness must be set to true if
+            // the element has a selected attribute."
+            if (element.isHtmlElement("option") &&
+                element.attributes.any { it.namespace == null && it.localName == "selected" }
+            ) {
+                element.selectedness = true
             }
             return element
         }
