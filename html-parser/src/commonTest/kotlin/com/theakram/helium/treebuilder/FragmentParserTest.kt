@@ -26,6 +26,7 @@
 package com.theakram.helium.treebuilder
 
 import com.theakram.helium.HTMLParser
+import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.QuirksMode
 import com.theakram.helium.tree.TreeNode
@@ -145,5 +146,43 @@ internal class FragmentParserTest {
         val nodes = FragmentParser.parseFragment(div, "<p><table>").children
 
         assertEquals("table", nodes.single().children.single().localName)
+    }
+
+    @Test
+    fun `the context's start tag token has its local name and its attributes by qualified name`() {
+        val context = TreeNode.createElement(
+            localName = "annotation-xml",
+            namespace = Namespaces.MATHML,
+            attributes = listOf(
+                Attribute(localName = "encoding", value = "text/html"),
+                Attribute(Namespaces.XLINK, "xlink", "href", "a"),
+                // A second attribute with the same qualified name in another namespace: the first is kept
+                Attribute("urn:x", "xlink", "href", "b")
+            )
+        )
+
+        val token = FragmentParser.startTagTokenOf(context)
+
+        assertEquals("annotation-xml", token.name)
+        assertEquals(mapOf("encoding" to "text/html", "xlink:href" to "a"), token.attributes)
+    }
+
+    @Test
+    fun `an annotation-xml context is an HTML integration point by its start tag token's encoding`() {
+        fun parse(encoding: Attribute) = FragmentParser.parseFragment(
+            TreeNode.createElement("annotation-xml", Namespaces.MATHML, attributes = listOf(encoding)),
+            "<foo>"
+        )
+
+        // foo is not a breakout tag, so it is inserted in the MathML namespace unless the context is an HTML
+        // integration point. An XLink attribute's qualified name is xlink:encoding, which the token has no use for.
+        assertEquals(
+            Namespaces.HTML,
+            parse(Attribute(localName = "encoding", value = "text/html")).children.single().namespace
+        )
+        assertEquals(
+            Namespaces.MATHML,
+            parse(Attribute(Namespaces.XLINK, "xlink", "encoding", "text/html")).children.single().namespace
+        )
     }
 }

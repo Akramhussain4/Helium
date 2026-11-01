@@ -123,7 +123,7 @@ internal object InForeignContent : InsertionMode {
             val node = treeBuilder.currentNode
             if (node.namespace == Namespaces.HTML ||
                 IntegrationPoints.isMathMLTextIntegrationPoint(node) ||
-                IntegrationPoints.isHTMLIntegrationPoint(node)
+                treeBuilder.isHTMLIntegrationPoint(node)
             ) {
                 break
             }
