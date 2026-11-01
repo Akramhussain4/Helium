@@ -206,9 +206,8 @@ public class TreeNode(
      */
     internal var selectedcontentDisabled: Boolean = false
 
-    // For a select element, the selectedcontent elements whose disabledness was last recalculated with it as their
-    // nearest select ancestor, which updating its selectedcontent elements narrows down to those still in it
-    internal var registeredSelectedcontents: MutableList<TreeNode>? = null
+    // For a select element, its enabled selectedcontent descendants in tree order, or null if they need finding again
+    internal var selectedcontentsInTreeOrder: List<TreeNode>? = null
 
     // Set once this node or a descendant is an option or selectedcontent element, so that inserting and removing nodes
     // can skip the subtrees without one. Like mayContainFormAssociatedElement, they aren't cleared.
@@ -291,25 +290,49 @@ public class TreeNode(
         }
         // "If referenceChild is node, then set referenceChild to node's next sibling"
         val reference = if (referenceChild === newChild) newChild.nextSibling else referenceChild
-        newChild.parent?.removeChild(newChild)
-        val index = if (reference == null) children.size else children.indexOf(reference)
-        children.add(index, newChild)
-        newChild.parent = this
-        formOwnerNodeInserted(newChild)
-        selectNodeInserted(newChild)
+        // Moving a node, or inserting option or selectedcontent elements, can queue selectedcontent updates, which
+        // wait for the insertion to finish. Other insertions skip the walk up to the root this needs.
+        val scope = if (newChild.parent != null || newChild.mayContainSelectPart()) root else null
+        scope?.let { it.mutationDepth++ }
+        try {
+            newChild.parent?.removeChild(newChild)
+            val index = if (reference == null) children.size else children.indexOf(reference)
+            children.add(index, newChild)
+            newChild.parent = this
+            formOwnerNodeInserted(newChild)
+            selectNodeInserted(newChild)
+        } finally {
+            scope?.endMutation()
+        }
     }
 
     public fun removeChild(child: TreeNode) {
         val oldRoot = root
         val document = nodeDocumentOfRoot(oldRoot)
-        if (children.remove(child)) {
+        require(child.parent === this) { "Node is not a child of this node" }
+        oldRoot.mutationDepth++
+        try {
+            children.remove(child)
             child.parent = null
             child.rootNodeDocument = document
             formOwnerNodeRemoved(child, oldRoot)
-            selectNodeRemoved(child)
-        } else {
-            throw IllegalArgumentException("Node is not a child of this node")
+            selectNodeRemoved(child, oldRoot)
+        } finally {
+            oldRoot.endMutation()
         }
+    }
+
+    /**
+     * For a tree's root, how many insertions and removals in the tree are under way, and the select elements whose
+     * selectedcontent elements their removing steps queued updates for. The spec queues those updates as microtasks;
+     * Helium runs them when the outermost insertion or removal finishes, so that they don't change the tree in the
+     * middle of one.
+     */
+    internal var mutationDepth: Int = 0
+    internal var pendingSelectedcontentUpdates: MutableList<TreeNode>? = null
+
+    private fun endMutation() {
+        if (--mutationDepth == 0 && pendingSelectedcontentUpdates != null) runPendingSelectedcontentUpdates()
     }
 
     /**
@@ -329,21 +352,25 @@ public class TreeNode(
             val copy = node.cloneSingleNode()
             if (result == null) result = copy
 
-            // Step 2: the template element's cloning steps, "For each child of node's template contents's children, in
-            // tree order: clone a node given child with document set to copy's template contents's node document,
-            // subtree set to true, and parent set to copy's template contents."
-            val contents = node.templateContent
-            val copyContents = copy.templateContent
-            if (subtree && contents != null && copyContents != null) {
-                for (child in contents.children) child.cloneNode(subtree = true, parent = copyContents)
-            }
-
             // Step 3:
             copyParent?.appendChild(copy)
 
             // Step 4:
             if (subtree) {
                 for (index in node.children.indices.reversed()) pending.addLast(node.children[index] to copy)
+            }
+
+            // Step 2: the template element's cloning steps, "For each child of node's template contents's children, in
+            // tree order: clone a node given child with document set to copy's template contents's node document,
+            // subtree set to true, and parent set to copy's template contents." They go on the same stack, so that
+            // nested templates don't recurse, and are cloned before the children; the contents being a tree of their
+            // own, appending the copy first doesn't change the result.
+            val contents = node.templateContent
+            val copyContents = copy.templateContent
+            if (subtree && contents != null && copyContents != null) {
+                for (index in contents.children.indices.reversed()) {
+                    pending.addLast(contents.children[index] to copyContents)
+                }
             }
         }
         return result!!

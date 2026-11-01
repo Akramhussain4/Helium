@@ -370,7 +370,8 @@ internal inline fun TreeNode.forEachInclusiveDescendantIn(
     }
 }
 
-private fun TreeNode.mayContainSelectPart(): Boolean = mayContainOption || mayContainSelectedcontent
+internal fun TreeNode.mayContainSelectPart(): Boolean =
+    mayContainOption || mayContainSelectedcontent || isHtmlElement("option") || isHtmlElement("selectedcontent")
 
 /**
  * The insertion and post-connection steps of the option and selectedcontent elements among [inserted] and its
@@ -414,21 +415,46 @@ internal fun selectNodeInserted(inserted: TreeNode) {
 /**
  * The option element removing steps, run for [removed] and each of its descendants: "Let selects be the result of
  * update an option's nearest ancestor select given removedNode. For each select of selects: queue a microtask to
- * update a select's descendant selectedcontent elements given select." Helium has no microtasks, so it updates them
- * once the removing steps have run.
+ * update a select's descendant selectedcontent elements given select." The updates are queued on [oldRoot], the root
+ * of the tree [removed] was in, to run when the outermost insertion or removal in it finishes.
  *
  * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element
  */
-internal fun selectNodeRemoved(removed: TreeNode) {
-    val selects = mutableListOf<TreeNode>()
+internal fun selectNodeRemoved(removed: TreeNode, oldRoot: TreeNode) {
     removed.forEachInclusiveDescendantIn({ it.mayContainOption }) { node ->
         if (node.isHtmlElement("option")) {
             for (select in node.updateNearestAncestorSelect()) {
-                if (selects.none { it === select }) selects += select
+                val pending = oldRoot.pendingSelectedcontentUpdates
+                    ?: mutableListOf<TreeNode>().also { oldRoot.pendingSelectedcontentUpdates = it }
+                if (pending.none { it === select }) pending += select
             }
         }
     }
-    for (select in selects) select.updateDescendantSelectedcontents()
+}
+
+/**
+ * Runs the selectedcontent updates queued on this tree root, as the microtasks the spec queues would run. An update
+ * can queue more, which run too, but each select is updated once: a select whose update queues an update of itself
+ * again, which the spec would go on doing for ever, is left as that update left it.
+ */
+internal fun TreeNode.runPendingSelectedcontentUpdates() {
+    val updated = mutableListOf<TreeNode>()
+    // The updates insert and remove nodes, whose own updates join the queue instead of running in the middle
+    mutationDepth++
+    try {
+        while (true) {
+            val pending = pendingSelectedcontentUpdates ?: break
+            pendingSelectedcontentUpdates = null
+            for (select in pending) {
+                if (updated.any { it === select }) continue
+                updated += select
+                select.updateDescendantSelectedcontents()
+            }
+        }
+    } finally {
+        mutationDepth--
+        pendingSelectedcontentUpdates = null
+    }
 }
 
 /**

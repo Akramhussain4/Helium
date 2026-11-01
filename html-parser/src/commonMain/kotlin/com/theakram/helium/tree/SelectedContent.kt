@@ -30,9 +30,30 @@ package com.theakram.helium.tree
  * one runs it, so the option it left selected is that option without going through the list.
  */
 internal fun TreeNode.firstSelectedOption(): TreeNode? {
+    // A select that has never had an option among its descendants has none in its list
+    if (!mayContainOption) return null
     if (hasRunSelectednessSettingAlgorithm && !hasContentAttribute("multiple")) return selectedOptionAfterLastRun
     forEachInListOfOptions { if (it.selectedness) return it }
     return null
+}
+
+/**
+ * This select element's descendants that are selectedcontent elements whose disabled is false, in tree order. The list
+ * is kept until it no longer holds: an enabled selectedcontent element's ancestors change only when it or one of them
+ * is inserted, which recalculates its disabledness and drops the list of its select, so the list holds while each
+ * element in it is still enabled and in the select. That spares going through the select's descendants each time its
+ * selected option changes.
+ */
+private fun TreeNode.descendantEnabledSelectedcontents(): List<TreeNode> {
+    selectedcontentsInTreeOrder?.let { list ->
+        if (list.all { !it.selectedcontentDisabled && isAncestorOf(it) }) return list
+    }
+    val list = mutableListOf<TreeNode>()
+    forEachInclusiveDescendantIn({ it.mayContainSelectedcontent }) { node ->
+        if (node !== this && node.isHtmlElement("selectedcontent") && !node.selectedcontentDisabled) list += node
+    }
+    selectedcontentsInTreeOrder = list
+    return list
 }
 
 /**
@@ -42,14 +63,8 @@ internal fun TreeNode.updateDescendantSelectedcontents() {
     // Step 1:
     if (hasContentAttribute("multiple")) return
 
-    // Step 2: the selectedcontent elements that registered with this select when their disabledness was last
-    // recalculated, and are still enabled descendants of it. A node's ancestors change only when it or one of them is
-    // inserted, which recalculates its disabledness, and an enabled one has no other select ancestor, so these are all
-    // of them, without going through the select's descendants each time its selected option changes.
-    val registered = registeredSelectedcontents ?: return
-    registered.removeAll { it.selectedcontentDisabled || !isAncestorOf(it) }
-    val descendantSelectedcontents =
-        if (registered.size > 1) registered.sortedWith(::compareTreeOrder) else registered.toList()
+    // Step 2:
+    val descendantSelectedcontents = descendantEnabledSelectedcontents()
 
     // Step 3:
     for (selectedcontent in descendantSelectedcontents) updateSelectedcontent(selectedcontent)
@@ -127,11 +142,8 @@ internal fun TreeNode.recalculateSelectedcontentDisabledness(): TreeNode? {
         ancestor = ancestor.parent
     }
 
-    if (!selectedcontentDisabled && nearestSelectAncestor != null) {
-        val registered = nearestSelectAncestor.registeredSelectedcontents
-            ?: mutableListOf<TreeNode>().also { nearestSelectAncestor.registeredSelectedcontents = it }
-        if (registered.none { it === this }) registered += this
-    }
+    // A new enabled selectedcontent element for the select's list of them
+    if (!selectedcontentDisabled) nearestSelectAncestor?.selectedcontentsInTreeOrder = null
 
     // Step 4:
     return nearestSelectAncestor

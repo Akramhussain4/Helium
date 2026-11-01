@@ -30,6 +30,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotSame
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 /**
@@ -192,6 +193,51 @@ internal class SelectedContentTest {
         val contents = head.findChildElement("template")!!.templateContent!!
 
         assertEquals("a", contents.first("selectedcontent").contents())
+    }
+
+    @Test
+    fun `a selected option inside the selected option doesn't make updates go on forever`() {
+        // B's copy in the selectedcontent element is in the select's list of options, after A, so it becomes the
+        // selected option, and replacing it with its contents brings back A, whose contents bring back the copy: in the
+        // spec, a microtask that queues itself again for ever. Each select is updated once per round of updates
+        // instead, so parsing ends, with A selected.
+        val body = body(
+            "<select><option>A<div><option selected>B</div></option><button><selectedcontent></selectedcontent>" +
+                "</button></select>"
+        )
+        val select = body.first("select")
+
+        assertSame(select.children.first(), select.firstSelectedOption())
+    }
+
+    @Test
+    fun `moving an option into a selectedcontent element before one of its children works`() {
+        // Removing the option from the select updates the selectedcontent element, but only once the insertion is
+        // done, as the spec's microtask would
+        val body = body("<select><button><selectedcontent></button><option>a</option><option>b</option></select>")
+        val selectedcontent = body.first("selectedcontent")
+        val option = body.first("select").children[1]
+        selectedcontent.insertBefore(option, selectedcontent.firstChild)
+
+        assertEquals("b", selectedcontent.contents())
+    }
+
+    @Test
+    fun `the updates queued while replacing a selectedcontent element's children run after it`() {
+        val body = body(
+            "<select><button><selectedcontent></button><option>o0</option><selectedcontent><option selected>p</select>"
+        )
+        val selectedcontents = body.descendants().filter { it.localName == "selectedcontent" }
+
+        assertEquals(listOf("o0", "o0"), selectedcontents.map { it.contents() }.toList())
+    }
+
+    @Test
+    fun `cloning deeply nested template contents doesn't recurse`() {
+        val html = "<select><button><selectedcontent></button><option>" + "<template>".repeat(20_000) + "x"
+        val body = body(html)
+
+        assertEquals("template", body.first("selectedcontent").children.single().localName)
     }
 
     @Test
