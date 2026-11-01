@@ -84,12 +84,13 @@ internal object InTable : InsertionMode {
                     if (!treeBuilder.hasElementInTableScope("table")) {
                         // This is a parse error; ignore the token.
                         treeBuilder.parseError()
+                        continueInCurrentMode()
                     } else {
+                        // "Pop elements from this stack until a table element has been popped from the stack."
                         treeBuilder.popUntil("table")
-                        // The reset switches the insertion mode itself, which ends the processing of this token
-                        treeBuilder.resetInsertionModeAppropriately()
+                        // "Reset the insertion mode appropriately."
+                        switchTo(treeBuilder.appropriateInsertionMode())
                     }
-                    continueInCurrentMode()
                 }
 
                 in IGNORED_END_TAGS -> {
@@ -148,8 +149,10 @@ internal object InTable : InsertionMode {
                 if (!treeBuilder.hasElementInTableScope("table")) {
                     continueInCurrentMode()
                 } else {
+                    // "Pop elements from this stack until a table element has been popped from the stack."
                     treeBuilder.popUntil("table")
-                    treeBuilder.resetInsertionModeAndReprocess()
+                    // "Reset the insertion mode appropriately." "Reprocess the token."
+                    reprocessIn(treeBuilder.appropriateInsertionMode())
                 }
             }
 

@@ -96,8 +96,8 @@ internal object InTemplate : InsertionMode {
                 // Pop the current template insertion mode off the stack of template insertion modes.
                 treeBuilder.popTemplateInsertionMode()
 
-                // Reset the insertion mode appropriately, then reprocess the token.
-                treeBuilder.resetInsertionModeAndReprocess()
+                // "Reset the insertion mode appropriately." "Reprocess the token."
+                reprocessIn(treeBuilder.appropriateInsertionMode())
             }
         }
     }

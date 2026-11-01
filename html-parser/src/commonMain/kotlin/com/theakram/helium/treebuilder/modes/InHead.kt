@@ -274,8 +274,7 @@ internal object InHead : InsertionMode {
         // Step 7:
         treeBuilder.popTemplateInsertionMode()
         // Step 8:
-        treeBuilder.resetInsertionModeAppropriately()
-        return switchTo(treeBuilder.currentMode)
+        return switchTo(treeBuilder.appropriateInsertionMode())
     }
 
     /**

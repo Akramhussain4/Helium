@@ -25,9 +25,7 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tree.Namespaces
-import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
-import com.theakram.helium.treebuilder.reprocessIn
 
 // Steps that the table insertion modes ("in table", "in table body", "in row") and "in template" share
 
@@ -41,13 +39,4 @@ internal fun TreeBuilder.clearStackBackTo(context: Set<String>) {
     while (currentNode.namespace != Namespaces.HTML || currentNode.localName !in context) {
         checkNotNull(popCurrentElement()) { "The html element ends every table context" }
     }
-}
-
-/**
- * "Reset the insertion mode appropriately" followed by "Reprocess the token": the reset picks the new insertion
- * mode, and the token is reprocessed in it.
- */
-internal fun TreeBuilder.resetInsertionModeAndReprocess(): InsertionModeTransition {
-    resetInsertionModeAppropriately()
-    return reprocessIn(currentMode)
 }
