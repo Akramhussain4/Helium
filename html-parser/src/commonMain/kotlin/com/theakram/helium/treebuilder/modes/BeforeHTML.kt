@@ -26,13 +26,13 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionLocation
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
@@ -43,7 +43,10 @@ import com.theakram.helium.util.isAsciiWhitespace
 internal object BeforeHTML : InsertionMode {
     override fun process(token: Token, treeBuilder: TreeBuilder): InsertionModeTransition {
         return when (token) {
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             is Token.Comment -> {
                 treeBuilder.insertComment(token.data, InsertionLocation(treeBuilder.document, null))
@@ -58,20 +61,21 @@ internal object BeforeHTML : InsertionMode {
             is Token.Character if token.codePoint.isAsciiWhitespace() -> continueInCurrentMode()
 
             is Token.StartTag if token.name == "html" -> {
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
-                }
-                val element = TreeNode.createElement(localName = "html", attributes = attributes)
+                val element = TreeNode.createElement(
+                    localName = "html",
+                    attributes = InHeadHelpers.toAttributeList(token.attributes)
+                )
                 treeBuilder.insertElementAtAdjustedInsertionLocation(element, InsertionLocation(treeBuilder.document, null))
                 treeBuilder.pushElement(element)
 
                 switchTo(BeforeHead)
             }
 
-            is Token.EndTag -> when {
-                token.name in setOf("head", "body", "html", "br") -> handleAnythingElse(treeBuilder)
+            is Token.EndTag if token.name in ANYTHING_ELSE_END_TAGS -> handleAnythingElse(treeBuilder)
 
-                else -> continueInCurrentMode()
+            is Token.EndTag -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
             }
 
             else -> handleAnythingElse(treeBuilder)
@@ -84,4 +88,6 @@ internal object BeforeHTML : InsertionMode {
         treeBuilder.pushElement(element)
         return reprocessIn(BeforeHead)
     }
+
+    private val ANYTHING_ELSE_END_TAGS = setOf("head", "body", "html", "br")
 }

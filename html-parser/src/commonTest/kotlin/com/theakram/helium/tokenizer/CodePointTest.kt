@@ -36,7 +36,8 @@ internal class CodePointTest {
 
     private fun errors(html: String) = HTMLParser().run {
         parse(html)
-        errors.map { it.code to it.position }
+        // Only the tokenizer's errors, which have codes: without a DOCTYPE, tree construction reports one too
+        errors.filter { it.code != null }.map { it.code to it.position }
     }
 
     @Test

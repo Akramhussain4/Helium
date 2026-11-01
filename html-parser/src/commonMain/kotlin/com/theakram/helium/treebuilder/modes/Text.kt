@@ -26,8 +26,12 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Namespaces
-import com.theakram.helium.treebuilder.*
+import com.theakram.helium.treebuilder.InsertionMode
+import com.theakram.helium.treebuilder.InsertionModeTransition
+import com.theakram.helium.treebuilder.TreeBuilder
+import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.reprocessIn
+import com.theakram.helium.treebuilder.switchTo
 
 /**
  * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-incdata
@@ -41,51 +45,38 @@ internal object Text : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.EndTag if token.name == "script" -> {
-                // TODO: If the active speculative HTML parser is null and the JavaScript execution context stack is empty,
-
+            is Token.EOF -> {
+                treeBuilder.parseError()
+                // N/A: "If the current node is a script element, then set its already started to true." Helium doesn't
+                // execute scripts, so script elements have no already started.
                 treeBuilder.popCurrentElement()
-                val originalMode = treeBuilder.getOriginalInsertionMode() ?: InBody
+                reprocessIn(originalInsertionMode(treeBuilder))
+            }
 
-                // TODO: Let the old insertion point have the same value as the current insertion point.
-                // TODO: Let the insertion point be just before the next input character.
-                // TODO: Increment the parser's script nesting level by one.
-                // TODO: If the active speculative HTML parser is null, then prepare the script element script.
-                // TODO: Decrement the parser's script nesting level by one.
-                // TODO: If the parser's script nesting level is zero, then set the parser pause flag to false.
-                // TODO: Let the insertion point have the value of the old insertion point.
-                // TODO: Handle pending parsing-blocking script
-
-                switchTo(originalMode)
+            is Token.EndTag if token.name == "script" -> {
+                // N/A: Helium has no JavaScript execution context stack to perform a microtask checkpoint for.
+                // N/A: "Let script be the current node". Helium doesn't prepare the script element, so it isn't kept.
+                treeBuilder.popCurrentElement()
+                val transition = switchTo(originalInsertionMode(treeBuilder))
+                // N/A: The remaining steps save and restore the insertion point, prepare the script element and execute
+                // pending parsing-blocking scripts. Helium doesn't execute scripts and has no document.write(), so none
+                // of them has an effect.
+                transition
             }
 
             is Token.EndTag -> {
                 treeBuilder.popCurrentElement()
-                val originalMode = treeBuilder.getOriginalInsertionMode() ?: InBody
-                switchTo(originalMode)
+                switchTo(originalInsertionMode(treeBuilder))
             }
 
-            is Token.EOF -> {
-                // Parse error.
-                val currentNode = treeBuilder.currentNode
-                if (currentNode.namespace == Namespaces.HTML && currentNode.localName == "script") {
-                    // TODO: Set script element's already started to true
-                }
-                treeBuilder.popCurrentElement()
-                val originalMode = treeBuilder.getOriginalInsertionMode() ?: InBody
-                reprocessIn(originalMode)
-            }
-
-            else -> {
-                // Parse error
-                val currentNode = treeBuilder.currentNode
-                if (currentNode.namespace == Namespaces.HTML && currentNode.localName == "script") {
-                    // TODO: Set script element's already started to true
-                }
-                treeBuilder.popCurrentElement()
-                val originalMode = treeBuilder.getOriginalInsertionMode() ?: InBody
-                reprocessIn(originalMode)
-            }
+            // The tree builder only switches to "text" after switching the tokenizer to the RCDATA, RAWTEXT or script
+            // data state, which emit nothing but character, end tag and end-of-file tokens
+            else -> error("The \"text\" insertion mode can't receive a ${token::class.simpleName} token")
         }
     }
+
+    private fun originalInsertionMode(treeBuilder: TreeBuilder): InsertionMode =
+        checkNotNull(treeBuilder.getOriginalInsertionMode()) {
+            "The original insertion mode is set before switching to the \"text\" insertion mode"
+        }
 }

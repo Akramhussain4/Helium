@@ -27,7 +27,6 @@ package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.QuirksMode
-import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.treebuilder.InsertionLocation
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
@@ -35,8 +34,8 @@ import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
-import com.theakram.helium.util.isAsciiWhitespace
 import com.theakram.helium.util.equalsAsciiCaseInsensitive
+import com.theakram.helium.util.isAsciiWhitespace
 import com.theakram.helium.util.startsWithAsciiCaseInsensitive
 
 /**
@@ -58,35 +57,36 @@ internal object Initial : InsertionMode {
             }
 
             is Token.DocType -> {
+                if (token.name != "html" || token.publicId != null ||
+                    (token.systemId != null && token.systemId != "about:legacy-compat")
+                ) {
+                    treeBuilder.parseError()
+                }
+
                 treeBuilder.insertDoctype(
                     name = token.name ?: "",
                     publicId = token.publicId ?: "",
                     systemId = token.systemId ?: ""
                 )
 
-                if (!treeBuilder.document.isIframeSrcdoc && !treeBuilder.document.parserCannotChangeMode) {
-                    val quirksMode = determineQuirksMode(token)
-                    treeBuilder.document.quirksMode = quirksMode
+                val document = treeBuilder.document
+                if (!document.isIframeSrcdoc && !document.parserCannotChangeMode) {
+                    if (matchesQuirksModeConditions(token)) {
+                        document.quirksMode = QuirksMode.QUIRKS
+                    } else if (matchesLimitedQuirksModeConditions(token)) {
+                        document.quirksMode = QuirksMode.LIMITED_QUIRKS
+                    }
                 }
 
                 switchTo(BeforeHTML)
             }
 
-            is Token.EOF -> {
-                // Parse error
-                if (!treeBuilder.document.isIframeSrcdoc) {
-                    if (!treeBuilder.document.parserCannotChangeMode) {
-                        treeBuilder.document.quirksMode = QuirksMode.QUIRKS
-                    }
-                }
-                reprocessIn(BeforeHTML)
-            }
-
             else -> {
-                if (!treeBuilder.document.isIframeSrcdoc) {
-                    // Parse error (not tracked yet)
-                    if (!treeBuilder.document.parserCannotChangeMode) {
-                        treeBuilder.document.quirksMode = QuirksMode.QUIRKS
+                val document = treeBuilder.document
+                if (!document.isIframeSrcdoc) {
+                    treeBuilder.parseError()
+                    if (!document.parserCannotChangeMode) {
+                        document.quirksMode = QuirksMode.QUIRKS
                     }
                 }
                 reprocessIn(BeforeHTML)
@@ -94,35 +94,34 @@ internal object Initial : InsertionMode {
         }
     }
 
-    private fun determineQuirksMode(token: Token.DocType): QuirksMode = when {
-        shouldUseQuirksMode(token) -> QuirksMode.QUIRKS
-        shouldUseLimitedQuirksMode(token) -> QuirksMode.LIMITED_QUIRKS
-        else -> QuirksMode.NO_QUIRKS
-    }
+    // "The system identifier and public identifier strings must be compared to the values given in the lists above
+    // in an ASCII case-insensitive manner. A system identifier whose value is the empty string is not considered
+    // missing for the purposes of the conditions above." The conditions that are about a missing system identifier
+    // say "missing or the empty string", so treating a missing identifier as the empty string is equivalent.
 
-    private fun shouldUseQuirksMode(token: Token.DocType): Boolean {
-        val name = token.name.orEmpty()
+    private fun matchesQuirksModeConditions(token: Token.DocType): Boolean {
         val publicId = token.publicId.orEmpty()
         val systemId = token.systemId.orEmpty()
 
-        return token.forceQuirks || name != "html"
-                || QUIRKS_MODE_EXACT_PUBLIC_IDS.any { publicId.equalsAsciiCaseInsensitive(it) } || systemId.equalsAsciiCaseInsensitive("http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd") || QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) } ||
-                systemId.isEmpty() && QUIRKS_MODE_SYSTEM_ID_MISSING_PREFIXES.any {
-            publicId.startsWithAsciiCaseInsensitive(it)
-        }
+        return token.forceQuirks ||
+                token.name != "html" ||
+                QUIRKS_MODE_PUBLIC_IDS.any { publicId.equalsAsciiCaseInsensitive(it) } ||
+                systemId.equalsAsciiCaseInsensitive(QUIRKS_MODE_SYSTEM_ID) ||
+                QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) } ||
+                (systemId.isEmpty() && HTML_4_01_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) })
     }
 
-    private fun shouldUseLimitedQuirksMode(token: Token.DocType): Boolean {
+    private fun matchesLimitedQuirksModeConditions(token: Token.DocType): Boolean {
         val publicId = token.publicId.orEmpty()
         val systemId = token.systemId.orEmpty()
 
-        return LIMITED_QUIRKS_MODE_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) }
-                || systemId.isNotEmpty() && LIMITED_QUIRKS_SYSTEM_ID_NOT_MISSING_PREFIXES.any {
-            publicId.startsWithAsciiCaseInsensitive(it)
-        }
+        return LIMITED_QUIRKS_MODE_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) } ||
+                (systemId.isNotEmpty() && HTML_4_01_PUBLIC_ID_PREFIXES.any { publicId.startsWithAsciiCaseInsensitive(it) })
     }
 
-    private val QUIRKS_MODE_EXACT_PUBLIC_IDS = setOf(
+    private const val QUIRKS_MODE_SYSTEM_ID = "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd"
+
+    private val QUIRKS_MODE_PUBLIC_IDS = listOf(
         "-//W3O//DTD W3 HTML Strict 3.0//EN//",
         "-/W3C/DTD HTML 4.0 Transitional/EN",
         "HTML"
@@ -186,18 +185,14 @@ internal object Initial : InsertionMode {
         "-//WebTechs//DTD Mozilla HTML//"
     )
 
-    private val QUIRKS_MODE_SYSTEM_ID_MISSING_PREFIXES = listOf(
+    // Quirks mode when the system identifier is missing or empty, limited-quirks mode otherwise
+    private val HTML_4_01_PUBLIC_ID_PREFIXES = listOf(
         "-//W3C//DTD HTML 4.01 Frameset//",
         "-//W3C//DTD HTML 4.01 Transitional//"
     )
 
-    private val LIMITED_QUIRKS_MODE_PREFIXES = listOf(
+    private val LIMITED_QUIRKS_MODE_PUBLIC_ID_PREFIXES = listOf(
         "-//W3C//DTD XHTML 1.0 Frameset//",
         "-//W3C//DTD XHTML 1.0 Transitional//"
-    )
-
-    private val LIMITED_QUIRKS_SYSTEM_ID_NOT_MISSING_PREFIXES = listOf(
-        "-//W3C//DTD HTML 4.01 Frameset//",
-        "-//W3C//DTD HTML 4.01 Transitional//"
     )
 }

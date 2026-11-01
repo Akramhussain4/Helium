@@ -26,11 +26,11 @@
 package com.theakram.helium.treebuilder.modes
 
 import com.theakram.helium.tokenization.Token
-import com.theakram.helium.tree.Attribute
 import com.theakram.helium.treebuilder.InsertionMode
 import com.theakram.helium.treebuilder.InsertionModeTransition
 import com.theakram.helium.treebuilder.TreeBuilder
 import com.theakram.helium.treebuilder.continueInCurrentMode
+import com.theakram.helium.treebuilder.modes.helpers.InHeadHelpers
 import com.theakram.helium.treebuilder.reprocessIn
 import com.theakram.helium.treebuilder.switchTo
 import com.theakram.helium.util.isAsciiWhitespace
@@ -56,46 +56,48 @@ internal object AfterHead : InsertionMode {
                 continueInCurrentMode()
             }
 
-            is Token.DocType -> continueInCurrentMode()
+            is Token.DocType -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             is Token.StartTag if token.name == "html" -> InBody.process(token, treeBuilder)
 
             is Token.StartTag if token.name == "body" -> {
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
-                }
-                treeBuilder.insertElement(token.name, attributes = attributes)
+                treeBuilder.insertElement(token.name, attributes = InHeadHelpers.toAttributeList(token.attributes))
                 treeBuilder.setFramesetNotOk()
                 switchTo(InBody)
             }
 
             is Token.StartTag if token.name == "frameset" -> {
-                val attributes = token.attributes.map { (name, value) ->
-                    Attribute(namespace = null, prefix = null, localName = name, value = value)
-                }
-                treeBuilder.insertElement(token.name, attributes = attributes)
+                treeBuilder.insertElement(token.name, attributes = InHeadHelpers.toAttributeList(token.attributes))
                 switchTo(InFrameSet)
             }
 
-            is Token.StartTag if token.name in setOf(
-                "base", "basefont", "bgsound", "link", "meta",
-                "noframes", "script", "style", "template", "title"
-            ) -> {
-                val headElement = treeBuilder.headElement ?: error("Head element pointer cannot be null at this point")
+            is Token.StartTag if token.name in IN_HEAD_START_TAGS -> {
+                treeBuilder.parseError()
+                val headElement = checkNotNull(treeBuilder.headElement) {
+                    "The head element pointer cannot be null at this point"
+                }
                 treeBuilder.pushElement(headElement)
-
-                val result = InHead.process(token, treeBuilder)
+                val transition = InHead.process(token, treeBuilder)
                 treeBuilder.removeElement(headElement)
-                result
+                transition
             }
 
             is Token.EndTag if token.name == "template" -> InHead.process(token, treeBuilder)
 
-            is Token.EndTag if token.name in setOf("body", "html", "br") -> handleAnythingElse(treeBuilder)
+            is Token.EndTag if token.name in ANYTHING_ELSE_END_TAGS -> handleAnythingElse(treeBuilder)
 
-            is Token.StartTag if token.name == "head" -> continueInCurrentMode()
+            is Token.StartTag if token.name == "head" -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
-            is Token.EndTag -> continueInCurrentMode()
+            is Token.EndTag -> {
+                treeBuilder.parseError()
+                continueInCurrentMode()
+            }
 
             else -> handleAnythingElse(treeBuilder)
         }
@@ -106,4 +108,10 @@ internal object AfterHead : InsertionMode {
         treeBuilder.setFramesetOk()
         return reprocessIn(InBody)
     }
+
+    private val IN_HEAD_START_TAGS = setOf(
+        "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "template", "title"
+    )
+
+    private val ANYTHING_ELSE_END_TAGS = setOf("body", "html", "br")
 }
