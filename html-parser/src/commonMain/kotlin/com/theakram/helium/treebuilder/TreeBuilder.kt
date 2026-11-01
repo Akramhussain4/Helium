@@ -87,6 +87,20 @@ internal class TreeBuilder(
     internal val isFragmentCase: Boolean get() = contextElement != null
 
     /**
+     * "The start tag token of context": the start tag token the fragment parsing algorithm creates, whose name is
+     * the context element's local name and whose attributes are its attributes.
+     *
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-fragment-parsing-algorithm
+     */
+    internal var contextElementStartTag: Token.StartTag? = null
+
+    /**
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-integration-point
+     */
+    internal fun isHTMLIntegrationPoint(node: TreeNode): Boolean =
+        IntegrationPoints.isHTMLIntegrationPoint(node, contextElementStartTag.takeIf { node === contextElement })
+
+    /**
      * Initially false, and none of Helium's parsing entry points allow declarative shadow roots.
      *
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#concept-parser-allow-declarative-shadow-roots
@@ -197,7 +211,7 @@ internal class TreeBuilder(
         if (stack.isEmpty()) return true
         val node = adjustedCurrentNode
         val isMathMLTextIntegrationPoint = IntegrationPoints.isMathMLTextIntegrationPoint(node)
-        val isHTMLIntegrationPoint = IntegrationPoints.isHTMLIntegrationPoint(node)
+        val isHTMLIntegrationPoint = isHTMLIntegrationPoint(node)
         return node.namespace == Namespaces.HTML ||
                 (isMathMLTextIntegrationPoint && token is Token.StartTag &&
                         token.name != "mglyph" && token.name != "malignmark") ||
@@ -409,6 +423,7 @@ internal class TreeBuilder(
         // A new document per parse, so trees returned by earlier parses stay intact
         document = TreeNode.createDocument()
         contextElement = null
+        contextElementStartTag = null
         headElement = null
         formElement = null
         activeFormattingElements.clear()

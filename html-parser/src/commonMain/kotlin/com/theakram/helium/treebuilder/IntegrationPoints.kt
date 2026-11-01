@@ -25,6 +25,7 @@
 
 package com.theakram.helium.treebuilder
 
+import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.TreeNode
 import com.theakram.helium.util.asciiLowercase
@@ -44,13 +45,17 @@ internal object IntegrationPoints {
         node.namespace == Namespaces.MATHML && node.localName in MATHML_TEXT_INTEGRATION_POINTS
 
     /**
+     * [startTag] is the start tag token [node] was created for, when it isn't the element's own attributes: the
+     * "fake" token of the fragment parsing algorithm's context element.
+     *
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#html-integration-point
      */
-    fun isHTMLIntegrationPoint(node: TreeNode): Boolean = when (node.namespace) {
+    fun isHTMLIntegrationPoint(node: TreeNode, startTag: Token.StartTag? = null): Boolean = when (node.namespace) {
         // "A MathML annotation-xml element whose start tag token had an attribute with the name "encoding" whose value
         // was an ASCII case-insensitive match for "text/html" [or] "application/xhtml+xml""
         Namespaces.MATHML -> node.localName == "annotation-xml" &&
-                startTagEncodingAttributeValue(node)?.asciiLowercase() in HTML_ENCODINGS
+                (if (startTag != null) startTag.attributes["encoding"] else startTagEncodingAttributeValue(node))
+                    ?.asciiLowercase() in HTML_ENCODINGS
 
         Namespaces.SVG -> node.localName in SVG_HTML_INTEGRATION_POINTS
 
@@ -58,10 +63,9 @@ internal object IntegrationPoints {
     }
 
     /**
-     * The value of the attribute named exactly "encoding" on the start tag token the element was created for. The
-     * element's attributes are the token's: attribute adjustments never rename "encoding", so the token's attribute
-     * is the element's attribute whose qualified name is "encoding". For the fragment context element, the token is
-     * the "fake" token, whose attributes are the context element's.
+     * The value of the attribute named exactly "encoding" on the start tag token the parser created [element] for.
+     * The element's attributes are the token's: attribute adjustments never rename "encoding", so the token's
+     * attribute is the element's attribute whose qualified name is "encoding".
      */
     private fun startTagEncodingAttributeValue(element: TreeNode): String? =
         element.attributes.firstOrNull { it.prefix == null && it.localName == "encoding" }?.value

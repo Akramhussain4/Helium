@@ -25,6 +25,7 @@
 
 package com.theakram.helium.treebuilder
 
+import com.theakram.helium.tokenization.Token
 import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tree.Namespaces
 import com.theakram.helium.tree.NodeType
@@ -127,8 +128,8 @@ internal object FragmentParser {
             treeBuilder.pushTemplateInsertionMode(InTemplate)
         }
 
-        // Step 17: The context's start tag token is read from the context element itself, e.g. for
-        // annotation-xml HTML integration points
+        // Step 17:
+        treeBuilder.contextElementStartTag = startTagTokenOf(context)
 
         // Step 18:
         treeBuilder.resetInsertionModeAppropriately()
@@ -143,6 +144,16 @@ internal object FragmentParser {
         // Step 23:
         return fragment
     }
+
+    /**
+     * "A start tag token whose name is the local name of context and whose attributes are the attributes of context".
+     * A token's attributes have names but no namespaces, so they are keyed by qualified name, keeping the first of
+     * any that share one, as the tokenizer keeps the first of duplicate attributes.
+     */
+    internal fun startTagTokenOf(context: TreeNode): Token.StartTag = Token.StartTag(
+        name = checkNotNull(context.localName) { "The context is an element" },
+        attributes = buildMap { context.attributes.forEach { if (it.name !in this) put(it.name, it.value) } }
+    )
 
     private fun getInitialTokenizerState(context: TreeNode, scriptingMode: ScriptingMode): TokenizerStateType {
         if (context.namespace != Namespaces.HTML) {
