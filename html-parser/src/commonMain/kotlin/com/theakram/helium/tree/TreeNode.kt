@@ -153,7 +153,7 @@ public class TreeNode(
     }
 
     /**
-     * Returns true if this is a template element with content.
+     * Whether this is a template element in the HTML namespace.
      */
     public val isTemplate: Boolean
         get() = type == NodeType.ELEMENT &&

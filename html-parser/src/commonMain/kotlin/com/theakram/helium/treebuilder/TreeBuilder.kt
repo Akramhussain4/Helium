@@ -103,7 +103,7 @@ internal class TreeBuilder(
     /**
      * Initially false, and none of Helium's parsing entry points allow declarative shadow roots.
      *
-     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#concept-parser-allow-declarative-shadow-roots
+     * Spec: https://html.spec.whatwg.org/multipage/parsing.html#allow-declarative-shadow-roots
      */
     internal val allowDeclarativeShadowRoots: Boolean = false
 
@@ -195,6 +195,9 @@ internal class TreeBuilder(
                 }
 
                 is InsertionModeTransition.StopParsing -> {
+                    // The end (https://html.spec.whatwg.org/multipage/parsing.html#stop-parsing), step 4: "Pop all the
+                    // nodes off the stack of open elements." Its other steps are about speculative parsing, the
+                    // insertion point, document readiness, scripts and events, which Helium doesn't have.
                     while (stack.size > 0) {
                         popCurrentElement()
                     }

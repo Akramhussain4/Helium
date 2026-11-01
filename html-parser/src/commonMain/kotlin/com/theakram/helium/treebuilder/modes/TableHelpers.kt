@@ -35,7 +35,7 @@ import com.theakram.helium.treebuilder.reprocessIn
  * Pops elements from the stack of open elements while the current node is not an HTML element named in [context]:
  * the "clear the stack back to a table context" steps and their table body and table row variants.
  *
- * Every context includes html, which is always at the bottom of the stack, so the stack never runs out.
+ * Every context includes html, which is always the topmost element of the stack, so the stack never runs out.
  */
 internal fun TreeBuilder.clearStackBackTo(context: Set<String>) {
     while (currentNode.namespace != Namespaces.HTML || currentNode.localName !in context) {

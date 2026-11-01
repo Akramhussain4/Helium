@@ -32,6 +32,9 @@ import com.theakram.helium.util.isAsciiDigit
 import com.theakram.helium.util.isAsciiLowerHexDigit
 import com.theakram.helium.util.isAsciiUpperHexDigit
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#hexadecimal-character-reference-state
+ */
 internal data object HexadecimalCharacterReference : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

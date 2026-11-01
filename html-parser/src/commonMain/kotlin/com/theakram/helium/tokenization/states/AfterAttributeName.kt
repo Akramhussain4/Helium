@@ -31,6 +31,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.isWhiteSpace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#after-attribute-name-state
+ */
 internal data object AfterAttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

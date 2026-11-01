@@ -85,7 +85,8 @@ internal object InHead : InsertionMode {
                 treeBuilder.insertElement(token.name, attributes = attributes)
                 treeBuilder.popCurrentElement()
                 treeBuilder.acknowledgeSelfClosingFlag()
-                // TODO: Handle character encoding detection (if active speculative HTML parser is null)
+                // "If the active speculative HTML parser is null:" its steps change the encoding while the confidence
+                // is tentative. Helium parses strings, which are already decoded, so they don't apply.
                 continueInCurrentMode()
             }
 
@@ -188,7 +189,8 @@ internal object InHead : InsertionMode {
         val insertionLocation = treeBuilder.appropriatePlaceForInsertingNode()
         // Step 10:
         treeBuilder.pushElement(template)
-        // Steps 11-12: Helium has no parser sanitizer configuration, so sanitizerAction stays "Keep"
+        // Steps 11-12: Helium has no parser sanitizer configuration, so sanitizerAction stays "Keep". For the same
+        // reason the alreadySanitized argument, true in every insertion below, makes no difference and is left out.
 
         // Step 13 "Keep":
         when {

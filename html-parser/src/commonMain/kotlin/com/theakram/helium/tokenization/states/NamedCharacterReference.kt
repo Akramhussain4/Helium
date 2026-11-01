@@ -32,7 +32,7 @@ import com.theakram.helium.tokenization.util.isAttributeState
 import com.theakram.helium.util.isAsciiAlphaNumeric
 
 /**
- * https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#named-character-reference-state
  */
 internal data object NamedCharacterReference : TokenizationState {
 

@@ -47,7 +47,7 @@ internal object EndTagHandler {
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
      */
     fun handleAnyOtherEndTag(treeBuilder: TreeBuilder, tagName: String): InsertionModeTransition {
-        // Steps 1, 3 and 4:
+        // Steps 1, 4 and 5: Initialize node to be the current node, then set it to the previous entry each time round
         for (node in treeBuilder.elementStack.asReversed()) {
             // Step 2:
             if (InBodyHelpers.isHtmlElement(node, tagName)) {

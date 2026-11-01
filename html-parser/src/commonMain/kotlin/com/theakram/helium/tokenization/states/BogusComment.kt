@@ -31,6 +31,9 @@ import com.theakram.helium.tokenization.Tokenizer
 import com.theakram.helium.tokenization.util.IS
 import com.theakram.helium.util.Chars
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#bogus-comment-state
+ */
 internal data object BogusComment : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

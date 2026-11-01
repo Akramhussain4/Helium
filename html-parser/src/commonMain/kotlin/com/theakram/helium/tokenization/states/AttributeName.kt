@@ -32,6 +32,9 @@ import com.theakram.helium.util.Chars
 import com.theakram.helium.util.isAsciiUpperAlpha
 import com.theakram.helium.util.isWhiteSpace
 
+/**
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#attribute-name-state
+ */
 internal data object AttributeName : TokenizationState {
     override fun consume(codePoint: Int, tokenizer: Tokenizer): StateTransition {
         return when {

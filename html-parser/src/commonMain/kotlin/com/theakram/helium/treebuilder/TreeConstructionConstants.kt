@@ -86,7 +86,8 @@ internal object TreeConstructionConstants {
     )
 
     /**
-     * Heading elements (mutually exclusive - only one heading can be open at a time).
+     * The heading elements, h1 to h6. A heading start tag closes a heading that is the current node, but headings can
+     * still nest, as in `<h1><div><h2>`.
      */
     val HEADING_ELEMENTS = setOf("h1", "h2", "h3", "h4", "h5", "h6")
 

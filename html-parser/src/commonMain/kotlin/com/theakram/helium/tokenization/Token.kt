@@ -91,7 +91,7 @@ internal class DocTypeBuilder {
 /**
  * The current tag token, a start or an end tag, as the tokenizer builds it.
  *
- * Spec: https://html.spec.whatwg.org/multipage/parsing.html#current-tag-token
+ * Spec: https://html.spec.whatwg.org/multipage/parsing.html#tokenization
  */
 internal class TagTokenBuilder {
     private class AttributeBuilder {

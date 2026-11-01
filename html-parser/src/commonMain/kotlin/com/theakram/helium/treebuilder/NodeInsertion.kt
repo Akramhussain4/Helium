@@ -127,7 +127,11 @@ internal class NodeInsertion(
         ) {
             return
         }
-        // Steps 3-7: Insert element into targetParent before referenceChild
+        // Step 3: Helium has no parser sanitizer configuration, so there is nothing to sanitize
+        // Step 4: An assertion that ensuring pre-insert validity doesn't throw. insertBefore below checks its hierarchy
+        // and reference child conditions, but not the node type or Document child rules.
+        // Steps 5 and 7: Helium has no custom elements, so there are no custom element reactions to queue or invoke
+        // Step 6:
         targetParent.insertBefore(element, referenceChild)
     }
 
@@ -135,6 +139,7 @@ internal class NodeInsertion(
      * Spec: https://html.spec.whatwg.org/multipage/parsing.html#insert-a-character
      */
     fun insertCharacter(data: String) {
+        // Step 1: data is passed in
         // Step 2:
         val (targetParent, referenceChild) = adjustedInsertionLocation()
         // Step 3:
@@ -143,11 +148,10 @@ internal class NodeInsertion(
         }
         // Step 4:
         val previousSibling = if (referenceChild != null) referenceChild.previousSibling else targetParent.lastChild
+        // Step 5:
         if (previousSibling?.type == NodeType.TEXT) {
-            // Step 5:
             previousSibling.data = (previousSibling.data ?: "") + data
         } else {
-            // Step 6:
             targetParent.insertBefore(TreeNode.createText(data), referenceChild)
         }
     }
