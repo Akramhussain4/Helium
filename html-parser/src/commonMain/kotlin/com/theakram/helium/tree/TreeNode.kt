@@ -25,6 +25,7 @@
 
 package com.theakram.helium.tree
 
+import com.theakram.helium.util.asciiLowercase
 import com.theakram.helium.util.equalsAsciiCaseInsensitive
 
 /**
@@ -201,41 +202,107 @@ public class TreeNode(
     public val childElements: List<TreeNode>
         get() = children.filter { it.type == NodeType.ELEMENT }
 
-    public fun setAttribute(name: String, value: String) {
-        attributes.removeAll { it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name) }
-        attributes.add(Attribute(namespace = null, prefix = null, localName = name, value = value))
+    // Helium's documents are all HTML documents, so the DOM's "in the HTML namespace and its node document is an HTML
+    // document" condition is just the namespace
+    private fun normalizedQualifiedName(qualifiedName: String): String =
+        if (namespace == Namespaces.HTML) qualifiedName.asciiLowercase() else qualifiedName
+
+    /**
+     * Spec: https://dom.spec.whatwg.org/#concept-element-attributes-get-by-name
+     */
+    private fun attributeIndexByName(qualifiedName: String): Int {
+        val name = normalizedQualifiedName(qualifiedName)
+        return attributes.indexOfFirst { it.name == name }
     }
 
+    private fun attributeByName(qualifiedName: String): Attribute? =
+        attributes.getOrNull(attributeIndexByName(qualifiedName))
+
+    /**
+     * Spec: https://dom.spec.whatwg.org/#concept-element-attributes-get-by-namespace
+     */
+    private fun attributeIndexByNamespace(namespace: String?, localName: String): Int {
+        val attributeNamespace = namespace?.ifEmpty { null }
+        return attributes.indexOfFirst { it.namespace == attributeNamespace && it.localName == localName }
+    }
+
+    /**
+     * Sets the value of the attribute whose qualified name is [qualifiedName], or adds an attribute with no namespace
+     * and that local name. On an HTML element the name is ASCII lowercased first.
+     *
+     * @throws IllegalArgumentException if [qualifiedName] is not a valid attribute local name (the DOM's
+     * "InvalidCharacterError")
+     *
+     * Spec: https://dom.spec.whatwg.org/#dom-element-setattribute
+     */
+    public fun setAttribute(qualifiedName: String, value: String) {
+        require(isValidAttributeLocalName(qualifiedName)) {
+            "InvalidCharacterError: \"$qualifiedName\" is not a valid attribute local name"
+        }
+        val index = attributeIndexByName(qualifiedName)
+        if (index != -1) {
+            attributes[index] = attributes[index].copy(value = value)
+            return
+        }
+        val localName = normalizedQualifiedName(qualifiedName)
+        attributes.add(Attribute(namespace = null, prefix = null, localName = localName, value = value))
+    }
+
+    /**
+     * Sets the value of the attribute in [namespace] whose local name is the one in [qualifiedName], or adds the
+     * attribute with the prefix and local name [qualifiedName] gives. An existing attribute keeps its prefix.
+     *
+     * @throws IllegalArgumentException if the name is not valid or doesn't fit the namespace (the DOM's
+     * "InvalidCharacterError" and "NamespaceError")
+     *
+     * Spec: https://dom.spec.whatwg.org/#dom-element-setattributens
+     */
+    public fun setAttributeNS(namespace: String?, qualifiedName: String, value: String) {
+        val (attributeNamespace, prefix, localName) = validateAndExtract(namespace, qualifiedName)
+        setAttributeNS(attributeNamespace, prefix, localName, value)
+    }
+
+    /**
+     * Sets the value of the attribute in [namespace] with [localName], or adds the attribute with [prefix] if there
+     * is none. An existing attribute keeps its prefix. Unlike the qualified name overload, this doesn't validate the
+     * names, as the DOM's own algorithm doesn't.
+     *
+     * Spec: https://dom.spec.whatwg.org/#concept-element-attributes-set-value
+     */
     public fun setAttributeNS(namespace: String?, prefix: String?, localName: String, value: String) {
-        attributes.removeAll {
-            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
+        val index = attributeIndexByNamespace(namespace, localName)
+        if (index != -1) {
+            attributes[index] = attributes[index].copy(value = value)
+            return
         }
-        attributes.add(Attribute(namespace = namespace, prefix = prefix, localName = localName, value = value))
+        val attributeNamespace = namespace?.ifEmpty { null }
+        attributes.add(Attribute(namespace = attributeNamespace, prefix = prefix, localName = localName, value = value))
     }
 
-    public fun getAttribute(name: String): String? {
-        return attributes.find {
-            it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name)
-        }?.value
-    }
+    /**
+     * The value of the first attribute whose qualified name is [qualifiedName], or null. On an HTML element the name
+     * is ASCII lowercased first.
+     *
+     * Spec: https://dom.spec.whatwg.org/#dom-element-getattribute
+     */
+    public fun getAttribute(qualifiedName: String): String? = attributeByName(qualifiedName)?.value
 
-    public fun getAttributeNS(namespace: String?, localName: String): String? {
-        return attributes.find {
-            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
-        }?.value
-    }
+    /**
+     * Spec: https://dom.spec.whatwg.org/#dom-element-getattributens
+     */
+    public fun getAttributeNS(namespace: String?, localName: String): String? =
+        attributes.getOrNull(attributeIndexByNamespace(namespace, localName))?.value
 
-    public fun hasAttribute(name: String): Boolean {
-        return attributes.any {
-            it.namespace == null && it.localName.equalsAsciiCaseInsensitive(name)
-        }
-    }
+    /**
+     * Spec: https://dom.spec.whatwg.org/#dom-element-hasattribute
+     */
+    public fun hasAttribute(qualifiedName: String): Boolean = attributeByName(qualifiedName) != null
 
-    public fun hasAttributeNS(namespace: String?, localName: String): Boolean {
-        return attributes.any {
-            it.namespace == namespace && it.localName.equalsAsciiCaseInsensitive(localName)
-        }
-    }
+    /**
+     * Spec: https://dom.spec.whatwg.org/#dom-element-hasattributens
+     */
+    public fun hasAttributeNS(namespace: String?, localName: String): Boolean =
+        attributeIndexByNamespace(namespace, localName) != -1
 
     /**
      * Serialize to html5lib tree format for testing.
