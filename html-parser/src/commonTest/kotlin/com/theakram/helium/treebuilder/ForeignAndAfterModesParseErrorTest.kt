@@ -209,7 +209,7 @@ internal class ForeignAndAfterModesParseErrorTest {
     }
 
     @Test
-    fun `a font start tag breaks out of foreign content only with color, face or size`() {
+    fun `a font start tag breaks out of foreign content only with color or face or size`() {
         // The input closes the font in body and leaves nothing open, so the breakout is its only error
         assertEquals(1, parse("<!DOCTYPE html><svg><font color=red></font>").treeErrors)
         assertEquals(0, parse("<!DOCTYPE html><svg><font id=x></font></svg>").treeErrors)

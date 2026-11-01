@@ -57,7 +57,7 @@ internal class InBodyParseErrorTest {
     }
 
     @Test
-    fun `doctype, html, body and frameset start tags in the body are parse errors`() {
+    fun `doctype and html and body and frameset start tags in the body are parse errors`() {
         assertEquals(listOf(null), errors("<p><!DOCTYPE html>"))
         assertEquals(listOf(null), errors("<p><html lang=en>"))
         assertEquals(listOf(null), errors("<p><body class=x>"))
@@ -130,7 +130,7 @@ internal class InBodyParseErrorTest {
     }
 
     @Test
-    fun `li, dd and dt start tags that close an item with other elements open are parse errors`() {
+    fun `li and dd and dt start tags that close an item with other elements open are parse errors`() {
         assertEquals(listOf(null), errors("<li><span><li>"))
         assertEquals(listOf(null), errors("<dd><span><dt>"))
     }
@@ -178,7 +178,7 @@ internal class InBodyParseErrorTest {
 
     // In these, the second error is the end of the file with the select and the span open
     @Test
-    fun `option, optgroup and hr start tags with an option still in scope in a select are parse errors`() {
+    fun `option and optgroup and hr start tags with an option still in scope in a select are parse errors`() {
         assertEquals(emptyList(), errors("<select><option>a<option>b<optgroup><option>c<hr></select>"))
         assertEquals(listOf(null, null), errors("<select><option><span><option>"))
         assertEquals(listOf(null, null), errors("<select><option><span><optgroup>"))
