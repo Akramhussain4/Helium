@@ -58,14 +58,15 @@ private val TreeNode.id: String?
         attributes.firstOrNull { it.namespace == null && it.localName == "id" }?.value?.ifEmpty { null }
 
 /**
- * Compares [a] and [b] by tree order: negative if [a] comes first. They must be in the same tree.
+ * Compares [a] and [b] by tree order: negative if [a] comes first. They must be in the same tree, and if [within] is
+ * given, both inclusive descendants of it, which spares going up from it to the root.
  *
  * Spec: https://dom.spec.whatwg.org/#concept-tree-order
  */
-internal fun compareTreeOrder(a: TreeNode, b: TreeNode): Int {
+internal fun compareTreeOrder(a: TreeNode, b: TreeNode, within: TreeNode? = null): Int {
     if (a === b) return 0
-    val aChain = generateSequence(a) { it.parent }.toList().asReversed()
-    val bChain = generateSequence(b) { it.parent }.toList().asReversed()
+    val aChain = generateSequence(a) { if (it === within) null else it.parent }.toList().asReversed()
+    val bChain = generateSequence(b) { if (it === within) null else it.parent }.toList().asReversed()
     var depth = 0
     while (depth < aChain.size && depth < bChain.size && aChain[depth] === bChain[depth]) depth++
     // An ancestor comes before its descendants

@@ -210,8 +210,8 @@ private fun TreeNode.runSelectednessSettingAlgorithmAfterInserting(option: TreeN
         option.selectedness -> {
             // An option left selected that was inserted with this one had its steps run first, so it comes before
             val optionIsLater = option.isLastInListOfOptionsOf(this) ||
-                inserted === selected || inserted.isAncestorOf(selected!!) ||
-                compareTreeOrder(option, selected) > 0
+                inserted.isInclusiveAncestorWithin(selected!!, this) ||
+                compareTreeOrder(option, selected, within = this) > 0
             if (optionIsLater) {
                 selected!!.selectedness = false
                 selectedOptionAfterLastRun = option
@@ -264,6 +264,16 @@ private fun TreeNode.isLastInListOfOptionsOf(select: TreeNode): Boolean {
         node = parent
     }
     return true
+}
+
+/** Whether this is [node] or an ancestor of it, looking no further up than [limit], an ancestor of [node]. */
+private fun TreeNode.isInclusiveAncestorWithin(node: TreeNode, limit: TreeNode): Boolean {
+    var current: TreeNode? = node
+    while (current != null && current !== limit) {
+        if (current === this) return true
+        current = current.parent
+    }
+    return this === limit
 }
 
 internal fun TreeNode.isAncestorOf(node: TreeNode): Boolean {
