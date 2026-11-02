@@ -31,15 +31,7 @@ package com.theakram.helium.treebuilder.helpers
  */
 internal object KnownFailures {
 
-    private const val SELECTEDCONTENT =
-        "selectedcontent is kept up to date by DOM insertion steps, which a parser without a DOM doesn't run"
-
-    private val failures = mapOf(
-        "webkit02.dat:692" to SELECTEDCONTENT,
-        "webkit02.dat:706" to SELECTEDCONTENT,
-        "webkit02.dat:732" to SELECTEDCONTENT,
-        "webkit02.dat:748" to SELECTEDCONTENT
-    )
+    private val failures = emptyMap<String, String>()
 
     fun reasonFor(filename: String, lineNumber: Int): String? = failures["$filename:$lineNumber"]
 }

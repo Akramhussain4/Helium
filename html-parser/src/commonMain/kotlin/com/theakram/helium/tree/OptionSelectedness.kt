@@ -32,7 +32,7 @@ internal fun TreeNode.isHtmlElement(localName: String): Boolean =
 private fun TreeNode.contentAttributeValue(localName: String): String? =
     attributes.firstOrNull { it.namespace == null && it.localName == localName }?.value
 
-private fun TreeNode.hasContentAttribute(localName: String): Boolean =
+internal fun TreeNode.hasContentAttribute(localName: String): Boolean =
     attributes.any { it.namespace == null && it.localName == localName }
 
 /** Whether this is an HTML element whose descendants are left out of a select's list of options. */
@@ -290,10 +290,13 @@ internal fun TreeNode.isAncestorOf(node: TreeNode): Boolean {
  */
 internal fun TreeNode.resetSelectedness(hasChanged: Boolean) {
     // Step 1:
-    runSelectednessSettingAlgorithm()
+    val changed = runSelectednessSettingAlgorithm() || hasChanged
 
-    // Steps 2-3, "If hasChanged is false, then return. Update a select's descendant selectedcontent elements given
-    // select.", wait for Helium to model selectedcontent elements
+    // Step 2:
+    if (!changed) return
+
+    // Step 3:
+    updateDescendantSelectedcontents()
 }
 
 /**
@@ -328,51 +331,130 @@ internal fun TreeNode.updateNearestAncestorSelect(inserted: TreeNode? = null): L
     return result
 }
 
-/** Marks [inserted] and its ancestors as possibly containing an option element if it is one or contains one. */
-private fun markMayContainOption(inserted: TreeNode) {
+/**
+ * Marks [inserted] and its ancestors as possibly containing an option or selectedcontent element if it is one or
+ * contains one.
+ */
+private fun markMayContainSelectParts(inserted: TreeNode) {
     if (inserted.isHtmlElement("option")) inserted.mayContainOption = true
-    if (!inserted.mayContainOption) return
+    if (inserted.isHtmlElement("selectedcontent")) inserted.mayContainSelectedcontent = true
     var ancestor = inserted.parent
-    while (ancestor != null && !ancestor.mayContainOption) {
-        ancestor.mayContainOption = true
+    while (ancestor != null &&
+        ((inserted.mayContainOption && !ancestor.mayContainOption) ||
+            (inserted.mayContainSelectedcontent && !ancestor.mayContainSelectedcontent))
+    ) {
+        if (inserted.mayContainOption) ancestor.mayContainOption = true
+        if (inserted.mayContainSelectedcontent) ancestor.mayContainSelectedcontent = true
         ancestor = ancestor.parent
     }
 }
 
-/** Calls [action] with each option element among this node and its descendants, in tree order. */
-private inline fun TreeNode.forEachOptionInclusiveDescendant(action: (TreeNode) -> Unit) {
-    if (!mayContainOption) return
+/**
+ * Calls [action] with this node and each of its descendants in tree order, skipping the subtrees for which [mayContain]
+ * is false.
+ */
+internal inline fun TreeNode.forEachInclusiveDescendantIn(
+    mayContain: (TreeNode) -> Boolean,
+    action: (TreeNode) -> Unit
+) {
+    if (!mayContain(this)) return
     val pending = ArrayDeque<TreeNode>()
     pending.addLast(this)
     while (pending.isNotEmpty()) {
         val node = pending.removeLast()
-        if (node.isHtmlElement("option")) action(node)
+        action(node)
         for (index in node.children.indices.reversed()) {
             val child = node.children[index]
-            if (child.mayContainOption) pending.addLast(child)
+            if (mayContain(child)) pending.addLast(child)
+        }
+    }
+}
+
+internal fun TreeNode.mayContainSelectPart(): Boolean =
+    mayContainOption || mayContainSelectedcontent || isHtmlElement("option") || isHtmlElement("selectedcontent")
+
+/**
+ * The insertion and post-connection steps of the option and selectedcontent elements among [inserted] and its
+ * descendants. The insertion steps run for each of them first, in tree order: for an option, "update an option's
+ * nearest ancestor select given insertedOption", and for a selectedcontent element, "recalculate a selectedcontent
+ * element's disabledness". Then, if they are connected, their post-connection steps run, once the tree is in a
+ * consistent state.
+ *
+ * Spec: https://dom.spec.whatwg.org/#concept-node-insert
+ */
+internal fun selectNodeInserted(inserted: TreeNode) {
+    markMayContainSelectParts(inserted)
+    if (!inserted.mayContainSelectPart()) return
+
+    // The insertion steps
+    val staticNodeList = mutableListOf<TreeNode>()
+    inserted.forEachInclusiveDescendantIn({ it.mayContainSelectPart() }) { node ->
+        if (node.isHtmlElement("option")) {
+            node.updateNearestAncestorSelect(inserted)
+            staticNodeList += node
+        } else if (node.isHtmlElement("selectedcontent")) {
+            node.recalculateSelectedcontentDisabledness()
+            staticNodeList += node
+        }
+    }
+
+    // The post-connection steps, which can change the tree: "For each node of staticNodeList, if node is connected,
+    // then run the post-connection steps with node."
+    for (node in staticNodeList) {
+        if (node.root.type != NodeType.DOCUMENT) continue
+        if (node.isHtmlElement("option")) {
+            // "The option HTML element post-connection steps, given insertedOption, are to update descendant
+            // selectedcontent elements for an option given insertedOption."
+            node.updateDescendantSelectedcontentsForOption()
+        } else {
+            node.selectedcontentPostConnectionSteps()
         }
     }
 }
 
 /**
- * The option element insertion steps, run for [inserted] and each of its descendants: "update an option's nearest
- * ancestor select given insertedOption".
+ * The option element removing steps, run for [removed] and each of its descendants: "Let selects be the result of
+ * update an option's nearest ancestor select given removedNode. For each select of selects: queue a microtask to
+ * update a select's descendant selectedcontent elements given select." The updates are queued on [oldRoot], the root
+ * of the tree [removed] was in, to run when the outermost insertion or removal in it finishes.
  *
  * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element
  */
-internal fun optionNodeInserted(inserted: TreeNode) {
-    markMayContainOption(inserted)
-    inserted.forEachOptionInclusiveDescendant { it.updateNearestAncestorSelect(inserted) }
+internal fun selectNodeRemoved(removed: TreeNode, oldRoot: TreeNode) {
+    removed.forEachInclusiveDescendantIn({ it.mayContainOption }) { node ->
+        if (node.isHtmlElement("option")) {
+            for (select in node.updateNearestAncestorSelect()) {
+                val pending = oldRoot.pendingSelectedcontentUpdates
+                    ?: mutableListOf<TreeNode>().also { oldRoot.pendingSelectedcontentUpdates = it }
+                if (pending.none { it === select }) pending += select
+            }
+        }
+    }
 }
 
 /**
- * The option element removing steps, run for [removed] and each of its descendants: "Let selects be the result of
- * update an option's nearest ancestor select given removedNode."
- *
- * Spec: https://html.spec.whatwg.org/multipage/form-elements.html#the-option-element
+ * Runs the selectedcontent updates queued on this tree root, as the microtasks the spec queues would run. An update
+ * can queue more, which run too, but each select is updated once: a select whose update queues an update of itself
+ * again, which the spec would go on doing for ever, is left as that update left it.
  */
-internal fun optionNodeRemoved(removed: TreeNode) {
-    removed.forEachOptionInclusiveDescendant { it.updateNearestAncestorSelect() }
+internal fun TreeNode.runPendingSelectedcontentUpdates() {
+    val updated = mutableListOf<TreeNode>()
+    // The updates insert and remove nodes, whose own updates join the queue instead of running in the middle
+    mutationDepth++
+    try {
+        while (true) {
+            val pending = pendingSelectedcontentUpdates ?: break
+            pendingSelectedcontentUpdates = null
+            for (select in pending) {
+                if (updated.any { it === select }) continue
+                updated += select
+                select.updateDescendantSelectedcontents()
+            }
+        }
+    } finally {
+        mutationDepth--
+        pendingSelectedcontentUpdates = null
+    }
 }
 
 /**
