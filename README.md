@@ -96,6 +96,24 @@ val rows = parser.parseFragment("<tr><td>1<td>2", target).children // [<tr>]
 By default, Helium parses like a browser with JavaScript enabled, so `<noscript>` content is raw text. To parse it
 as markup instead, as a browser with JavaScript disabled does, create the parser with `HTMLParser(scriptingEnabled = false)`.
 
+To turn a tree back into HTML, use `innerHtml()` for a node's contents and `outerHtml()` for the node itself. For
+elements, these give what the DOM's `innerHTML` and `outerHTML` give. They follow the spec's
+[serialization algorithm](https://html.spec.whatwg.org/multipage/parsing.html#serialising-html-fragments): text is
+escaped, void elements like `<br>` get no end tag, and a template's contents are written out:
+
+```kotlin
+val paragraph = parser.parseFragment("<p class=greeting>Fish &amp; chips<br>", TreeNode.createElement("div")).firstChild!!
+paragraph.outerHtml() // <p class="greeting">Fish &amp; chips<br></p>
+paragraph.innerHtml() // Fish &amp; chips<br>
+```
+
+The serializer also writes out the tags the parser inserted, so `parser.parse("<p>Hi").innerHtml()` gives
+`<html><head></head><body><p>Hi</p></body></html>`.
+
+If you parsed with `HTMLParser(scriptingEnabled = false)`, serialize with `innerHtml(scriptingEnabled = false)` too.
+The tree doesn't record the flag. With the default `true`, `<noscript>` text is written unescaped, and text that the
+parser decoded from character references, such as `&lt;img onerror=...&gt;`, becomes live markup in the output.
+
 ## Status
 
 Helium is pre-1.0 and its API may change between minor versions.
@@ -112,7 +130,6 @@ Conformance is measured against the standard conformance suite for HTML parsers,
 Not supported yet:
 
 - Complete error reporting: `errors` only contains tokenizer errors, and not all of those yet
-- Serializing a tree back to HTML
 
 ## Building
 

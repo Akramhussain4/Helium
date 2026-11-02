@@ -18,10 +18,16 @@ All notable changes to this project are documented here. The format is based on
 - `TreeNode.formOwner`: a form-associated element's form owner. The parser associates elements with the form element
   pointer as it creates them, and inserting or removing nodes and changing the `form` attribute reset it, as the HTML
   spec says. A `form` attribute naming a form that appears later is not tracked
+- `TreeNode.innerHtml()` and `TreeNode.outerHtml()` serialize a tree back to HTML, with the spec's HTML fragment
+  serialization algorithm, as the DOM's `innerHTML` and `outerHTML` getters do. Their `scriptingEnabled` flag decides
+  whether `<noscript>` text is escaped. It defaults to `true`, like `HTMLParser`'s, and should be the value the tree
+  was parsed with
 
 ### Changed
 
 - `TreeNode.createElement` accepts a null namespace, for elements in no namespace
+- Setting `TreeNode.templateContent` makes the template the fragment's host, as `createElement` does for the
+  contents it creates, so the fragment's nodes belong to an inert template document
 - `TreeNode`'s attribute methods match names as the DOM does: `getAttribute`, `hasAttribute` and `setAttribute`
   compare qualified names, ASCII lowercasing the argument only on HTML elements, and the `NS` methods compare
   namespace and local name exactly. `setAttribute` changes an existing attribute in place and throws

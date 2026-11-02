@@ -104,9 +104,13 @@ public final class com/theakram/helium/tree/TreeNode {
 	public final fun hasAttribute (Ljava/lang/String;)Z
 	public final fun hasAttributeNS (Ljava/lang/String;Ljava/lang/String;)Z
 	public final fun hasChildren ()Z
+	public final fun innerHtml (Z)Ljava/lang/String;
+	public static synthetic fun innerHtml$default (Lcom/theakram/helium/tree/TreeNode;ZILjava/lang/Object;)Ljava/lang/String;
 	public final fun insertBefore (Lcom/theakram/helium/tree/TreeNode;Lcom/theakram/helium/tree/TreeNode;)V
 	public final fun isIframeSrcdoc ()Z
 	public final fun isTemplate ()Z
+	public final fun outerHtml (Z)Ljava/lang/String;
+	public static synthetic fun outerHtml$default (Lcom/theakram/helium/tree/TreeNode;ZILjava/lang/Object;)Ljava/lang/String;
 	public final fun removeChild (Lcom/theakram/helium/tree/TreeNode;)V
 	public final fun setAttribute (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setAttributeNS (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
